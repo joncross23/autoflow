@@ -1,0 +1,483 @@
+{
+  "project": {
+    "id": "autoflow-dev",
+    "name": "AutoFlow Development",
+    "description": "Building AutoFlow — an AI & Automation Discovery Platform. This project tracks its own development, demonstrating the product's value.",
+    "status": "active",
+    "createdAt": "2024-12-16T00:00:00Z",
+    "updatedAt": "2024-12-16T00:00:00Z"
+  },
+  
+  "columns": [
+    { "id": "backlog", "name": "Backlog", "colour": "#6366f1", "order": 0 },
+    { "id": "sprint", "name": "Current Sprint", "colour": "#f59e0b", "order": 1 },
+    { "id": "in-progress", "name": "In Progress", "colour": "#3b82f6", "order": 2 },
+    { "id": "review", "name": "Review/QA", "colour": "#8b5cf6", "order": 3 },
+    { "id": "done", "name": "Done", "colour": "#22c55e", "order": 4 }
+  ],
+  
+  "cards": [
+    {
+      "id": "AF-001",
+      "title": "Theme system with dark mode default",
+      "description": "Create the CSS custom properties architecture for theme switching. Dark mode is the default, with light mode and system preference options.",
+      "columnId": "sprint",
+      "order": 0,
+      "labels": ["phase-0.5", "design", "ui"],
+      "priority": "high",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-001",
+          "name": "Implementation",
+          "items": [
+            { "id": "cli-001", "text": "Define CSS custom properties for colours", "done": false },
+            { "id": "cli-002", "text": "Create dark theme variables", "done": false },
+            { "id": "cli-003", "text": "Create light theme variables", "done": false },
+            { "id": "cli-004", "text": "Implement system preference detection", "done": false },
+            { "id": "cli-005", "text": "Build theme toggle component", "done": false },
+            { "id": "cli-006", "text": "Persist preference to localStorage", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 9
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-002",
+      "title": "Colour theme selector (accent colours)",
+      "description": "Allow users to choose from 5-6 accent colour themes: Midnight Blue, Emerald Green, Sunset Orange, Royal Purple, Rose Pink, Slate Grey.",
+      "columnId": "sprint",
+      "order": 1,
+      "labels": ["phase-0.5", "design", "ui"],
+      "priority": "high",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-002",
+          "name": "Implementation",
+          "items": [
+            { "id": "cli-007", "text": "Design 6 accent colour palettes", "done": false },
+            { "id": "cli-008", "text": "Create colour theme CSS variables", "done": false },
+            { "id": "cli-009", "text": "Build colour selector UI component", "done": false },
+            { "id": "cli-010", "text": "Apply accent colours throughout mockups", "done": false },
+            { "id": "cli-011", "text": "Persist selection to localStorage", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 6,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-003",
+      "title": "Dashboard mockup",
+      "description": "Create interactive mockup of main dashboard showing: quick capture, ideas pipeline, active projects, completed stats, total impact, recent activity.",
+      "columnId": "sprint",
+      "order": 2,
+      "labels": ["phase-0.5", "design", "mockup"],
+      "priority": "high",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-003",
+          "name": "Components",
+          "items": [
+            { "id": "cli-012", "text": "Quick capture input field", "done": false },
+            { "id": "cli-013", "text": "Ideas pipeline widget", "done": false },
+            { "id": "cli-014", "text": "Active projects cards", "done": false },
+            { "id": "cli-015", "text": "Stats summary cards", "done": false },
+            { "id": "cli-016", "text": "Recent activity feed", "done": false },
+            { "id": "cli-017", "text": "Navigation sidebar", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 9
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-004",
+      "title": "Kanban board mockup with drag-drop visuals",
+      "description": "Create Trello-style kanban board mockup with emphasis on smooth drag-and-drop UX: ghost cards, insertion lines, column reordering, coloured headers.",
+      "columnId": "sprint",
+      "order": 3,
+      "labels": ["phase-0.5", "design", "mockup", "critical"],
+      "priority": "critical",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-004",
+          "name": "Board Features",
+          "items": [
+            { "id": "cli-018", "text": "Column layout with coloured headers", "done": false },
+            { "id": "cli-019", "text": "Card components with labels/avatars", "done": false },
+            { "id": "cli-020", "text": "Drag ghost preview", "done": false },
+            { "id": "cli-021", "text": "Drop zone highlighting", "done": false },
+            { "id": "cli-022", "text": "Insertion line indicator", "done": false },
+            { "id": "cli-023", "text": "Column drag-to-reorder", "done": false },
+            { "id": "cli-024", "text": "Quick add card (type + enter)", "done": false },
+            { "id": "cli-025", "text": "Smooth animations (60fps)", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 10
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-005",
+      "title": "Card detail modal mockup",
+      "description": "Full card modal showing all features: title, description, labels, checklists, attachments, comments, activity, custom fields, AI analysis button.",
+      "columnId": "sprint",
+      "order": 4,
+      "labels": ["phase-0.5", "design", "mockup"],
+      "priority": "high",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-005",
+          "name": "Card Features",
+          "items": [
+            { "id": "cli-026", "text": "Title with inline edit", "done": false },
+            { "id": "cli-027", "text": "Rich description editor", "done": false },
+            { "id": "cli-028", "text": "Labels selector", "done": false },
+            { "id": "cli-029", "text": "Checklist with paste-to-create", "done": false },
+            { "id": "cli-030", "text": "Due date picker", "done": false },
+            { "id": "cli-031", "text": "Member assignment", "done": false },
+            { "id": "cli-032", "text": "Attachments section", "done": false },
+            { "id": "cli-033", "text": "Comments thread", "done": false },
+            { "id": "cli-034", "text": "Activity log", "done": false },
+            { "id": "cli-035", "text": "AI Analysis button/panel", "done": false },
+            { "id": "cli-036", "text": "Custom fields display", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 12,
+        "businessValue": 9
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-006",
+      "title": "Questionnaire form mockup (public)",
+      "description": "Public-facing questionnaire form that visitors can fill without login. Shows the AI & Automation Audit template.",
+      "columnId": "sprint",
+      "order": 5,
+      "labels": ["phase-0.5", "design", "mockup"],
+      "priority": "medium",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-006",
+          "name": "Form Elements",
+          "items": [
+            { "id": "cli-037", "text": "Form header with branding", "done": false },
+            { "id": "cli-038", "text": "Question components", "done": false },
+            { "id": "cli-039", "text": "Text area inputs", "done": false },
+            { "id": "cli-040", "text": "Progress indicator", "done": false },
+            { "id": "cli-041", "text": "Submit confirmation", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 6,
+        "businessValue": 8
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-007",
+      "title": "Mobile responsive mockups",
+      "description": "Ensure all mockups work on mobile. Dashboard, kanban (touch drag), card modal, forms.",
+      "columnId": "sprint",
+      "order": 6,
+      "labels": ["phase-0.5", "design", "mobile"],
+      "priority": "high",
+      "phase": "0.5",
+      "checklists": [
+        {
+          "id": "cl-007",
+          "name": "Views",
+          "items": [
+            { "id": "cli-042", "text": "Mobile navigation pattern", "done": false },
+            { "id": "cli-043", "text": "Dashboard mobile layout", "done": false },
+            { "id": "cli-044", "text": "Kanban horizontal scroll", "done": false },
+            { "id": "cli-045", "text": "Touch-friendly drag handles", "done": false },
+            { "id": "cli-046", "text": "Full-screen card modal", "done": false },
+            { "id": "cli-047", "text": "Mobile form layout", "done": false }
+          ]
+        }
+      ],
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 8
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-008",
+      "title": "Git repository setup",
+      "description": "Create GitHub repository with full structure: .github workflows, docs folder, src structure, all config files.",
+      "columnId": "backlog",
+      "order": 0,
+      "labels": ["phase-0", "infrastructure"],
+      "priority": "high",
+      "phase": "0",
+      "checklists": [
+        {
+          "id": "cl-008",
+          "name": "Tasks",
+          "items": [
+            { "id": "cli-048", "text": "Create GitHub repository", "done": false },
+            { "id": "cli-049", "text": "Add .github/workflows CI/CD", "done": false },
+            { "id": "cli-050", "text": "Create docs/ structure", "done": false },
+            { "id": "cli-051", "text": "Add PR and issue templates", "done": false },
+            { "id": "cli-052", "text": "Configure branch protection", "done": false }
+          ]
+        }
+      ],
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-009",
+      "title": "Next.js project initialisation",
+      "description": "Initialise Next.js 14+ with App Router, TypeScript strict mode, Tailwind CSS, shadcn/ui.",
+      "columnId": "backlog",
+      "order": 1,
+      "labels": ["phase-0", "infrastructure"],
+      "priority": "high",
+      "phase": "0",
+      "checklists": [
+        {
+          "id": "cl-009",
+          "name": "Tasks",
+          "items": [
+            { "id": "cli-053", "text": "npx create-next-app with TypeScript", "done": false },
+            { "id": "cli-054", "text": "Configure tsconfig strict mode", "done": false },
+            { "id": "cli-055", "text": "Install and configure Tailwind", "done": false },
+            { "id": "cli-056", "text": "Initialise shadcn/ui", "done": false },
+            { "id": "cli-057", "text": "Set up path aliases", "done": false },
+            { "id": "cli-058", "text": "Configure ESLint + Prettier", "done": false }
+          ]
+        }
+      ],
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-010",
+      "title": "Supabase project setup",
+      "description": "Create Supabase project, configure auth settings, set up initial database schema.",
+      "columnId": "backlog",
+      "order": 2,
+      "labels": ["phase-0", "infrastructure", "database"],
+      "priority": "high",
+      "phase": "0",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-011",
+      "title": "CI/CD pipeline",
+      "description": "GitHub Actions for: lint, test, preview deployments (Vercel), production deployments.",
+      "columnId": "backlog",
+      "order": 3,
+      "labels": ["phase-0", "infrastructure", "devops"],
+      "priority": "medium",
+      "phase": "0",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-012",
+      "title": "Supabase Auth with MFA",
+      "description": "Implement authentication with email/password, magic links, and TOTP MFA support.",
+      "columnId": "backlog",
+      "order": 4,
+      "labels": ["phase-2", "auth", "security"],
+      "priority": "high",
+      "phase": "2",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-013",
+      "title": "User registration and login flows",
+      "description": "Registration, login, password reset, email verification UI and logic.",
+      "columnId": "backlog",
+      "order": 5,
+      "labels": ["phase-2", "auth"],
+      "priority": "high",
+      "phase": "2",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-014",
+      "title": "Quick idea capture component",
+      "description": "Single-field rapid entry with Cmd/Ctrl+K shortcut, Enter to submit, auto-save drafts.",
+      "columnId": "backlog",
+      "order": 6,
+      "labels": ["phase-3", "feature", "ideas"],
+      "priority": "high",
+      "phase": "3",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-015",
+      "title": "Ideas list views (table and card)",
+      "description": "Display ideas in sortable table and visual card grid. Filter by status, tags, date.",
+      "columnId": "backlog",
+      "order": 7,
+      "labels": ["phase-3", "feature", "ideas"],
+      "priority": "high",
+      "phase": "3",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-016",
+      "title": "Claude API integration",
+      "description": "Set up Anthropic Claude API for idea evaluation. Handle rate limits, errors, streaming.",
+      "columnId": "backlog",
+      "order": 8,
+      "labels": ["phase-4", "ai", "integration"],
+      "priority": "high",
+      "phase": "4",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-017",
+      "title": "AI idea scoring prompts",
+      "description": "Design and test prompts for evaluating ideas: complexity, value, ROI, solutions.",
+      "columnId": "backlog",
+      "order": 9,
+      "labels": ["phase-4", "ai"],
+      "priority": "high",
+      "phase": "4",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-018",
+      "title": "Kanban board implementation",
+      "description": "Full kanban with dnd-kit: columns, cards, drag-drop, all visual polish from mockups.",
+      "columnId": "backlog",
+      "order": 10,
+      "labels": ["phase-5", "feature", "kanban"],
+      "priority": "critical",
+      "phase": "5",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-019",
+      "title": "Card detail modal (full implementation)",
+      "description": "All card features: description, checklists, labels, attachments, comments, custom fields.",
+      "columnId": "backlog",
+      "order": 11,
+      "labels": ["phase-5", "feature", "kanban"],
+      "priority": "high",
+      "phase": "5",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-020",
+      "title": "Questionnaire template builder",
+      "description": "Create, edit, duplicate questionnaire templates. Version history, archive.",
+      "columnId": "backlog",
+      "order": 12,
+      "labels": ["phase-6", "feature", "forms"],
+      "priority": "high",
+      "phase": "6",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-021",
+      "title": "Public questionnaire form",
+      "description": "Shareable public link, no login required. Submit responses, confirmation.",
+      "columnId": "backlog",
+      "order": 13,
+      "labels": ["phase-6", "feature", "forms"],
+      "priority": "high",
+      "phase": "6",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-022",
+      "title": "Main dashboard",
+      "description": "Quick capture, pipeline stats, active projects, impact metrics, activity feed.",
+      "columnId": "backlog",
+      "order": 14,
+      "labels": ["phase-7", "feature", "dashboard"],
+      "priority": "high",
+      "phase": "7",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-023",
+      "title": "Time audit sheet generation",
+      "description": "Auto-generate Excel/PDF time audit from project data. Match the reference format.",
+      "columnId": "backlog",
+      "order": 15,
+      "labels": ["phase-7", "feature", "export"],
+      "priority": "medium",
+      "phase": "7",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-024",
+      "title": "PWA service worker",
+      "description": "Offline support, sync queue, background sync when connection restored.",
+      "columnId": "backlog",
+      "order": 16,
+      "labels": ["phase-8", "pwa", "offline"],
+      "priority": "medium",
+      "phase": "8",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-025",
+      "title": "Voice capture integration",
+      "description": "Voice-to-text for mobile idea capture using Web Speech API or similar.",
+      "columnId": "backlog",
+      "order": 17,
+      "labels": ["phase-8", "feature", "mobile"],
+      "priority": "medium",
+      "phase": "8",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-026",
+      "title": "Version history for ideas/projects",
+      "description": "Track all changes, view previous versions, restore to any version.",
+      "columnId": "backlog",
+      "order": 18,
+      "labels": ["phase-8", "feature"],
+      "priority": "medium",
+      "phase": "8",
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "AF-027",
+      "title": "Bulk import from spreadsheet",
+      "description": "Import ideas from CSV/Excel. Map columns, preview, confirm.",
+      "columnId": "backlog",
+      "order": 19,
+      "labels": ["phase-8", "feature", "import"],
+      "priority": "medium",
+      "phase": "8",
+      "createdAt": "2024-12-16T00:00:00Z"
+    }
+  ]
+}

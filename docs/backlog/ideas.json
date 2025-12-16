@@ -1,0 +1,318 @@
+{
+  "ideas": [
+    {
+      "id": "IDEA-001",
+      "title": "Keyboard shortcuts reference panel",
+      "description": "Full list of keyboard shortcuts for power users (J/K navigation, G+B for boards, etc.) accessible via ? key.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "ux",
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 4,
+        "businessValue": 6,
+        "suggestedSolutions": ["Overlay modal with shortcut list", "Command palette integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-002",
+      "title": "Activity digest emails",
+      "description": "Weekly email summary of project progress, completed tasks, upcoming due dates.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "notifications",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 7,
+        "suggestedSolutions": ["Resend for transactional email", "Supabase Edge Functions for scheduling"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-003",
+      "title": "Public read-only board sharing",
+      "description": "Share project progress with external stakeholders without requiring login.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "sharing",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 7,
+        "suggestedSolutions": ["Unique shareable URLs", "Row-level security in Supabase"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-004",
+      "title": "Board duplication",
+      "description": "Copy entire board as template including columns, labels, and optionally cards.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "feature",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 6,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-005",
+      "title": "Card dependencies (blocked by)",
+      "description": "Mark cards as blocked by other cards. Visual indicator and filter for blocked items.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "feature",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 7,
+        "suggestedSolutions": ["Link cards with dependency type", "Gantt view integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-006",
+      "title": "Time tracking on cards",
+      "description": "Track actual vs estimated hours per task. Start/stop timer or manual entry.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "feature",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 8,
+        "suggestedSolutions": ["Timer component", "Time log entries", "Reporting integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-007",
+      "title": "Recurring cards",
+      "description": "Automatically create cards on schedule (daily/weekly/monthly) for repeated tasks.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "automation",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 7,
+        "suggestedSolutions": ["Supabase cron jobs", "Card templates with schedule"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-008",
+      "title": "Board-level permissions",
+      "description": "Different access levels per board even for same user. Some boards read-only, others editable.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "permissions",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-009",
+      "title": "API webhooks for integrations",
+      "description": "Webhook endpoints for n8n/Zapier integration. Trigger on card events, form submissions.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "integration",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 8,
+        "suggestedSolutions": ["Supabase webhooks", "Custom API endpoints"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-010",
+      "title": "Mobile push notifications",
+      "description": "Push notifications for due dates, mentions, and important updates when using PWA.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "notifications",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 14,
+        "businessValue": 7,
+        "suggestedSolutions": ["Web Push API", "Service worker integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-011",
+      "title": "AI conversation interface",
+      "description": "Chat with AI about ideas: 'Help me break this down', 'What am I missing?', brainstorming mode.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "ai",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 20,
+        "businessValue": 9,
+        "suggestedSolutions": ["Claude API with streaming", "Chat UI component", "Context-aware prompts"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-012",
+      "title": "Card aging visual indicator",
+      "description": "Cards that haven't been touched get progressively faded/marked to identify stale items.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "ux",
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 3,
+        "businessValue": 5
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-013",
+      "title": "Calendar view for cards",
+      "description": "View cards by due date in calendar format. Drag to reschedule.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "view",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-014",
+      "title": "Timeline/Gantt view",
+      "description": "Visualise cards with start and end dates on a timeline. See dependencies and overlaps.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "view",
+      "aiEvaluation": {
+        "complexity": "very-high",
+        "estimatedHours": 24,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-015",
+      "title": "Saved filter views",
+      "description": "Save frequently used filter combinations as named views. Quick switch between views.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "ux",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-016",
+      "title": "Card templates",
+      "description": "Save cards as templates for quick creation of similar items. Template library per board.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "feature",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-017",
+      "title": "Board templates gallery",
+      "description": "Pre-configured board setups for common use cases: Sprint planning, Content calendar, etc.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "feature",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-018",
+      "title": "Post-implementation ROI tracking",
+      "description": "After completing automation project, track actual vs projected ROI. 'Was it worth it?' retrospectives.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "analytics",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 9
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-019",
+      "title": "Gamification elements",
+      "description": "Points for ideas captured, badges for projects completed, optional team leaderboards.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "engagement",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 14,
+        "businessValue": 5
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-020",
+      "title": "Automation rules engine",
+      "description": "When X happens, do Y. e.g., 'When card moved to Done, notify team'. Built-in automation.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "automation",
+      "aiEvaluation": {
+        "complexity": "very-high",
+        "estimatedHours": 40,
+        "businessValue": 8
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    }
+  ],
+  
+  "metadata": {
+    "lastUpdated": "2024-12-16T00:00:00Z",
+    "totalIdeas": 20,
+    "byStatus": {
+      "captured": 20,
+      "evaluating": 0,
+      "prioritised": 0,
+      "converting": 0,
+      "archived": 0
+    },
+    "byCategory": {
+      "feature": 4,
+      "ux": 3,
+      "view": 2,
+      "ai": 1,
+      "notifications": 2,
+      "automation": 2,
+      "integration": 1,
+      "analytics": 1,
+      "sharing": 1,
+      "permissions": 1,
+      "engagement": 1
+    }
+  }
+}

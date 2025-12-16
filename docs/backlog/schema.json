@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutoFlow Backlog Schema",
+  "description": "Schema for project and idea tracking in AutoFlow",
+  
+  "definitions": {
+    "checklistItem": {
+      "type": "object",
+      "required": ["id", "text", "done"],
+      "properties": {
+        "id": { "type": "string" },
+        "text": { "type": "string" },
+        "done": { "type": "boolean" },
+        "dueDate": { "type": "string", "format": "date" }
+      }
+    },
+    
+    "aiEvaluation": {
+      "type": "object",
+      "properties": {
+        "complexity": { "enum": ["low", "medium", "high", "very-high"] },
+        "estimatedHours": { "type": "number", "minimum": 0 },
+        "businessValue": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "automationReadiness": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "roiPotential": { "type": "string" },
+        "suggestedSolutions": { "type": "array", "items": { "type": "string" } },
+        "evaluatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    
+    "card": {
+      "type": "object",
+      "required": ["id", "title", "columnId", "order", "createdAt"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^AF-[0-9]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "columnId": { "type": "string" },
+        "order": { "type": "integer", "minimum": 0 },
+        "labels": { "type": "array", "items": { "type": "string" } },
+        "priority": { "enum": ["low", "medium", "high", "critical"] },
+        "checklists": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "items"],
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "items": { "type": "array", "items": { "$ref": "#/definitions/checklistItem" } }
+            }
+          }
+        },
+        "dueDate": { "type": "string", "format": "date" },
+        "startDate": { "type": "string", "format": "date" },
+        "assignees": { "type": "array", "items": { "type": "string" } },
+        "aiEvaluation": { "$ref": "#/definitions/aiEvaluation" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "phase": { "type": "string" }
+      }
+    },
+    
+    "column": {
+      "type": "object",
+      "required": ["id", "name", "order"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "colour": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        "order": { "type": "integer", "minimum": 0 },
+        "wipLimit": { "type": "integer", "minimum": 0 },
+        "collapsed": { "type": "boolean", "default": false }
+      }
+    },
+    
+    "idea": {
+      "type": "object",
+      "required": ["id", "title", "status", "createdAt"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^IDEA-[0-9]+$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "source": { "type": "string" },
+        "status": { "enum": ["captured", "evaluating", "prioritised", "converting", "archived", "rejected"] },
+        "aiEvaluation": { "$ref": "#/definitions/aiEvaluation" },
+        "convertedToCard": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  
+  "type": "object",
+  "required": ["project", "columns", "cards"],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "enum": ["planning", "active", "paused", "completed", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "columns": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/column" }
+    },
+    "cards": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/card" }
+    }
+  }
+}
