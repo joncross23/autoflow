@@ -4,8 +4,8 @@
 > **Vercel:** Linked to GitHub ✔  
 > **Supabase:** Linked to GitHub ✔  
 > **Last Updated:** 2024-12-16  
-> **Current Phase:** 0.5 — Design Sprint  
-> **Next Session Focus:** Card detail modal mockup
+> **Current Phase:** 0.5 — Design Sprint ✅ COMPLETE  
+> **Next Phase:** 0 — Foundation (Infrastructure Setup)
 
 ---
 
@@ -19,39 +19,104 @@
 - [x] Backlog structure designed
 - [x] Claude Project + Claude Code sync strategy established
 - [x] Bootstrap files created
-- [x] **Theme system mockup** (dark mode, colour selector)
-- [x] **Kanban board mockup** (drag-drop UX)
+- [x] **Phase 0.5: All mockups created and accepted**
 
-### In Progress
-- [ ] Card detail modal mockup
-- [ ] Dashboard mockup
+### Ready for Phase 0
+- [ ] Initialise Next.js project
+- [ ] Configure Tailwind + shadcn/ui
+- [ ] Set up Supabase project
+- [ ] Create CI/CD pipeline
+- [ ] Extract design tokens from mockups
 
 ### Blocked
 _None currently_
 
 ---
 
-## Current Phase: 0.5 — Design Sprint
+## Phase 0.5: Design Sprint — ✅ COMPLETE
 
 **Objective:** Create interactive mockups for stakeholder QA and acceptance before infrastructure investment.
 
 **Deliverables:**
 | Mockup | Status | Notes |
 |--------|--------|-------|
-| Theme system + colour selector | ✅ Done | 6 accent themes, dark/light/system |
-| Kanban board | ✅ Done | Trello-style drag-drop UX |
-| Card detail modal | Not started | Next priority |
-| Main dashboard | Not started | |
-| Questionnaire form (public) | Not started | |
-| Mobile responsive views | Not started | |
+| Theme system + colour selector | ✅ Accepted | 6 accent themes, dark/light/system |
+| Kanban board | ✅ Accepted | Trello-style drag-drop UX |
+| Card detail modal | ✅ Accepted | Full card features, AI analysis |
+| Main dashboard | ✅ Accepted | Quick capture, stats, activity feed |
+| Questionnaire form (public) | ✅ Accepted | Progress indicator, branding |
+| Mobile responsive views | ✅ Accepted | All views adapted for mobile |
 
 **Acceptance Criteria:**
 - [x] All mockups render in dark mode by default
 - [x] Theme toggle works (dark/light/system)
 - [x] Colour theme selector functional
 - [x] Drag-drop has clear visual feedback
-- [ ] Mobile layouts demonstrated
-- [ ] Stakeholder sign-off obtained
+- [x] Mobile layouts demonstrated
+- [x] **Stakeholder sign-off obtained** ✅
+
+---
+
+## Phase 0: Foundation — NEXT
+
+**Objective:** Set up development infrastructure and extract design system from mockups.
+
+**Tasks:**
+| Task | Status | Notes |
+|------|--------|-------|
+| Next.js 14+ with App Router | Not started | TypeScript strict mode |
+| Tailwind CSS + shadcn/ui | Not started | |
+| Design tokens extraction | Not started | From mockup CSS variables |
+| Supabase project setup | Not started | Auth + Database |
+| CI/CD pipeline | Not started | GitHub Actions → Vercel |
+| Component library scaffold | Not started | Based on mockup patterns |
+
+---
+
+## Design Tokens (from mockups)
+
+### Mode Colours
+```css
+/* Dark Mode */
+--bg: #0A0A0B;
+--bg-secondary: #131316;
+--bg-tertiary: #1A1A1F;
+--bg-elevated: #1F1F26;
+--border: #27272A;
+--border-subtle: #1F1F23;
+--text: #FAFAFA;
+--text-secondary: #A1A1AA;
+--text-muted: #71717A;
+
+/* Light Mode */
+--bg: #FAFAFA;
+--bg-secondary: #F4F4F5;
+--bg-tertiary: #E4E4E7;
+--bg-elevated: #FFFFFF;
+--border: #D4D4D8;
+--border-subtle: #E4E4E7;
+--text: #09090B;
+--text-secondary: #52525B;
+--text-muted: #A1A1AA;
+```
+
+### Accent Themes
+| Theme | Primary | Muted |
+|-------|---------|-------|
+| Midnight Blue | `#3B82F6` | `#1E3A5F` |
+| Emerald Green | `#10B981` | `#064E3B` |
+| Sunset Orange | `#F59E0B` | `#78350F` |
+| Royal Purple | `#8B5CF6` | `#4C1D95` |
+| Rose Pink | `#EC4899` | `#831843` |
+| Slate Grey | `#64748B` | `#1E293B` |
+
+### Animation Timings
+- Transitions: `0.12s ease-out`
+- Card pickup: `rotate(1.5deg)`, shadow `0 8px 24px`
+- Hover lift: `translateY(-1px)`
+
+### Accessibility Rule
+> Text on `--primary-muted` or `--primary` backgrounds must use explicit white (`#FFFFFF` or `rgba(255,255,255,x)`), never `var(--text)`.
 
 ---
 
@@ -68,42 +133,7 @@ _None currently_
 | 2024-12-16 | 3-level background hierarchy | bg → bg-secondary → bg-elevated for depth |
 | 2024-12-16 | Subtle drag animations | 1.5° rotation, soft shadows — Trello-like |
 | 2024-12-16 | Card-sized drop placeholders | Visual clarity for drop targets |
-
----
-
-## Design Tokens Established
-
-### Mode Colours
-```
-Dark Mode:
-  --bg: #0A0A0B
-  --bg-secondary: #131316
-  --bg-tertiary: #1A1A1F
-  --bg-elevated: #1F1F26
-  --text: #FAFAFA
-  --text-secondary: #A1A1AA
-  --text-muted: #71717A
-
-Light Mode:
-  --bg: #FAFAFA
-  --bg-secondary: #F4F4F5
-  --bg-tertiary: #E4E4E7
-  --bg-elevated: #FFFFFF
-  --text: #09090B
-```
-
-### Accent Themes
-```
-Midnight Blue: #3B82F6 / #1E3A5F
-Emerald Green: #10B981 / #064E3B
-Sunset Orange: #F59E0B / #78350F
-Royal Purple:  #8B5CF6 / #4C1D95
-Rose Pink:     #EC4899 / #831843
-Slate Grey:    #64748B / #1E293B
-```
-
-### Accessibility Rule
-> Text on `--primary-muted` or `--primary` backgrounds must use explicit white (`#FFFFFF` or `rgba(255,255,255,x)`), never `var(--text)`.
+| 2024-12-16 | **All mockups accepted** | Ready to proceed to infrastructure |
 
 ---
 
@@ -119,30 +149,21 @@ Slate Grey:    #64748B / #1E293B
 
 ---
 
-## Next Session Checklist
+## Mockup Files
 
-### Continue Design Sprint:
-- [ ] Create card detail modal mockup with:
-  - Title with inline edit
-  - Rich description editor
-  - Labels selector
-  - Checklists with paste-to-create
-  - Due date picker
-  - Member assignment
-  - Attachments section
-  - Comments thread
-  - Activity log
-  - AI Analysis button/panel
-- [ ] Create dashboard mockup (expand from theme system preview)
-- [ ] Get stakeholder feedback on all mockups
+All mockups in `docs/mockups/`:
 
-### When ready for Phase 0:
-- [ ] Confirm mockups approved
-- [ ] Initialise Next.js project
-- [ ] Configure Tailwind + shadcn/ui
-- [ ] Set up Supabase project
-- [ ] Create CI/CD pipeline
-- [ ] Extract design tokens from mockups
+| File | Description |
+|------|-------------|
+| `README.md` | How to view mockups, design tokens reference |
+| `theme-system.jsx` | Theme toggle, accent colour picker |
+| `kanban-board.jsx` | Drag-drop board with columns and cards |
+| `card-detail-modal.jsx` | Full card editing, checklists, AI panel |
+| `dashboard.jsx` | Main dashboard with all widgets |
+| `questionnaire-form.jsx` | Public-facing form |
+| `mobile-views.jsx` | Mobile-responsive layouts |
+
+**To view:** Open in Claude and ask to render as artifact, or run in any React environment.
 
 ---
 
@@ -158,49 +179,35 @@ Slate Grey:    #64748B / #1E293B
 - Created bootstrap files for Claude Project + Claude Code sync
 - Decided to start with mockups before infrastructure
 
-**Artifacts Created:**
-- `CLAUDE.md` — Claude Code root instructions
-- `PROJECT_INSTRUCTIONS.md` — Claude Project settings
-- `docs/PROJECT_CONTEXT.md` — Full specification
-- `docs/CURRENT_STATE.md` — This file
-- `docs/backlog/*.json` — Backlog structure
-
 ---
 
-### 2024-12-16 — Theme System & Kanban Mockups
+### 2024-12-16 — Phase 0.5 Design Sprint ✅
 **Participants:** Jon (stakeholder), Claude
 
 **Accomplished:**
-- Created interactive theme system mockup:
-  - Dark/Light/System mode toggle
-  - 6 accent colour themes with CSS variables
-  - Dashboard preview showing theme applied to UI
-  - CSS custom properties architecture documented
-- Created Kanban board mockup:
-  - Full drag-drop functionality
-  - Card-sized drop placeholders (Trello-style)
-  - Column reordering
-  - Subtle, professional animations
-  - Labels, progress bars, avatars, due dates
-- Refined accessibility (contrast on accent backgrounds)
-- Refined animations (subtle rotation, soft shadows)
+- Created all 6 interactive mockups
+- Iterated on accessibility (contrast fixes)
+- Refined animations (subtle, Trello-like)
+- Fixed drag-drop UX (card placeholders, no hover during drag)
+- **All mockups accepted by stakeholder**
 
-**Artifacts Created:**
-- `docs/mockups/README.md` — Mockups documentation
-- `docs/mockups/theme-system.jsx` — Theme mockup
-- `docs/mockups/kanban-board.jsx` — Kanban mockup
+**Mockups Created:**
+1. Theme system — dark/light/system, 6 accent colours
+2. Kanban board — full drag-drop with Trello UX
+3. Card detail modal — all card features, AI analysis
+4. Dashboard — quick capture, stats, pipeline, activity
+5. Questionnaire form — public form with progress
+6. Mobile views — responsive adaptations
 
-**Feedback Incorporated:**
-- Fixed text contrast on accent-coloured backgrounds
-- Removed jarring column hover effects
-- Made drag animations more subtle (1.5° vs 3°)
-- Changed insertion indicator to card-sized placeholder
-- Disabled card hover effects during drag operations
-- Fixed column header menu button layout shift
+**Key Design Refinements:**
+- Column header menu button doesn't cause layout jump
+- Card hover disabled during drag operations
+- Drop placeholder is card-sized (not just a line)
+- Animations are subtle: 1.5° rotation, soft shadows
+- All accent-background text uses explicit white
 
 **Next Steps:**
-1. Card detail modal mockup
-2. Full dashboard mockup
-3. Questionnaire form mockup
-4. Mobile responsive views
-5. Stakeholder sign-off → Phase 0
+1. Commit all mockups to Git
+2. Begin Phase 0: Foundation
+3. Extract design tokens to code
+4. Set up Next.js + Tailwind + shadcn/ui

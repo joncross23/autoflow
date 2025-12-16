@@ -13,17 +13,19 @@
 
 ## Current Phase
 
-**Phase 0.5: Design Sprint** — Creating interactive mockups for stakeholder approval before infrastructure setup.
+**Phase 0.5: Design Sprint** — ✅ COMPLETE. All mockups accepted.
+
+**Phase 0: Foundation** — NEXT. Infrastructure setup.
 
 **Always read `/docs/CURRENT_STATE.md` first** to understand current progress and focus.
 
 ### Sprint Mockups Status
 - [x] `docs/mockups/theme-system.jsx` — Theme toggle, accent colours
 - [x] `docs/mockups/kanban-board.jsx` — Drag-drop board
-- [ ] `docs/mockups/card-detail-modal.jsx` — Full card features
-- [ ] `docs/mockups/dashboard.jsx` — Main dashboard
-- [ ] `docs/mockups/questionnaire-form.jsx` — Public forms
-- [ ] `docs/mockups/mobile-views.jsx` — Responsive layouts
+- [x] `docs/mockups/card-detail-modal.jsx` — Full card features
+- [x] `docs/mockups/dashboard.jsx` — Main dashboard
+- [x] `docs/mockups/questionnaire-form.jsx` — Public forms
+- [x] `docs/mockups/mobile-views.jsx` — Responsive layouts
 
 ## Key Files
 
@@ -94,6 +96,7 @@ For mockups during Phase 0.5, committing directly to `develop` is acceptable.
 3. Update `/docs/CURRENT_STATE.md` if needed
 
 ## Commands
+
 ```bash
 # Development
 npm run dev          # Start development server
