@@ -2,14 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Plus, Loader2, Settings } from "lucide-react";
+import { ArrowLeft, Plus, Loader2, Settings, LayoutGrid, List } from "lucide-react";
 import Link from "next/link";
-import { TaskKanbanBoard, TaskDetailModal } from "@/components/projects";
+import { TaskKanbanBoard, TaskDetailModal, TaskListView } from "@/components/projects";
 import { getProject } from "@/lib/api/projects";
 import { getProjectColumns } from "@/lib/api/columns";
 import { getTasksForProject, createTask, updateTask, toggleTask, deleteTask } from "@/lib/api/tasks";
 import { getTaskLabels } from "@/lib/api/labels";
 import type { DbProject, DbColumn, DbTask, DbLabel } from "@/types/database";
+
+type ViewMode = "board" | "list";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -25,6 +27,7 @@ export default function ProjectDetailPage() {
   const [addingTaskToColumn, setAddingTaskToColumn] = useState<string | null>(null);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("board");
 
   const loadProjectData = useCallback(async () => {
     try {
@@ -180,21 +183,60 @@ export default function ProjectDetailPage() {
               <p className="text-foreground-secondary mt-1">{project.description}</p>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <span className="text-sm text-foreground-muted">
               {tasks.length} tasks · {tasks.filter((t) => t.completed).length} completed
             </span>
+
+            {/* View Toggle */}
+            <div className="flex items-center bg-bg-secondary rounded-lg p-1">
+              <button
+                onClick={() => setViewMode("board")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
+                  viewMode === "board"
+                    ? "bg-bg-tertiary text-foreground font-medium"
+                    : "text-foreground-muted hover:text-foreground"
+                }`}
+                title="Board view"
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Board
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
+                  viewMode === "list"
+                    ? "bg-bg-tertiary text-foreground font-medium"
+                    : "text-foreground-muted hover:text-foreground"
+                }`}
+                title="List view"
+              >
+                <List className="h-4 w-4" />
+                List
+              </button>
+            </div>
+
+            {/* Add Task Button */}
+            {columns.length > 0 && (
+              <button
+                onClick={() => handleAddTask(columns[0].id)}
+                className="btn btn-primary flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add Task
+              </button>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Task Kanban Board */}
+      {/* Task Views */}
       <div className="flex-1 overflow-hidden">
         {columns.length === 0 ? (
           <div className="flex items-center justify-center h-64 text-foreground-muted">
             No columns configured for this project
           </div>
-        ) : (
+        ) : viewMode === "board" ? (
           <TaskKanbanBoard
             columns={columns}
             tasks={tasks}
@@ -205,6 +247,14 @@ export default function ProjectDetailPage() {
             onToggleTask={handleToggleTask}
             onEditTask={handleEditTask}
             onDeleteTask={handleDeleteTask}
+          />
+        ) : (
+          <TaskListView
+            tasks={tasks}
+            columns={columns}
+            taskLabels={taskLabels}
+            onTaskClick={handleEditTask}
+            onToggleTask={handleToggleTask}
           />
         )}
       </div>
@@ -226,6 +276,24 @@ export default function ProjectDetailPage() {
                 if (e.key === "Escape") setAddingTaskToColumn(null);
               }}
             />
+            <div className="mb-4">
+              <label className="block text-sm text-foreground-secondary mb-2">
+                Add to column
+              </label>
+              <select
+                value={addingTaskToColumn}
+                onChange={(e) => setAddingTaskToColumn(e.target.value)}
+                className="input w-full"
+              >
+                {columns
+                  .sort((a, b) => a.position - b.position)
+                  .map((col) => (
+                    <option key={col.id} value={col.id}>
+                      {col.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setAddingTaskToColumn(null)}

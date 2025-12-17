@@ -149,26 +149,43 @@ export function TaskKanbanBoard({
     async (event: DragEndEvent) => {
       setActiveTask(null);
 
-      const { active } = event;
+      const { active, over } = event;
+      if (!over) return;
+
       const activeId = active.id as string;
+      const overId = over.id as string;
+
+      // Find the task in current state (which has updated column_id from handleDragOver)
       const task = tasks.find((t) => t.id === activeId);
       if (!task) return;
 
-      // Recalculate positions and persist changes
-      const columnTasks = tasksByColumn[task.column_id || ""] || [];
-      const newPosition = columnTasks.findIndex((t) => t.id === task.id);
+      // Determine target column - either the column we're over, or the column of the task we're over
+      let targetColumnId = task.column_id;
+      const isOverColumn = columns.some((col) => col.id === overId);
+      if (isOverColumn) {
+        targetColumnId = overId;
+      } else {
+        const overTask = tasks.find((t) => t.id === overId);
+        if (overTask) {
+          targetColumnId = overTask.column_id;
+        }
+      }
+
+      // Calculate new position based on current tasks array order
+      const tasksInTargetColumn = tasks.filter((t) => t.column_id === targetColumnId);
+      const newPosition = tasksInTargetColumn.findIndex((t) => t.id === task.id);
 
       // Update in database
       try {
         await updateTask(task.id, {
-          column_id: task.column_id,
-          position: newPosition >= 0 ? newPosition : task.position,
+          column_id: targetColumnId,
+          position: newPosition >= 0 ? newPosition : 0,
         });
       } catch (error) {
         console.error("Failed to save task position:", error);
       }
     },
-    [tasks, tasksByColumn]
+    [tasks, columns]
   );
 
   // Sort columns by position
