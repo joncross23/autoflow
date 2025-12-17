@@ -45,6 +45,39 @@ export interface DbIdeaUpdate {
 }
 
 // Helper to convert DB row to app type
+// AI Evaluation types
+export interface AiEvaluation {
+  id: string;
+  idea_id: string;
+  complexity_score: number; // 1-5
+  complexity_rationale: string;
+  roi_score: number; // 1-5
+  roi_rationale: string;
+  time_saved_hours: number; // estimated hours saved per year
+  time_saved_rationale: string;
+  recommendations: string[];
+  risks: string[];
+  overall_priority: "low" | "medium" | "high" | "critical";
+  overall_summary: string;
+  created_at: string;
+}
+
+export interface DbAiEvaluation {
+  id: string;
+  idea_id: string;
+  complexity_score: number;
+  complexity_rationale: string;
+  roi_score: number;
+  roi_rationale: string;
+  time_saved_hours: number;
+  time_saved_rationale: string;
+  recommendations: string[];
+  risks: string[];
+  overall_priority: "low" | "medium" | "high" | "critical";
+  overall_summary: string;
+  created_at: string;
+}
+
 export function dbIdeaToIdea(db: DbIdea): {
   id: string;
   userId: string;

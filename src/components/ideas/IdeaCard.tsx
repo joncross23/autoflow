@@ -9,6 +9,7 @@ import type { DbIdea, IdeaStatus } from "@/types/database";
 
 interface IdeaCardProps {
   idea: DbIdea;
+  onClick?: (idea: DbIdea) => void;
   onEdit: (idea: DbIdea) => void;
   onDelete: (id: string) => void;
 }
@@ -30,12 +31,21 @@ const FREQUENCY_LABELS: Record<string, string> = {
   adhoc: "Ad-hoc",
 };
 
-export function IdeaCard({ idea, onEdit, onDelete }: IdeaCardProps) {
+export function IdeaCard({ idea, onClick, onEdit, onDelete }: IdeaCardProps) {
   const [showMenu, setShowMenu] = useState(false);
   const statusConfig = STATUS_CONFIG[idea.status];
 
+  const handleCardClick = () => {
+    if (onClick && !showMenu) {
+      onClick(idea);
+    }
+  };
+
   return (
-    <div className="card group relative">
+    <div
+      className={cn("card group relative", onClick && "cursor-pointer hover:border-primary/50")}
+      onClick={handleCardClick}
+    >
       {/* Status badge */}
       <div className="mb-3 flex items-center justify-between">
         <Badge variant={statusConfig.variant} size="sm">
@@ -45,7 +55,10 @@ export function IdeaCard({ idea, onEdit, onDelete }: IdeaCardProps) {
         {/* Actions menu */}
         <div className="relative">
           <button
-            onClick={() => setShowMenu(!showMenu)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowMenu(!showMenu);
+            }}
             className="p-1 rounded hover:bg-bg-hover opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <MoreHorizontal className="h-4 w-4 text-muted-foreground" />

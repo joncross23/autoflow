@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Plus, Lightbulb, Search, Filter, Loader2 } from "lucide-react";
 import { getIdeas, deleteIdea } from "@/lib/api/ideas";
 import { NoIdeasEmptyState } from "@/components/shared";
-import { IdeaCard } from "@/components/ideas/IdeaCard";
-import { IdeaForm } from "@/components/ideas/IdeaForm";
+import { IdeaCard, IdeaForm, IdeaDetailModal } from "@/components/ideas";
 import type { DbIdea, IdeaStatus } from "@/types/database";
 
 const STATUS_FILTERS: { value: IdeaStatus | "all"; label: string }[] = [
@@ -25,6 +24,7 @@ export default function IdeasPage() {
   const [editingIdea, setEditingIdea] = useState<DbIdea | null>(null);
   const [statusFilter, setStatusFilter] = useState<IdeaStatus | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewingIdea, setViewingIdea] = useState<DbIdea | null>(null);
 
   const loadIdeas = useCallback(async () => {
     try {
@@ -48,7 +48,12 @@ export default function IdeasPage() {
     setShowForm(true);
   };
 
+  const handleView = (idea: DbIdea) => {
+    setViewingIdea(idea);
+  };
+
   const handleEdit = (idea: DbIdea) => {
+    setViewingIdea(null);
     setEditingIdea(idea);
     setShowForm(true);
   };
@@ -61,6 +66,7 @@ export default function IdeasPage() {
     try {
       await deleteIdea(id);
       setIdeas((prev) => prev.filter((idea) => idea.id !== id));
+      setViewingIdea(null);
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to delete idea");
     }
@@ -168,11 +174,22 @@ export default function IdeasPage() {
             <IdeaCard
               key={idea.id}
               idea={idea}
+              onClick={handleView}
               onEdit={handleEdit}
               onDelete={handleDelete}
             />
           ))}
         </div>
+      )}
+
+      {/* Idea Detail Modal */}
+      {viewingIdea && (
+        <IdeaDetailModal
+          idea={viewingIdea}
+          onClose={() => setViewingIdea(null)}
+          onEdit={() => handleEdit(viewingIdea)}
+          onDelete={() => handleDelete(viewingIdea.id)}
+        />
       )}
 
       {/* Idea Form Modal */}
