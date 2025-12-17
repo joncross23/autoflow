@@ -4,14 +4,14 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2025-12-17
-> **Current Phase:** 6.5 — Task Kanban & Import (COMPLETE)
-> **Next Phase:** 7 — User Testing & Refinement
+> **Current Phase:** 7 — User Testing & Refinement (IN PROGRESS)
+> **Previous Phase:** 6.5 — Task Kanban & Import (COMPLETE)
 
 ---
 
-## Phase Status: PHASE 6.5 COMPLETE
+## Phase Status: PHASE 7 IN PROGRESS
 
-Phase 6.5 adds the **Project Task Kanban Board** — allowing users to drill into a project and view/manage tasks in custom columns. The backlog import script seeds the database with the AutoFlow development project (27 tasks across 5 columns with labels and checklists).
+Phase 7 focuses on **User Testing & Refinement**. The task detail modal has been added, allowing users to click tasks to view and edit details. Next steps include enhancing checklist editing and fixing drag-drop persistence.
 
 ---
 
@@ -362,6 +362,14 @@ grey: #64748B
 
 ## Session Log
 
+### 2025-12-17 — Phase 7 Task Detail Modal (In Progress)
+- Created TaskDetailModal component with title/description editing
+- Added checklist display with toggle functionality
+- Wired up onClick handlers through TaskCard → TaskColumn → TaskKanbanBoard
+- Added keyboard shortcuts (Esc to close, Cmd+S to save)
+- Display task labels in modal
+- TODO: Full checklist editing, task deletion from modal
+
 ### 2025-12-17 — Phase 6.5 Task Kanban & Import Complete
 - Created /dashboard/projects/[id] page for viewing project tasks
 - Built TaskKanbanBoard component with dynamic columns from database
@@ -490,19 +498,19 @@ grey: #64748B
 
 ### Phase 7 Priorities
 
-| Task | Priority | Description |
-|------|----------|-------------|
-| Task drag-drop persistence | High | Fix task reordering within/across columns |
-| Task editing modal | High | Full task edit form (title, description, labels) |
-| Checklist UI in task detail | High | View/toggle checklist items |
-| Dashboard recent activity | Medium | Show recent idea/project/task updates |
-| Mobile testing | Medium | Verify touch drag-drop, responsive layout |
-| Performance audit | Medium | Lazy loading, bundle size optimization |
-| Error state polish | Low | Better error messages, retry UX |
-| Keyboard shortcuts | Low | Navigation shortcuts (J/K, G+B, etc.) |
+| Task | Priority | Status | Description |
+|------|----------|--------|-------------|
+| Task detail modal | High | **Partial** | Basic view/edit done, needs checklist editing |
+| Checklist UI in task detail | High | **Partial** | Display/toggle done, needs add/remove items |
+| Task drag-drop persistence | High | Pending | Fix task reordering within/across columns |
+| Dashboard recent activity | Medium | Pending | Show recent idea/project/task updates |
+| Mobile testing | Medium | Pending | Verify touch drag-drop, responsive layout |
+| Performance audit | Medium | Pending | Lazy loading, bundle size optimization |
+| Error state polish | Low | Pending | Better error messages, retry UX |
+| Keyboard shortcuts | Low | Pending | Navigation shortcuts (J/K, G+B, etc.) |
 
 ### Quick Wins
-1. **Task detail modal** — Click task to view/edit details + checklists
+1. ~~**Task detail modal** — Click task to view/edit details + checklists~~ (Done)
 2. **Batch operations** — Multi-select tasks for bulk move/delete
 3. **Search across tasks** — Filter tasks by title/label within project
 
