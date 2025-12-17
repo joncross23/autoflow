@@ -2,7 +2,8 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Calendar, Clock, MoreHorizontal } from "lucide-react";
+import { GripVertical, Calendar, Clock, MoreHorizontal, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { DbProject, Priority } from "@/types/database";
 
@@ -72,6 +73,14 @@ export function ProjectCard({
         </div>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Link
+            href={`/dashboard/projects/${project.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="p-1 rounded hover:bg-bg-hover"
+            title="View board"
+          >
+            <ExternalLink className="h-4 w-4 text-muted-foreground" />
+          </Link>
           <button
             onClick={(e) => {
               e.stopPropagation();

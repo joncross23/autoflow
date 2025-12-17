@@ -245,6 +245,15 @@ export async function convertIdeaToProject(
 ): Promise<DbProject> {
   const supabase = createClient();
 
+  // Get current user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
   // Get max position for backlog
   const { data: maxPosData } = await supabase
     .from("projects")
@@ -260,6 +269,7 @@ export async function convertIdeaToProject(
   const { data, error } = await supabase
     .from("projects")
     .insert({
+      user_id: user.id, // FIX: Add user_id for RLS policy
       idea_id: idea.id,
       title: idea.title,
       description: idea.description,

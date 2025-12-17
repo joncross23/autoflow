@@ -125,23 +125,158 @@ export interface DbProjectUpdate {
 export interface DbTask {
   id: string;
   project_id: string;
+  column_id: string | null;
   title: string;
+  description: string | null;
   completed: boolean;
   position: number;
   created_at: string;
+  updated_at: string;
 }
 
 export interface DbTaskInsert {
   project_id: string;
+  column_id?: string | null;
   title: string;
+  description?: string | null;
   completed?: boolean;
   position?: number;
 }
 
 export interface DbTaskUpdate {
   title?: string;
+  description?: string | null;
+  column_id?: string | null;
   completed?: boolean;
   position?: number;
+  updated_at?: string;
+}
+
+// Column types (custom columns per project)
+export type ColumnColor = "slate" | "blue" | "green" | "orange" | "purple" | "red" | "yellow" | "pink";
+
+export interface DbColumn {
+  id: string;
+  project_id: string;
+  name: string;
+  position: number;
+  color: ColumnColor | null;
+  wip_limit: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbColumnInsert {
+  project_id: string;
+  name: string;
+  position: number;
+  color?: ColumnColor | null;
+  wip_limit?: number | null;
+}
+
+export interface DbColumnUpdate {
+  name?: string;
+  position?: number;
+  color?: ColumnColor | null;
+  wip_limit?: number | null;
+  updated_at?: string;
+}
+
+// Label types (color-coded tags)
+export type LabelColor =
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "purple"
+  | "pink"
+  | "slate"
+  | "emerald"
+  | "indigo";
+
+export interface DbLabel {
+  id: string;
+  user_id: string;
+  name: string;
+  color: LabelColor;
+  created_at: string;
+}
+
+export interface DbLabelInsert {
+  name: string;
+  color: LabelColor;
+}
+
+export interface DbLabelUpdate {
+  name?: string;
+  color?: LabelColor;
+}
+
+// Label junction tables
+export interface DbIdeaLabel {
+  idea_id: string;
+  label_id: string;
+  created_at: string;
+}
+
+export interface DbProjectLabel {
+  project_id: string;
+  label_id: string;
+  created_at: string;
+}
+
+export interface DbTaskLabel {
+  task_id: string;
+  label_id: string;
+  created_at: string;
+}
+
+// Checklist types
+export interface DbChecklist {
+  id: string;
+  task_id: string;
+  title: string;
+  position: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbChecklistInsert {
+  task_id: string;
+  title: string;
+  position: number;
+}
+
+export interface DbChecklistUpdate {
+  title?: string;
+  position?: number;
+  updated_at?: string;
+}
+
+// Checklist item types
+export interface DbChecklistItem {
+  id: string;
+  checklist_id: string;
+  title: string;
+  done: boolean;
+  position: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbChecklistItemInsert {
+  checklist_id: string;
+  title: string;
+  done?: boolean;
+  position: number;
+}
+
+export interface DbChecklistItemUpdate {
+  title?: string;
+  done?: boolean;
+  position?: number;
+  updated_at?: string;
 }
 
 export function dbIdeaToIdea(db: DbIdea): {
