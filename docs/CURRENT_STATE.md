@@ -4,14 +4,14 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2024-12-17
-> **Current Phase:** 2 — Authentication (COMPLETE)
-> **Next Phase:** 3 — Idea Capture
+> **Current Phase:** 3 — Idea Capture (COMPLETE)
+> **Next Phase:** 4 — AI Evaluation
 
 ---
 
-## Phase Status: PHASE 2 COMPLETE
+## Phase Status: PHASE 3 COMPLETE
 
-Phase 2 (Authentication) is **complete**. User authentication with Supabase is fully implemented including login, register, forgot password, protected routes, and user profile management. The project is ready for **Phase 3: Idea Capture**.
+Phase 3 (Idea Capture) is **complete**. Users can now create, view, edit, and delete automation ideas. The dashboard features a quick capture widget with keyboard shortcut (Cmd/Ctrl+K) and real-time stats. The project is ready for **Phase 4: AI Evaluation**.
 
 ---
 
@@ -76,6 +76,21 @@ Phase 2 (Authentication) is **complete**. User authentication with Supabase is f
 | Settings page profile | **Done** | User info display, change password |
 | Build verification | **Done** | Production build succeeds |
 
+### Phase 3 — Idea Capture (COMPLETE)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Create ideas database schema | **Done** | SQL migration with RLS policies |
+| Build idea API functions | **Done** | CRUD operations with Supabase |
+| Build IdeaCard component | **Done** | Card with status, actions menu |
+| Build IdeaForm component | **Done** | Full form with all idea fields |
+| Build ideas list page | **Done** | Search, filter, grid layout |
+| Add idea editing | **Done** | Edit via form modal |
+| Add idea deletion | **Done** | Delete with confirmation |
+| Build QuickCapture widget | **Done** | Dashboard widget, Cmd/Ctrl+K |
+| Update dashboard with stats | **Done** | Real-time idea counts, pipeline |
+| Build verification | **Done** | Production build succeeds |
+
 ---
 
 ## What's Now Available
@@ -93,7 +108,7 @@ npm run test   # Run tests with Vitest
 - `/register` — Create account page
 - `/forgot-password` — Password reset request
 - `/dashboard` — Main dashboard with stats (protected)
-- `/dashboard/ideas` — Ideas list placeholder (protected)
+- `/dashboard/ideas` — Ideas list with CRUD operations (protected)
 - `/dashboard/projects` — Projects/Kanban placeholder (protected)
 - `/settings` — Theme + account settings with profile (protected)
 
@@ -123,18 +138,18 @@ npm run test   # Run tests with Vitest
 
 ---
 
-## Next Phase: Idea Capture
+## Next Phase: AI Evaluation
 
-Phase 3 will implement the core idea capture functionality:
+Phase 4 will add AI-powered evaluation of automation ideas:
 
 | Task | Priority | Description |
 |------|----------|-------------|
-| Create ideas database table | High | Supabase table with RLS policies |
-| Build idea creation form | High | Quick capture with title and description |
-| Implement ideas list view | High | Display user's ideas with filtering |
-| Add idea editing | Medium | Update existing ideas |
-| Add idea deletion | Medium | Soft delete with confirmation |
-| Quick capture component | Medium | Dashboard widget with keyboard shortcut |
+| Set up Claude API client | High | Anthropic SDK integration |
+| Design evaluation prompt | High | Complexity, ROI, time saved analysis |
+| Build AI evaluation UI | High | Loading state, results display |
+| Store evaluations in database | Medium | Link to ideas with timestamps |
+| Add re-evaluate action | Medium | Allow re-running AI analysis |
+| Display AI insights on cards | Low | Summary badges on idea cards |
 
 ---
 
@@ -263,6 +278,19 @@ grey: #64748B
 
 ## Session Log
 
+### 2024-12-17 — Phase 3 Idea Capture Complete
+- Created ideas database schema with SQL migration
+- Implemented Row Level Security (RLS) policies
+- Built ideas API functions (CRUD operations)
+- Created IdeaCard component with status badges and actions menu
+- Created IdeaForm component with full idea fields
+- Built ideas list page with search and status filter
+- Added idea editing via modal form
+- Added idea deletion with confirmation
+- Built QuickCapture widget with Cmd/Ctrl+K shortcut
+- Updated dashboard with real-time idea counts and pipeline
+- Verified production build succeeds
+
 ### 2024-12-17 — Phase 2 Authentication Complete
 - Installed Supabase packages (@supabase/supabase-js, @supabase/ssr)
 - Created Supabase client utilities (browser, server, middleware)
@@ -320,4 +348,8 @@ grey: #64748B
 
 ## Next Action
 
-**Begin Phase 3: Idea Capture** — Create ideas database table and build capture UI.
+**Begin Phase 4: AI Evaluation** — Integrate Claude API for automated idea scoring and recommendations.
+
+**Note:** Before using the ideas feature, run the SQL migration in Supabase:
+- Copy contents of `supabase/migrations/001_create_ideas_table.sql`
+- Run in Supabase SQL Editor

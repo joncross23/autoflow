@@ -1,44 +1,188 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { Plus, Lightbulb, Search, Filter, Loader2 } from "lucide-react";
+import { getIdeas, deleteIdea } from "@/lib/api/ideas";
+import { NoIdeasEmptyState } from "@/components/shared";
+import { IdeaCard } from "@/components/ideas/IdeaCard";
+import { IdeaForm } from "@/components/ideas/IdeaForm";
+import type { DbIdea, IdeaStatus } from "@/types/database";
+
+const STATUS_FILTERS: { value: IdeaStatus | "all"; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "new", label: "New" },
+  { value: "evaluating", label: "Evaluating" },
+  { value: "prioritised", label: "Prioritised" },
+  { value: "converting", label: "Converting" },
+  { value: "archived", label: "Archived" },
+];
+
 export default function IdeasPage() {
+  const [ideas, setIdeas] = useState<DbIdea[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingIdea, setEditingIdea] = useState<DbIdea | null>(null);
+  const [statusFilter, setStatusFilter] = useState<IdeaStatus | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const loadIdeas = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getIdeas(statusFilter === "all" ? undefined : statusFilter);
+      setIdeas(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load ideas");
+    } finally {
+      setLoading(false);
+    }
+  }, [statusFilter]);
+
+  useEffect(() => {
+    loadIdeas();
+  }, [loadIdeas]);
+
+  const handleCreateNew = () => {
+    setEditingIdea(null);
+    setShowForm(true);
+  };
+
+  const handleEdit = (idea: DbIdea) => {
+    setEditingIdea(idea);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this idea?")) {
+      return;
+    }
+
+    try {
+      await deleteIdea(id);
+      setIdeas((prev) => prev.filter((idea) => idea.id !== id));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete idea");
+    }
+  };
+
+  const handleFormClose = () => {
+    setShowForm(false);
+    setEditingIdea(null);
+  };
+
+  const handleFormSuccess = () => {
+    handleFormClose();
+    loadIdeas();
+  };
+
+  // Filter ideas by search query
+  const filteredIdeas = ideas.filter((idea) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      idea.title.toLowerCase().includes(query) ||
+      idea.description?.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="p-6">
-      <header className="mb-8 flex items-center justify-between">
+      <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Ideas</h1>
-          <p className="text-foreground-secondary">
+          <p className="text-muted-foreground">
             Capture and evaluate automation ideas
           </p>
         </div>
-        <button className="btn btn-primary" disabled>
-          + New Idea
+        <button className="btn btn-primary" onClick={handleCreateNew}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Idea
         </button>
       </header>
 
-      {/* Empty state */}
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="mb-4 rounded-full bg-primary-muted p-4">
-          <svg
-            className="h-8 w-8 text-primary"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-            />
-          </svg>
+      {/* Filters */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+        {/* Search */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search ideas..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input w-full pl-10"
+          />
         </div>
-        <h2 className="mb-2 text-lg font-semibold">No ideas yet</h2>
-        <p className="mb-4 max-w-sm text-foreground-muted">
-          Start capturing automation ideas. They&apos;ll appear here for evaluation
-          and prioritisation.
-        </p>
-        <p className="text-sm text-foreground-muted">
-          Ideas capture coming in Phase 3
-        </p>
+
+        {/* Status filter */}
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as IdeaStatus | "all")}
+            className="input"
+          >
+            {STATUS_FILTERS.map((filter) => (
+              <option key={filter.value} value={filter.value}>
+                {filter.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      {/* Content */}
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      ) : error ? (
+        <div className="card bg-error/10 border-error/20 text-center py-8">
+          <p className="text-error">{error}</p>
+          <button
+            className="btn btn-outline mt-4"
+            onClick={loadIdeas}
+          >
+            Try again
+          </button>
+        </div>
+      ) : filteredIdeas.length === 0 ? (
+        ideas.length === 0 ? (
+          <NoIdeasEmptyState
+            action={
+              <button className="btn btn-primary" onClick={handleCreateNew}>
+                <Lightbulb className="h-4 w-4 mr-2" />
+                Capture your first idea
+              </button>
+            }
+          />
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">No ideas match your search</p>
+          </div>
+        )
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredIdeas.map((idea) => (
+            <IdeaCard
+              key={idea.id}
+              idea={idea}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Idea Form Modal */}
+      {showForm && (
+        <IdeaForm
+          idea={editingIdea}
+          onClose={handleFormClose}
+          onSuccess={handleFormSuccess}
+        />
+      )}
     </div>
   );
 }

@@ -1,7 +1,35 @@
-import { Lightbulb, TrendingUp, CheckCircle, Clock } from "lucide-react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Lightbulb, TrendingUp, CheckCircle, Clock, Loader2 } from "lucide-react";
 import { StatCard, StatGrid, Progress } from "@/components/shared";
+import { QuickCapture } from "@/components/ideas";
+import { getIdeaCounts } from "@/lib/api/ideas";
+import type { IdeaStatus } from "@/types/database";
 
 export default function DashboardPage() {
+  const [ideaCounts, setIdeaCounts] = useState<Record<IdeaStatus, number> | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadStats = async () => {
+    try {
+      const counts = await getIdeaCounts();
+      setIdeaCounts(counts);
+    } catch (err) {
+      console.error("Failed to load idea counts:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const totalIdeas = ideaCounts
+    ? Object.values(ideaCounts).reduce((sum, count) => sum + count, 0)
+    : 0;
+
   return (
     <div className="p-6">
       <header className="mb-8">
@@ -13,47 +41,30 @@ export default function DashboardPage() {
 
       {/* Quick Capture */}
       <div className="mb-8">
-        <div className="card">
-          <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <Lightbulb className="h-4 w-4" />
-            <span className="text-sm font-medium">Quick Capture</span>
-            <span className="badge badge-primary text-[10px]">Cmd/Ctrl+K</span>
-          </div>
-          <input
-            type="text"
-            placeholder="Type an automation idea and press Enter..."
-            className="input w-full"
-            disabled
-          />
-          <p className="mt-2 text-xs text-muted-foreground">
-            Quick capture coming in Phase 3
-          </p>
-        </div>
+        <QuickCapture onSuccess={loadStats} />
       </div>
 
       {/* Stats */}
       <StatGrid columns={4} className="mb-8">
         <StatCard
           label="Total Ideas"
-          value="0"
+          value={loading ? "-" : totalIdeas.toString()}
           icon={Lightbulb}
-          change={{ value: 0, label: "this week" }}
         />
         <StatCard
-          label="In Progress"
-          value="0"
+          label="Evaluating"
+          value={loading ? "-" : (ideaCounts?.evaluating || 0).toString()}
           icon={TrendingUp}
         />
         <StatCard
-          label="Completed"
-          value="0"
+          label="Prioritised"
+          value={loading ? "-" : (ideaCounts?.prioritised || 0).toString()}
           icon={CheckCircle}
         />
         <StatCard
-          label="Hours Saved"
-          value="0"
+          label="Converting"
+          value={loading ? "-" : (ideaCounts?.converting || 0).toString()}
           icon={Clock}
-          change={{ value: 0, label: "this month" }}
         />
       </StatGrid>
 
@@ -62,15 +73,43 @@ export default function DashboardPage() {
         {/* Ideas Pipeline */}
         <div className="card">
           <h2 className="mb-4 font-semibold">Ideas Pipeline</h2>
-          <div className="space-y-4">
-            <PipelineItem label="New" count={0} total={0} color="blue" />
-            <PipelineItem label="Evaluating" count={0} total={0} color="orange" />
-            <PipelineItem label="Prioritised" count={0} total={0} color="purple" />
-            <PipelineItem label="Converting" count={0} total={0} color="emerald" />
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Start capturing ideas to see your pipeline here.
-          </p>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <PipelineItem
+                label="New"
+                count={ideaCounts?.new || 0}
+                total={totalIdeas}
+                color="blue"
+              />
+              <PipelineItem
+                label="Evaluating"
+                count={ideaCounts?.evaluating || 0}
+                total={totalIdeas}
+                color="orange"
+              />
+              <PipelineItem
+                label="Prioritised"
+                count={ideaCounts?.prioritised || 0}
+                total={totalIdeas}
+                color="purple"
+              />
+              <PipelineItem
+                label="Converting"
+                count={ideaCounts?.converting || 0}
+                total={totalIdeas}
+                color="emerald"
+              />
+            </div>
+          )}
+          {!loading && totalIdeas === 0 && (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Start capturing ideas to see your pipeline here.
+            </p>
+          )}
         </div>
 
         {/* Recent Activity */}
@@ -78,14 +117,19 @@ export default function DashboardPage() {
           <h2 className="mb-4 font-semibold">Recent Activity</h2>
           <div className="space-y-3">
             <ActivityItem
-              action="Project created"
-              detail="AutoFlow Development"
-              time="Just now"
+              action="Phase completed"
+              detail="Phase 2: Authentication"
+              time="Today"
             />
             <ActivityItem
               action="Phase completed"
-              detail="Phase 0: Foundation"
+              detail="Phase 1: Theme Implementation"
               time="Today"
+            />
+            <ActivityItem
+              action="Project created"
+              detail="AutoFlow Development"
+              time="Earlier"
             />
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
@@ -98,11 +142,11 @@ export default function DashboardPage() {
       <div className="mt-8 card">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-semibold">Development Progress</h3>
-          <span className="text-sm text-muted-foreground">Phase 1 of 8</span>
+          <span className="text-sm text-muted-foreground">Phase 3 of 8</span>
         </div>
-        <Progress value={1} max={8} size="md" />
+        <Progress value={3} max={8} size="md" />
         <p className="mt-2 text-sm text-muted-foreground">
-          Currently in <span className="text-primary font-medium">Phase 1: Theme Implementation</span>
+          Currently in <span className="text-primary font-medium">Phase 3: Idea Capture</span>
         </p>
       </div>
     </div>

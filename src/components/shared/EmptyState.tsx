@@ -34,11 +34,12 @@ export function EmptyState({
 }
 
 /** Preset empty states for common scenarios */
-export function NoIdeasEmptyState() {
+export function NoIdeasEmptyState({ action }: { action?: ReactNode } = {}) {
   return (
     <EmptyState
       title="No ideas yet"
       description="Start capturing automation ideas. They'll appear here for evaluation and prioritisation."
+      action={action}
     />
   );
 }
