@@ -4,14 +4,14 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2024-12-17
-> **Current Phase:** 1 — Theme Implementation (COMPLETE)
-> **Next Phase:** 2 — Authentication
+> **Current Phase:** 2 — Authentication (COMPLETE)
+> **Next Phase:** 3 — Idea Capture
 
 ---
 
-## Phase Status: PHASE 1 COMPLETE
+## Phase Status: PHASE 2 COMPLETE
 
-Phase 1 (Theme Implementation) is **complete**. The full design system has been ported from the prototype mockups and a comprehensive component library is now available. The project is ready for **Phase 2: Authentication**.
+Phase 2 (Authentication) is **complete**. User authentication with Supabase is fully implemented including login, register, forgot password, protected routes, and user profile management. The project is ready for **Phase 3: Idea Capture**.
 
 ---
 
@@ -61,6 +61,21 @@ Phase 1 (Theme Implementation) is **complete**. The full design system has been 
 | Update dashboard | **Done** | Using new components with real UI structure |
 | Build verification | **Done** | Production build succeeds |
 
+### Phase 2 — Authentication (COMPLETE)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Install Supabase packages | **Done** | @supabase/supabase-js, @supabase/ssr |
+| Create Supabase clients | **Done** | Browser, server, and middleware clients |
+| Build login page | **Done** | Email/password auth with redirect support |
+| Build register page | **Done** | Full name, email, password with confirmation |
+| Build forgot password | **Done** | Password reset email flow |
+| Auth callback route | **Done** | OAuth and email confirmation handler |
+| Protected routes middleware | **Done** | Dashboard/settings require auth |
+| useUser hook | **Done** | Session state with signOut function |
+| Settings page profile | **Done** | User info display, change password |
+| Build verification | **Done** | Production build succeeds |
+
 ---
 
 ## What's Now Available
@@ -74,10 +89,13 @@ npm run test   # Run tests with Vitest
 
 ### Pages
 - `/` — Landing page with feature cards
-- `/dashboard` — Main dashboard with stats placeholders
-- `/dashboard/ideas` — Ideas list placeholder
-- `/dashboard/projects` — Projects/Kanban placeholder
-- `/settings` — Working theme settings (mode + accent colour)
+- `/login` — Sign in page (email/password)
+- `/register` — Create account page
+- `/forgot-password` — Password reset request
+- `/dashboard` — Main dashboard with stats (protected)
+- `/dashboard/ideas` — Ideas list placeholder (protected)
+- `/dashboard/projects` — Projects/Kanban placeholder (protected)
+- `/settings` — Theme + account settings with profile (protected)
 
 ### Components
 - `ThemeProvider` — Context provider for theme state
@@ -105,18 +123,18 @@ npm run test   # Run tests with Vitest
 
 ---
 
-## Next Phase: Authentication
+## Next Phase: Idea Capture
 
-Phase 2 will implement user authentication with Supabase:
+Phase 3 will implement the core idea capture functionality:
 
 | Task | Priority | Description |
 |------|----------|-------------|
-| Set up Supabase client | High | Configure auth client and middleware |
-| Create auth pages | High | Login, register, forgot password |
-| Implement protected routes | High | Middleware for dashboard routes |
-| User profile management | Medium | View/edit profile settings |
-| Session handling | Medium | Refresh tokens, logout |
-| Social auth (optional) | Low | Google, GitHub providers |
+| Create ideas database table | High | Supabase table with RLS policies |
+| Build idea creation form | High | Quick capture with title and description |
+| Implement ideas list view | High | Display user's ideas with filtering |
+| Add idea editing | Medium | Update existing ideas |
+| Add idea deletion | Medium | Soft delete with confirmation |
+| Quick capture component | Medium | Dashboard widget with keyboard shortcut |
 
 ---
 
@@ -132,6 +150,8 @@ Phase 2 will implement user authentication with Supabase:
 | 2024-12-16 | CSS custom properties | Easy theme switching, runtime updates |
 | 2024-12-17 | System theme option | Respect user OS preferences |
 | 2024-12-17 | shadcn/ui + custom styles | Best of both: component library + custom design |
+| 2024-12-17 | Supabase SSR pattern | Separate clients for browser, server, middleware |
+| 2024-12-17 | Protected routes via middleware | Centralized auth check, clean redirects |
 
 ---
 
@@ -212,6 +232,15 @@ grey: #64748B
 | `src/components/shared/Progress.tsx` | Progress and CircularProgress |
 | `src/components/shared/Skeleton.tsx` | Loading skeleton components |
 | `src/components/shared/index.ts` | Component library exports |
+| `src/lib/supabase/client.ts` | Browser Supabase client |
+| `src/lib/supabase/server.ts` | Server Supabase client |
+| `src/lib/supabase/middleware.ts` | Middleware Supabase client |
+| `src/middleware.ts` | Route protection middleware |
+| `src/hooks/useUser.ts` | User session hook |
+| `src/app/(auth)/login/page.tsx` | Login page |
+| `src/app/(auth)/register/page.tsx` | Registration page |
+| `src/app/(auth)/forgot-password/page.tsx` | Password reset page |
+| `src/app/auth/callback/route.ts` | Auth callback handler |
 
 ### Design Mockups
 | File | Description |
@@ -233,6 +262,19 @@ grey: #64748B
 ---
 
 ## Session Log
+
+### 2024-12-17 — Phase 2 Authentication Complete
+- Installed Supabase packages (@supabase/supabase-js, @supabase/ssr)
+- Created Supabase client utilities (browser, server, middleware)
+- Built auth pages:
+  - Login: email/password with redirect support
+  - Register: full name, email, password confirmation, email verification
+  - Forgot password: reset email flow
+- Created auth callback route for OAuth/email confirmation
+- Implemented protected routes middleware (dashboard, settings)
+- Built useUser hook for session state management
+- Updated settings page with user profile and change password
+- Verified production build succeeds
 
 ### 2024-12-17 — Phase 1 Theme Implementation Complete
 - Enhanced globals.css with complete design tokens from theme-engine.js
@@ -278,4 +320,4 @@ grey: #64748B
 
 ## Next Action
 
-**Begin Phase 2: Authentication** — Set up Supabase client and implement user authentication.
+**Begin Phase 3: Idea Capture** — Create ideas database table and build capture UI.

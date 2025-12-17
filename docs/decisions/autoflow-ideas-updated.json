@@ -1,0 +1,725 @@
+{
+  "ideas": [
+    {
+      "id": "IDEA-001",
+      "title": "Keyboard shortcuts reference panel",
+      "description": "Full list of keyboard shortcuts for power users (J/K navigation, G+B for boards, etc.) accessible via ? key.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "ux",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 4,
+        "businessValue": 6,
+        "suggestedSolutions": ["Overlay modal with shortcut list", "Command palette integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-002",
+      "title": "Activity digest emails",
+      "description": "Weekly email summary of project progress, completed tasks, upcoming due dates.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "notifications",
+      "priority": "P2",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 7,
+        "suggestedSolutions": ["Resend for transactional email", "Supabase Edge Functions for scheduling"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-003",
+      "title": "Public read-only board sharing",
+      "description": "Share project progress with external stakeholders without requiring login.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "sharing",
+      "priority": "P2",
+      "targetPhase": 7,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 7,
+        "suggestedSolutions": ["Unique shareable URLs", "Row-level security in Supabase"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-004",
+      "title": "Board duplication",
+      "description": "Copy entire board as template including columns, labels, and optionally cards.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 6,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-005",
+      "title": "Card dependencies (blocked by)",
+      "description": "Mark cards as blocked by other cards. Visual indicator and filter for blocked items.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "targetPhase": 5,
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 7,
+        "suggestedSolutions": ["Link cards with dependency type", "Gantt view integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-006",
+      "title": "Time tracking on cards",
+      "description": "Track actual vs estimated hours per task. Start/stop timer or manual entry.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "targetPhase": 5,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 8,
+        "suggestedSolutions": ["Timer component", "Time log entries", "Reporting integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-007",
+      "title": "Recurring cards",
+      "description": "Automatically create cards on schedule (daily/weekly/monthly) for repeated tasks.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "automation",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 7,
+        "suggestedSolutions": ["Supabase cron jobs", "Card templates with schedule"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-008",
+      "title": "Board-level permissions",
+      "description": "Different access levels per board even for same user. Some boards read-only, others editable.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "permissions",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-009",
+      "title": "API webhooks for integrations",
+      "description": "Webhook endpoints for n8n/Zapier integration. Trigger on card events, form submissions.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "integration",
+      "priority": "P2",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 8,
+        "suggestedSolutions": ["Supabase webhooks", "Custom API endpoints"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-010",
+      "title": "Mobile push notifications",
+      "description": "Push notifications for due dates, mentions, and important updates when using PWA.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "notifications",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 14,
+        "businessValue": 7,
+        "suggestedSolutions": ["Web Push API", "Service worker integration"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-011",
+      "title": "AI conversation interface",
+      "description": "Chat with AI about ideas: 'Help me break this down', 'What am I missing?', brainstorming mode.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "ai",
+      "priority": "P1",
+      "targetPhase": 4,
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 20,
+        "businessValue": 9,
+        "suggestedSolutions": ["Claude API with streaming", "Chat UI component", "Context-aware prompts"]
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-012",
+      "title": "Card aging visual indicator",
+      "description": "Cards that haven't been touched get progressively faded/marked to identify stale items.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "ux",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 3,
+        "businessValue": 5
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-013",
+      "title": "Calendar view for cards",
+      "description": "View cards by due date in calendar format. Drag to reschedule.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "view",
+      "priority": "P3",
+      "targetPhase": 8,
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-014",
+      "title": "Timeline/Gantt view",
+      "description": "Visualise cards with start and end dates on a timeline. See dependencies and overlaps.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "view",
+      "priority": "P3",
+      "targetPhase": 8,
+      "aiEvaluation": {
+        "complexity": "very-high",
+        "estimatedHours": 24,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-015",
+      "title": "Saved filter views",
+      "description": "Save frequently used filter combinations as named views. Quick switch between views.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "ux",
+      "priority": "P2",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-016",
+      "title": "Card templates",
+      "description": "Save cards as templates for quick creation of similar items. Template library per board.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 8,
+        "businessValue": 6
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-017",
+      "title": "Board templates gallery",
+      "description": "Pre-configured board setups for common use cases: Sprint planning, Content calendar, etc.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 7
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-018",
+      "title": "Post-implementation ROI tracking",
+      "description": "After completing automation project, track actual vs projected ROI. 'Was it worth it?' retrospectives.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "analytics",
+      "priority": "P1",
+      "targetPhase": 7,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 9
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-019",
+      "title": "Gamification elements",
+      "description": "Points for ideas captured, badges for projects completed, optional team leaderboards.",
+      "source": "development-planning",
+      "status": "captured",
+      "category": "engagement",
+      "priority": "P3",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 14,
+        "businessValue": 5
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-020",
+      "title": "Automation rules engine",
+      "description": "When X happens, do Y. e.g., 'When card moved to Done, notify team'. Built-in automation.",
+      "source": "trello-feature-audit",
+      "status": "captured",
+      "category": "automation",
+      "priority": "P3",
+      "targetPhase": "8+",
+      "aiEvaluation": {
+        "complexity": "very-high",
+        "estimatedHours": 40,
+        "businessValue": 8
+      },
+      "createdAt": "2024-12-16T00:00:00Z"
+    },
+    {
+      "id": "IDEA-021",
+      "title": "Insights system",
+      "description": "Attach supporting evidence to ideas: customer quotes, research notes, support tickets, external links. Insights have impact ratings and can boost AI scoring.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P1",
+      "targetPhase": 3,
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 16,
+        "businessValue": 9,
+        "suggestedSolutions": [
+          "Insights panel in idea detail modal",
+          "Impact rating (High/Medium/Low) affects scoring",
+          "Customer segment tagging",
+          "Questionnaire responses auto-create insights"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-022",
+      "title": "Matrix view (Impact vs Effort)",
+      "description": "X-Y scatter plot view for prioritisation discussions. Configurable axes, circle size by value. Quadrants: Quick Wins, Big Bets, Fill-ins, Avoid.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "view",
+      "priority": "P1",
+      "targetPhase": 7,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 9,
+        "suggestedSolutions": [
+          "D3.js or Recharts scatter plot",
+          "Draggable items to re-score",
+          "Quadrant labels",
+          "Filter by labels/status"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-023",
+      "title": "Stakeholder portal (published read-only views)",
+      "description": "Generate unique URLs for stakeholders to view ideas, roadmaps, progress without accounts. Configurable field visibility, optional password protection.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "sharing",
+      "priority": "P1",
+      "targetPhase": 7,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 14,
+        "businessValue": 8,
+        "suggestedSolutions": [
+          "UUID-based public URLs",
+          "Row-level security in Supabase",
+          "View configuration (show/hide fields)",
+          "Export to PDF/image"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-024",
+      "title": "RICE scoring framework",
+      "description": "Manual scoring using Reach, Impact, Confidence, Effort. Formula: (R × I × C) / E. Can be combined with AI scoring for hybrid approach.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P1",
+      "targetPhase": 4,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 8,
+        "suggestedSolutions": [
+          "Slider inputs for each dimension",
+          "Auto-calculate RICE score",
+          "Toggle between AI / RICE / Combined",
+          "Visual comparison chart"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-025",
+      "title": "Idea voting",
+      "description": "Allow team members to vote on ideas. Upvote/downvote or point allocation. Voting counts displayed and used in prioritisation.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P1",
+      "targetPhase": 3,
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 6,
+        "businessValue": 7,
+        "suggestedSolutions": [
+          "Simple upvote button",
+          "Vote count on idea cards",
+          "Sort by votes in list view",
+          "Optional: $10 game allocation"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-026",
+      "title": "Now/Next/Later roadmap view",
+      "description": "Time-agnostic roadmap showing commitment levels rather than dates. Drag ideas between Now (in progress), Next (committed), Later (backlog).",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "view",
+      "priority": "P1",
+      "targetPhase": 7,
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 6,
+        "businessValue": 8,
+        "suggestedSolutions": [
+          "Three-column board view",
+          "Dashboard widget showing roadmap",
+          "Publishable to stakeholders",
+          "Drag-drop to change commitment"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-027",
+      "title": "Contributor role",
+      "description": "New user role between Viewer and Editor. Contributors can add insights, vote, comment, but cannot edit core fields or create new ideas.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "permissions",
+      "priority": "P1",
+      "targetPhase": 2,
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 4,
+        "businessValue": 7,
+        "suggestedSolutions": [
+          "New role in Supabase RLS",
+          "Permission checks in UI",
+          "Invite link for contributors"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-028",
+      "title": "Formula fields (custom scoring)",
+      "description": "User-defined formula fields for custom scoring. E.g., {impact} × {confidence} / {effort}. Supports basic arithmetic on numeric fields.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "targetPhase": 5,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 7,
+        "suggestedSolutions": [
+          "Formula builder UI",
+          "Field picker dropdown",
+          "Auto-recalculate on change",
+          "Display in list/matrix views"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-029",
+      "title": "Goals/OKR linking",
+      "description": "Connect ideas and projects to company goals or OKRs. Filter views by goal. Track goal progress through linked items.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "targetPhase": 8,
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "businessValue": 8,
+        "suggestedSolutions": [
+          "Goals entity in database",
+          "Many-to-many linking",
+          "Goal progress dashboard",
+          "Filter ideas by goal"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-030",
+      "title": "Insight impact ratings",
+      "description": "Rate insights as High/Medium/Low impact. Higher-rated insights boost idea AI scores more. Aggregate insight value per idea.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "targetPhase": 3,
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 4,
+        "businessValue": 7,
+        "suggestedSolutions": [
+          "Impact rating dropdown",
+          "Score multiplier logic",
+          "Total insight score on idea card"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-031",
+      "title": "Customer tagging on ideas",
+      "description": "Tag specific customers/companies to ideas. Segment customers (Enterprise/SMB/Startup). Score ideas by customer segment value.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P2",
+      "targetPhase": "v2",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 10,
+        "businessValue": 7,
+        "suggestedSolutions": [
+          "Customer entity in database",
+          "Tagging UI on ideas",
+          "Segment-weighted scoring",
+          "Customer request count field"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-032",
+      "title": "Slack integration for insights",
+      "description": "Capture messages from Slack as insights. Link Slack conversations to ideas. #product-feedback channel monitoring.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "integration",
+      "priority": "P2",
+      "targetPhase": "v2",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 14,
+        "businessValue": 6,
+        "suggestedSolutions": [
+          "Slack bot/app",
+          "Message action to create insight",
+          "Webhook for channel monitoring"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-033",
+      "title": "Embeddable views (iframe)",
+      "description": "Embed AutoFlow views in other tools via iframe. Read-only, branded, auto-updating.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "integration",
+      "priority": "P3",
+      "targetPhase": "v2",
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 6,
+        "businessValue": 6,
+        "suggestedSolutions": [
+          "Embed code generator",
+          "X-Frame-Options config",
+          "Responsive sizing"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-034",
+      "title": "Browser extension for capturing insights",
+      "description": "Chrome extension to capture text, screenshots, URLs from any webpage and send to AutoFlow as insights attached to ideas.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P3",
+      "targetPhase": "v2+",
+      "aiEvaluation": {
+        "complexity": "high",
+        "estimatedHours": 20,
+        "businessValue": 5,
+        "suggestedSolutions": [
+          "Chrome extension with popup",
+          "Right-click context menu",
+          "Screenshot capture",
+          "Idea picker dropdown"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-035",
+      "title": "$10 voting game",
+      "description": "Gamified prioritisation: each user gets $10 to allocate across ideas. Forces trade-off thinking. Results inform priority.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "feature",
+      "priority": "P3",
+      "targetPhase": "v2",
+      "aiEvaluation": {
+        "complexity": "low",
+        "estimatedHours": 8,
+        "businessValue": 5,
+        "suggestedSolutions": [
+          "Allocation UI per user",
+          "Session-based voting rounds",
+          "Aggregate results view"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    },
+    {
+      "id": "IDEA-036",
+      "title": "Delivery progress tracking (external links)",
+      "description": "Link ideas to external delivery tickets (Jira, Linear, Asana). Show progress status from linked items.",
+      "source": "jpd-analysis",
+      "status": "captured",
+      "category": "integration",
+      "priority": "P3",
+      "targetPhase": "v2+",
+      "aiEvaluation": {
+        "complexity": "medium",
+        "estimatedHours": 16,
+        "businessValue": 6,
+        "suggestedSolutions": [
+          "OAuth integrations",
+          "Webhook status sync",
+          "Progress bar on ideas"
+        ]
+      },
+      "jpdInspired": true,
+      "createdAt": "2024-12-17T00:00:00Z"
+    }
+  ],
+  
+  "metadata": {
+    "lastUpdated": "2024-12-17T00:00:00Z",
+    "totalIdeas": 36,
+    "analysisSource": "JPD Feature Comparison - December 2024",
+    "byStatus": {
+      "captured": 36,
+      "evaluating": 0,
+      "prioritised": 0,
+      "converting": 0,
+      "archived": 0
+    },
+    "byPriority": {
+      "P1": 8,
+      "P2": 10,
+      "P3": 18
+    },
+    "byCategory": {
+      "feature": 11,
+      "view": 4,
+      "ux": 3,
+      "ai": 1,
+      "notifications": 2,
+      "automation": 2,
+      "integration": 4,
+      "analytics": 1,
+      "sharing": 2,
+      "permissions": 2,
+      "engagement": 1
+    },
+    "bySource": {
+      "development-planning": 11,
+      "trello-feature-audit": 9,
+      "jpd-analysis": 16
+    }
+  },
+  
+  "priorityGuide": {
+    "P1": "High priority - Include in v1 MVP phases",
+    "P2": "Medium priority - Include in v1 but can be deferred",
+    "P3": "Lower priority - Consider for v2+"
+  }
+}
