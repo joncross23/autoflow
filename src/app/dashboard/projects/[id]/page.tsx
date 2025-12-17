@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Loader2, Settings } from "lucide-react";
 import Link from "next/link";
-import { TaskKanbanBoard } from "@/components/projects";
+import { TaskKanbanBoard, TaskDetailModal } from "@/components/projects";
 import { getProject } from "@/lib/api/projects";
 import { getProjectColumns } from "@/lib/api/columns";
 import { getTasksForProject, createTask, updateTask, toggleTask, deleteTask } from "@/lib/api/tasks";
@@ -24,6 +24,7 @@ export default function ProjectDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [addingTaskToColumn, setAddingTaskToColumn] = useState<string | null>(null);
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
 
   const loadProjectData = useCallback(async () => {
     try {
@@ -106,8 +107,23 @@ export default function ProjectDetailPage() {
   };
 
   const handleEditTask = (task: DbTask) => {
-    // For now, just log - could open a modal
-    console.log("Edit task:", task);
+    setSelectedTask(task);
+  };
+
+  const handleTaskSave = (updated: DbTask) => {
+    setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+    setSelectedTask(null);
+  };
+
+  const handleTaskDeleteFromModal = async (task: DbTask) => {
+    if (!confirm(`Delete "${task.title}"?`)) return;
+    try {
+      await deleteTask(task.id);
+      setTasks((prev) => prev.filter((t) => t.id !== task.id));
+      setSelectedTask(null);
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+    }
   };
 
   const handleDeleteTask = async (task: DbTask) => {
@@ -185,6 +201,7 @@ export default function ProjectDetailPage() {
             taskLabels={taskLabels}
             onTasksChange={handleTasksChange}
             onAddTask={handleAddTask}
+            onTaskClick={handleEditTask}
             onToggleTask={handleToggleTask}
             onEditTask={handleEditTask}
             onDeleteTask={handleDeleteTask}
@@ -226,6 +243,16 @@ export default function ProjectDetailPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Task detail modal */}
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          onSave={handleTaskSave}
+          onDelete={handleTaskDeleteFromModal}
+        />
       )}
     </div>
   );

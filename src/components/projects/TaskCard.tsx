@@ -9,6 +9,7 @@ import type { DbTask, DbLabel } from "@/types/database";
 interface TaskCardProps {
   task: DbTask;
   labels?: DbLabel[];
+  onClick?: (task: DbTask) => void;
   onToggle?: (task: DbTask) => void;
   onEdit?: (task: DbTask) => void;
   onDelete?: (task: DbTask) => void;
@@ -18,6 +19,7 @@ interface TaskCardProps {
 export function TaskCard({
   task,
   labels = [],
+  onClick,
   onToggle,
   onEdit,
   onDelete,
@@ -96,8 +98,11 @@ export function TaskCard({
           )}
         </button>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
+        {/* Content - clickable to open detail */}
+        <div
+          className="flex-1 min-w-0 cursor-pointer"
+          onClick={() => onClick?.(task)}
+        >
           <p className={`text-sm ${task.completed ? "line-through text-foreground-muted" : ""}`}>
             {task.title}
           </p>

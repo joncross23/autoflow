@@ -25,6 +25,7 @@ interface TaskKanbanBoardProps {
   taskLabels?: Record<string, DbLabel[]>;
   onTasksChange: (tasks: DbTask[]) => void;
   onAddTask?: (columnId: string) => void;
+  onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
   onDeleteTask?: (task: DbTask) => void;
@@ -36,6 +37,7 @@ export function TaskKanbanBoard({
   taskLabels = {},
   onTasksChange,
   onAddTask,
+  onTaskClick,
   onToggleTask,
   onEditTask,
   onDeleteTask,
@@ -191,6 +193,7 @@ export function TaskKanbanBoard({
             tasks={tasksByColumn[column.id] || []}
             taskLabels={taskLabels}
             onAddTask={onAddTask}
+            onTaskClick={onTaskClick}
             onToggleTask={onToggleTask}
             onEditTask={onEditTask}
             onDeleteTask={onDeleteTask}

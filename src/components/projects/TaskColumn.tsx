@@ -11,6 +11,7 @@ interface TaskColumnProps {
   tasks: DbTask[];
   taskLabels?: Record<string, DbLabel[]>;
   onAddTask?: (columnId: string) => void;
+  onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
   onDeleteTask?: (task: DbTask) => void;
@@ -32,6 +33,7 @@ export function TaskColumn({
   tasks,
   taskLabels = {},
   onAddTask,
+  onTaskClick,
   onToggleTask,
   onEditTask,
   onDeleteTask,
@@ -80,6 +82,7 @@ export function TaskColumn({
               key={task.id}
               task={task}
               labels={taskLabels[task.id] || []}
+              onClick={onTaskClick}
               onToggle={onToggleTask}
               onEdit={onEditTask}
               onDelete={onDeleteTask}
