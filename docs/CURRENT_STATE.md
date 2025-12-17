@@ -4,14 +4,14 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2024-12-17
-> **Current Phase:** 0.5 — Design Sprint (COMPLETE)
-> **Prototype Version:** v4.4 + Advanced Styling System
+> **Current Phase:** 0 — Foundation (COMPLETE)
+> **Next Phase:** 1 — Theme Implementation
 
 ---
 
-## Phase Status: READY FOR IMPLEMENTATION
+## Phase Status: PHASE 0 COMPLETE
 
-Phase 0.5 (Design Sprint) is **complete**. All mockups have been created, reviewed, and accepted. The project is now ready to transition to **Phase 0: Foundation** — setting up the development infrastructure.
+Phase 0 (Foundation) is **complete**. The development infrastructure is ready. The project is now ready to move to **Phase 1: Theme Implementation**.
 
 ---
 
@@ -28,50 +28,66 @@ Phase 0.5 (Design Sprint) is **complete**. All mockups have been created, review
 | Card detail modal | **Done** | All features including AI analysis panel |
 | Questionnaire form | **Done** | Multi-step with progress indicator |
 | Mobile responsive | **Done** | Bottom nav, horizontal scroll, touch-friendly |
-| **Advanced Styling System** | **Done** | Separable architecture, 3 themes, HSB picker |
+| Advanced Styling System | **Done** | Separable architecture, 3 themes, HSB picker |
 | Stakeholder sign-off | **Done** | All mockups accepted |
 
-### v4.4 Prototype Features
+### Phase 0 — Foundation (COMPLETE)
 
-The latest prototype (`autoflow-prototype-v4.4.html`) includes:
+| Task | Status | Notes |
+|------|--------|-------|
+| Initialize Next.js 14+ | **Done** | App Router, TypeScript strict mode |
+| Configure Tailwind CSS | **Done** | Design tokens from prototype |
+| Install shadcn/ui | **Done** | Button, Card, Input components |
+| Create folder structure | **Done** | src/app, components, lib, hooks, types |
+| Set up ThemeProvider | **Done** | Dark/light/system + 6 accent colours |
+| Configure ESLint + Prettier | **Done** | Code quality standards |
+| Set up Vitest | **Done** | Testing framework configured |
+| Install core dependencies | **Done** | dnd-kit, framer-motion, lucide-react |
+| Create placeholder pages | **Done** | Dashboard, Ideas, Projects, Settings |
+| Build verification | **Done** | Production build succeeds |
 
-- **AI Auto-populate** — Intelligent extraction from plain text input
-- **System theme preference** — Follows OS dark/light mode setting
-- **Mobile responsive** — Bottom navigation, adaptive layouts
-- **Empty states** — Helpful UI when no data exists
-- **Pipeline widget** — Visual ideas funnel on dashboard
-- **Avatar tooltips** — Name on hover with stacking support
-- **Full drag-drop** — Cards and columns with visual feedback
-- **Unified labels** — ID-based system with colour picker
-- **Collapsible sidebar** — Cmd/Ctrl+B toggle
+---
 
-### Advanced Styling System
+## What's Now Available
 
-A production-ready, framework-agnostic styling system has been added:
+### Running the App
+```bash
+npm run dev    # Start development server at http://localhost:3000
+npm run build  # Production build
+npm run test   # Run tests with Vitest
+```
 
-| Component | File | Description |
-|-----------|------|-------------|
-| Theme Engine | `theme-engine.js` | Core system with 25+ CSS variables, 3 themes |
-| Color Picker | `color-picker.jsx` | HSB model with eyedropper, presets |
-| Theme Switcher | `theme-switcher.jsx` | Settings UI for theme/mode/accent |
-| Demo | `theme-demo-complete.jsx` | Full working demonstration |
+### Pages
+- `/` — Landing page with feature cards
+- `/dashboard` — Main dashboard with stats placeholders
+- `/dashboard/ideas` — Ideas list placeholder
+- `/dashboard/projects` — Projects/Kanban placeholder
+- `/settings` — Working theme settings (mode + accent colour)
 
-**3 Professional Themes:**
-1. **App Default** — Modern dark-first (current style)
-2. **Windows 11** — Clean minimalist (Fluent Design)
-3. **macOS Tahoe** — Refined sophisticated (Sequoia aesthetic)
+### Components
+- `ThemeProvider` — Context provider for theme state
+- `ThemeToggle` — UI for mode and accent selection
+- `Sidebar` — Collapsible navigation (Cmd/Ctrl+B)
+- shadcn/ui: Button, Card, Input
 
-**Key Features:**
-- Instant theme switching (<2ms, CSS-only)
-- No component refactoring needed
-- Runtime custom accent colours
-- localStorage persistence
-- Framework-agnostic (works with Next.js, Vue, etc.)
+### Theme System
+- **Modes:** Dark (default), Light, System
+- **Accents:** Midnight Blue, Emerald Green, Sunset Orange, Royal Purple, Rose Pink, Slate Grey
+- Persisted to localStorage
 
-**Documentation:**
-- `THEME_INTEGRATION_GUIDE.md` — Step-by-step integration
-- `STYLING_QUICK_REFERENCE.md` — API reference
-- `AGENT_DELIVERY_INSTRUCTIONS.md` — Implementation guide
+---
+
+## Next Phase: Theme Implementation
+
+Phase 1 will port the full design system from the prototype mockups:
+
+| Task | Priority | Description |
+|------|----------|-------------|
+| Port remaining design tokens | High | All CSS variables from prototype |
+| Build component library | High | Card, Badge, Avatar, etc. |
+| Refine ThemeProvider | Medium | Add more customisation options |
+| Dark/Light mode polish | Medium | Ensure all states look correct |
+| Add keyboard shortcuts | Low | Theme toggle shortcut |
 
 ---
 
@@ -86,6 +102,7 @@ A production-ready, framework-agnostic styling system has been added:
 | 2024-12-16 | Unified ID-based labels | More flexible, supports editing |
 | 2024-12-16 | CSS custom properties | Easy theme switching, runtime updates |
 | 2024-12-17 | System theme option | Respect user OS preferences |
+| 2024-12-17 | shadcn/ui + custom styles | Best of both: component library + custom design |
 
 ---
 
@@ -148,16 +165,27 @@ grey: #64748B
 
 ## Project Artifacts
 
-### Active Files
+### Source Code
 | File | Description |
 |------|-------------|
-| `docs/mockups/autoflow-prototype-v4.4.html` | **Latest** — Full interactive prototype |
-| `docs/mockups/theme-system.jsx` | Standalone theme system mockup |
-| `docs/mockups/kanban-board.jsx` | Standalone kanban board mockup |
-| `docs/mockups/card-detail-modal.jsx` | Standalone card modal mockup |
-| `docs/mockups/dashboard.jsx` | Standalone dashboard mockup |
-| `docs/mockups/questionnaire-form.jsx` | Standalone form mockup |
-| `docs/mockups/mobile-views.jsx` | Standalone mobile mockup |
+| `src/app/layout.tsx` | Root layout with ThemeProvider |
+| `src/app/globals.css` | Design tokens + Tailwind config |
+| `src/components/theme/ThemeProvider.tsx` | Theme context provider |
+| `src/components/theme/ThemeToggle.tsx` | Theme settings UI |
+| `src/components/layout/Sidebar.tsx` | Navigation sidebar |
+| `src/lib/utils.ts` | Utility functions |
+| `src/types/index.ts` | TypeScript definitions |
+
+### Design Mockups
+| File | Description |
+|------|-------------|
+| `docs/mockups/autoflow-prototype-v4.4.html` | Full interactive prototype |
+| `docs/mockups/theme-system.jsx` | Theme system mockup |
+| `docs/mockups/kanban-board.jsx` | Kanban board mockup |
+| `docs/mockups/card-detail-modal.jsx` | Card modal mockup |
+| `docs/mockups/dashboard.jsx` | Dashboard mockup |
+| `docs/mockups/questionnaire-form.jsx` | Form mockup |
+| `docs/mockups/mobile-views.jsx` | Mobile mockup |
 
 ### Archived Files
 | Location | Content |
@@ -168,6 +196,18 @@ grey: #64748B
 ---
 
 ## Session Log
+
+### 2024-12-17 — Phase 0 Foundation Complete
+- Initialised Next.js 14+ with App Router and TypeScript
+- Configured Tailwind CSS with design tokens from prototype
+- Installed shadcn/ui with Button, Card, Input components
+- Created folder structure (components, lib, hooks, types)
+- Built ThemeProvider with dark/light/system + 6 accent colours
+- Configured ESLint and Prettier
+- Set up Vitest for testing
+- Created placeholder pages (Dashboard, Ideas, Projects, Settings)
+- Created Sidebar with mobile responsive bottom nav
+- Verified production build succeeds
 
 ### 2024-12-17 — Project Consolidation
 - Archived previous prototype versions
@@ -187,4 +227,4 @@ grey: #64748B
 
 ## Next Action
 
-**Begin Phase 0: Foundation** — See `NEXT_STEPS.md` for implementation checklist.
+**Begin Phase 1: Theme Implementation** — Port remaining design tokens and build component library.

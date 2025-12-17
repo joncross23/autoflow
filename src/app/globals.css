@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* AutoFlow Design System + shadcn/ui integration */
+  :root {
+    /* Dark mode by default (AutoFlow) */
+    --bg: #0A0A0B;
+    --bg-secondary: #131316;
+    --bg-tertiary: #1A1A1F;
+    --bg-elevated: #1F1F26;
+    --border-color: #27272A;
+    --border-subtle: #1F1F23;
+    --text: #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+
+    /* Default accent: Midnight Blue */
+    --primary-color: #3B82F6;
+    --primary-hover: #2563EB;
+    --primary-muted: #1E3A5F;
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* shadcn/ui variables - mapped to dark mode */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 217 91% 60%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+
+  /* Light mode */
+  .light {
+    --bg: #FAFAFA;
+    --bg-secondary: #F4F4F5;
+    --bg-tertiary: #E4E4E7;
+    --bg-elevated: #FFFFFF;
+    --border-color: #D4D4D8;
+    --border-subtle: #E4E4E7;
+    --text: #09090B;
+    --text-secondary: #52525B;
+    --text-muted: #A1A1AA;
+
+    /* shadcn/ui variables - light mode */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 217 91% 60%;
+  }
+
+  /* Accent colour themes */
+  .accent-blue {
+    --primary-color: #3B82F6;
+    --primary-hover: #2563EB;
+    --primary-muted: #1E3A5F;
+    --primary: 217 91% 60%;
+    --ring: 217 91% 60%;
+  }
+
+  .accent-emerald {
+    --primary-color: #10B981;
+    --primary-hover: #059669;
+    --primary-muted: #064E3B;
+    --primary: 160 84% 39%;
+    --ring: 160 84% 39%;
+  }
+
+  .accent-orange {
+    --primary-color: #F59E0B;
+    --primary-hover: #D97706;
+    --primary-muted: #78350F;
+    --primary: 38 92% 50%;
+    --ring: 38 92% 50%;
+  }
+
+  .accent-purple {
+    --primary-color: #8B5CF6;
+    --primary-hover: #7C3AED;
+    --primary-muted: #4C1D95;
+    --primary: 258 90% 66%;
+    --ring: 258 90% 66%;
+  }
+
+  .accent-pink {
+    --primary-color: #EC4899;
+    --primary-hover: #DB2777;
+    --primary-muted: #831843;
+    --primary: 330 81% 60%;
+    --ring: 330 81% 60%;
+  }
+
+  .accent-slate {
+    --primary-color: #64748B;
+    --primary-hover: #475569;
+    --primary-muted: #1E293B;
+    --primary: 215 16% 47%;
+    --ring: 215 16% 47%;
+  }
+
+  /* Light mode accent adjustments */
+  .light.accent-blue {
+    --primary-muted: #DBEAFE;
+  }
+
+  .light.accent-emerald {
+    --primary-muted: #D1FAE5;
+  }
+
+  .light.accent-orange {
+    --primary-muted: #FEF3C7;
+  }
+
+  .light.accent-purple {
+    --primary-muted: #EDE9FE;
+  }
+
+  .light.accent-pink {
+    --primary-muted: #FCE7F3;
+  }
+
+  .light.accent-slate {
+    --primary-muted: #E2E8F0;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+
+  /* Selection */
+  ::selection {
+    background: var(--primary-muted);
+    color: var(--text);
+  }
+}
+
+@layer components {
+  /* Card component base (AutoFlow) */
+  .card {
+    @apply rounded-lg border bg-card p-4;
+  }
+
+  /* Button base (AutoFlow custom) */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-muted;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-muted-foreground hover:bg-secondary hover:text-foreground;
+  }
+
+  /* Input base (AutoFlow custom) */
+  .input {
+    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+    @apply placeholder:text-muted-foreground;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Label tag component */
+  .label-tag {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+}
+
+@layer utilities {
+  /* Animation utilities for drag-drop */
+  .drag-active {
+    @apply rotate-[1.5deg] shadow-card-drag;
+  }
+
+  .drag-ghost {
+    @apply opacity-40;
+  }
+
+  .drop-placeholder {
+    border: 2px dashed var(--primary-color);
+    @apply rounded-lg;
+    min-height: 60px;
+  }
+}
