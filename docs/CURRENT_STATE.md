@@ -3,15 +3,15 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2024-12-17
-> **Current Phase:** 6 — Polish & Deploy (COMPLETE)
-> **Next Phase:** 7 — User Testing
+> **Last Updated:** 2025-12-17
+> **Current Phase:** 6.5 — Task Kanban & Import (COMPLETE)
+> **Next Phase:** 7 — User Testing & Refinement
 
 ---
 
-## Phase Status: PHASE 6 COMPLETE
+## Phase Status: PHASE 6.5 COMPLETE
 
-Phase 6 (Polish & Deploy) is **complete**. The application is production-ready with loading states, error boundaries, SEO optimization, and Vercel deployment configuration. All pages have skeleton loaders, global error handling, OpenGraph images, and robots/sitemap files.
+Phase 6.5 adds the **Project Task Kanban Board** — allowing users to drill into a project and view/manage tasks in custom columns. The backlog import script seeds the database with the AutoFlow development project (27 tasks across 5 columns with labels and checklists).
 
 ---
 
@@ -132,6 +132,21 @@ Phase 6 (Polish & Deploy) is **complete**. The application is production-ready w
 | Vercel config | **Done** | vercel.json with headers |
 | Build verification | **Done** | Production build succeeds |
 
+### Phase 6.5 — Task Kanban & Import (COMPLETE)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Project detail page | **Done** | /dashboard/projects/[id] route |
+| TaskKanbanBoard component | **Done** | Dynamic columns from database |
+| TaskColumn component | **Done** | Droppable column with WIP limit indicator |
+| TaskCard component | **Done** | Sortable card with labels, checkbox, actions |
+| Columns API | **Done** | CRUD for project columns |
+| Labels API | **Done** | CRUD for labels, task/project/idea assignments |
+| Checklists API | **Done** | CRUD for task checklists and items |
+| Import script | **Done** | scripts/import-backlog.ts seeds from JSON |
+| "View board" link | **Done** | ProjectCard links to task kanban |
+| Build verification | **Done** | Production build succeeds |
+
 ---
 
 ## What's Now Available
@@ -150,7 +165,8 @@ npm run test   # Run tests with Vitest
 - `/forgot-password` — Password reset request
 - `/dashboard` — Main dashboard with stats (protected)
 - `/dashboard/ideas` — Ideas list with CRUD operations (protected)
-- `/dashboard/projects` — Kanban board with drag-drop (protected)
+- `/dashboard/projects` — Projects Kanban board (protected)
+- `/dashboard/projects/[id]` — Task Kanban board within a project (protected)
 - `/dashboard/settings` — Theme + account settings with profile (protected)
 
 ### Components
@@ -346,6 +362,19 @@ grey: #64748B
 
 ## Session Log
 
+### 2025-12-17 — Phase 6.5 Task Kanban & Import Complete
+- Created /dashboard/projects/[id] page for viewing project tasks
+- Built TaskKanbanBoard component with dynamic columns from database
+- Built TaskColumn component with droppable zone and WIP limit indicator
+- Built TaskCard component with labels, checkbox toggle, actions menu
+- Created columns API (CRUD, reorder within project)
+- Created labels API (CRUD, assignments to tasks/projects/ideas)
+- Created checklists API (CRUD for checklists and items)
+- Built import-backlog.ts script to seed database from docs/backlog/project.json
+- Added "View board" link (ExternalLink icon) to ProjectCard
+- Successfully imported AutoFlow Development project (27 tasks, 5 columns, 30 labels)
+- Verified production build succeeds
+
 ### 2024-12-17 — Phase 6 Polish & Deploy Complete
 - Added loading.tsx files for all dashboard routes with skeleton loaders
 - Created ErrorBoundary component with retry functionality
@@ -457,18 +486,33 @@ grey: #64748B
 
 ## Next Action
 
-**Begin Phase 7: User Testing** — Gather user feedback and refine the application based on real-world usage.
+**Begin Phase 7: User Testing & Refinement** — Test the full workflow, gather feedback, and polish the experience.
 
-**Deployment Checklist:**
+### Phase 7 Priorities
+
+| Task | Priority | Description |
+|------|----------|-------------|
+| Task drag-drop persistence | High | Fix task reordering within/across columns |
+| Task editing modal | High | Full task edit form (title, description, labels) |
+| Checklist UI in task detail | High | View/toggle checklist items |
+| Dashboard recent activity | Medium | Show recent idea/project/task updates |
+| Mobile testing | Medium | Verify touch drag-drop, responsive layout |
+| Performance audit | Medium | Lazy loading, bundle size optimization |
+| Error state polish | Low | Better error messages, retry UX |
+| Keyboard shortcuts | Low | Navigation shortcuts (J/K, G+B, etc.) |
+
+### Quick Wins
+1. **Task detail modal** — Click task to view/edit details + checklists
+2. **Batch operations** — Multi-select tasks for bulk move/delete
+3. **Search across tasks** — Filter tasks by title/label within project
+
+### Deployment Checklist (if not done)
 1. Set environment variables in Vercel:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `ANTHROPIC_API_KEY`
    - `NEXT_PUBLIC_APP_URL` (your Vercel domain)
 
-2. Run all database migrations in Supabase:
-   - `001_create_ideas_table.sql`
-   - `002_create_evaluations_table.sql`
-   - `003_create_projects_table.sql`
+2. Run database migrations in Supabase (or use Supabase GitHub integration)
 
-3. Deploy to Vercel (auto-deployed via GitHub integration)
+3. Push to main branch → auto-deploys via Vercel
