@@ -78,6 +78,72 @@ export interface DbAiEvaluation {
   created_at: string;
 }
 
+// Project types
+export type ProjectStatus = "backlog" | "planning" | "in_progress" | "review" | "done" | "archived";
+export type Priority = "low" | "medium" | "high" | "critical";
+
+export interface DbProject {
+  id: string;
+  user_id: string;
+  idea_id: string | null;
+  title: string;
+  description: string | null;
+  status: ProjectStatus;
+  priority: Priority;
+  position: number;
+  due_date: string | null;
+  estimated_hours: number | null;
+  actual_hours: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbProjectInsert {
+  title: string;
+  idea_id?: string | null;
+  description?: string | null;
+  status?: ProjectStatus;
+  priority?: Priority;
+  position?: number;
+  due_date?: string | null;
+  estimated_hours?: number | null;
+}
+
+export interface DbProjectUpdate {
+  title?: string;
+  description?: string | null;
+  status?: ProjectStatus;
+  priority?: Priority;
+  position?: number;
+  due_date?: string | null;
+  estimated_hours?: number | null;
+  actual_hours?: number;
+  updated_at?: string;
+}
+
+// Task types (project subtasks)
+export interface DbTask {
+  id: string;
+  project_id: string;
+  title: string;
+  completed: boolean;
+  position: number;
+  created_at: string;
+}
+
+export interface DbTaskInsert {
+  project_id: string;
+  title: string;
+  completed?: boolean;
+  position?: number;
+}
+
+export interface DbTaskUpdate {
+  title?: string;
+  completed?: boolean;
+  position?: number;
+}
+
 export function dbIdeaToIdea(db: DbIdea): {
   id: string;
   userId: string;

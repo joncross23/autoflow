@@ -1,8 +1,11 @@
 "use client";
 
-import { X, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { X, Pencil, Trash2, ArrowRight, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
+import { convertIdeaToProject } from "@/lib/api/projects";
 import type { DbIdea, IdeaStatus, IdeaFrequency } from "@/types/database";
 
 interface IdeaDetailModalProps {
@@ -10,6 +13,7 @@ interface IdeaDetailModalProps {
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onConvert?: () => void;
 }
 
 const STATUS_COLORS: Record<IdeaStatus, string> = {
@@ -34,7 +38,31 @@ export function IdeaDetailModal({
   onClose,
   onEdit,
   onDelete,
+  onConvert,
 }: IdeaDetailModalProps) {
+  const router = useRouter();
+  const [converting, setConverting] = useState(false);
+
+  const handleConvertToProject = async () => {
+    if (idea.status === "converting") {
+      // Already converted - navigate to projects
+      router.push("/dashboard/projects");
+      onClose();
+      return;
+    }
+
+    setConverting(true);
+    try {
+      await convertIdeaToProject(idea);
+      onConvert?.();
+      router.push("/dashboard/projects");
+      onClose();
+    } catch (error) {
+      console.error("Failed to convert idea:", error);
+      setConverting(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -54,6 +82,33 @@ export function IdeaDetailModal({
             </span>
           </div>
           <div className="flex items-center gap-2">
+            {/* Convert to Project button */}
+            {idea.status !== "archived" && (
+              <button
+                onClick={handleConvertToProject}
+                disabled={converting}
+                className={cn(
+                  "btn btn-sm",
+                  idea.status === "converting"
+                    ? "btn-outline"
+                    : "btn-primary"
+                )}
+                title={
+                  idea.status === "converting"
+                    ? "View in Projects"
+                    : "Convert to Project"
+                }
+              >
+                {converting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ArrowRight className="h-4 w-4 mr-1" />
+                    {idea.status === "converting" ? "View Project" : "Convert"}
+                  </>
+                )}
+              </button>
+            )}
             <button
               onClick={onEdit}
               className="p-2 rounded hover:bg-bg-hover"
