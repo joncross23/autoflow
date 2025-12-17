@@ -4,14 +4,14 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2024-12-17
-> **Current Phase:** 4 — AI Evaluation (COMPLETE)
-> **Next Phase:** 5 — Projects & Kanban
+> **Current Phase:** 5 — Projects & Kanban (COMPLETE)
+> **Next Phase:** 6 — Polish & Deploy
 
 ---
 
-## Phase Status: PHASE 4 COMPLETE
+## Phase Status: PHASE 5 COMPLETE
 
-Phase 4 (AI Evaluation) is **complete**. Users can now run AI-powered evaluations on their automation ideas using Claude. The evaluation provides complexity scores, ROI assessment, estimated time savings, recommendations, and risk analysis. Ideas can be viewed in a detail modal with the AI evaluation panel. The project is ready for **Phase 5: Projects & Kanban**.
+Phase 5 (Projects & Kanban) is **complete**. Users can now manage automation projects on a drag-and-drop Kanban board with columns: Backlog, Planning, In Progress, Review, and Done. Ideas can be converted to projects directly from the idea detail modal. Projects track priority, due dates, and estimated hours.
 
 ---
 
@@ -105,6 +105,19 @@ Phase 4 (AI Evaluation) is **complete**. Users can now run AI-powered evaluation
 | Move Settings to dashboard | **Done** | /dashboard/settings with shared layout |
 | Build verification | **Done** | Production build succeeds |
 
+### Phase 5 — Projects & Kanban (COMPLETE)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Create projects database schema | **Done** | SQL migration with RLS, tasks table |
+| Build project API functions | **Done** | CRUD, reorder, convert from idea |
+| Build tasks API functions | **Done** | CRUD, toggle completion |
+| Build Kanban board UI | **Done** | dnd-kit with 5 columns |
+| Build ProjectCard component | **Done** | Sortable with drag handle |
+| Build ProjectForm modal | **Done** | Create/edit with all fields |
+| Convert idea to project | **Done** | Button in IdeaDetailModal |
+| Build verification | **Done** | Production build succeeds |
+
 ---
 
 ## What's Now Available
@@ -123,8 +136,8 @@ npm run test   # Run tests with Vitest
 - `/forgot-password` — Password reset request
 - `/dashboard` — Main dashboard with stats (protected)
 - `/dashboard/ideas` — Ideas list with CRUD operations (protected)
-- `/dashboard/projects` — Projects/Kanban placeholder (protected)
-- `/settings` — Theme + account settings with profile (protected)
+- `/dashboard/projects` — Kanban board with drag-drop (protected)
+- `/dashboard/settings` — Theme + account settings with profile (protected)
 
 ### Components
 - `ThemeProvider` — Context provider for theme state
@@ -152,18 +165,18 @@ npm run test   # Run tests with Vitest
 
 ---
 
-## Next Phase: Projects & Kanban
+## Next Phase: Polish & Deploy
 
-Phase 5 will add project management with Kanban board:
+Phase 6 will focus on production readiness:
 
 | Task | Priority | Description |
 |------|----------|-------------|
-| Create projects database schema | High | SQL migration with RLS policies |
-| Build project API functions | High | CRUD operations with Supabase |
-| Build Kanban board UI | High | Drag-drop columns with dnd-kit |
-| Convert idea to project | Medium | Move prioritised ideas to projects |
-| Build project detail modal | Medium | Full project info with tasks |
-| Add task management | Low | Subtasks within projects |
+| Add loading states | High | Skeleton loaders throughout |
+| Error boundary | High | Global error handling |
+| SEO optimization | Medium | Meta tags, OG images |
+| Performance audit | Medium | Core Web Vitals check |
+| Documentation | Low | User guide, API docs |
+| Production deploy | High | Vercel configuration |
 
 ---
 
@@ -280,6 +293,12 @@ grey: #64748B
 | `src/components/ideas/QuickCapture.tsx` | Dashboard quick capture widget |
 | `src/components/ideas/AiEvaluationPanel.tsx` | AI evaluation display panel |
 | `src/components/ideas/IdeaDetailModal.tsx` | Full idea detail modal |
+| `src/components/projects/KanbanBoard.tsx` | Kanban board with dnd-kit |
+| `src/components/projects/KanbanColumn.tsx` | Droppable kanban column |
+| `src/components/projects/ProjectCard.tsx` | Sortable project card |
+| `src/components/projects/ProjectForm.tsx` | Project create/edit modal |
+| `src/lib/api/projects.ts` | Project CRUD and reorder API |
+| `src/lib/api/tasks.ts` | Task CRUD API |
 
 ### Design Mockups
 | File | Description |
@@ -301,6 +320,22 @@ grey: #64748B
 ---
 
 ## Session Log
+
+### 2024-12-17 — Phase 5 Projects & Kanban Complete
+- Created projects and tasks database schema with SQL migration
+- Implemented Row Level Security (RLS) policies for both tables
+- Built projects API functions (CRUD, reorder, batch update positions)
+- Built tasks API functions (CRUD, toggle completion)
+- Created KanbanBoard component with dnd-kit (5 columns: Backlog, Planning, In Progress, Review, Done)
+- Created KanbanColumn as droppable container
+- Created ProjectCard as draggable/sortable card with priority badge
+- Built ProjectForm modal for create/edit with all fields
+- Added "Convert to Project" button in IdeaDetailModal
+- Conversion updates idea status to "converting" and creates backlog project
+- Fixed JSON parsing for Claude API responses (markdown code block stripping)
+- Fixed Supabase query (.single() to .maybeSingle() for optional results)
+- Created SVG favicon to resolve 404 errors
+- Verified production build succeeds
 
 ### 2024-12-17 — Phase 4 AI Evaluation Complete
 - Installed @anthropic-ai/sdk for Claude API integration
@@ -385,13 +420,13 @@ grey: #64748B
 
 ## Next Action
 
-**Begin Phase 5: Projects & Kanban** — Build the project management Kanban board with drag-drop functionality.
+**Begin Phase 6: Polish & Deploy** — Focus on production readiness with loading states, error boundaries, and deployment configuration.
 
-**Note:** Before using AI evaluation, ensure:
-1. Run the evaluations SQL migration in Supabase:
-   - Copy contents of `supabase/migrations/002_create_evaluations_table.sql`
+**Note:** Before using projects & kanban, ensure:
+1. Run the projects SQL migration in Supabase:
+   - Copy contents of `supabase/migrations/003_create_projects_table.sql`
    - Run in Supabase SQL Editor
-2. Add your Anthropic API key to `.env.local`:
-   ```
-   ANTHROPIC_API_KEY=sk-ant-...
-   ```
+
+**Previous setup still required:**
+- Run `002_create_evaluations_table.sql` for AI evaluations
+- Add `ANTHROPIC_API_KEY=sk-ant-...` to `.env.local` for AI features
