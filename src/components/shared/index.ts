@@ -5,3 +5,4 @@ export { EmptyState, NoIdeasEmptyState, NoProjectsEmptyState, NoResultsEmptyStat
 export { StatCard, StatGrid } from "./StatCard";
 export { Progress, CircularProgress } from "./Progress";
 export { Skeleton, CardSkeleton, StatCardSkeleton, AvatarSkeleton, TableRowSkeleton, ListSkeleton } from "./Skeleton";
+export { ErrorBoundary } from "./ErrorBoundary";

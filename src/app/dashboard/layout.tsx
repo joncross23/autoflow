@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { Sidebar } from "@/components/layout/Sidebar";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "View your automation ideas pipeline and project progress.",
+};
 
 export default function DashboardLayout({
   children,
