@@ -4,14 +4,14 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2024-12-17
-> **Current Phase:** 3 — Idea Capture (COMPLETE)
-> **Next Phase:** 4 — AI Evaluation
+> **Current Phase:** 4 — AI Evaluation (COMPLETE)
+> **Next Phase:** 5 — Projects & Kanban
 
 ---
 
-## Phase Status: PHASE 3 COMPLETE
+## Phase Status: PHASE 4 COMPLETE
 
-Phase 3 (Idea Capture) is **complete**. Users can now create, view, edit, and delete automation ideas. The dashboard features a quick capture widget with keyboard shortcut (Cmd/Ctrl+K) and real-time stats. The project is ready for **Phase 4: AI Evaluation**.
+Phase 4 (AI Evaluation) is **complete**. Users can now run AI-powered evaluations on their automation ideas using Claude. The evaluation provides complexity scores, ROI assessment, estimated time savings, recommendations, and risk analysis. Ideas can be viewed in a detail modal with the AI evaluation panel. The project is ready for **Phase 5: Projects & Kanban**.
 
 ---
 
@@ -91,6 +91,20 @@ Phase 3 (Idea Capture) is **complete**. Users can now create, view, edit, and de
 | Update dashboard with stats | **Done** | Real-time idea counts, pipeline |
 | Build verification | **Done** | Production build succeeds |
 
+### Phase 4 — AI Evaluation (COMPLETE)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Set up Claude API client | **Done** | @anthropic-ai/sdk integration |
+| Design evaluation prompt | **Done** | Structured prompt for complexity, ROI, time saved |
+| Build AI evaluation UI | **Done** | AiEvaluationPanel component with scores |
+| Store evaluations in database | **Done** | SQL migration with RLS policies |
+| Create API route | **Done** | /api/ideas/[id]/evaluate endpoint |
+| Build IdeaDetailModal | **Done** | Full modal with AI evaluation sidebar |
+| Add re-evaluate action | **Done** | RefreshCw button in panel |
+| Move Settings to dashboard | **Done** | /dashboard/settings with shared layout |
+| Build verification | **Done** | Production build succeeds |
+
 ---
 
 ## What's Now Available
@@ -138,18 +152,18 @@ npm run test   # Run tests with Vitest
 
 ---
 
-## Next Phase: AI Evaluation
+## Next Phase: Projects & Kanban
 
-Phase 4 will add AI-powered evaluation of automation ideas:
+Phase 5 will add project management with Kanban board:
 
 | Task | Priority | Description |
 |------|----------|-------------|
-| Set up Claude API client | High | Anthropic SDK integration |
-| Design evaluation prompt | High | Complexity, ROI, time saved analysis |
-| Build AI evaluation UI | High | Loading state, results display |
-| Store evaluations in database | Medium | Link to ideas with timestamps |
-| Add re-evaluate action | Medium | Allow re-running AI analysis |
-| Display AI insights on cards | Low | Summary badges on idea cards |
+| Create projects database schema | High | SQL migration with RLS policies |
+| Build project API functions | High | CRUD operations with Supabase |
+| Build Kanban board UI | High | Drag-drop columns with dnd-kit |
+| Convert idea to project | Medium | Move prioritised ideas to projects |
+| Build project detail modal | Medium | Full project info with tasks |
+| Add task management | Low | Subtasks within projects |
 
 ---
 
@@ -256,6 +270,16 @@ grey: #64748B
 | `src/app/(auth)/register/page.tsx` | Registration page |
 | `src/app/(auth)/forgot-password/page.tsx` | Password reset page |
 | `src/app/auth/callback/route.ts` | Auth callback handler |
+| `src/lib/ai/client.ts` | Anthropic Claude API client |
+| `src/lib/ai/evaluate.ts` | AI evaluation service with prompt |
+| `src/lib/api/ideas.ts` | Ideas CRUD API functions |
+| `src/lib/api/evaluations.ts` | Evaluations API functions |
+| `src/app/api/ideas/[id]/evaluate/route.ts` | AI evaluation API endpoint |
+| `src/components/ideas/IdeaCard.tsx` | Idea card component |
+| `src/components/ideas/IdeaForm.tsx` | Idea create/edit form |
+| `src/components/ideas/QuickCapture.tsx` | Dashboard quick capture widget |
+| `src/components/ideas/AiEvaluationPanel.tsx` | AI evaluation display panel |
+| `src/components/ideas/IdeaDetailModal.tsx` | Full idea detail modal |
 
 ### Design Mockups
 | File | Description |
@@ -277,6 +301,19 @@ grey: #64748B
 ---
 
 ## Session Log
+
+### 2024-12-17 — Phase 4 AI Evaluation Complete
+- Installed @anthropic-ai/sdk for Claude API integration
+- Created AI client and evaluation service with structured prompt
+- Designed evaluation prompt for complexity, ROI, time savings analysis
+- Added API route /api/ideas/[id]/evaluate for running evaluations
+- Created evaluations database migration with RLS policies
+- Built AiEvaluationPanel component with scores, recommendations, risks
+- Created IdeaDetailModal with AI evaluation sidebar
+- Added re-evaluate functionality with RefreshCw button
+- Moved Settings from /settings to /dashboard/settings for consistent navigation
+- Fixed navigation highlighting issue (Dashboard exact match)
+- Verified production build succeeds
 
 ### 2024-12-17 — Phase 3 Idea Capture Complete
 - Created ideas database schema with SQL migration
@@ -348,8 +385,13 @@ grey: #64748B
 
 ## Next Action
 
-**Begin Phase 4: AI Evaluation** — Integrate Claude API for automated idea scoring and recommendations.
+**Begin Phase 5: Projects & Kanban** — Build the project management Kanban board with drag-drop functionality.
 
-**Note:** Before using the ideas feature, run the SQL migration in Supabase:
-- Copy contents of `supabase/migrations/001_create_ideas_table.sql`
-- Run in Supabase SQL Editor
+**Note:** Before using AI evaluation, ensure:
+1. Run the evaluations SQL migration in Supabase:
+   - Copy contents of `supabase/migrations/002_create_evaluations_table.sql`
+   - Run in Supabase SQL Editor
+2. Add your Anthropic API key to `.env.local`:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-...
+   ```
