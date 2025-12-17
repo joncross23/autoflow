@@ -81,9 +81,22 @@ export async function evaluateIdea(idea: DbIdea): Promise<EvaluationResult> {
     throw new Error("No text response from AI");
   }
 
-  // Parse JSON response
+  // Parse JSON response - handle potential markdown code blocks
   try {
-    const result = JSON.parse(textBlock.text) as EvaluationResult;
+    let jsonText = textBlock.text.trim();
+
+    // Remove markdown code blocks if present
+    if (jsonText.startsWith("```json")) {
+      jsonText = jsonText.slice(7);
+    } else if (jsonText.startsWith("```")) {
+      jsonText = jsonText.slice(3);
+    }
+    if (jsonText.endsWith("```")) {
+      jsonText = jsonText.slice(0, -3);
+    }
+    jsonText = jsonText.trim();
+
+    const result = JSON.parse(jsonText) as EvaluationResult;
 
     // Validate required fields
     if (
@@ -98,7 +111,8 @@ export async function evaluateIdea(idea: DbIdea): Promise<EvaluationResult> {
     }
 
     return result;
-  } catch {
+  } catch (err) {
+    console.error("Failed to parse AI response:", textBlock.text);
     throw new Error("Failed to parse AI evaluation response");
   }
 }

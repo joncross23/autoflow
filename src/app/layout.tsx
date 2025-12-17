@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description:
     "Capture automation ideas, evaluate them with AI, and track implementation projects.",
   keywords: ["automation", "AI", "productivity", "project management"],
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

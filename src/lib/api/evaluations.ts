@@ -26,17 +26,13 @@ export async function getLatestEvaluation(ideaId: string): Promise<DbAiEvaluatio
     .eq("idea_id", ideaId)
     .order("created_at", { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (error) {
-    if (error.code === "PGRST116") {
-      // No rows returned
-      return null;
-    }
     throw new Error(error.message);
   }
 
-  return data as DbAiEvaluation;
+  return data as DbAiEvaluation | null;
 }
 
 export async function deleteEvaluation(id: string): Promise<void> {
