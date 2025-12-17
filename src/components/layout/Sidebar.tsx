@@ -45,7 +45,10 @@ export function Sidebar() {
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background-secondary">
         <div className="flex justify-around py-2">
           {navItems.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href || pathname.startsWith(`${href}/`);
+            // Exact match for /dashboard, prefix match for others
+            const isActive = href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}
@@ -100,7 +103,10 @@ export function Sidebar() {
       <nav className="flex-1 p-2">
         <ul className="space-y-1">
           {navItems.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href || pathname.startsWith(`${href}/`);
+            // Exact match for /dashboard, prefix match for others
+            const isActive = href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <li key={href}>
                 <Link
