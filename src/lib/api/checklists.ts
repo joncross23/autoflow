@@ -374,3 +374,107 @@ export async function getTaskChecklistsWithItems(taskId: string): Promise<
 
   return checklistsWithItems;
 }
+
+/**
+ * Get aggregated checklist progress for a task (all checklists combined)
+ */
+export async function getTaskChecklistProgress(taskId: string): Promise<{
+  total: number;
+  completed: number;
+}> {
+  const supabase = createClient();
+
+  // Get all checklists for the task
+  const { data: checklists, error: checklistError } = await supabase
+    .from("checklists")
+    .select("id")
+    .eq("task_id", taskId);
+
+  if (checklistError || !checklists?.length) {
+    return { total: 0, completed: 0 };
+  }
+
+  // Get all items for all checklists in one query
+  const { data: items, error: itemsError } = await supabase
+    .from("checklist_items")
+    .select("done")
+    .in("checklist_id", checklists.map((c) => c.id));
+
+  if (itemsError) {
+    return { total: 0, completed: 0 };
+  }
+
+  const total = items?.length || 0;
+  const completed = items?.filter((item) => item.done).length || 0;
+
+  return { total, completed };
+}
+
+/**
+ * Get checklist progress for multiple tasks efficiently
+ */
+export async function getTasksChecklistProgress(taskIds: string[]): Promise<
+  Record<string, { total: number; completed: number }>
+> {
+  if (taskIds.length === 0) {
+    return {};
+  }
+
+  const supabase = createClient();
+
+  // Get all checklists for all tasks
+  const { data: checklists, error: checklistError } = await supabase
+    .from("checklists")
+    .select("id, task_id")
+    .in("task_id", taskIds);
+
+  if (checklistError || !checklists?.length) {
+    return {};
+  }
+
+  // Get all items for all checklists
+  const { data: items, error: itemsError } = await supabase
+    .from("checklist_items")
+    .select("checklist_id, done")
+    .in("checklist_id", checklists.map((c) => c.id));
+
+  if (itemsError) {
+    return {};
+  }
+
+  // Build task_id -> checklist_ids map
+  const taskToChecklists: Record<string, string[]> = {};
+  checklists.forEach((c) => {
+    if (!taskToChecklists[c.task_id]) {
+      taskToChecklists[c.task_id] = [];
+    }
+    taskToChecklists[c.task_id].push(c.id);
+  });
+
+  // Build checklist_id -> items map
+  const checklistItems: Record<string, { done: boolean }[]> = {};
+  items?.forEach((item) => {
+    if (!checklistItems[item.checklist_id]) {
+      checklistItems[item.checklist_id] = [];
+    }
+    checklistItems[item.checklist_id].push(item);
+  });
+
+  // Calculate progress for each task
+  const result: Record<string, { total: number; completed: number }> = {};
+  taskIds.forEach((taskId) => {
+    const checklistIds = taskToChecklists[taskId] || [];
+    let total = 0;
+    let completed = 0;
+    checklistIds.forEach((checklistId) => {
+      const items = checklistItems[checklistId] || [];
+      total += items.length;
+      completed += items.filter((i) => i.done).length;
+    });
+    if (total > 0) {
+      result[taskId] = { total, completed };
+    }
+  });
+
+  return result;
+}

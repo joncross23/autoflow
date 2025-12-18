@@ -10,32 +10,67 @@ const modes = [
 ] as const;
 
 const accents = [
-  { value: "blue", label: "Midnight Blue", color: "#3B82F6" },
-  { value: "emerald", label: "Emerald Green", color: "#10B981" },
-  { value: "orange", label: "Sunset Orange", color: "#F59E0B" },
-  { value: "purple", label: "Royal Purple", color: "#8B5CF6" },
-  { value: "pink", label: "Rose Pink", color: "#EC4899" },
-  { value: "slate", label: "Slate Grey", color: "#64748B" },
+  {
+    value: "blue",
+    label: "Midnight Blue",
+    color: "#3B82F6",
+    gradient: "linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)",
+  },
+  {
+    value: "emerald",
+    label: "Emerald Green",
+    color: "#10B981",
+    gradient: "linear-gradient(135deg, #064E3B 0%, #10B981 100%)",
+  },
+  {
+    value: "orange",
+    label: "Sunset Orange",
+    color: "#F59E0B",
+    gradient: "linear-gradient(135deg, #92400E 0%, #F59E0B 100%)",
+  },
+  {
+    value: "purple",
+    label: "Royal Purple",
+    color: "#8B5CF6",
+    gradient: "linear-gradient(135deg, #4C1D95 0%, #8B5CF6 100%)",
+  },
+  {
+    value: "pink",
+    label: "Rose Pink",
+    color: "#EC4899",
+    gradient: "linear-gradient(135deg, #831843 0%, #EC4899 100%)",
+  },
+  {
+    value: "slate",
+    label: "Slate Grey",
+    color: "#64748B",
+    gradient: "linear-gradient(135deg, #1E293B 0%, #64748B 100%)",
+  },
 ] as const;
 
 export function ThemeToggle() {
   const { mode, accent, setMode, setAccent } = useTheme();
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Mode selector */}
+    <div className="flex flex-col gap-6">
+      {/* Mode selector - segmented control style */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-foreground-secondary">
+        <label className="mb-3 block text-xs font-semibold text-foreground-muted uppercase tracking-wider">
           Appearance
         </label>
-        <div className="flex gap-2">
+        <div className="inline-flex gap-1 p-1 bg-bg-tertiary rounded-xl border border-border-subtle">
           {modes.map(({ value, label, icon: Icon }) => (
             <button
               key={value}
               onClick={() => setMode(value)}
-              className={`btn flex items-center gap-2 ${
-                mode === value ? "btn-primary" : "btn-secondary"
-              }`}
+              className={`
+                flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-medium
+                transition-all duration-200
+                ${mode === value
+                  ? "bg-bg-elevated text-foreground shadow-sm"
+                  : "text-foreground-muted hover:text-foreground"
+                }
+              `}
               aria-pressed={mode === value}
             >
               <Icon className="h-4 w-4" />
@@ -45,32 +80,35 @@ export function ThemeToggle() {
         </div>
       </div>
 
-      {/* Accent colour selector */}
+      {/* Accent colour selector - gradient swatches */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-foreground-secondary">
+        <label className="mb-3 block text-xs font-semibold text-foreground-muted uppercase tracking-wider">
           Accent Colour
         </label>
         <div className="flex flex-wrap gap-2">
-          {accents.map(({ value, label, color }) => (
+          {accents.map(({ value, label, color, gradient }) => (
             <button
               key={value}
               onClick={() => setAccent(value)}
-              className={`flex h-10 items-center gap-2 rounded-md border px-3 text-sm transition-colors ${
-                accent === value
-                  ? "border-primary bg-primary-muted"
-                  : "border-border hover:border-primary"
-              }`}
+              className={`
+                w-9 h-9 rounded-[10px] border-2 transition-all duration-200
+                ${accent === value
+                  ? "border-foreground scale-110 shadow-lg"
+                  : "border-transparent hover:scale-105"
+                }
+              `}
+              style={{
+                background: gradient,
+                boxShadow: accent === value ? `0 4px 12px ${color}40` : "0 2px 4px rgba(0,0,0,0.2)",
+              }}
               aria-pressed={accent === value}
               title={label}
-            >
-              <span
-                className="h-4 w-4 rounded-full"
-                style={{ backgroundColor: color }}
-              />
-              <span className="hidden sm:inline">{label}</span>
-            </button>
+            />
           ))}
         </div>
+        <p className="mt-2 text-[13px] text-foreground-secondary">
+          {accents.find((a) => a.value === accent)?.label}
+        </p>
       </div>
     </div>
   );

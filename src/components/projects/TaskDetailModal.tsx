@@ -10,11 +10,27 @@ import {
   Loader2,
   Save,
   Trash2,
+  Calendar,
+  Tag,
+  Users,
+  Paperclip,
+  Link as LinkIcon,
+  MessageSquare,
+  Activity,
+  Sparkles,
+  Move,
+  Copy,
+  Eye,
+  Archive,
+  Share2,
+  Plus,
+  MoreHorizontal,
 } from "lucide-react";
 import { updateTask } from "@/lib/api/tasks";
 import {
   getTaskChecklistsWithItems,
   toggleChecklistItem,
+  createChecklistItem,
 } from "@/lib/api/checklists";
 import { getTaskLabels } from "@/lib/api/labels";
 import type { DbTask, DbLabel, DbChecklist, DbChecklistItem } from "@/types/database";
@@ -32,6 +48,86 @@ interface TaskDetailModalProps {
   onDelete?: (task: DbTask) => void;
 }
 
+// Section component for consistent styling
+function Section({
+  icon: Icon,
+  title,
+  children,
+  onAdd,
+  addLabel,
+  defaultOpen = true,
+}: {
+  icon: React.ElementType;
+  title: string;
+  children: React.ReactNode;
+  onAdd?: () => void;
+  addLabel?: string;
+  defaultOpen?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
+        >
+          <Icon className="h-4 w-4" />
+          {title}
+          {isOpen ? (
+            <ChevronDown className="h-3 w-3 text-foreground-muted" />
+          ) : (
+            <ChevronRight className="h-3 w-3 text-foreground-muted" />
+          )}
+        </button>
+        {onAdd && isOpen && (
+          <button
+            onClick={onAdd}
+            className="text-xs text-foreground-muted hover:text-primary transition-colors"
+          >
+            + {addLabel || "Add"}
+          </button>
+        )}
+      </div>
+      {isOpen && children}
+    </div>
+  );
+}
+
+// Sidebar action button
+function SidebarButton({
+  icon: Icon,
+  label,
+  onClick,
+  active,
+  variant = "default",
+}: {
+  icon: React.ElementType;
+  label: string;
+  onClick?: () => void;
+  active?: boolean;
+  variant?: "default" | "ai" | "danger";
+}) {
+  const variantClasses = {
+    default: active
+      ? "bg-primary/20 text-primary"
+      : "bg-bg-tertiary hover:bg-bg-hover text-foreground-secondary hover:text-foreground",
+    ai: "bg-purple-500/20 text-purple-400 hover:bg-purple-500/30",
+    danger: "bg-error/10 text-error hover:bg-error/20",
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors ${variantClasses[variant]}`}
+    >
+      <Icon className="h-4 w-4" />
+      {label}
+    </button>
+  );
+}
+
 export function TaskDetailModal({
   task,
   onClose,
@@ -46,6 +142,8 @@ export function TaskDetailModal({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [newItemText, setNewItemText] = useState<Record<string, string>>({});
+  const [showActivity, setShowActivity] = useState(false);
 
   // Load task details
   const loadTaskDetails = useCallback(async () => {
@@ -57,7 +155,6 @@ export function TaskDetailModal({
       ]);
       setLabels(labelsData);
       setChecklists(checklistsData);
-      // Expand all checklists by default
       setExpandedChecklists(new Set(checklistsData.map((c) => c.checklist.id)));
     } catch (error) {
       console.error("Failed to load task details:", error);
@@ -77,7 +174,7 @@ export function TaskDetailModal({
   }, [title, description, task.title, task.description]);
 
   // Save task
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!hasChanges) return;
 
     try {
@@ -92,7 +189,7 @@ export function TaskDetailModal({
     } finally {
       setSaving(false);
     }
-  };
+  }, [hasChanges, task.id, title, description, onSave]);
 
   // Toggle checklist item
   const handleToggleItem = async (itemId: string, checklistId: string) => {
@@ -118,6 +215,41 @@ export function TaskDetailModal({
       );
     } catch (error) {
       console.error("Failed to toggle item:", error);
+    }
+  };
+
+  // Add new checklist item
+  const handleAddItem = async (checklistId: string) => {
+    const text = newItemText[checklistId]?.trim();
+    if (!text) return;
+
+    try {
+      const newItem = await createChecklistItem({
+        checklist_id: checklistId,
+        title: text,
+        position: checklists.find((c) => c.checklist.id === checklistId)?.items.length || 0,
+      });
+
+      setChecklists((prev) =>
+        prev.map((cl) => {
+          if (cl.checklist.id !== checklistId) return cl;
+          const newItems = [...cl.items, newItem];
+          const completed = newItems.filter((i) => i.done).length;
+          return {
+            ...cl,
+            items: newItems,
+            progress: {
+              total: newItems.length,
+              completed,
+              percentage: newItems.length > 0 ? Math.round((completed / newItems.length) * 100) : 0,
+            },
+          };
+        })
+      );
+
+      setNewItemText((prev) => ({ ...prev, [checklistId]: "" }));
+    } catch (error) {
+      console.error("Failed to add item:", error);
     }
   };
 
@@ -168,29 +300,237 @@ export function TaskDetailModal({
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl my-8 mx-4">
-        <div className="card p-0 overflow-hidden shadow-xl">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <div className="flex items-center gap-2">
-              {task.completed ? (
-                <CheckCircle2 className="h-5 w-5 text-success" />
-              ) : (
-                <Circle className="h-5 w-5 text-foreground-muted" />
+      <div className="relative w-full max-w-4xl my-8 mx-4">
+        <div className="bg-bg-secondary rounded-xl overflow-hidden shadow-2xl border border-border">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-lg bg-bg-tertiary hover:bg-bg-hover text-foreground-muted hover:text-foreground transition-colors z-10"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div className="flex">
+            {/* Main Content */}
+            <div className="flex-1 p-6 min-w-0">
+              {/* Header */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-2 text-sm text-foreground-muted">
+                  {task.completed ? (
+                    <CheckCircle2 className="h-4 w-4 text-success" />
+                  ) : (
+                    <Circle className="h-4 w-4" />
+                  )}
+                  <span>Task</span>
+                  <span className="px-2 py-0.5 bg-bg-tertiary rounded font-mono text-xs">
+                    {task.id.slice(0, 8)}
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full text-xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-foreground-muted"
+                  placeholder="Task title"
+                />
+              </div>
+
+              {/* Labels */}
+              {labels.length > 0 && (
+                <Section icon={Tag} title="Labels" onAdd={() => {}} addLabel="Add">
+                  <div className="flex flex-wrap gap-2">
+                    {labels.map((label) => (
+                      <span
+                        key={label.id}
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded border ${
+                          labelColorClasses[label.color] || labelColorClasses.slate
+                        }`}
+                      >
+                        {label.name}
+                        <button className="opacity-60 hover:opacity-100">×</button>
+                      </span>
+                    ))}
+                    <button className="px-2.5 py-1 text-xs font-medium rounded border border-dashed border-border text-foreground-muted hover:border-primary hover:text-primary transition-colors">
+                      + Add
+                    </button>
+                  </div>
+                </Section>
               )}
-              <span className="text-sm text-foreground-muted">Task</span>
+
+              {/* Dates - Placeholder */}
+              <Section icon={Calendar} title="Dates">
+                <div className="flex gap-4">
+                  <div>
+                    <div className="text-xs text-foreground-muted mb-1">Start</div>
+                    <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
+                      Set date
+                    </button>
+                  </div>
+                  <div>
+                    <div className="text-xs text-foreground-muted mb-1">Due</div>
+                    <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
+                      Set date
+                    </button>
+                  </div>
+                </div>
+              </Section>
+
+              {/* Description */}
+              <Section icon={MoreHorizontal} title="Description">
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={4}
+                  className="w-full p-3 bg-bg-tertiary border border-border rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Add a more detailed description..."
+                />
+              </Section>
+
+              {/* Checklists */}
+              {loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-foreground-muted" />
+                </div>
+              ) : checklists.length > 0 ? (
+                <div className="space-y-4">
+                  {checklists.map(({ checklist, items, progress }) => (
+                    <div key={checklist.id} className="border border-border rounded-lg overflow-hidden">
+                      {/* Checklist header */}
+                      <button
+                        onClick={() => toggleChecklist(checklist.id)}
+                        className="w-full flex items-center justify-between p-3 bg-bg-tertiary hover:bg-bg-hover transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-foreground-muted" />
+                          <span className="font-medium text-sm">{checklist.title}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-foreground-muted">
+                            {progress.completed}/{progress.total}
+                          </span>
+                          {/* Progress bar */}
+                          <div className="w-24 h-1.5 bg-bg-secondary rounded-full overflow-hidden">
+                            <div
+                              className={`h-full transition-all ${
+                                progress.percentage === 100 ? "bg-success" : "bg-primary"
+                              }`}
+                              style={{ width: `${progress.percentage}%` }}
+                            />
+                          </div>
+                          {expandedChecklists.has(checklist.id) ? (
+                            <ChevronDown className="h-4 w-4 text-foreground-muted" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4 text-foreground-muted" />
+                          )}
+                        </div>
+                      </button>
+
+                      {/* Checklist items */}
+                      {expandedChecklists.has(checklist.id) && (
+                        <div className="p-3 space-y-1">
+                          {items.map((item) => (
+                            <button
+                              key={item.id}
+                              onClick={() => handleToggleItem(item.id, checklist.id)}
+                              className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-bg-tertiary transition-colors group"
+                            >
+                              <div
+                                className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${
+                                  item.done
+                                    ? "bg-primary border-primary"
+                                    : "border-border group-hover:border-primary"
+                                }`}
+                              >
+                                {item.done && (
+                                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                )}
+                              </div>
+                              <span
+                                className={`text-sm flex-1 ${
+                                  item.done ? "line-through text-foreground-muted" : ""
+                                }`}
+                              >
+                                {item.title}
+                              </span>
+                            </button>
+                          ))}
+
+                          {/* Add item input */}
+                          <div className="flex items-center gap-2 pt-2">
+                            <Plus className="h-4 w-4 text-foreground-muted" />
+                            <input
+                              type="text"
+                              value={newItemText[checklist.id] || ""}
+                              onChange={(e) =>
+                                setNewItemText((prev) => ({
+                                  ...prev,
+                                  [checklist.id]: e.target.value,
+                                }))
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  handleAddItem(checklist.id);
+                                }
+                              }}
+                              placeholder="Add an item..."
+                              className="flex-1 bg-transparent text-sm outline-none placeholder:text-foreground-muted"
+                            />
+                            {newItemText[checklist.id] && (
+                              <button
+                                onClick={() => handleAddItem(checklist.id)}
+                                className="px-2 py-1 text-xs bg-primary text-white rounded hover:bg-primary-hover"
+                              >
+                                Add
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {/* Activity */}
+              <Section icon={Activity} title="Activity" defaultOpen={false}>
+                <button
+                  onClick={() => setShowActivity(!showActivity)}
+                  className="text-xs text-foreground-muted hover:text-foreground"
+                >
+                  {showActivity ? "Hide" : "Show"} details
+                </button>
+                {showActivity && (
+                  <div className="mt-3 space-y-2 text-sm text-foreground-muted">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs">●</span>
+                      Created {new Date(task.created_at).toLocaleDateString()}
+                    </div>
+                    {task.updated_at && task.updated_at !== task.created_at && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">●</span>
+                        Updated {new Date(task.updated_at).toLocaleDateString()}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Section>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Sidebar */}
+            <div className="w-48 p-4 bg-bg-tertiary border-l border-border shrink-0">
+              {/* Save button */}
               {hasChanges && (
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="btn btn-primary btn-sm"
+                  className="w-full btn btn-primary mb-4"
                 >
                   {saving ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -202,149 +542,75 @@ export function TaskDetailModal({
                   )}
                 </button>
               )}
-              {onDelete && (
-                <button
-                  onClick={() => onDelete(task)}
-                  className="p-2 text-foreground-muted hover:text-error transition-colors"
-                  title="Delete task"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              )}
-              <button
-                onClick={onClose}
-                className="p-2 text-foreground-muted hover:text-foreground transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-6">
-            {/* Title */}
-            <div>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full text-xl font-semibold bg-transparent border-none outline-none focus:ring-0 placeholder:text-foreground-muted"
-                placeholder="Task title"
-              />
-            </div>
-
-            {/* Labels */}
-            {labels.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {labels.map((label) => (
-                  <span
-                    key={label.id}
-                    className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded border ${
-                      labelColorClasses[label.color] || labelColorClasses.slate
-                    }`}
-                  >
-                    {label.name}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Description */}
-            <div>
-              <label className="block text-sm font-medium text-foreground-secondary mb-2">
-                Description
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-                className="input w-full resize-none"
-                placeholder="Add a more detailed description..."
-              />
-            </div>
-
-            {/* Checklists */}
-            {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-foreground-muted" />
-              </div>
-            ) : checklists.length > 0 ? (
               <div className="space-y-4">
-                {checklists.map(({ checklist, items, progress }) => (
-                  <div key={checklist.id} className="border border-border rounded-lg">
-                    {/* Checklist header */}
-                    <button
-                      onClick={() => toggleChecklist(checklist.id)}
-                      className="w-full flex items-center justify-between p-3 hover:bg-bg-secondary transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        {expandedChecklists.has(checklist.id) ? (
-                          <ChevronDown className="h-4 w-4 text-foreground-muted" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4 text-foreground-muted" />
-                        )}
-                        <span className="font-medium">{checklist.title}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-foreground-muted">
-                          {progress.completed}/{progress.total}
-                        </span>
-                        {/* Progress bar */}
-                        <div className="w-20 h-1.5 bg-bg-tertiary rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary transition-all"
-                            style={{ width: `${progress.percentage}%` }}
-                          />
-                        </div>
-                      </div>
-                    </button>
-
-                    {/* Checklist items */}
-                    {expandedChecklists.has(checklist.id) && (
-                      <div className="px-3 pb-3 space-y-1">
-                        {items.map((item) => (
-                          <button
-                            key={item.id}
-                            onClick={() => handleToggleItem(item.id, checklist.id)}
-                            className="flex items-center gap-2 w-full p-2 text-left rounded hover:bg-bg-secondary transition-colors"
-                          >
-                            {item.done ? (
-                              <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
-                            ) : (
-                              <Circle className="h-4 w-4 text-foreground-muted shrink-0" />
-                            )}
-                            <span
-                              className={`text-sm ${
-                                item.done
-                                  ? "line-through text-foreground-muted"
-                                  : ""
-                              }`}
-                            >
-                              {item.title}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                {/* Add to card */}
+                <div>
+                  <div className="text-xs font-semibold text-foreground-muted uppercase mb-2">
+                    Add to card
                   </div>
-                ))}
-              </div>
-            ) : null}
-          </div>
+                  <div className="space-y-1">
+                    <SidebarButton icon={Users} label="Members" />
+                    <SidebarButton icon={Tag} label="Labels" />
+                    <SidebarButton icon={CheckCircle2} label="Checklist" />
+                    <SidebarButton icon={Calendar} label="Dates" />
+                    <SidebarButton icon={Paperclip} label="Attachment" />
+                    <SidebarButton icon={LinkIcon} label="Link" />
+                  </div>
+                </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-bg-secondary">
-            <span className="text-xs text-foreground-muted">
-              Created {new Date(task.created_at).toLocaleDateString()}
-            </span>
-            <span className="text-xs text-foreground-muted">
-              Press <kbd className="px-1 py-0.5 bg-bg-tertiary rounded text-[10px]">Esc</kbd> to close
-              {hasChanges && (
-                <>
-                  , <kbd className="px-1 py-0.5 bg-bg-tertiary rounded text-[10px]">Cmd+S</kbd> to save
-                </>
-              )}
-            </span>
+                {/* AI */}
+                <div>
+                  <div className="text-xs font-semibold text-foreground-muted uppercase mb-2">
+                    AI
+                  </div>
+                  <div className="space-y-1">
+                    <SidebarButton icon={Sparkles} label="Analyse" variant="ai" />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div>
+                  <div className="text-xs font-semibold text-foreground-muted uppercase mb-2">
+                    Actions
+                  </div>
+                  <div className="space-y-1">
+                    <SidebarButton icon={Move} label="Move" />
+                    <SidebarButton icon={Copy} label="Copy" />
+                    <SidebarButton icon={Eye} label="Watch" />
+                    <SidebarButton icon={Archive} label="Archive" />
+                    <SidebarButton icon={Share2} label="Share" />
+                  </div>
+                </div>
+
+                {/* Danger zone */}
+                {onDelete && (
+                  <div>
+                    <div className="space-y-1">
+                      <SidebarButton
+                        icon={Trash2}
+                        label="Delete"
+                        variant="danger"
+                        onClick={() => onDelete(task)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer hint */}
+              <div className="mt-6 pt-4 border-t border-border">
+                <p className="text-[10px] text-foreground-muted leading-relaxed">
+                  <kbd className="px-1 py-0.5 bg-bg-secondary rounded">Esc</kbd> close
+                  {hasChanges && (
+                    <>
+                      {" · "}
+                      <kbd className="px-1 py-0.5 bg-bg-secondary rounded">⌘S</kbd> save
+                    </>
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
+import { Plus, MoreVertical } from "lucide-react";
 import { TaskCard } from "./TaskCard";
 import type { DbColumn, DbTask, DbLabel } from "@/types/database";
 
@@ -10,6 +11,7 @@ interface TaskColumnProps {
   column: DbColumn;
   tasks: DbTask[];
   taskLabels?: Record<string, DbLabel[]>;
+  checklistProgress?: Record<string, { completed: number; total: number }>;
   onAddTask?: (columnId: string) => void;
   onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
@@ -17,89 +19,137 @@ interface TaskColumnProps {
   onDeleteTask?: (task: DbTask) => void;
 }
 
-const columnColorClasses: Record<string, { header: string; border: string }> = {
-  slate: { header: "bg-slate-500/20 text-slate-300", border: "border-t-slate-500" },
-  blue: { header: "bg-blue-500/20 text-blue-300", border: "border-t-blue-500" },
-  green: { header: "bg-green-500/20 text-green-300", border: "border-t-green-500" },
-  orange: { header: "bg-orange-500/20 text-orange-300", border: "border-t-orange-500" },
-  purple: { header: "bg-purple-500/20 text-purple-300", border: "border-t-purple-500" },
-  red: { header: "bg-red-500/20 text-red-300", border: "border-t-red-500" },
-  yellow: { header: "bg-yellow-500/20 text-yellow-300", border: "border-t-yellow-500" },
-  pink: { header: "bg-pink-500/20 text-pink-300", border: "border-t-pink-500" },
+// Mapping column colors to actual hex values
+const columnColors: Record<string, string> = {
+  slate: "#64748B",
+  blue: "#3B82F6",
+  green: "#22C55E",
+  orange: "#F59E0B",
+  purple: "#8B5CF6",
+  red: "#EF4444",
+  yellow: "#EAB308",
+  pink: "#EC4899",
+  indigo: "#6366F1",
+  emerald: "#10B981",
+  cyan: "#06B6D4",
 };
 
 export function TaskColumn({
   column,
   tasks,
   taskLabels = {},
+  checklistProgress = {},
   onAddTask,
   onTaskClick,
   onToggleTask,
   onEditTask,
   onDeleteTask,
 }: TaskColumnProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
   });
 
-  const colorClass = columnColorClasses[column.color || "slate"] || columnColorClasses.slate;
-  const completedCount = tasks.filter((t) => t.completed).length;
+  const colorHex = columnColors[column.color || "slate"] || columnColors.slate;
+  const isOverLimit = column.wip_limit && tasks.length >= column.wip_limit;
 
   return (
     <div
+      data-column-id={column.id}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={`
-        flex flex-col w-72 min-w-72 rounded-lg bg-bg-secondary border-t-4
-        ${colorClass.border}
-        ${isOver ? "ring-2 ring-primary" : ""}
+        flex flex-col w-[280px] min-w-[280px] max-h-[calc(100vh-200px)]
+        bg-[#0D2137] rounded-xl
+        transition-all duration-150 ease-out
+        ${isOver ? "ring-2 ring-primary ring-opacity-50" : ""}
       `}
     >
-      {/* Column header */}
-      <div className="flex items-center justify-between px-3 py-2">
-        <div className="flex items-center gap-2">
-          <span className={`px-2 py-0.5 text-xs font-medium rounded ${colorClass.header}`}>
-            {column.name}
-          </span>
-          <span className="text-xs text-foreground-muted">
-            {completedCount}/{tasks.length}
-          </span>
-        </div>
+      {/* Column Header */}
+      <div
+        className="flex items-center gap-2.5 px-3.5 py-3 border-b border-border-subtle select-none"
+      >
+        {/* Colored indicator square */}
+        <div
+          className="w-3 h-3 rounded shrink-0"
+          style={{ backgroundColor: colorHex }}
+        />
+
+        {/* Column title */}
+        <span className="text-sm font-semibold text-foreground flex-1">
+          {column.name}
+        </span>
+
+        {/* Task count / WIP limit */}
+        <span className={`text-xs ${isOverLimit ? "text-error font-semibold" : "text-foreground-muted"}`}>
+          {tasks.length}
+          {column.wip_limit ? `/${column.wip_limit}` : ""}
+        </span>
+
+        {/* Menu button (shows on hover) */}
         <button
-          onClick={() => onAddTask?.(column.id)}
-          className="p-1 text-foreground-muted hover:text-foreground hover:bg-bg-tertiary rounded transition-colors"
+          className={`p-1 text-foreground-muted hover:text-foreground transition-opacity ${
+            isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
         >
-          <Plus className="h-4 w-4" />
+          <MoreVertical className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Tasks */}
-      <div ref={setNodeRef} className="flex-1 p-2 space-y-2 overflow-y-auto min-h-[200px]">
+      {/* Cards Container */}
+      <div
+        ref={setNodeRef}
+        data-cards-container={column.id}
+        className="flex-1 flex flex-col gap-2 p-2 overflow-y-auto min-h-[100px]"
+      >
         <SortableContext
           items={tasks.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              labels={taskLabels[task.id] || []}
-              onClick={onTaskClick}
-              onToggle={onToggleTask}
-              onEdit={onEditTask}
-              onDelete={onDeleteTask}
-            />
+          {tasks.map((task, index) => (
+            <div key={task.id} data-card-index={index}>
+              <TaskCard
+                task={task}
+                labels={taskLabels[task.id] || []}
+                checklistProgress={checklistProgress[task.id]}
+                onClick={onTaskClick}
+                onToggle={onToggleTask}
+                onEdit={onEditTask}
+                onDelete={onDeleteTask}
+              />
+            </div>
           ))}
         </SortableContext>
 
+        {/* Empty state placeholder */}
         {tasks.length === 0 && (
-          <div className="flex items-center justify-center h-24 text-sm text-foreground-muted border-2 border-dashed border-border rounded-lg">
+          <div className="flex items-center justify-center h-16 text-sm text-foreground-muted border-2 border-dashed border-border rounded-[10px] opacity-60">
             Drop tasks here
           </div>
         )}
       </div>
 
-      {/* WIP limit indicator */}
+      {/* Quick Add Card Button */}
+      <div className="p-2 pt-0">
+        <button
+          onClick={() => onAddTask?.(column.id)}
+          className="
+            flex items-center gap-2 w-full px-3 py-2.5
+            text-foreground-muted text-[13px]
+            border border-dashed border-border rounded-[10px]
+            transition-all duration-150
+            hover:border-primary hover:text-primary
+          "
+        >
+          <Plus className="h-4 w-4" />
+          Add card
+        </button>
+      </div>
+
+      {/* WIP limit warning */}
       {column.wip_limit && tasks.length > column.wip_limit && (
-        <div className="px-3 py-1 text-xs text-warning bg-warning/10 border-t border-warning/20">
+        <div className="px-3 py-1.5 text-xs text-error bg-error/10 border-t border-error/20 rounded-b-xl">
           WIP limit exceeded ({tasks.length}/{column.wip_limit})
         </div>
       )}

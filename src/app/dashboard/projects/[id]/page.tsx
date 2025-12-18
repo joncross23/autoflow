@@ -9,6 +9,7 @@ import { getProject } from "@/lib/api/projects";
 import { getProjectColumns } from "@/lib/api/columns";
 import { getTasksForProject, createTask, updateTask, toggleTask, deleteTask } from "@/lib/api/tasks";
 import { getTaskLabels } from "@/lib/api/labels";
+import { getTasksChecklistProgress } from "@/lib/api/checklists";
 import type { DbProject, DbColumn, DbTask, DbLabel } from "@/types/database";
 
 type ViewMode = "board" | "list";
@@ -22,6 +23,7 @@ export default function ProjectDetailPage() {
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [taskLabels, setTaskLabels] = useState<Record<string, DbLabel[]>>({});
+  const [checklistProgress, setChecklistProgress] = useState<Record<string, { completed: number; total: number }>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addingTaskToColumn, setAddingTaskToColumn] = useState<string | null>(null);
@@ -50,19 +52,23 @@ export default function ProjectDetailPage() {
       setColumns(columnsData);
       setTasks(tasksData);
 
-      // Load labels for all tasks
+      // Load labels and checklist progress for all tasks
       const labelsMap: Record<string, DbLabel[]> = {};
-      await Promise.all(
-        tasksData.map(async (task) => {
-          try {
-            const labels = await getTaskLabels(task.id);
-            labelsMap[task.id] = labels;
-          } catch {
-            labelsMap[task.id] = [];
-          }
-        })
-      );
+      const [labelsResult, progressResult] = await Promise.all([
+        Promise.all(
+          tasksData.map(async (task) => {
+            try {
+              const labels = await getTaskLabels(task.id);
+              labelsMap[task.id] = labels;
+            } catch {
+              labelsMap[task.id] = [];
+            }
+          })
+        ),
+        getTasksChecklistProgress(tasksData.map((t) => t.id)),
+      ]);
       setTaskLabels(labelsMap);
+      setChecklistProgress(progressResult);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load project");
     } finally {
@@ -231,7 +237,7 @@ export default function ProjectDetailPage() {
       </header>
 
       {/* Task Views */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden -mx-6 -mb-6 px-6 pt-4 pb-6 bg-[#0F2D4A]">
         {columns.length === 0 ? (
           <div className="flex items-center justify-center h-64 text-foreground-muted">
             No columns configured for this project
@@ -241,6 +247,7 @@ export default function ProjectDetailPage() {
             columns={columns}
             tasks={tasks}
             taskLabels={taskLabels}
+            checklistProgress={checklistProgress}
             onTasksChange={handleTasksChange}
             onAddTask={handleAddTask}
             onTaskClick={handleEditTask}

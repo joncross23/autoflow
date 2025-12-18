@@ -23,6 +23,7 @@ interface TaskKanbanBoardProps {
   columns: DbColumn[];
   tasks: DbTask[];
   taskLabels?: Record<string, DbLabel[]>;
+  checklistProgress?: Record<string, { completed: number; total: number }>;
   onTasksChange: (tasks: DbTask[]) => void;
   onAddTask?: (columnId: string) => void;
   onTaskClick?: (task: DbTask) => void;
@@ -35,6 +36,7 @@ export function TaskKanbanBoard({
   columns,
   tasks,
   taskLabels = {},
+  checklistProgress = {},
   onTasksChange,
   onAddTask,
   onTaskClick,
@@ -209,6 +211,7 @@ export function TaskKanbanBoard({
             column={column}
             tasks={tasksByColumn[column.id] || []}
             taskLabels={taskLabels}
+            checklistProgress={checklistProgress}
             onAddTask={onAddTask}
             onTaskClick={onTaskClick}
             onToggleTask={onToggleTask}
@@ -224,6 +227,7 @@ export function TaskKanbanBoard({
             <TaskCard
               task={activeTask}
               labels={taskLabels[activeTask.id] || []}
+              checklistProgress={checklistProgress[activeTask.id]}
               isDragging
             />
           </div>

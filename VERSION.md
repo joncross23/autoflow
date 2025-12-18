@@ -1,6 +1,27 @@
 # AutoFlow Version History
 
-## Current Version: 0.1.0
+## Current Version: 0.2.0
+
+---
+
+## Version 0.2.0 (2025-12-18)
+
+**Type:** Feature Update
+
+**Features:**
+- Updated kanban board styling to match mockup designs
+  - Teal-blue board background (#0F2D4A)
+  - Dark navy column backgrounds (#0D2137)
+  - Dark card backgrounds with subtle borders (#0A1628)
+- Added checklist progress display on task cards
+- Efficient batch API for checklist progress loading
+- Avatar and AvatarStack components for assignee display
+- Task cards now show progress bars, due dates, and indicators
+
+**Technical:**
+- New `getTasksChecklistProgress` API for batch progress fetching
+- Optimized data loading with Promise.all patterns
+- Custom hex color theming for kanban board
 
 ---
 

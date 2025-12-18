@@ -132,7 +132,7 @@ export function Sidebar() {
       {!isCollapsed && (
         <div className="border-t border-border p-4">
           <p className="text-xs text-foreground-muted">
-            Version 0.1.0
+            Version 0.2.0
           </p>
         </div>
       )}

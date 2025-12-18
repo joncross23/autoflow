@@ -3,7 +3,8 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2025-12-17
+> **Last Updated:** 2025-12-18
+> **Current Version:** 0.2.0
 > **Current Phase:** 7 — User Testing & Refinement (IN PROGRESS)
 > **Previous Phase:** 6.5 — Task Kanban & Import (COMPLETE)
 
@@ -362,6 +363,19 @@ grey: #64748B
 
 ## Session Log
 
+### 2025-12-18 — Version 0.2.0 Kanban Styling & Checklist Progress
+- Updated kanban board styling to match mockup designs:
+  - Board background: #0F2D4A (teal-blue)
+  - Column background: #0D2137 (dark navy)
+  - Card background: #0A1628 (deep navy)
+  - Card border: #1E3A5F (subtle teal-blue)
+- Added checklist progress display on task cards
+- Created efficient batch API `getTasksChecklistProgress` for loading progress
+- Added Avatar and AvatarStack components for assignee display
+- Task cards now show progress bars, due dates, and checklist indicators
+- Updated version to 0.2.0 in sidebar and VERSION.md
+- Resolved multiple webpack cache corruption issues during development
+
 ### 2025-12-17 — Phase 7 Task Detail Modal (In Progress)
 - Created TaskDetailModal component with title/description editing
 - Added checklist display with toggle functionality
@@ -500,6 +514,8 @@ grey: #64748B
 
 | Task | Priority | Status | Description |
 |------|----------|--------|-------------|
+| Kanban board styling | High | **Done** | Updated colors to match mockup (v0.2.0) |
+| Checklist progress on cards | High | **Done** | Progress bars and indicators on TaskCard |
 | Task detail modal | High | **Partial** | Basic view/edit done, needs checklist editing |
 | Checklist UI in task detail | High | **Partial** | Display/toggle done, needs add/remove items |
 | Task drag-drop persistence | High | Pending | Fix task reordering within/across columns |

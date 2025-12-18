@@ -130,6 +130,8 @@ export interface DbTask {
   description: string | null;
   completed: boolean;
   position: number;
+  due_date: string | null;
+  priority: Priority | null;
   created_at: string;
   updated_at: string;
 }
@@ -141,6 +143,8 @@ export interface DbTaskInsert {
   description?: string | null;
   completed?: boolean;
   position?: number;
+  due_date?: string | null;
+  priority?: Priority | null;
 }
 
 export interface DbTaskUpdate {
@@ -149,6 +153,8 @@ export interface DbTaskUpdate {
   column_id?: string | null;
   completed?: boolean;
   position?: number;
+  due_date?: string | null;
+  priority?: Priority | null;
   updated_at?: string;
 }
 
