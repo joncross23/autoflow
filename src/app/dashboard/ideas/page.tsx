@@ -32,7 +32,9 @@ export default function IdeasPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getIdeas(statusFilter === "all" ? undefined : statusFilter);
+      const data = await getIdeas(
+        statusFilter === "all" ? undefined : { status: statusFilter }
+      );
       setIdeas(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load ideas");
