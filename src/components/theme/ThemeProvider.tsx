@@ -7,37 +7,68 @@ import {
   useState,
   useCallback,
 } from "react";
-
-type Mode = "dark" | "light" | "system";
-type Accent = "blue" | "emerald" | "orange" | "purple" | "pink" | "slate";
+import type {
+  SystemTheme,
+  Mode,
+  Accent,
+  ThemeDefinition,
+} from "@/lib/themes";
+import {
+  themes,
+  DEFAULT_THEME,
+  DEFAULT_MODE,
+  DEFAULT_ACCENT,
+} from "@/lib/themes";
 
 interface ThemeContextType {
+  // System theme (autoflow, macos, windows)
+  systemTheme: SystemTheme;
+  setSystemTheme: (theme: SystemTheme) => void;
+
+  // Mode (dark, light, system)
   mode: Mode;
-  accent: Accent;
-  resolvedMode: "dark" | "light";
   setMode: (mode: Mode) => void;
+  resolvedMode: "dark" | "light";
+
+  // Accent color
+  accent: Accent;
   setAccent: (accent: Accent) => void;
+
+  // Current theme definition for reference
+  themeDefinition: ThemeDefinition;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
+  defaultSystemTheme?: SystemTheme;
   defaultMode?: Mode;
   defaultAccent?: Accent;
   storageKey?: string;
 }
 
+interface PersistedTheme {
+  mode?: Mode;
+  accent?: Accent;
+  systemTheme?: SystemTheme;
+}
+
 export function ThemeProvider({
   children,
-  defaultMode = "dark",
-  defaultAccent = "blue",
+  defaultSystemTheme = DEFAULT_THEME,
+  defaultMode = DEFAULT_MODE,
+  defaultAccent = DEFAULT_ACCENT,
   storageKey = "autoflow-theme",
 }: ThemeProviderProps) {
+  const [systemTheme, setSystemThemeState] = useState<SystemTheme>(defaultSystemTheme);
   const [mode, setModeState] = useState<Mode>(defaultMode);
   const [accent, setAccentState] = useState<Accent>(defaultAccent);
   const [resolvedMode, setResolvedMode] = useState<"dark" | "light">("dark");
   const [mounted, setMounted] = useState(false);
+
+  // Get current theme definition
+  const themeDefinition = themes[systemTheme];
 
   // Get system preference
   const getSystemMode = useCallback((): "dark" | "light" => {
@@ -55,14 +86,18 @@ export function ThemeProvider({
     [getSystemMode]
   );
 
-  // Load saved theme on mount
+  // Load saved theme on mount (backward compatible)
   useEffect(() => {
     const savedTheme = localStorage.getItem(storageKey);
     if (savedTheme) {
       try {
-        const { mode: savedMode, accent: savedAccent } = JSON.parse(savedTheme);
-        if (savedMode) setModeState(savedMode);
-        if (savedAccent) setAccentState(savedAccent);
+        const parsed: PersistedTheme = JSON.parse(savedTheme);
+        if (parsed.mode) setModeState(parsed.mode);
+        if (parsed.accent) setAccentState(parsed.accent);
+        // New: load system theme if present, otherwise default to 'autoflow'
+        if (parsed.systemTheme && themes[parsed.systemTheme]) {
+          setSystemThemeState(parsed.systemTheme);
+        }
       } catch {
         // Invalid JSON, use defaults
       }
@@ -82,6 +117,14 @@ export function ThemeProvider({
     root.classList.remove("dark", "light");
     root.classList.add(resolved);
   }, [mode, mounted, resolveMode]);
+
+  // Apply system theme data attribute
+  useEffect(() => {
+    if (!mounted) return;
+
+    const root = document.documentElement;
+    root.setAttribute("data-theme", systemTheme);
+  }, [systemTheme, mounted]);
 
   // Apply accent class
   useEffect(() => {
@@ -107,6 +150,10 @@ export function ThemeProvider({
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
       setResolvedMode(getSystemMode());
+      // Re-apply mode class
+      const root = document.documentElement;
+      root.classList.remove("dark", "light");
+      root.classList.add(getSystemMode());
     };
 
     mediaQuery.addEventListener("change", handler);
@@ -116,8 +163,13 @@ export function ThemeProvider({
   // Persist theme to localStorage
   useEffect(() => {
     if (!mounted) return;
-    localStorage.setItem(storageKey, JSON.stringify({ mode, accent }));
-  }, [mode, accent, storageKey, mounted]);
+    const themeData: PersistedTheme = { mode, accent, systemTheme };
+    localStorage.setItem(storageKey, JSON.stringify(themeData));
+  }, [mode, accent, systemTheme, storageKey, mounted]);
+
+  const setSystemTheme = useCallback((newTheme: SystemTheme) => {
+    setSystemThemeState(newTheme);
+  }, []);
 
   const setMode = useCallback((newMode: Mode) => {
     setModeState(newMode);
@@ -138,7 +190,16 @@ export function ThemeProvider({
 
   return (
     <ThemeContext.Provider
-      value={{ mode, accent, resolvedMode, setMode, setAccent }}
+      value={{
+        systemTheme,
+        setSystemTheme,
+        mode,
+        setMode,
+        resolvedMode,
+        accent,
+        setAccent,
+        themeDefinition,
+      }}
     >
       {children}
     </ThemeContext.Provider>

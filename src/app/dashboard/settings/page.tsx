@@ -1,18 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { User, Mail, Loader2, LogOut, Lock } from "lucide-react";
 import { useUser } from "@/hooks";
 import { createClient } from "@/lib/supabase/client";
 import { Avatar } from "@/components/shared";
-
-// Dynamically import ThemeToggle to avoid SSR issues with useTheme
-const ThemeToggle = dynamic(
-  () => import("@/components/theme/ThemeToggle").then((mod) => mod.ThemeToggle),
-  { ssr: false }
-);
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -67,19 +60,14 @@ export default function SettingsPage() {
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">
-          Customise your AutoFlow experience
-        </p>
-      </header>
-
+    <div className="space-y-6">
       {/* Account section */}
-      <section className="card mb-6">
-        <h2 className="mb-4 text-lg font-semibold">Account</h2>
+      <section className="card">
+        <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--text)" }}>
+          Account
+        </h2>
         {userLoading ? (
-          <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="flex items-center gap-2" style={{ color: "var(--text-muted)" }}>
             <Loader2 className="h-4 w-4 animate-spin" />
             Loading...
           </div>
@@ -89,31 +77,31 @@ export default function SettingsPage() {
             <div className="flex items-center gap-4">
               <Avatar name={userName} size="lg" />
               <div>
-                <p className="font-medium">{userName}</p>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
+                <p className="font-medium" style={{ color: "var(--text)" }}>{userName}</p>
+                <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{user.email}</p>
               </div>
             </div>
 
             {/* User details */}
-            <div className="space-y-3 pt-4 border-t border-border">
+            <div className="space-y-3 pt-4" style={{ borderTop: "1px solid var(--border-color)" }}>
               <div className="flex items-center gap-3">
-                <User className="h-4 w-4 text-muted-foreground" />
+                <User className="h-4 w-4" style={{ color: "var(--text-muted)" }} />
                 <div>
-                  <p className="text-sm text-muted-foreground">Full name</p>
-                  <p className="text-sm">{userName}</p>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>Full name</p>
+                  <p className="text-sm" style={{ color: "var(--text)" }}>{userName}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-muted-foreground" />
+                <Mail className="h-4 w-4" style={{ color: "var(--text-muted)" }} />
                 <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="text-sm">{user.email}</p>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>Email</p>
+                  <p className="text-sm" style={{ color: "var(--text)" }}>{user.email}</p>
                 </div>
               </div>
             </div>
 
             {/* Sign out button */}
-            <div className="pt-4 border-t border-border">
+            <div className="pt-4" style={{ borderTop: "1px solid var(--border-color)" }}>
               <button
                 onClick={handleSignOut}
                 disabled={signingOut}
@@ -129,7 +117,7 @@ export default function SettingsPage() {
             </div>
           </div>
         ) : (
-          <p className="text-muted-foreground">
+          <p style={{ color: "var(--text-muted)" }}>
             Not signed in
           </p>
         )}
@@ -137,28 +125,51 @@ export default function SettingsPage() {
 
       {/* Password section - only show if user is signed in */}
       {user && (
-        <section className="card mb-6">
-          <h2 className="mb-4 text-lg font-semibold">Change Password</h2>
+        <section className="card">
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--text)" }}>
+            Change Password
+          </h2>
 
           {passwordError && (
-            <div className="mb-4 p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
+            <div
+              className="mb-4 p-3 rounded-lg text-sm"
+              style={{
+                backgroundColor: "var(--error-muted)",
+                border: "1px solid var(--error)",
+                color: "var(--error)",
+              }}
+            >
               {passwordError}
             </div>
           )}
 
           {passwordSuccess && (
-            <div className="mb-4 p-3 rounded-lg bg-success/10 border border-success/20 text-success text-sm">
+            <div
+              className="mb-4 p-3 rounded-lg text-sm"
+              style={{
+                backgroundColor: "var(--success-muted)",
+                border: "1px solid var(--success)",
+                color: "var(--success)",
+              }}
+            >
               Password updated successfully
             </div>
           )}
 
           <form onSubmit={handleUpdatePassword} className="space-y-4">
             <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium mb-1.5">
+              <label
+                htmlFor="newPassword"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "var(--text)" }}
+              >
                 New password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                  style={{ color: "var(--text-muted)" }}
+                />
                 <input
                   id="newPassword"
                   type="password"
@@ -172,11 +183,18 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1.5">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "var(--text)" }}
+              >
                 Confirm new password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                  style={{ color: "var(--text-muted)" }}
+                />
                 <input
                   id="confirmPassword"
                   type="password"
@@ -207,16 +225,12 @@ export default function SettingsPage() {
         </section>
       )}
 
-      {/* Theme section */}
-      <section className="card mb-6">
-        <h2 className="mb-4 text-lg font-semibold">Theme</h2>
-        <ThemeToggle />
-      </section>
-
       {/* Data section placeholder */}
       <section className="card">
-        <h2 className="mb-4 text-lg font-semibold">Data & Privacy</h2>
-        <p className="text-muted-foreground">
+        <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--text)" }}>
+          Data & Privacy
+        </h2>
+        <p style={{ color: "var(--text-muted)" }}>
           Export and privacy controls coming soon
         </p>
       </section>
