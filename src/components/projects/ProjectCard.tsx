@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Calendar, Clock, MoreHorizontal, ExternalLink } from "lucide-react";
+import { GripVertical, Calendar, Clock, MoreHorizontal, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { DbProject, Priority } from "@/types/database";
@@ -27,6 +28,23 @@ export function ProjectCard({
   onEdit,
   onDelete,
 }: ProjectCardProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
   const {
     attributes,
     listeners,
@@ -81,15 +99,52 @@ export function ProjectCard({
           >
             <ExternalLink className="h-4 w-4 text-muted-foreground" />
           </Link>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit?.();
-            }}
-            className="p-1 rounded hover:bg-bg-hover"
-          >
-            <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-          </button>
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+              }}
+              className="p-1 rounded hover:bg-bg-hover"
+            >
+              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+            </button>
+
+            {/* Dropdown menu */}
+            {menuOpen && (
+              <div
+                className="absolute right-0 top-full mt-1 z-50 min-w-[120px] rounded-md border bg-bg-elevated shadow-lg"
+                style={{
+                  borderColor: "var(--border-color)",
+                  backgroundColor: "var(--bg-elevated)",
+                }}
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    onEdit?.();
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm hover:bg-bg-hover transition-colors"
+                  style={{ color: "var(--text)" }}
+                >
+                  <Pencil className="h-4 w-4" />
+                  Edit
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    onDelete?.();
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm hover:bg-bg-hover transition-colors text-red-500"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

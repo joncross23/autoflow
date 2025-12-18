@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// Inter - fallback font
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// Plus Jakarta Sans - AutoFlow theme font (luxury/refined)
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -59,10 +72,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body
+        className={`${inter.variable} ${plusJakarta.variable} font-sans antialiased`}
+      >
         <ThemeProvider
           defaultMode="dark"
           defaultAccent="blue"
+          defaultSystemTheme="autoflow"
           storageKey="autoflow-theme"
         >
           {children}
