@@ -17,9 +17,11 @@ interface IdeaCardProps {
 const STATUS_CONFIG: Record<IdeaStatus, { label: string; variant: "default" | "primary" | "success" | "warning" | "error" }> = {
   new: { label: "New", variant: "primary" },
   evaluating: { label: "Evaluating", variant: "warning" },
-  prioritised: { label: "Prioritised", variant: "success" },
-  converting: { label: "Converting", variant: "default" },
-  archived: { label: "Archived", variant: "default" },
+  accepted: { label: "Accepted", variant: "success" },
+  doing: { label: "In Progress", variant: "warning" },
+  complete: { label: "Complete", variant: "success" },
+  parked: { label: "Parked", variant: "default" },
+  dropped: { label: "Dropped", variant: "error" },
 };
 
 const FREQUENCY_LABELS: Record<string, string> = {

@@ -49,8 +49,8 @@ export default function DashboardPage() {
   const activeIdeas = ideaCounts
     ? (ideaCounts.new || 0) +
       (ideaCounts.evaluating || 0) +
-      (ideaCounts.prioritised || 0) +
-      (ideaCounts.converting || 0)
+      (ideaCounts.accepted || 0) +
+      (ideaCounts.doing || 0)
     : 0;
 
   const activeProjects = projects.filter(
@@ -224,8 +224,8 @@ function PipelineWidget({
   const stages = [
     { key: "new", label: "New", color: "#3B82F6" },
     { key: "evaluating", label: "Evaluating", color: "#F59E0B" },
-    { key: "prioritised", label: "Prioritised", color: "#8B5CF6" },
-    { key: "converting", label: "Converting", color: "#10B981" },
+    { key: "accepted", label: "Accepted", color: "#8B5CF6" },
+    { key: "doing", label: "In Progress", color: "#10B981" },
   ] as const;
 
   const total = ideaCounts

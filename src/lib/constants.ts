@@ -11,9 +11,11 @@ export const APP_DESCRIPTION = "AI & Automation Discovery Platform";
 export const IDEA_STATUSES = [
   "new",
   "evaluating",
-  "prioritised",
-  "converting",
-  "archived",
+  "accepted",
+  "doing",
+  "complete",
+  "parked",
+  "dropped",
 ] as const;
 
 export const PROJECT_STATUSES = [

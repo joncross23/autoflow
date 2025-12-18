@@ -54,16 +54,24 @@ export interface Comment extends BaseEntity {
   author?: User;
 }
 
-// Idea (pre-evaluation)
+// Idea (unified model - includes projects)
 export interface Idea extends BaseEntity {
   title: string;
   description?: string;
-  status: "new" | "evaluating" | "prioritised" | "converting" | "archived";
+  status: "new" | "evaluating" | "accepted" | "doing" | "complete" | "parked" | "dropped";
   frequency?: "daily" | "weekly" | "monthly" | "quarterly" | "yearly" | "adhoc";
   timeSpent?: number; // minutes per occurrence
   owner?: string;
+  ownerId?: string;
+  teamId?: string;
   painPoints?: string;
   desiredOutcome?: string;
+  effortEstimate?: "trivial" | "small" | "medium" | "large" | "xlarge";
+  priority: "low" | "medium" | "high" | "critical";
+  position: number;
+  archived: boolean;
+  startedAt?: string;
+  completedAt?: string;
   labels: Label[];
   aiEvaluation?: AIEvaluation;
 }

@@ -128,9 +128,11 @@ export async function getIdeaCounts(): Promise<Record<IdeaStatus, number>> {
   const counts: Record<IdeaStatus, number> = {
     new: 0,
     evaluating: 0,
-    prioritised: 0,
-    converting: 0,
-    archived: 0,
+    accepted: 0,
+    doing: 0,
+    complete: 0,
+    parked: 0,
+    dropped: 0,
   };
 
   data?.forEach((idea) => {

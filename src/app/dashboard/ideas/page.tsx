@@ -11,9 +11,11 @@ const STATUS_FILTERS: { value: IdeaStatus | "all"; label: string }[] = [
   { value: "all", label: "All" },
   { value: "new", label: "New" },
   { value: "evaluating", label: "Evaluating" },
-  { value: "prioritised", label: "Prioritised" },
-  { value: "converting", label: "Converting" },
-  { value: "archived", label: "Archived" },
+  { value: "accepted", label: "Accepted" },
+  { value: "doing", label: "In Progress" },
+  { value: "complete", label: "Complete" },
+  { value: "parked", label: "Parked" },
+  { value: "dropped", label: "Dropped" },
 ];
 
 export default function IdeasPage() {

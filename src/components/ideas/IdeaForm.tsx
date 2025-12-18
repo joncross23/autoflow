@@ -14,9 +14,11 @@ interface IdeaFormProps {
 const STATUS_OPTIONS: { value: IdeaStatus; label: string }[] = [
   { value: "new", label: "New" },
   { value: "evaluating", label: "Evaluating" },
-  { value: "prioritised", label: "Prioritised" },
-  { value: "converting", label: "Converting" },
-  { value: "archived", label: "Archived" },
+  { value: "accepted", label: "Accepted" },
+  { value: "doing", label: "In Progress" },
+  { value: "complete", label: "Complete" },
+  { value: "parked", label: "Parked" },
+  { value: "dropped", label: "Dropped" },
 ];
 
 const FREQUENCY_OPTIONS: { value: IdeaFrequency; label: string }[] = [

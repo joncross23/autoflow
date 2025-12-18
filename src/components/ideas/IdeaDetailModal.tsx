@@ -19,9 +19,11 @@ interface IdeaDetailModalProps {
 const STATUS_COLORS: Record<IdeaStatus, string> = {
   new: "badge-primary",
   evaluating: "badge-warning",
-  prioritised: "badge-info",
-  converting: "badge-success",
-  archived: "badge-default",
+  accepted: "badge-info",
+  doing: "badge-warning",
+  complete: "badge-success",
+  parked: "badge-default",
+  dropped: "badge-default",
 };
 
 const FREQUENCY_LABELS: Record<IdeaFrequency, string> = {
@@ -44,9 +46,9 @@ export function IdeaDetailModal({
   const [converting, setConverting] = useState(false);
 
   const handleConvertToProject = async () => {
-    if (idea.status === "converting") {
-      // Already converted - navigate to projects
-      router.push("/dashboard/projects");
+    // If already accepted/doing, navigate to delivery board
+    if (idea.status === "accepted" || idea.status === "doing") {
+      router.push("/dashboard/delivery");
       onClose();
       return;
     }
@@ -55,7 +57,7 @@ export function IdeaDetailModal({
     try {
       await convertIdeaToProject(idea);
       onConvert?.();
-      router.push("/dashboard/projects");
+      router.push("/dashboard/delivery");
       onClose();
     } catch (error) {
       console.error("Failed to convert idea:", error);
@@ -82,21 +84,21 @@ export function IdeaDetailModal({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {/* Convert to Project button */}
-            {idea.status !== "archived" && (
+            {/* Convert to Project / View Delivery button */}
+            {idea.status !== "parked" && idea.status !== "dropped" && idea.status !== "complete" && (
               <button
                 onClick={handleConvertToProject}
                 disabled={converting}
                 className={cn(
                   "btn btn-sm",
-                  idea.status === "converting"
+                  idea.status === "accepted" || idea.status === "doing"
                     ? "btn-outline"
                     : "btn-primary"
                 )}
                 title={
-                  idea.status === "converting"
-                    ? "View in Projects"
-                    : "Convert to Project"
+                  idea.status === "accepted" || idea.status === "doing"
+                    ? "View in Delivery Board"
+                    : "Accept & Start"
                 }
               >
                 {converting ? (
@@ -104,7 +106,7 @@ export function IdeaDetailModal({
                 ) : (
                   <>
                     <ArrowRight className="h-4 w-4 mr-1" />
-                    {idea.status === "converting" ? "View Project" : "Convert"}
+                    {idea.status === "accepted" || idea.status === "doing" ? "View Tasks" : "Accept"}
                   </>
                 )}
               </button>
