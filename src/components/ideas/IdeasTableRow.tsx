@@ -4,7 +4,7 @@ import { memo } from "react";
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { ScoreBadge } from "./ScoreBadge";
-import type { DbIdea, ColumnConfig, EffortEstimate, PlanningHorizon, PLANNING_HORIZON_LABELS } from "@/types/database";
+import type { DbIdea, DbLabel, ColumnConfig, EffortEstimate, PlanningHorizon, PLANNING_HORIZON_LABELS } from "@/types/database";
 
 const HORIZON_COLORS: Record<NonNullable<PlanningHorizon>, string> = {
   now: "bg-green-500/10 text-green-500 border-green-500/20",
@@ -19,6 +19,7 @@ interface IdeasTableRowProps {
   onSelect: (id: string, selected: boolean) => void;
   onClick: (idea: DbIdea) => void;
   aiScore?: number | null;
+  labels?: DbLabel[];
 }
 
 const EFFORT_LABELS: Record<EffortEstimate, string> = {
@@ -36,6 +37,7 @@ function IdeasTableRowComponent({
   onSelect,
   onClick,
   aiScore,
+  labels = [],
 }: IdeasTableRowProps) {
   const visibleColumns = columns
     .filter((col) => col.visible)
@@ -167,6 +169,34 @@ function IdeasTableRowComponent({
           <td key={columnId} className={cellClass} style={style}>
             {/* Themes will be populated when we add theme fetching */}
             <span className="text-muted-foreground text-sm">-</span>
+          </td>
+        );
+      case "labels":
+        return (
+          <td key={columnId} className={cellClass} style={style}>
+            {labels.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {labels.slice(0, 3).map((label) => (
+                  <span
+                    key={label.id}
+                    className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium"
+                    style={{
+                      backgroundColor: `${label.color}20`,
+                      color: label.color,
+                    }}
+                  >
+                    {label.name}
+                  </span>
+                ))}
+                {labels.length > 3 && (
+                  <span className="text-xs text-muted-foreground">
+                    +{labels.length - 3}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <span className="text-muted-foreground text-sm">-</span>
+            )}
           </td>
         );
       case "rice_reach":

@@ -5,8 +5,10 @@ import Link from "next/link";
 import { Loader2, Filter, ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
+import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
 import { getGlobalColumns } from "@/lib/api/columns";
 import { getIdeas } from "@/lib/api/ideas";
+import { updateTask, deleteTask } from "@/lib/api/tasks";
 import { createClient } from "@/lib/supabase/client";
 import type { DbColumn, DbTask, DbIdea, DbLabel } from "@/types/database";
 
@@ -31,6 +33,9 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   );
   const [showOrphans, setShowOrphans] = useState(true);
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  // Task detail modal state
+  const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
 
   useEffect(() => {
     loadData();
@@ -156,6 +161,47 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
 
   const handleTasksChange = (updatedTasks: DbTask[]) => {
     setTasks(updatedTasks);
+  };
+
+  // Task modal handlers
+  const handleTaskClick = (task: DbTask) => {
+    setSelectedTask(task);
+  };
+
+  const handleTaskSave = (updatedTask: DbTask) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+    );
+    setSelectedTask(updatedTask);
+  };
+
+  const handleTaskDelete = async (task: DbTask) => {
+    if (!confirm("Are you sure you want to delete this task?")) return;
+    try {
+      await deleteTask(task.id);
+      setTasks((prev) => prev.filter((t) => t.id !== task.id));
+      setSelectedTask(null);
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+    }
+  };
+
+  const handleToggleTask = async (task: DbTask) => {
+    try {
+      const updated = await updateTask(task.id, { completed: !task.completed });
+      setTasks((prev) =>
+        prev.map((t) => (t.id === task.id ? updated : t))
+      );
+    } catch (err) {
+      console.error("Failed to toggle task:", err);
+    }
+  };
+
+  // Get parent idea title for task modal
+  const getIdeaTitle = (ideaId: string | null) => {
+    if (!ideaId) return undefined;
+    const idea = ideas.find((i) => i.id === ideaId);
+    return idea?.title;
   };
 
   if (loading) {
@@ -311,10 +357,24 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
               taskLabels={taskLabels}
               checklistProgress={checklistProgress}
               onTasksChange={handleTasksChange}
+              onTaskClick={handleTaskClick}
+              onToggleTask={handleToggleTask}
+              onDeleteTask={handleTaskDelete}
             />
           )}
         </div>
       </div>
+
+      {/* Task Detail Modal */}
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          ideaTitle={getIdeaTitle(selectedTask.idea_id)}
+          onClose={() => setSelectedTask(null)}
+          onSave={handleTaskSave}
+          onDelete={handleTaskDelete}
+        />
+      )}
     </div>
   );
 }

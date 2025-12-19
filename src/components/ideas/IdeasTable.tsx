@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { ChevronUp, ChevronDown, GripVertical, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IdeasTableRow } from "./IdeasTableRow";
-import type { DbIdea, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+import type { DbIdea, DbLabel, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 
 export type SortField = "title" | "status" | "score" | "updated_at" | "created_at";
 export type SortOrder = "asc" | "desc";
@@ -20,13 +20,17 @@ interface IdeasTableProps {
   sortOrder: SortOrder;
   onSort: (field: SortField, order: SortOrder) => void;
   aiScores?: Record<string, number>;
+  ideaLabels?: Record<string, DbLabel[]>;
   loading?: boolean;
 }
 
 const COLUMN_LABELS: Record<string, string> = {
   title: "Title",
   status: "Status",
+  labels: "Labels",
   score: "Score",
+  horizon: "Horizon",
+  rice_score: "RICE",
   updated_at: "Updated",
   created_at: "Created",
   description: "Description",
@@ -35,6 +39,10 @@ const COLUMN_LABELS: Record<string, string> = {
   started_at: "Started",
   completed_at: "Completed",
   themes: "Themes",
+  rice_reach: "Reach",
+  rice_impact: "Impact",
+  rice_confidence: "Confidence",
+  rice_effort: "Effort (RICE)",
 };
 
 export function IdeasTable({
@@ -48,6 +56,7 @@ export function IdeasTable({
   sortOrder,
   onSort,
   aiScores = {},
+  ideaLabels = {},
   loading = false,
 }: IdeasTableProps) {
   const [showColumnSettings, setShowColumnSettings] = useState(false);
@@ -313,6 +322,7 @@ export function IdeasTable({
                   onSelect={handleSelectOne}
                   onClick={onIdeaClick}
                   aiScore={aiScores[idea.id]}
+                  labels={ideaLabels[idea.id] || []}
                 />
               ))
             )}

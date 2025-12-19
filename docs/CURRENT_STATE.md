@@ -4,9 +4,55 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2025-12-19
-> **Current Version:** 1.2.0
-> **Current Phase:** V1.2 Collaboration (COMPLETE)
+> **Current Version:** 1.3.0
+> **Current Phase:** V1.3 Rich Cards (COMPLETE)
 > **Next Phase:** Deploy & Stabilize
+
+---
+
+## V1.3 Rich Cards Status: COMPLETE
+
+V1.3 adds rich card editing with Labels, Checklists, Attachments, Links, and AI Suggestions on both Ideas and Tasks.
+
+### V1.3 Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Wider Panels | **Done** | IdeaDetailSlider and TaskDetailModal widened to 50% |
+| Labels | **Done** | User-scoped labels with hex colours on ideas and tasks |
+| Checklists on Ideas | **Done** | Ideas can now have their own checklists |
+| Attachments | **Done** | File uploads for ideas and tasks (Supabase Storage) |
+| Links | **Done** | External links with emoji favicons |
+| AI Task Suggestions | **Done** | Task-level AI analysis with subtask/blocker/tip suggestions |
+| Click-to-Edit Cards | **Done** | TaskCard click anywhere opens modal (edit removed from dropdown) |
+
+### Database Migration (V1.3)
+
+| File | Description |
+|------|-------------|
+| `supabase-v1.3-rich-cards.sql` | Labels, idea_labels, task_labels, attachments, links tables + priority column on tasks |
+
+### New Components (V1.3)
+
+| Component | Location | Description |
+|-----------|----------|-------------|
+| `LabelsSection` | `src/components/shared/LabelsSection.tsx` | Labels display with create/add/remove |
+| `ChecklistsSection` | `src/components/shared/ChecklistsSection.tsx` | Checklists for ideas and tasks |
+| `AttachmentsSection` | `src/components/shared/AttachmentsSection.tsx` | File upload with drag-drop |
+| `LinksSection` | `src/components/shared/LinksSection.tsx` | External links management |
+| `AISuggestionsSection` | `src/components/shared/AISuggestionsSection.tsx` | Task-level AI suggestions |
+
+### New API Functions (V1.3)
+
+| Function | Location | Description |
+|----------|----------|-------------|
+| `getIdeaChecklists` | `src/lib/api/checklists.ts` | Get checklists for an idea |
+| `createIdeaChecklist` | `src/lib/api/checklists.ts` | Create checklist on an idea |
+| `getIdeaAttachments` | `src/lib/api/attachments.ts` | Get attachments for an idea |
+| `uploadIdeaAttachment` | `src/lib/api/attachments.ts` | Upload file to idea |
+| `getIdeaLinks` | `src/lib/api/links.ts` | Get links for an idea |
+| `createIdeaLink` | `src/lib/api/links.ts` | Add link to idea |
+| `/api/tasks/[id]/analyse` | API route | Task-level AI analysis endpoint |
 
 ---
 
@@ -115,6 +161,7 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
    - `supabase-v1.1-horizon.sql`
    - `supabase-v1.2-comments.sql`
    - `supabase-v1.2-activity-log.sql`
+   - `supabase-v1.3-rich-cards.sql`
 
 2. **Set environment variables** in Vercel:
    - `NEXT_PUBLIC_SUPABASE_URL`
@@ -126,19 +173,29 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 
 ---
 
-## Next Steps (V1.3+)
+## Known Issues
 
-### Remaining V1.2 Features (Optional)
+| Issue | Severity | Description |
+|-------|----------|-------------|
+| AI Suggestions Fail | Medium | "Failed to get AI suggestions" error in TaskDetailModal. Likely missing/invalid ANTHROPIC_API_KEY in Vercel. |
+| Slow Response Times | Medium | General sluggishness on page loads. Need to optimise Supabase queries and add loading states. |
+| Attachments Bucket | Low | Supabase Storage bucket `attachments` needs to be manually created in dashboard. |
+
+### Optimisation Opportunities (V1.4)
+
+- Add database indexes for common queries
+- Implement query batching for related data (labels, checklists, etc.)
+- Add skeleton loading states for smoother UX
+- Consider React Query for caching and deduplication
+
+---
+
+## Next Steps (V1.4+)
+
+### V1.4 — Power Features
 | Feature | Description |
 |---------|-------------|
-| Attachments | Files, images on cards |
-| Templates | Card + board templates |
-| Voting | Simple upvote on ideas |
-| Card Aging | Visual indicator for stale items |
-
-### V1.3 — Power Features
-| Feature | Description |
-|---------|-------------|
+| Time Tracking | Track time spent on tasks |
 | Custom Fields | User-defined fields per idea |
 | Dependencies | Blocked-by relationships |
 | PWA | Service worker, offline capture |
@@ -146,6 +203,9 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ### V2.0+ — Future
 | Feature | Description |
 |---------|-------------|
+| Templates | Card + board templates |
+| Voting | Simple upvote on ideas |
+| Card Aging | Visual indicator for stale items |
 | Discovery Forms | Questionnaire builder |
 | ROI Tracking | Actual vs projected returns |
 | Webhooks | n8n/Zapier integration |
@@ -153,6 +213,22 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2025-12-19 — V1.3 Bugfixes
+- Fixed: TaskCard click now opens TaskDetailModal (was missing handler in DeliveryBoard)
+- Fixed: Labels column now available in Ideas table (added to column options)
+- Added: Labels fetched in bulk for Ideas table performance
+- Added: Known issues section documenting AI suggestions error and performance
+
+### 2025-12-19 — V1.3 Rich Cards Complete
+- Widened IdeaDetailSlider and TaskDetailModal to 50% width
+- Added Labels system with hex colours on ideas and tasks
+- Added Checklists support for Ideas (in addition to Tasks)
+- Added Attachments with Supabase Storage integration
+- Added Links with emoji favicons
+- Added AI Suggestions for tasks with new `/api/tasks/[id]/analyse` endpoint
+- TaskCard click anywhere opens modal (removed edit from dropdown)
+- Version bumped to 1.3.0
 
 ### 2025-12-19 — V1.2 Collaboration Complete
 - Added Comments system with threaded replies
