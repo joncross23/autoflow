@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { GlobalCommandPalette } from "@/components/search";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -17,6 +18,7 @@ export default function DashboardLayout({
       <main className="flex-1 overflow-y-auto bg-background">
         {children}
       </main>
+      <GlobalCommandPalette />
     </div>
   );
 }
