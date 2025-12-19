@@ -34,12 +34,11 @@ export interface DbIdea {
   frequency: IdeaFrequency | null;
   time_spent: number | null;    // minutes per occurrence
   owner: string | null;         // Legacy text field
-  owner_id: string | null;      // FK to auth.users
+  owner_id: string | null;      // FK to auth.users (future)
   team_id: string | null;       // Future: team-based access
   pain_points: string | null;
   desired_outcome: string | null;
   effort_estimate: EffortEstimate | null;
-  priority: Priority;
   position: number;
   archived: boolean;
   started_at: string | null;
@@ -59,7 +58,6 @@ export interface DbIdeaInsert {
   pain_points?: string | null;
   desired_outcome?: string | null;
   effort_estimate?: EffortEstimate | null;
-  priority?: Priority;
   position?: number;
   archived?: boolean;
   started_at?: string | null;
@@ -77,7 +75,6 @@ export interface DbIdeaUpdate {
   pain_points?: string | null;
   desired_outcome?: string | null;
   effort_estimate?: EffortEstimate | null;
-  priority?: Priority;
   position?: number;
   archived?: boolean;
   started_at?: string | null;
@@ -399,7 +396,6 @@ export function dbIdeaToIdea(db: DbIdea): {
   painPoints: string | null;
   desiredOutcome: string | null;
   effortEstimate: EffortEstimate | null;
-  priority: Priority;
   position: number;
   archived: boolean;
   startedAt: string | null;
@@ -421,7 +417,6 @@ export function dbIdeaToIdea(db: DbIdea): {
     painPoints: db.pain_points,
     desiredOutcome: db.desired_outcome,
     effortEstimate: db.effort_estimate,
-    priority: db.priority,
     position: db.position,
     archived: db.archived,
     startedAt: db.started_at,

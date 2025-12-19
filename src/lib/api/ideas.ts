@@ -14,7 +14,7 @@ export interface IdeaFilters {
   status?: IdeaStatus | IdeaStatus[];
   archived?: boolean;
   search?: string;
-  sortBy?: "created_at" | "updated_at" | "title" | "status" | "priority";
+  sortBy?: "created_at" | "updated_at" | "title" | "status";
   sortOrder?: "asc" | "desc";
   limit?: number;
   offset?: number;
@@ -165,7 +165,6 @@ export async function createIdea(idea: DbIdeaInsert): Promise<DbIdea> {
       ...idea,
       user_id: user.id,
       status: idea.status || "new",
-      priority: idea.priority || "medium",
       archived: idea.archived || false,
     })
     .select()

@@ -51,7 +51,11 @@ const STATUS_CONFIG: Record<
 };
 
 export function StatusBadge({ status, size = "md", className }: StatusBadgeProps) {
-  const config = STATUS_CONFIG[status];
+  const config = STATUS_CONFIG[status] || {
+    label: status || "Unknown",
+    bgClass: "bg-gray-500/15",
+    textClass: "text-gray-500",
+  };
 
   return (
     <span
