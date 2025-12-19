@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
+import { RiceScorePanel } from "./RiceScorePanel";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
 import { IdeaTasksSection } from "./IdeaTasksSection";
 import { updateIdea, updateIdeaStatus, deleteIdea } from "@/lib/api/ideas";
@@ -476,6 +477,9 @@ export function IdeaDetailSlider({
                 </p>
               </div>
             )}
+
+            {/* RICE Score (V1.1) */}
+            <RiceScorePanel idea={idea} onUpdate={onUpdate} />
 
             {/* Tasks Section */}
             {(idea.status === "accepted" || idea.status === "doing") && (

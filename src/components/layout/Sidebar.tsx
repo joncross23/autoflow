@@ -7,6 +7,7 @@ import {
   Home,
   Lightbulb,
   Kanban,
+  Grid3X3,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -18,6 +19,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
   { href: "/dashboard/delivery", label: "Delivery", icon: Kanban },
+  { href: "/dashboard/matrix", label: "Matrix", icon: Grid3X3 },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
@@ -132,7 +134,7 @@ export function Sidebar() {
       {!isCollapsed && (
         <div className="border-t border-border p-4">
           <p className="text-xs text-foreground-muted">
-            Version 1.0.0
+            Version 1.1.0
           </p>
         </div>
       )}

@@ -1,10 +1,11 @@
 /**
  * Ideas API
  * V1.0: Unified model (Ideas + Projects merged)
+ * V1.1: RICE scoring support
  */
 
 import { createClient } from "@/lib/supabase/client";
-import type { DbIdea, DbIdeaInsert, DbIdeaUpdate, IdeaStatus } from "@/types/database";
+import type { DbIdea, DbIdeaInsert, DbIdeaUpdate, IdeaStatus, RiceImpact } from "@/types/database";
 
 // ============================================
 // Filter Types
@@ -14,10 +15,23 @@ export interface IdeaFilters {
   status?: IdeaStatus | IdeaStatus[];
   archived?: boolean;
   search?: string;
-  sortBy?: "created_at" | "updated_at" | "title" | "status";
+  // RICE score filters (V1.1)
+  minRiceScore?: number;
+  maxRiceScore?: number;
+  hasRiceScore?: boolean;  // Filter to only show scored/unscored ideas
+  // Sorting
+  sortBy?: "created_at" | "updated_at" | "title" | "status" | "rice_score";
   sortOrder?: "asc" | "desc";
   limit?: number;
   offset?: number;
+}
+
+// RICE score input for updates
+export interface RiceScoreInput {
+  reach: number;      // 1-10
+  impact: RiceImpact; // 0.25, 0.5, 1, 2, 3
+  confidence: number; // 0-100
+  effort: number;     // 1-10
 }
 
 // ============================================
@@ -55,10 +69,31 @@ export async function getIdeas(filters?: IdeaFilters): Promise<DbIdea[]> {
     );
   }
 
+  // RICE score filters (V1.1)
+  if (filters?.minRiceScore !== undefined) {
+    query = query.gte("rice_score", filters.minRiceScore);
+  }
+  if (filters?.maxRiceScore !== undefined) {
+    query = query.lte("rice_score", filters.maxRiceScore);
+  }
+  if (filters?.hasRiceScore !== undefined) {
+    if (filters.hasRiceScore) {
+      query = query.not("rice_score", "is", null);
+    } else {
+      query = query.is("rice_score", null);
+    }
+  }
+
   // Sorting
   const sortBy = filters?.sortBy || "created_at";
   const sortOrder = filters?.sortOrder || "desc";
-  query = query.order(sortBy, { ascending: sortOrder === "asc" });
+
+  // Special handling for rice_score - nulls should be last when sorting desc
+  if (sortBy === "rice_score") {
+    query = query.order(sortBy, { ascending: sortOrder === "asc", nullsFirst: sortOrder === "asc" });
+  } else {
+    query = query.order(sortBy, { ascending: sortOrder === "asc" });
+  }
 
   // Pagination
   if (filters?.limit) {
@@ -361,4 +396,108 @@ export async function bulkDeleteIdeas(ids: string[]): Promise<void> {
   if (error) {
     throw new Error(error.message);
   }
+}
+
+// ============================================
+// RICE Scoring Operations (V1.1)
+// ============================================
+
+/**
+ * Calculate RICE score client-side (for preview before saving)
+ * RICE = (Reach × Impact × Confidence%) / Effort
+ */
+export function calculateRiceScore(input: RiceScoreInput): number {
+  const { reach, impact, confidence, effort } = input;
+
+  if (!reach || !impact || confidence === undefined || !effort || effort === 0) {
+    return 0;
+  }
+
+  return Math.round(((reach * impact * (confidence / 100)) / effort) * 100) / 100;
+}
+
+/**
+ * Update RICE scores for an idea
+ * The database trigger will automatically calculate rice_score
+ */
+export async function updateRiceScore(id: string, input: RiceScoreInput): Promise<DbIdea> {
+  return updateIdea(id, {
+    rice_reach: input.reach,
+    rice_impact: input.impact,
+    rice_confidence: input.confidence,
+    rice_effort: input.effort,
+  });
+}
+
+/**
+ * Clear RICE scores for an idea
+ */
+export async function clearRiceScore(id: string): Promise<DbIdea> {
+  return updateIdea(id, {
+    rice_reach: null,
+    rice_impact: null,
+    rice_confidence: null,
+    rice_effort: null,
+  });
+}
+
+/**
+ * Get ideas sorted by RICE score (highest first)
+ */
+export async function getIdeasByRiceScore(limit?: number): Promise<DbIdea[]> {
+  return getIdeas({
+    hasRiceScore: true,
+    sortBy: "rice_score",
+    sortOrder: "desc",
+    archived: false,
+    limit,
+  });
+}
+
+/**
+ * Get ideas needing RICE scoring
+ */
+export async function getIdeasNeedingRiceScore(): Promise<DbIdea[]> {
+  return getIdeas({
+    hasRiceScore: false,
+    status: ["new", "evaluating", "accepted"],
+    archived: false,
+    sortBy: "created_at",
+    sortOrder: "desc",
+  });
+}
+
+/**
+ * Get RICE score statistics
+ */
+export async function getRiceScoreStats(): Promise<{
+  scored: number;
+  unscored: number;
+  avgScore: number;
+  maxScore: number;
+  minScore: number;
+}> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("ideas")
+    .select("rice_score")
+    .eq("archived", false);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const scored = data?.filter((i) => i.rice_score !== null) || [];
+  const unscored = data?.filter((i) => i.rice_score === null) || [];
+
+  const scores = scored.map((i) => i.rice_score as number);
+
+  return {
+    scored: scored.length,
+    unscored: unscored.length,
+    avgScore: scores.length > 0 ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) / 100 : 0,
+    maxScore: scores.length > 0 ? Math.max(...scores) : 0,
+    minScore: scores.length > 0 ? Math.min(...scores) : 0,
+  };
 }

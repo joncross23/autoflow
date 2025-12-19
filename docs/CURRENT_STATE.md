@@ -4,9 +4,57 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2025-12-19
-> **Current Version:** 1.0.0
-> **Current Phase:** V1.0 Pivot (COMPLETE)
-> **Previous Phase:** 6.5 — Task Kanban & Import
+> **Current Version:** 1.1.0
+> **Current Phase:** V1.1 Scoring & Views (IN PROGRESS)
+> **Previous Phase:** V1.0 Pivot (COMPLETE)
+
+---
+
+## V1.1 Scoring & Views Status: IN PROGRESS
+
+V1.1 adds RICE scoring for idea prioritization, a Matrix View for visualizing ideas by Impact vs Effort, and saved filter views for quick access to filtered idea lists.
+
+### V1.1 Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| RICE Scoring | **Done** | Manual Reach/Impact/Confidence/Effort scoring with auto-calculated score |
+| RICE UI Panel | **Done** | Scoring panel in IdeaDetailSlider with preview |
+| Matrix View | **Done** | Impact vs Effort prioritization matrix at `/dashboard/matrix` |
+| Saved Views API | **Done** | API for saving/loading filter presets |
+| Saved Views UI | **Done** | Dropdown component for managing saved views |
+| Published Views | **Pending** | Shareable read-only URLs for stakeholders |
+
+### Database Migration
+
+Run `supabase-v1.1-rice-scoring.sql` to apply:
+- RICE scoring fields on ideas: `rice_reach`, `rice_impact`, `rice_confidence`, `rice_effort`, `rice_score`
+- Auto-calculated `rice_score` via database trigger
+- `saved_views` table for user filter presets
+- `published_views` table for shareable read-only views
+- RLS policies for all new tables
+
+### New Components (V1.1)
+
+| Component | Location | Description |
+|-----------|----------|-------------|
+| `RiceScorePanel` | `src/components/ideas/RiceScorePanel.tsx` | RICE scoring form in detail slider |
+| `MatrixView` | `src/components/ideas/MatrixView.tsx` | Impact vs Effort prioritization chart |
+| `SavedViewsDropdown` | `src/components/ideas/SavedViewsDropdown.tsx` | Saved filter views management |
+| Matrix Page | `src/app/dashboard/matrix/page.tsx` | Dedicated prioritization page |
+
+### New API Functions (V1.1)
+
+| Function | Location | Description |
+|----------|----------|-------------|
+| `updateRiceScore` | `src/lib/api/ideas.ts` | Update RICE scores for an idea |
+| `clearRiceScore` | `src/lib/api/ideas.ts` | Clear RICE scores |
+| `calculateRiceScore` | `src/lib/api/ideas.ts` | Client-side RICE calculation |
+| `getIdeasByRiceScore` | `src/lib/api/ideas.ts` | Get ideas sorted by RICE score |
+| `getRiceScoreStats` | `src/lib/api/ideas.ts` | Get RICE scoring statistics |
+| `getSavedViews` | `src/lib/api/views.ts` | Get all saved views |
+| `createSavedView` | `src/lib/api/views.ts` | Create a saved view |
+| `publishView` | `src/lib/api/views.ts` | Publish a view for sharing |
 
 ---
 
@@ -147,15 +195,15 @@ npm run test   # Run tests with Vitest
 
 ---
 
-## Next Steps (V1.1+)
+## Next Steps (V1.2+)
 
-### V1.1 — Scoring & Views
-| Feature | Description |
-|---------|-------------|
-| RICE Scoring | Manual Reach/Impact/Confidence/Effort + hybrid with AI |
-| Matrix View | X-Y prioritisation plot (Impact vs Effort) |
-| Published Views | Shareable read-only URLs for stakeholders |
-| Saved Filter Views | Named filter presets, quick switch |
+### V1.1 — Scoring & Views (IN PROGRESS)
+| Feature | Status |
+|---------|--------|
+| RICE Scoring | **Done** |
+| Matrix View | **Done** |
+| Saved Filter Views | **Done** |
+| Published Views | Pending |
 
 ### V1.2 — Collaboration
 | Feature | Description |
@@ -188,6 +236,17 @@ npm run test   # Run tests with Vitest
 ---
 
 ## Session Log
+
+### 2025-12-19 — V1.1 Scoring & Views Implementation
+- Added RICE scoring fields to database schema (`supabase-v1.1-rice-scoring.sql`)
+- Updated TypeScript types for RICE scoring
+- Created RiceScorePanel component for idea detail slider
+- Created MatrixView component for Impact vs Effort prioritization
+- Added Matrix page at `/dashboard/matrix`
+- Created saved views API and UI components
+- Added views API at `src/lib/api/views.ts`
+- Updated sidebar navigation with Matrix page
+- Version bumped to 1.1.0
 
 ### 2025-12-19 — V1.0 Pivot Complete
 - Completed all 7 phases of the V1.0 "Table-First" pivot
@@ -224,6 +283,7 @@ npm run test   # Run tests with Vitest
 2. Run database migrations in Supabase:
    - `supabase-phase-0-migration.sql` (if not already run)
    - `supabase-v1.0-pivot-migration.sql` (V1.0 schema changes)
+   - `supabase-v1.1-rice-scoring.sql` (V1.1 RICE scoring & saved views)
    - Additional RLS policy updates (see above)
 
 3. Push to main branch → auto-deploys via Vercel
