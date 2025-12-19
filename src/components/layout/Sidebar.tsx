@@ -17,7 +17,7 @@ import { useIsMobile } from "@/hooks";
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
-  { href: "/dashboard/projects", label: "Projects", icon: Kanban },
+  { href: "/dashboard/delivery", label: "Delivery", icon: Kanban },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
@@ -132,7 +132,7 @@ export function Sidebar() {
       {!isCollapsed && (
         <div className="border-t border-border p-4">
           <p className="text-xs text-foreground-muted">
-            Version 0.2.0
+            Version 1.0.0
           </p>
         </div>
       )}
