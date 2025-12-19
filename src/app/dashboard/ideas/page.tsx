@@ -18,10 +18,12 @@ import {
   IdeaDetailSlider,
   FilterPanel,
   BulkActionBar,
+  SavedViewsDropdown,
+  PublishViewDialog,
   DEFAULT_FILTERS,
 } from "@/components/ideas";
 import type { SortField, SortOrder, IdeaFilters } from "@/components/ideas";
-import type { DbIdea, IdeaStatus, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+import type { DbIdea, DbSavedView, IdeaStatus, ColumnConfig, SavedViewFilters, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 
 // Load column config from localStorage or use defaults
 function loadColumnConfig(): ColumnConfig[] {
@@ -83,6 +85,8 @@ export default function IdeasPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<SortField>("updated_at");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [shareView, setShareView] = useState<DbSavedView | null>(null);
 
   // Get the selected idea for detail modal
   const viewingIdea = selectedId ? ideas.find((i) => i.id === selectedId) : null;
@@ -209,6 +213,20 @@ export default function IdeasPage() {
     loadIdeas();
   };
 
+  // Handle loading a saved view
+  const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[]) => {
+    setFilters(viewFilters);
+    if (viewColumns) {
+      setColumns(viewColumns);
+    }
+  };
+
+  // Handle sharing a view
+  const handleShareView = (view: DbSavedView | null) => {
+    setShareView(view);
+    setShowShareDialog(true);
+  };
+
   // Filter ideas by search query (client-side for instant feedback)
   const filteredIdeas = ideas.filter((idea) => {
     if (!searchQuery) return true;
@@ -234,9 +252,9 @@ export default function IdeasPage() {
         </button>
       </header>
 
-      {/* Search bar */}
-      <div className="mb-4">
-        <div className="relative max-w-md">
+      {/* Search bar and Saved Views */}
+      <div className="mb-4 flex items-center gap-4">
+        <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
@@ -246,6 +264,12 @@ export default function IdeasPage() {
             className="input w-full pl-10"
           />
         </div>
+        <SavedViewsDropdown
+          currentFilters={filters}
+          currentColumns={columns}
+          onLoadView={handleLoadView}
+          onShareView={handleShareView}
+        />
       </div>
 
       {/* Filter panel */}
@@ -326,6 +350,18 @@ export default function IdeasPage() {
           onSuccess={handleFormSuccess}
         />
       )}
+
+      {/* Share View Dialog */}
+      <PublishViewDialog
+        isOpen={showShareDialog}
+        onClose={() => {
+          setShowShareDialog(false);
+          setShareView(null);
+        }}
+        savedView={shareView}
+        currentFilters={filters as unknown as SavedViewFilters}
+        currentColumns={columns}
+      />
     </div>
   );
 }

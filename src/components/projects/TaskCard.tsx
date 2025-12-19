@@ -129,12 +129,12 @@ export function TaskCard({
       onMouseLeave={() => setIsHovered(false)}
       className={`
         group rounded-[10px] p-3 cursor-pointer select-none
-        transition-all duration-150 ease-out
+        transition-all duration-150 ease-out shadow-sm
         ${isGhost
-          ? "bg-bg-secondary opacity-40"
-          : "bg-bg-secondary"
+          ? "bg-bg-tertiary opacity-40"
+          : "bg-bg-elevated"
         }
-        ${showHover ? "shadow-md -translate-y-0.5 ring-1 ring-primary/50" : ""}
+        ${showHover ? "shadow-lg -translate-y-0.5 ring-1 ring-primary/50" : ""}
         ${isBeingDragged ? "rotate-[1.5deg] shadow-xl opacity-95" : ""}
         ${task.completed && !isGhost ? "opacity-60" : ""}
       `}

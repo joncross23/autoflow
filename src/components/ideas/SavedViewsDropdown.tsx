@@ -12,6 +12,7 @@ import {
   Trash2,
   Loader2,
   X,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -21,18 +22,21 @@ import {
   deleteSavedView,
   setDefaultView,
 } from "@/lib/api/views";
-import type { DbSavedView, IdeaFilters, ColumnConfig } from "@/types/database";
+import type { DbSavedView, ColumnConfig, SavedViewFilters } from "@/types/database";
+import type { IdeaFilters } from "./FilterPanel";
 
 interface SavedViewsDropdownProps {
   currentFilters: IdeaFilters;
   currentColumns?: ColumnConfig[];
   onLoadView: (filters: IdeaFilters, columns?: ColumnConfig[]) => void;
+  onShareView?: (view: DbSavedView | null) => void;
 }
 
 export function SavedViewsDropdown({
   currentFilters,
   currentColumns,
   onLoadView,
+  onShareView,
 }: SavedViewsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [views, setViews] = useState<DbSavedView[]>([]);
@@ -69,12 +73,15 @@ export function SavedViewsDropdown({
 
     setSaving(true);
     try {
+      // Cast filters to SavedViewFilters for storage
+      const filtersToSave = currentFilters as unknown as SavedViewFilters;
+
       if (editingView) {
         // Update existing view
         const updated = await updateSavedView(editingView.id, {
           name: newViewName.trim(),
           description: newViewDescription.trim() || null,
-          filters: currentFilters,
+          filters: filtersToSave,
           column_config: currentColumns || null,
         });
         setViews((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
@@ -83,7 +90,7 @@ export function SavedViewsDropdown({
         const created = await createSavedView({
           name: newViewName.trim(),
           description: newViewDescription.trim() || null,
-          filters: currentFilters,
+          filters: filtersToSave,
           column_config: currentColumns || null,
         });
         setViews((prev) => [...prev, created]);
@@ -102,7 +109,9 @@ export function SavedViewsDropdown({
 
   const handleLoadView = (view: DbSavedView) => {
     setActiveViewId(view.id);
-    onLoadView(view.filters, view.column_config || undefined);
+    // Cast saved filters back to IdeaFilters
+    const loadedFilters = view.filters as unknown as IdeaFilters;
+    onLoadView(loadedFilters, view.column_config || undefined);
     setIsOpen(false);
   };
 
@@ -170,18 +179,32 @@ export function SavedViewsDropdown({
             {/* Header */}
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
               <span className="text-sm font-medium">Saved Views</span>
-              <button
-                onClick={() => {
-                  setEditingView(null);
-                  setNewViewName("");
-                  setNewViewDescription("");
-                  setShowSaveDialog(true);
-                }}
-                className="flex items-center gap-1 text-xs text-primary hover:underline"
-              >
-                <BookmarkPlus className="h-3.5 w-3.5" />
-                Save Current
-              </button>
+              <div className="flex items-center gap-2">
+                {onShareView && (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      onShareView(activeView || null);
+                    }}
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
+                    title="Share views"
+                  >
+                    <Share2 className="h-3.5 w-3.5" />
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setEditingView(null);
+                    setNewViewName("");
+                    setNewViewDescription("");
+                    setShowSaveDialog(true);
+                  }}
+                  className="flex items-center gap-1 text-xs text-primary hover:underline"
+                >
+                  <BookmarkPlus className="h-3.5 w-3.5" />
+                  Save Current
+                </button>
+              </div>
             </div>
 
             {/* Views List */}
@@ -225,6 +248,19 @@ export function SavedViewsDropdown({
 
                     {/* Actions */}
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {onShareView && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsOpen(false);
+                            onShareView(view);
+                          }}
+                          className="p-1 rounded hover:bg-bg-tertiary"
+                          title="Share view"
+                        >
+                          <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        </button>
+                      )}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

@@ -17,3 +17,13 @@ export { BulkActionBar } from "./BulkActionBar";
 // V1.0 Detail Slider Components
 export { IdeaDetailSlider } from "./IdeaDetailSlider";
 export { IdeaTasksSection } from "./IdeaTasksSection";
+
+// V1.1 RICE Scoring & Views
+export { RiceScorePanel } from "./RiceScorePanel";
+export { MatrixView } from "./MatrixView";
+export { SavedViewsDropdown } from "./SavedViewsDropdown";
+export { PublishViewDialog } from "./PublishViewDialog";
+
+// V1.2 Collaboration
+export { CommentsSection } from "./CommentsSection";
+export { ActivityLog } from "./ActivityLog";

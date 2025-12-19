@@ -269,7 +269,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
 
       {/* Tips */}
       <div className="text-xs text-muted-foreground bg-bg-tertiary rounded-lg p-3 space-y-1">
-        <p className="font-medium">Prioritization Tips:</p>
+        <p className="font-medium">Prioritisation Tips:</p>
         <p>
           <span className="text-green-500">Quick Wins</span> - High impact, low effort. Do these first!
         </p>

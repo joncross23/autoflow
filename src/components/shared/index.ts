@@ -6,3 +6,5 @@ export { StatCard, StatGrid } from "./StatCard";
 export { Progress, CircularProgress } from "./Progress";
 export { Skeleton, CardSkeleton, StatCardSkeleton, AvatarSkeleton, TableRowSkeleton, ListSkeleton } from "./Skeleton";
 export { ErrorBoundary } from "./ErrorBoundary";
+export { KeyboardShortcutsPanel, useKeyboardShortcuts } from "./KeyboardShortcutsPanel";
+export { KeyboardShortcutsWrapper } from "./KeyboardShortcutsWrapper";

@@ -14,7 +14,7 @@ export interface EvaluationResult {
   overall_summary: string;
 }
 
-const EVALUATION_PROMPT = `You are an automation expert helping businesses evaluate potential automation opportunities. Analyze the following automation idea and provide a structured evaluation.
+const EVALUATION_PROMPT = `You are an automation expert helping businesses evaluate potential automation opportunities. Analyse the following automation idea and provide a structured evaluation.
 
 <idea>
 Title: {{title}}

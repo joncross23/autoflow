@@ -501,3 +501,178 @@ export async function getRiceScoreStats(): Promise<{
     minScore: scores.length > 0 ? Math.min(...scores) : 0,
   };
 }
+
+// ============================================
+// Time Audit Operations (V1.1)
+// ============================================
+
+// Effort estimate to hours mapping (per week)
+const EFFORT_TO_HOURS: Record<string, number> = {
+  trivial: 1,    // Less than an hour
+  small: 4,      // Half day
+  medium: 16,    // 2 days
+  large: 40,     // 1 week
+  xlarge: 80,    // 2 weeks
+};
+
+// RICE effort (1-10) to hours mapping
+const RICE_EFFORT_TO_HOURS: Record<number, number> = {
+  1: 4,    // Half day
+  2: 8,    // 1 day
+  3: 16,   // 2 days
+  4: 24,   // 3 days
+  5: 40,   // 1 week
+  6: 60,   // 1.5 weeks
+  7: 80,   // 2 weeks
+  8: 120,  // 3 weeks
+  9: 160,  // 4 weeks
+  10: 200, // 5 weeks
+};
+
+// Calculate recoverable hours per instance (based on RICE reach * impact)
+// Reach = how many people/processes affected
+// Impact = significance (0.25=minimal, 0.5=low, 1=medium, 2=high, 3=massive)
+// Estimated hours saved per period = reach * impact * base_hours (4hrs)
+function calculateRecoverableHours(reach: number | null, impact: number | null): number {
+  if (!reach || !impact) return 0;
+  // Base assumption: each unit of reach saves 4 hours per month when fully automated
+  const baseHours = 4;
+  return Math.round(reach * impact * baseHours);
+}
+
+export interface TimeAuditItem {
+  id: string;
+  title: string;
+  status: IdeaStatus;
+  horizon: string | null;
+  effortHours: number;
+  recoverableHoursPerMonth: number;
+  riceScore: number | null;
+  confidence: number | null;
+  paybackMonths: number | null;
+}
+
+export interface TimeAuditSummary {
+  totalIdeas: number;
+  totalEffortHours: number;
+  totalRecoverableHoursPerMonth: number;
+  annualRecoverableHours: number;
+  avgPaybackMonths: number;
+  byHorizon: {
+    now: { count: number; effortHours: number; recoverableHours: number };
+    next: { count: number; effortHours: number; recoverableHours: number };
+    later: { count: number; effortHours: number; recoverableHours: number };
+    unplanned: { count: number; effortHours: number; recoverableHours: number };
+  };
+  byStatus: Record<IdeaStatus, { count: number; effortHours: number; recoverableHours: number }>;
+  items: TimeAuditItem[];
+}
+
+/**
+ * Get Time Audit report data
+ * Calculates effort investment and recoverable time for all ideas
+ */
+export async function getTimeAudit(): Promise<TimeAuditSummary> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("ideas")
+    .select("*")
+    .eq("archived", false)
+    .not("status", "in", "(dropped)")
+    .order("rice_score", { ascending: false, nullsFirst: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const ideas = data || [];
+
+  const items: TimeAuditItem[] = ideas.map((idea) => {
+    // Calculate effort hours from either RICE effort or effort_estimate
+    let effortHours = 0;
+    if (idea.rice_effort) {
+      effortHours = RICE_EFFORT_TO_HOURS[idea.rice_effort] || 0;
+    } else if (idea.effort_estimate) {
+      effortHours = EFFORT_TO_HOURS[idea.effort_estimate] || 0;
+    }
+
+    // Calculate recoverable hours based on RICE reach/impact
+    const recoverableHoursPerMonth = calculateRecoverableHours(
+      idea.rice_reach,
+      idea.rice_impact
+    );
+
+    // Calculate payback period in months
+    let paybackMonths: number | null = null;
+    if (effortHours > 0 && recoverableHoursPerMonth > 0) {
+      paybackMonths = Math.round((effortHours / recoverableHoursPerMonth) * 10) / 10;
+    }
+
+    return {
+      id: idea.id,
+      title: idea.title,
+      status: idea.status as IdeaStatus,
+      horizon: idea.horizon,
+      effortHours,
+      recoverableHoursPerMonth,
+      riceScore: idea.rice_score,
+      confidence: idea.rice_confidence,
+      paybackMonths,
+    };
+  });
+
+  // Calculate totals
+  const totalEffortHours = items.reduce((sum, i) => sum + i.effortHours, 0);
+  const totalRecoverableHoursPerMonth = items.reduce((sum, i) => sum + i.recoverableHoursPerMonth, 0);
+
+  // Calculate average payback (only for items with valid payback)
+  const itemsWithPayback = items.filter((i) => i.paybackMonths !== null);
+  const avgPaybackMonths = itemsWithPayback.length > 0
+    ? Math.round((itemsWithPayback.reduce((sum, i) => sum + (i.paybackMonths || 0), 0) / itemsWithPayback.length) * 10) / 10
+    : 0;
+
+  // Group by horizon
+  const byHorizon = {
+    now: { count: 0, effortHours: 0, recoverableHours: 0 },
+    next: { count: 0, effortHours: 0, recoverableHours: 0 },
+    later: { count: 0, effortHours: 0, recoverableHours: 0 },
+    unplanned: { count: 0, effortHours: 0, recoverableHours: 0 },
+  };
+
+  items.forEach((item) => {
+    const horizon = (item.horizon as "now" | "next" | "later") || "unplanned";
+    const key = horizon === "now" || horizon === "next" || horizon === "later" ? horizon : "unplanned";
+    byHorizon[key].count++;
+    byHorizon[key].effortHours += item.effortHours;
+    byHorizon[key].recoverableHours += item.recoverableHoursPerMonth;
+  });
+
+  // Group by status
+  const byStatus: Record<IdeaStatus, { count: number; effortHours: number; recoverableHours: number }> = {
+    new: { count: 0, effortHours: 0, recoverableHours: 0 },
+    evaluating: { count: 0, effortHours: 0, recoverableHours: 0 },
+    accepted: { count: 0, effortHours: 0, recoverableHours: 0 },
+    doing: { count: 0, effortHours: 0, recoverableHours: 0 },
+    complete: { count: 0, effortHours: 0, recoverableHours: 0 },
+    parked: { count: 0, effortHours: 0, recoverableHours: 0 },
+    dropped: { count: 0, effortHours: 0, recoverableHours: 0 },
+  };
+
+  items.forEach((item) => {
+    byStatus[item.status].count++;
+    byStatus[item.status].effortHours += item.effortHours;
+    byStatus[item.status].recoverableHours += item.recoverableHoursPerMonth;
+  });
+
+  return {
+    totalIdeas: items.length,
+    totalEffortHours,
+    totalRecoverableHoursPerMonth,
+    annualRecoverableHours: totalRecoverableHoursPerMonth * 12,
+    avgPaybackMonths,
+    byHorizon,
+    byStatus,
+    items,
+  };
+}

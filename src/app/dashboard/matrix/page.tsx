@@ -81,7 +81,7 @@ export default function MatrixPage() {
         <div>
           <h1 className="text-2xl font-bold">Priority Matrix</h1>
           <p className="text-muted-foreground">
-            Visualize ideas by Impact vs Effort to identify quick wins
+            Visualise ideas by Impact vs Effort to identify quick wins
           </p>
         </div>
         <button

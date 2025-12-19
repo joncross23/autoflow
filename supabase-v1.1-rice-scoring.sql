@@ -211,6 +211,21 @@ CREATE INDEX IF NOT EXISTS idx_published_views_slug ON published_views(slug);
 CREATE INDEX IF NOT EXISTS idx_published_views_active ON published_views(is_active) WHERE is_active = TRUE;
 
 -- ============================================
+-- 7. INCREMENT VIEW COUNT FUNCTION
+-- ============================================
+-- RPC function to increment view count on published views
+
+CREATE OR REPLACE FUNCTION increment_view_count(view_id UUID)
+RETURNS void AS $$
+BEGIN
+  UPDATE published_views
+  SET view_count = view_count + 1,
+      last_viewed_at = NOW()
+  WHERE id = view_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================
 -- VERIFICATION QUERIES
 -- ============================================
 -- Run these to verify migration was successful:

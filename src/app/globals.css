@@ -106,12 +106,12 @@
 
   /* Light mode */
   .light {
-    --bg: #FAFAFA;
-    --bg-secondary: #F4F4F5;
+    --bg: #E8E8EC;           /* Darker page background for contrast */
+    --bg-secondary: #F2F2F4;  /* Columns - lighter than page */
     --bg-tertiary: #E4E4E7;
-    --bg-elevated: #FFFFFF;
-    --bg-hover: #E4E4E7;
-    --bg-active: #D4D4D8;
+    --bg-elevated: #FFFFFF;   /* Cards - white, highest elevation */
+    --bg-hover: #EAEAED;
+    --bg-active: #DCDCE0;
 
     --border-color: #D4D4D8;
     --border-subtle: #E4E4E7;
@@ -135,7 +135,7 @@
     --info-muted: #DBEAFE;
 
     /* shadcn/ui variables - light mode */
-    --background: 0 0% 100%;
+    --background: 240 6% 92%;  /* #E8E8EC - gray page for contrast */
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -307,10 +307,10 @@
 
   /* macOS Light Mode Colors */
   [data-theme="macos"].light {
-    --bg: #FFFFFF;
-    --bg-secondary: #F6F6F6;
+    --bg: #E6E6E8;           /* Darker page for contrast */
+    --bg-secondary: #F0F0F2;  /* Columns */
     --bg-tertiary: #EFEFEF;
-    --bg-elevated: #FFFFFF;
+    --bg-elevated: #FFFFFF;   /* Cards - white */
     --bg-hover: #E8E8E8;
     --bg-active: #DCDCDC;
     --border-color: #D8D8D8;
@@ -330,7 +330,7 @@
     --info: #007AFF;
     --info-muted: #E0F0FF;
     /* shadcn/ui mapping */
-    --background: 0 0% 100%;
+    --background: 240 4% 91%;  /* #E6E6E8 - gray page for contrast */
     --foreground: 0 0% 11%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 11%;
@@ -384,10 +384,10 @@
 
   /* Windows Light Mode Colors */
   [data-theme="windows"].light {
-    --bg: #FFFFFF;
-    --bg-secondary: #F3F3F3;
+    --bg: #E4E4E6;           /* Darker page for contrast */
+    --bg-secondary: #EEEEEF;  /* Columns */
     --bg-tertiary: #ECECEC;
-    --bg-elevated: #FFFFFF;
+    --bg-elevated: #FFFFFF;   /* Cards - white */
     --bg-hover: #E8E8E8;
     --bg-active: #DCDCDC;
     --border-color: #C0C0C0;
@@ -407,7 +407,7 @@
     --info: #0067C0;
     --info-muted: #D0E8F7;
     /* shadcn/ui mapping */
-    --background: 0 0% 100%;
+    --background: 240 5% 90%;  /* #E4E4E6 - gray page for contrast */
     --foreground: 0 0% 0%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
@@ -999,6 +999,23 @@
 
   .bg-primary-muted {
     background-color: var(--primary-muted);
+  }
+
+  /* Background layer utilities (for elevation hierarchy) */
+  .bg-bg {
+    background-color: var(--bg);
+  }
+
+  .bg-bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+
+  .bg-bg-tertiary {
+    background-color: var(--bg-tertiary);
+  }
+
+  .bg-bg-elevated {
+    background-color: var(--bg-elevated);
   }
 
   /* Gradient backgrounds */

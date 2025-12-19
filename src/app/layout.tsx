@@ -8,6 +8,7 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
 });
 
 // Plus Jakarta Sans - AutoFlow theme font (luxury/refined)
@@ -16,6 +17,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+  preload: false, // Disable preload to avoid unused preload warnings
 });
 
 export const metadata: Metadata = {
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | AutoFlow",
   },
   description:
-    "Capture automation ideas, evaluate them with AI, and track implementation projects. Streamline your workflow with intelligent prioritization.",
+    "Capture automation ideas, evaluate them with AI, and track implementation projects. Streamline your workflow with intelligent prioritisation.",
   keywords: [
     "automation",
     "AI",

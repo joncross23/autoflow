@@ -4,7 +4,13 @@ import { memo } from "react";
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { ScoreBadge } from "./ScoreBadge";
-import type { DbIdea, ColumnConfig, EffortEstimate } from "@/types/database";
+import type { DbIdea, ColumnConfig, EffortEstimate, PlanningHorizon, PLANNING_HORIZON_LABELS } from "@/types/database";
+
+const HORIZON_COLORS: Record<NonNullable<PlanningHorizon>, string> = {
+  now: "bg-green-500/10 text-green-500 border-green-500/20",
+  next: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  later: "bg-slate-500/10 text-slate-500 border-slate-500/20",
+};
 
 interface IdeasTableRowProps {
   idea: DbIdea;
@@ -61,10 +67,28 @@ function IdeasTableRowComponent({
             <StatusBadge status={idea.status} size="sm" />
           </td>
         );
-      case "score":
+      case "horizon":
         return (
           <td key={columnId} className={cellClass} style={style}>
-            <ScoreBadge score={aiScore ?? null} size="sm" />
+            {idea.horizon ? (
+              <span
+                className={cn(
+                  "px-2 py-0.5 rounded-full text-xs font-medium border",
+                  HORIZON_COLORS[idea.horizon]
+                )}
+              >
+                {idea.horizon.charAt(0).toUpperCase() + idea.horizon.slice(1)}
+              </span>
+            ) : (
+              <span className="text-muted-foreground text-sm">-</span>
+            )}
+          </td>
+        );
+      case "score":
+      case "rice_score":
+        return (
+          <td key={columnId} className={cellClass} style={style}>
+            <ScoreBadge score={idea.rice_score ?? aiScore ?? null} size="sm" />
           </td>
         );
       case "updated_at":
@@ -143,6 +167,30 @@ function IdeasTableRowComponent({
           <td key={columnId} className={cellClass} style={style}>
             {/* Themes will be populated when we add theme fetching */}
             <span className="text-muted-foreground text-sm">-</span>
+          </td>
+        );
+      case "rice_reach":
+        return (
+          <td key={columnId} className={cn(cellClass, "text-sm")} style={style}>
+            {idea.rice_reach ?? "-"}
+          </td>
+        );
+      case "rice_impact":
+        return (
+          <td key={columnId} className={cn(cellClass, "text-sm")} style={style}>
+            {idea.rice_impact ?? "-"}
+          </td>
+        );
+      case "rice_confidence":
+        return (
+          <td key={columnId} className={cn(cellClass, "text-sm")} style={style}>
+            {idea.rice_confidence ? `${idea.rice_confidence}%` : "-"}
+          </td>
+        );
+      case "rice_effort":
+        return (
+          <td key={columnId} className={cn(cellClass, "text-sm")} style={style}>
+            {idea.rice_effort ?? "-"}
           </td>
         );
       default:
