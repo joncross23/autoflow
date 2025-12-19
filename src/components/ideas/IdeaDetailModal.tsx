@@ -5,7 +5,7 @@ import { X, Pencil, Trash2, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
-import { convertIdeaToProject } from "@/lib/api/projects";
+import { updateIdeaStatus } from "@/lib/api/ideas";
 import type { DbIdea, IdeaStatus, IdeaFrequency } from "@/types/database";
 
 interface IdeaDetailModalProps {
@@ -45,7 +45,7 @@ export function IdeaDetailModal({
   const router = useRouter();
   const [converting, setConverting] = useState(false);
 
-  const handleConvertToProject = async () => {
+  const handleAcceptIdea = async () => {
     // If already accepted/doing, navigate to delivery board
     if (idea.status === "accepted" || idea.status === "doing") {
       router.push("/dashboard/delivery");
@@ -55,12 +55,13 @@ export function IdeaDetailModal({
 
     setConverting(true);
     try {
-      await convertIdeaToProject(idea);
+      // Update status to "accepted" to move to delivery board
+      await updateIdeaStatus(idea.id, "accepted");
       onConvert?.();
       router.push("/dashboard/delivery");
       onClose();
     } catch (error) {
-      console.error("Failed to convert idea:", error);
+      console.error("Failed to accept idea:", error);
       setConverting(false);
     }
   };
@@ -84,10 +85,10 @@ export function IdeaDetailModal({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {/* Convert to Project / View Delivery button */}
+            {/* Accept / View Delivery button */}
             {idea.status !== "parked" && idea.status !== "dropped" && idea.status !== "complete" && (
               <button
-                onClick={handleConvertToProject}
+                onClick={handleAcceptIdea}
                 disabled={converting}
                 className={cn(
                   "btn btn-sm",

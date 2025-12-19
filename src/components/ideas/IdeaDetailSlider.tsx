@@ -19,7 +19,6 @@ import { AiEvaluationPanel } from "./AiEvaluationPanel";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
 import { IdeaTasksSection } from "./IdeaTasksSection";
 import { updateIdea, updateIdeaStatus, deleteIdea } from "@/lib/api/ideas";
-import { convertIdeaToProject } from "@/lib/api/projects";
 import type { DbIdea, IdeaStatus, EffortEstimate } from "@/types/database";
 
 interface IdeaDetailSliderProps {
@@ -163,7 +162,7 @@ export function IdeaDetailSlider({
     }
   };
 
-  const handleConvertToProject = async () => {
+  const handleAcceptIdea = async () => {
     if (idea.status === "accepted" || idea.status === "doing") {
       router.push("/dashboard/delivery");
       handleClose();
@@ -172,11 +171,13 @@ export function IdeaDetailSlider({
 
     setConverting(true);
     try {
-      await convertIdeaToProject(idea);
+      // Update status to "accepted" to move to delivery board
+      const updated = await updateIdeaStatus(idea.id, "accepted");
+      onUpdate(updated);
       router.push("/dashboard/delivery");
       handleClose();
     } catch (error) {
-      console.error("Failed to convert idea:", error);
+      console.error("Failed to accept idea:", error);
       setConverting(false);
     }
   };
@@ -250,7 +251,7 @@ export function IdeaDetailSlider({
               idea.status !== "dropped" &&
               idea.status !== "complete" && (
                 <button
-                  onClick={handleConvertToProject}
+                  onClick={handleAcceptIdea}
                   disabled={converting}
                   className={cn(
                     "btn btn-sm",
