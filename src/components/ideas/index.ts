@@ -13,3 +13,7 @@ export { ScoreBadge } from "./ScoreBadge";
 export { FilterPanel, DEFAULT_FILTERS } from "./FilterPanel";
 export type { IdeaFilters } from "./FilterPanel";
 export { BulkActionBar } from "./BulkActionBar";
+
+// V1.0 Detail Slider Components
+export { IdeaDetailSlider } from "./IdeaDetailSlider";
+export { IdeaTasksSection } from "./IdeaTasksSection";

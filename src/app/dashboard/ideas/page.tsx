@@ -15,7 +15,7 @@ import { NoIdeasEmptyState } from "@/components/shared";
 import {
   IdeasTable,
   IdeaForm,
-  IdeaDetailModal,
+  IdeaDetailSlider,
   FilterPanel,
   BulkActionBar,
   DEFAULT_FILTERS,
@@ -302,14 +302,19 @@ export default function IdeasPage() {
         onClearSelection={() => setSelectedIds(new Set())}
       />
 
-      {/* Idea Detail Modal (will be replaced with slider in Phase 4) */}
+      {/* Idea Detail Slider */}
       {viewingIdea && (
-        <IdeaDetailModal
+        <IdeaDetailSlider
           idea={viewingIdea}
           onClose={handleCloseDetail}
-          onEdit={() => handleEdit(viewingIdea)}
-          onDelete={() => handleDelete(viewingIdea.id)}
-          onConvert={loadIdeas}
+          onUpdate={(updated) => {
+            setIdeas((prev) =>
+              prev.map((i) => (i.id === updated.id ? updated : i))
+            );
+          }}
+          onDelete={(id) => {
+            setIdeas((prev) => prev.filter((i) => i.id !== id));
+          }}
         />
       )}
 
