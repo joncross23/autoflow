@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Filter, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
-import type { IdeaStatus } from "@/types/database";
+import type { IdeaStatus, PlanningHorizon } from "@/types/database";
 
 export interface IdeaFilters {
   statuses: IdeaStatus[];
+  horizons: PlanningHorizon[];
   archived: boolean;
   dateRange: "all" | "today" | "week" | "month" | "quarter";
   search: string;
@@ -29,6 +30,21 @@ const ALL_STATUSES: IdeaStatus[] = [
   "dropped",
 ];
 
+const ALL_HORIZONS: { value: PlanningHorizon; label: string; color: string }[] = [
+  { value: "now", label: "Now", color: "bg-green-500/10 text-green-500 border-green-500/20" },
+  { value: "next", label: "Next", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" },
+  { value: "later", label: "Later", color: "bg-slate-500/10 text-slate-500 border-slate-500/20" },
+  { value: null, label: "Unplanned", color: "bg-bg-tertiary text-muted-foreground" },
+];
+
+export const DEFAULT_FILTERS: IdeaFilters = {
+  statuses: [],
+  horizons: [],
+  archived: false,
+  dateRange: "all",
+  search: "",
+};
+
 const DATE_RANGE_OPTIONS: { value: IdeaFilters["dateRange"]; label: string }[] = [
   { value: "all", label: "All time" },
   { value: "today", label: "Today" },
@@ -46,6 +62,7 @@ export function FilterPanel({
 
   const activeFilterCount =
     filters.statuses.length +
+    filters.horizons.length +
     (filters.archived ? 1 : 0) +
     (filters.dateRange !== "all" ? 1 : 0);
 
@@ -56,9 +73,17 @@ export function FilterPanel({
     onFiltersChange({ ...filters, statuses: newStatuses });
   };
 
+  const toggleHorizon = (horizon: PlanningHorizon) => {
+    const newHorizons = filters.horizons.includes(horizon)
+      ? filters.horizons.filter((h) => h !== horizon)
+      : [...filters.horizons, horizon];
+    onFiltersChange({ ...filters, horizons: newHorizons });
+  };
+
   const clearFilters = () => {
     onFiltersChange({
       statuses: [],
+      horizons: [],
       archived: false,
       dateRange: "all",
       search: "",
@@ -158,6 +183,29 @@ export function FilterPanel({
               </div>
             </div>
 
+            {/* Horizon filter */}
+            <div>
+              <h4 className="text-sm font-medium mb-3">Planning Horizon</h4>
+              <div className="flex flex-wrap gap-2">
+                {ALL_HORIZONS.map((horizon) => (
+                  <button
+                    key={horizon.value ?? "null"}
+                    onClick={() => toggleHorizon(horizon.value)}
+                    className={cn(
+                      "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
+                      filters.horizons.includes(horizon.value)
+                        ? "border-primary bg-primary/10"
+                        : "border-border-subtle hover:bg-bg-hover"
+                    )}
+                  >
+                    <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", horizon.color)}>
+                      {horizon.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Date range filter */}
             <div>
               <h4 className="text-sm font-medium mb-3">Date Range</h4>
@@ -200,10 +248,3 @@ export function FilterPanel({
     </div>
   );
 }
-
-export const DEFAULT_FILTERS: IdeaFilters = {
-  statuses: [],
-  archived: false,
-  dateRange: "all",
-  search: "",
-};

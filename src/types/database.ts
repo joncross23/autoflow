@@ -25,6 +25,27 @@ export type EffortEstimate = "trivial" | "small" | "medium" | "large" | "xlarge"
 
 export type Priority = "low" | "medium" | "high" | "critical";
 
+// Planning horizon (Now/Next/Later roadmap planning)
+export type PlanningHorizon = "now" | "next" | "later" | null;
+
+export const PLANNING_HORIZON_LABELS: Record<NonNullable<PlanningHorizon>, string> = {
+  now: "Now",
+  next: "Next",
+  later: "Later",
+};
+
+// RICE Impact levels (standard RICE methodology)
+export type RiceImpact = 0.25 | 0.5 | 1 | 2 | 3;
+
+// RICE Impact labels for UI
+export const RICE_IMPACT_LABELS: Record<RiceImpact, string> = {
+  0.25: "Minimal",
+  0.5: "Low",
+  1: "Medium",
+  2: "High",
+  3: "Massive",
+};
+
 export interface DbIdea {
   id: string;
   user_id: string;
@@ -39,10 +60,17 @@ export interface DbIdea {
   pain_points: string | null;
   desired_outcome: string | null;
   effort_estimate: EffortEstimate | null;
+  horizon: PlanningHorizon;       // V1.1: Now/Next/Later planning
   position: number;
   archived: boolean;
   started_at: string | null;
   completed_at: string | null;
+  // RICE scoring fields (V1.1)
+  rice_reach: number | null;      // 1-10: How many users/processes affected
+  rice_impact: RiceImpact | null; // 0.25-3: Impact per instance
+  rice_confidence: number | null; // 0-100: Confidence percentage
+  rice_effort: number | null;     // 1-10: Person-weeks equivalent
+  rice_score: number | null;      // Calculated: (R×I×C%)/E
   created_at: string;
   updated_at: string;
 }
@@ -58,10 +86,16 @@ export interface DbIdeaInsert {
   pain_points?: string | null;
   desired_outcome?: string | null;
   effort_estimate?: EffortEstimate | null;
+  horizon?: PlanningHorizon;
   position?: number;
   archived?: boolean;
   started_at?: string | null;
   completed_at?: string | null;
+  // RICE scoring fields (V1.1)
+  rice_reach?: number | null;
+  rice_impact?: RiceImpact | null;
+  rice_confidence?: number | null;
+  rice_effort?: number | null;
 }
 
 export interface DbIdeaUpdate {
@@ -75,10 +109,16 @@ export interface DbIdeaUpdate {
   pain_points?: string | null;
   desired_outcome?: string | null;
   effort_estimate?: EffortEstimate | null;
+  horizon?: PlanningHorizon;
   position?: number;
   archived?: boolean;
   started_at?: string | null;
   completed_at?: string | null;
+  // RICE scoring fields (V1.1)
+  rice_reach?: number | null;
+  rice_impact?: RiceImpact | null;
+  rice_confidence?: number | null;
+  rice_effort?: number | null;
   updated_at?: string;
 }
 
@@ -396,10 +436,17 @@ export function dbIdeaToIdea(db: DbIdea): {
   painPoints: string | null;
   desiredOutcome: string | null;
   effortEstimate: EffortEstimate | null;
+  horizon: PlanningHorizon;
   position: number;
   archived: boolean;
   startedAt: string | null;
   completedAt: string | null;
+  // RICE scoring (V1.1)
+  riceReach: number | null;
+  riceImpact: RiceImpact | null;
+  riceConfidence: number | null;
+  riceEffort: number | null;
+  riceScore: number | null;
   createdAt: string;
   updatedAt: string;
 } {
@@ -417,10 +464,16 @@ export function dbIdeaToIdea(db: DbIdea): {
     painPoints: db.pain_points,
     desiredOutcome: db.desired_outcome,
     effortEstimate: db.effort_estimate,
+    horizon: db.horizon,
     position: db.position,
     archived: db.archived,
     startedAt: db.started_at,
     completedAt: db.completed_at,
+    riceReach: db.rice_reach,
+    riceImpact: db.rice_impact,
+    riceConfidence: db.rice_confidence,
+    riceEffort: db.rice_effort,
+    riceScore: db.rice_score,
     createdAt: db.created_at,
     updatedAt: db.updated_at,
   };
@@ -440,13 +493,116 @@ export interface ColumnConfig {
 export const DEFAULT_IDEA_COLUMNS: ColumnConfig[] = [
   { id: "title", visible: true, width: 300, order: 0 },
   { id: "status", visible: true, width: 120, order: 1 },
-  { id: "score", visible: true, width: 80, order: 2 },
-  { id: "updated_at", visible: true, width: 140, order: 3 },
-  { id: "created_at", visible: false, width: 140, order: 4 },
-  { id: "description", visible: false, width: 200, order: 5 },
-  { id: "effort_estimate", visible: false, width: 100, order: 6 },
-  { id: "owner", visible: false, width: 100, order: 7 },
-  { id: "started_at", visible: false, width: 140, order: 8 },
-  { id: "completed_at", visible: false, width: 140, order: 9 },
-  { id: "themes", visible: false, width: 150, order: 10 },
+  { id: "horizon", visible: true, width: 100, order: 2 },  // V1.1: Now/Next/Later
+  { id: "rice_score", visible: true, width: 100, order: 3 },  // V1.1: RICE score
+  { id: "updated_at", visible: true, width: 140, order: 4 },
+  { id: "created_at", visible: false, width: 140, order: 5 },
+  { id: "description", visible: false, width: 200, order: 6 },
+  { id: "effort_estimate", visible: false, width: 100, order: 7 },
+  { id: "owner", visible: false, width: 100, order: 8 },
+  { id: "started_at", visible: false, width: 140, order: 9 },
+  { id: "completed_at", visible: false, width: 140, order: 10 },
+  { id: "themes", visible: false, width: 150, order: 11 },
+  // RICE components (V1.1)
+  { id: "rice_reach", visible: false, width: 80, order: 12 },
+  { id: "rice_impact", visible: false, width: 80, order: 13 },
+  { id: "rice_confidence", visible: false, width: 100, order: 14 },
+  { id: "rice_effort", visible: false, width: 80, order: 15 },
 ];
+
+// ============================================
+// SAVED VIEWS TYPES (V1.1)
+// ============================================
+
+export interface IdeaFilters {
+  status?: IdeaStatus[];
+  archived?: boolean;
+  minScore?: number;
+  maxScore?: number;
+  minRiceScore?: number;
+  maxRiceScore?: number;
+  dateRange?: {
+    start?: string;
+    end?: string;
+  };
+  themes?: string[];
+  search?: string;
+}
+
+// Generic filter type for saved views (stores any UI filter structure as JSONB)
+export type SavedViewFilters = Record<string, unknown>;
+
+export interface DbSavedView {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  filters: SavedViewFilters;
+  column_config: ColumnConfig[] | null;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbSavedViewInsert {
+  name: string;
+  description?: string | null;
+  filters: SavedViewFilters;
+  column_config?: ColumnConfig[] | null;
+  is_default?: boolean;
+}
+
+export interface DbSavedViewUpdate {
+  name?: string;
+  description?: string | null;
+  filters?: SavedViewFilters;
+  column_config?: ColumnConfig[] | null;
+  is_default?: boolean;
+  updated_at?: string;
+}
+
+// ============================================
+// PUBLISHED VIEWS TYPES (V1.1)
+// ============================================
+
+export interface DbPublishedView {
+  id: string;
+  user_id: string;
+  saved_view_id: string | null;
+  name: string;
+  slug: string;
+  description: string | null;
+  filters: SavedViewFilters;
+  column_config: ColumnConfig[] | null;
+  is_active: boolean;
+  expires_at: string | null;
+  password_hash: string | null;
+  view_count: number;
+  last_viewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbPublishedViewInsert {
+  saved_view_id?: string | null;
+  name: string;
+  slug: string;
+  description?: string | null;
+  filters: SavedViewFilters;
+  column_config?: ColumnConfig[] | null;
+  is_active?: boolean;
+  expires_at?: string | null;
+  password_hash?: string | null;
+}
+
+export interface DbPublishedViewUpdate {
+  name?: string;
+  slug?: string;
+  description?: string | null;
+  filters?: SavedViewFilters;
+  column_config?: ColumnConfig[] | null;
+  is_active?: boolean;
+  expires_at?: string | null;
+  password_hash?: string | null;
+  updated_at?: string;
+}

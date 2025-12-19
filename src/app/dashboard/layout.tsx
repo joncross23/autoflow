@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { GlobalCommandPalette } from "@/components/search";
+import { KeyboardShortcutsWrapper } from "@/components/shared";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -19,6 +20,7 @@ export default function DashboardLayout({
         {children}
       </main>
       <GlobalCommandPalette />
+      <KeyboardShortcutsWrapper />
     </div>
   );
 }

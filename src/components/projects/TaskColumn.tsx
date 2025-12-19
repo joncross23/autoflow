@@ -61,9 +61,9 @@ export function TaskColumn({
       onMouseLeave={() => setIsHovered(false)}
       className={`
         flex flex-col w-[280px] min-w-[280px] max-h-[calc(100vh-200px)]
-        bg-[#0D2137] rounded-xl
+        bg-bg-secondary rounded-xl
         transition-all duration-150 ease-out
-        ${isOver ? "ring-2 ring-primary ring-opacity-50" : ""}
+        ${isOver ? "ring-2 ring-primary/50" : ""}
       `}
     >
       {/* Column Header */}

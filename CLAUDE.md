@@ -116,6 +116,24 @@ npm run docs:state   # Generate CURRENT_STATE.md from backlog
 - **Commits:** Conventional Commits format
 - **Tests:** Co-located with source files (`*.test.ts`)
 
+## Language Convention
+
+**Use British English** throughout the application:
+
+| American | British |
+|----------|---------|
+| analyze | analyse |
+| visualize | visualise |
+| prioritize | prioritise |
+| customize | customise |
+| organize | organise |
+| optimize | optimise |
+| color (in prose) | colour |
+| behavior | behaviour |
+| favorite | favourite |
+
+> **Note:** CSS properties (`color`, `background-color`) and code identifiers remain unchanged — this applies only to user-facing text, comments, and documentation.
+
 ## Design Principles
 
 - **Dark mode default** with light mode toggle

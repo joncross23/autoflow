@@ -16,10 +16,13 @@ import {
 } from "lucide-react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
+import { RiceScorePanel } from "./RiceScorePanel";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
 import { IdeaTasksSection } from "./IdeaTasksSection";
+import { CommentsSection } from "./CommentsSection";
+import { ActivityLog } from "./ActivityLog";
 import { updateIdea, updateIdeaStatus, deleteIdea } from "@/lib/api/ideas";
-import type { DbIdea, IdeaStatus, EffortEstimate } from "@/types/database";
+import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon } from "@/types/database";
 
 interface IdeaDetailSliderProps {
   idea: DbIdea;
@@ -46,6 +49,13 @@ const EFFORT_OPTIONS: { value: EffortEstimate; label: string }[] = [
   { value: "xlarge", label: "X-Large (1+ weeks)" },
 ];
 
+const HORIZON_OPTIONS: { value: PlanningHorizon; label: string; color: string }[] = [
+  { value: "now", label: "Now", color: "bg-green-500/10 text-green-500" },
+  { value: "next", label: "Next", color: "bg-blue-500/10 text-blue-500" },
+  { value: "later", label: "Later", color: "bg-slate-500/10 text-slate-500" },
+  { value: null, label: "Unplanned", color: "text-muted-foreground" },
+];
+
 export function IdeaDetailSlider({
   idea,
   onClose,
@@ -60,6 +70,7 @@ export function IdeaDetailSlider({
   const [description, setDescription] = useState(idea.description || "");
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [showEffortMenu, setShowEffortMenu] = useState(false);
+  const [showHorizonMenu, setShowHorizonMenu] = useState(false);
   const [saving, setSaving] = useState(false);
   const [converting, setConverting] = useState(false);
 
@@ -145,6 +156,19 @@ export function IdeaDetailSlider({
       onUpdate(updated);
     } catch (error) {
       console.error("Failed to update effort:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleHorizonChange = async (horizon: PlanningHorizon) => {
+    setShowHorizonMenu(false);
+    setSaving(true);
+    try {
+      const updated = await updateIdea(idea.id, { horizon });
+      onUpdate(updated);
+    } catch (error) {
+      console.error("Failed to update horizon:", error);
     } finally {
       setSaving(false);
     }
@@ -368,6 +392,62 @@ export function IdeaDetailSlider({
                 </div>
               </div>
 
+              {/* Planning Horizon */}
+              <div>
+                <div className="flex items-center gap-1.5 text-muted-foreground mb-1.5">
+                  <Tag className="h-3.5 w-3.5" />
+                  <span className="text-xs font-medium">Horizon</span>
+                </div>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowHorizonMenu(!showHorizonMenu)}
+                    className="flex items-center gap-1 text-sm hover:bg-bg-hover rounded px-2 py-1 -mx-2 transition-colors"
+                  >
+                    <span className={cn(
+                      "px-2 py-0.5 rounded-full text-xs font-medium",
+                      idea.horizon
+                        ? HORIZON_OPTIONS.find((h) => h.value === idea.horizon)?.color
+                        : "text-muted-foreground"
+                    )}>
+                      {idea.horizon
+                        ? HORIZON_OPTIONS.find((h) => h.value === idea.horizon)?.label
+                        : "Unplanned"}
+                    </span>
+                    <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                  </button>
+
+                  {showHorizonMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowHorizonMenu(false)}
+                      />
+                      <div className="absolute left-0 top-full mt-1 w-36 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                        {HORIZON_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.value ?? "null"}
+                            onClick={() => handleHorizonChange(opt.value)}
+                            className={cn(
+                              "w-full px-3 py-2 text-sm text-left transition-colors flex items-center gap-2",
+                              opt.value === idea.horizon
+                                ? "bg-primary/10 text-primary"
+                                : "hover:bg-bg-hover"
+                            )}
+                          >
+                            <span className={cn(
+                              "px-2 py-0.5 rounded-full text-xs font-medium",
+                              opt.color
+                            )}>
+                              {opt.label}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
               {/* Owner */}
               <div>
                 <div className="flex items-center gap-1.5 text-muted-foreground mb-1.5">
@@ -477,6 +557,9 @@ export function IdeaDetailSlider({
               </div>
             )}
 
+            {/* RICE Score (V1.1) */}
+            <RiceScorePanel idea={idea} onUpdate={onUpdate} />
+
             {/* Tasks Section */}
             {(idea.status === "accepted" || idea.status === "doing") && (
               <IdeaTasksSection ideaId={idea.id} />
@@ -485,6 +568,16 @@ export function IdeaDetailSlider({
             {/* AI Evaluation */}
             <div className="pt-4 border-t border-border">
               <AiEvaluationPanel ideaId={idea.id} />
+            </div>
+
+            {/* Comments (V1.2) */}
+            <div className="pt-4 border-t border-border">
+              <CommentsSection ideaId={idea.id} />
+            </div>
+
+            {/* Activity Log (V1.2) */}
+            <div className="pt-4 border-t border-border">
+              <ActivityLog ideaId={idea.id} maxItems={5} />
             </div>
           </div>
         </div>
