@@ -1,0 +1,331 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Plus, Lightbulb, Search, Loader2 } from "lucide-react";
+import {
+  getIdeas,
+  deleteIdea,
+  getIdeaCounts,
+  bulkArchiveIdeas,
+  bulkDeleteIdeas,
+  bulkUpdateStatus,
+} from "@/lib/api/ideas";
+import { NoIdeasEmptyState } from "@/components/shared";
+import {
+  IdeasTable,
+  IdeaForm,
+  IdeaDetailSlider,
+  FilterPanel,
+  BulkActionBar,
+  DEFAULT_FILTERS,
+} from "@/components/ideas";
+import type { SortField, SortOrder, IdeaFilters } from "@/components/ideas";
+import type { DbIdea, IdeaStatus, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+
+// Load column config from localStorage or use defaults
+function loadColumnConfig(): ColumnConfig[] {
+  if (typeof window === "undefined") {
+    return [
+      { id: "title", visible: true, width: 300, order: 0 },
+      { id: "status", visible: true, width: 120, order: 1 },
+      { id: "score", visible: true, width: 80, order: 2 },
+      { id: "updated_at", visible: true, width: 140, order: 3 },
+      { id: "created_at", visible: false, width: 140, order: 4 },
+      { id: "description", visible: false, width: 200, order: 5 },
+      { id: "effort_estimate", visible: false, width: 100, order: 6 },
+      { id: "owner", visible: false, width: 100, order: 7 },
+      { id: "started_at", visible: false, width: 140, order: 8 },
+      { id: "completed_at", visible: false, width: 140, order: 9 },
+      { id: "themes", visible: false, width: 150, order: 10 },
+    ];
+  }
+  const saved = localStorage.getItem("autoflow:ideas:columns");
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch {
+      // Fall through to default
+    }
+  }
+  return [
+    { id: "title", visible: true, width: 300, order: 0 },
+    { id: "status", visible: true, width: 120, order: 1 },
+    { id: "score", visible: true, width: 80, order: 2 },
+    { id: "updated_at", visible: true, width: 140, order: 3 },
+    { id: "created_at", visible: false, width: 140, order: 4 },
+    { id: "description", visible: false, width: 200, order: 5 },
+    { id: "effort_estimate", visible: false, width: 100, order: 6 },
+    { id: "owner", visible: false, width: 100, order: 7 },
+    { id: "started_at", visible: false, width: 140, order: 8 },
+    { id: "completed_at", visible: false, width: 140, order: 9 },
+    { id: "themes", visible: false, width: 150, order: 10 },
+  ];
+}
+
+export default function IdeasPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedId = searchParams.get("selected");
+
+  // Data state
+  const [ideas, setIdeas] = useState<DbIdea[]>([]);
+  const [ideaCounts, setIdeaCounts] = useState<Record<IdeaStatus, number> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // UI state
+  const [showForm, setShowForm] = useState(false);
+  const [editingIdea, setEditingIdea] = useState<DbIdea | null>(null);
+  const [columns, setColumns] = useState<ColumnConfig[]>(loadColumnConfig);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [filters, setFilters] = useState<IdeaFilters>(DEFAULT_FILTERS);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortField, setSortField] = useState<SortField>("updated_at");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+
+  // Get the selected idea for detail modal
+  const viewingIdea = selectedId ? ideas.find((i) => i.id === selectedId) : null;
+
+  // Save column config when it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("autoflow:ideas:columns", JSON.stringify(columns));
+    }
+  }, [columns]);
+
+  const loadIdeas = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Build filter params
+      const filterParams: Parameters<typeof getIdeas>[0] = {
+        archived: filters.archived,
+        sortBy: sortField === "score" ? "updated_at" : sortField,
+        sortOrder,
+      };
+
+      if (filters.statuses.length > 0) {
+        filterParams.status = filters.statuses;
+      }
+
+      if (filters.search || searchQuery) {
+        filterParams.search = filters.search || searchQuery;
+      }
+
+      const [data, counts] = await Promise.all([
+        getIdeas(filterParams),
+        getIdeaCounts(),
+      ]);
+
+      setIdeas(data);
+      setIdeaCounts(counts);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load ideas");
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, searchQuery, sortField, sortOrder]);
+
+  useEffect(() => {
+    loadIdeas();
+  }, [loadIdeas]);
+
+  // Handlers
+  const handleCreateNew = () => {
+    setEditingIdea(null);
+    setShowForm(true);
+  };
+
+  const handleIdeaClick = (idea: DbIdea) => {
+    // Update URL with selected idea
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("selected", idea.id);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  const handleCloseDetail = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("selected");
+    const newUrl = params.toString() ? `?${params.toString()}` : "/dashboard/ideas";
+    router.push(newUrl, { scroll: false });
+  };
+
+  const handleEdit = (idea: DbIdea) => {
+    handleCloseDetail();
+    setEditingIdea(idea);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this idea?")) {
+      return;
+    }
+
+    try {
+      await deleteIdea(id);
+      setIdeas((prev) => prev.filter((idea) => idea.id !== id));
+      handleCloseDetail();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete idea");
+    }
+  };
+
+  const handleFormClose = () => {
+    setShowForm(false);
+    setEditingIdea(null);
+  };
+
+  const handleFormSuccess = () => {
+    handleFormClose();
+    loadIdeas();
+  };
+
+  const handleSort = (field: SortField, order: SortOrder) => {
+    setSortField(field);
+    setSortOrder(order);
+  };
+
+  // Bulk operations
+  const handleBulkArchive = async () => {
+    const ids = Array.from(selectedIds);
+    await bulkArchiveIdeas(ids);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
+  const handleBulkDelete = async () => {
+    const ids = Array.from(selectedIds);
+    await bulkDeleteIdeas(ids);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
+  const handleBulkStatusChange = async (status: IdeaStatus) => {
+    const ids = Array.from(selectedIds);
+    await bulkUpdateStatus(ids, status);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
+  // Filter ideas by search query (client-side for instant feedback)
+  const filteredIdeas = ideas.filter((idea) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      idea.title.toLowerCase().includes(query) ||
+      idea.description?.toLowerCase().includes(query)
+    );
+  });
+
+  return (
+    <div className="p-6">
+      <header className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Ideas</h1>
+          <p className="text-muted-foreground">
+            Capture and evaluate automation ideas
+          </p>
+        </div>
+        <button className="btn btn-primary" onClick={handleCreateNew}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Idea
+        </button>
+      </header>
+
+      {/* Search bar */}
+      <div className="mb-4">
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search ideas..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input w-full pl-10"
+          />
+        </div>
+      </div>
+
+      {/* Filter panel */}
+      <FilterPanel
+        filters={filters}
+        onFiltersChange={setFilters}
+        ideaCounts={ideaCounts || undefined}
+      />
+
+      {/* Content */}
+      {error ? (
+        <div className="card bg-error/10 border-error/20 text-center py-8">
+          <p className="text-error">{error}</p>
+          <button className="btn btn-outline mt-4" onClick={loadIdeas}>
+            Try again
+          </button>
+        </div>
+      ) : filteredIdeas.length === 0 && !loading ? (
+        ideas.length === 0 ? (
+          <NoIdeasEmptyState
+            action={
+              <button className="btn btn-primary" onClick={handleCreateNew}>
+                <Lightbulb className="h-4 w-4 mr-2" />
+                Capture your first idea
+              </button>
+            }
+          />
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">No ideas match your filters</p>
+          </div>
+        )
+      ) : (
+        <IdeasTable
+          ideas={filteredIdeas}
+          columns={columns}
+          onColumnsChange={setColumns}
+          selectedIds={selectedIds}
+          onSelectionChange={setSelectedIds}
+          onIdeaClick={handleIdeaClick}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+          loading={loading}
+        />
+      )}
+
+      {/* Bulk action bar */}
+      <BulkActionBar
+        selectedCount={selectedIds.size}
+        onArchive={handleBulkArchive}
+        onDelete={handleBulkDelete}
+        onStatusChange={handleBulkStatusChange}
+        onClearSelection={() => setSelectedIds(new Set())}
+      />
+
+      {/* Idea Detail Slider */}
+      {viewingIdea && (
+        <IdeaDetailSlider
+          idea={viewingIdea}
+          onClose={handleCloseDetail}
+          onUpdate={(updated) => {
+            setIdeas((prev) =>
+              prev.map((i) => (i.id === updated.id ? updated : i))
+            );
+          }}
+          onDelete={(id) => {
+            setIdeas((prev) => prev.filter((i) => i.id !== id));
+          }}
+        />
+      )}
+
+      {/* Idea Form Modal */}
+      {showForm && (
+        <IdeaForm
+          idea={editingIdea}
+          onClose={handleFormClose}
+          onSuccess={handleFormSuccess}
+        />
+      )}
+    </div>
+  );
+}
