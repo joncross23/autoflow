@@ -38,6 +38,7 @@ import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { AISuggestionsSection } from "@/components/shared/AISuggestionsSection";
+import { ParentIdeaSection } from "@/components/shared/ParentIdeaSection";
 
 interface TaskDetailModalProps {
   task: DbTask;
@@ -137,6 +138,7 @@ export function TaskDetailModal({
   const isMobile = useIsMobile();
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
+  const [ideaId, setIdeaId] = useState<string | null>(task.idea_id);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
@@ -144,9 +146,12 @@ export function TaskDetailModal({
 
   // Track changes
   useEffect(() => {
-    const changed = title !== task.title || description !== (task.description || "");
+    const changed =
+      title !== task.title ||
+      description !== (task.description || "") ||
+      ideaId !== task.idea_id;
     setHasChanges(changed);
-  }, [title, description, task.title, task.description]);
+  }, [title, description, ideaId, task.title, task.description, task.idea_id]);
 
   // Save task
   const handleSave = useCallback(async () => {
@@ -157,6 +162,7 @@ export function TaskDetailModal({
       const updated = await updateTask(task.id, {
         title,
         description: description || null,
+        idea_id: ideaId,
       });
       onSave(updated);
     } catch (error) {
@@ -164,7 +170,7 @@ export function TaskDetailModal({
     } finally {
       setSaving(false);
     }
-  }, [hasChanges, task.id, title, description, onSave]);
+  }, [hasChanges, task.id, title, description, ideaId, onSave]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -235,17 +241,13 @@ export function TaskDetailModal({
           <div className="flex flex-col md:flex-row">
             {/* Main Content */}
             <div className="flex-1 p-4 md:p-6 min-w-0 overflow-y-auto md:max-h-[80vh]">
-              {/* Parent Idea Badge */}
-              {ideaTitle && task.idea_id && (
-                <Link
-                  href={`/dashboard/ideas?selected=${task.idea_id}`}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-4 text-xs font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-md transition-colors"
-                >
-                  <FileText className="h-3 w-3" />
-                  {ideaTitle}
-                  <ExternalLink className="h-3 w-3" />
-                </Link>
-              )}
+              {/* Parent Idea Selector */}
+              <div className="mb-4">
+                <ParentIdeaSection
+                  ideaId={ideaId}
+                  onIdeaChange={setIdeaId}
+                />
+              </div>
 
               {/* Header */}
               <div className="mb-4">

@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { Loader2, Filter, ChevronDown, ExternalLink, X } from "lucide-react";
+import { Loader2, ChevronDown, ExternalLink, X, Search, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
 import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
 import { getGlobalColumns } from "@/lib/api/columns";
@@ -18,7 +17,6 @@ interface DeliveryBoardProps {
 }
 
 export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
-  const isMobile = useIsMobile();
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
@@ -29,15 +27,28 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter state
-  const [selectedIdeaIds, setSelectedIdeaIds] = useState<Set<string>>(
-    initialIdeaFilter ? new Set([initialIdeaFilter]) : new Set()
+  // Filter state - single idea selection for "project board" feel
+  const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(
+    initialIdeaFilter || null
   );
-  const [showOrphans, setShowOrphans] = useState(true);
-  const [showFilterPanel, setShowFilterPanel] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Task detail modal state
   const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+        setSearchQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -110,30 +121,21 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
     }
   };
 
-  // Filter tasks based on selected ideas
+  // Only count tasks that are on the board (have column_id)
+  const boardTasks = useMemo(() => tasks.filter(t => t.column_id), [tasks]);
+
+  // Filter tasks based on selected idea
   const filteredTasks = useMemo(() => {
-    if (selectedIdeaIds.size === 0 && showOrphans) {
-      return tasks;
+    if (!selectedIdeaId) {
+      return boardTasks;
     }
+    return boardTasks.filter(t => t.idea_id === selectedIdeaId);
+  }, [boardTasks, selectedIdeaId]);
 
-    return tasks.filter((task) => {
-      // Show orphan tasks if enabled
-      if (!task.idea_id && showOrphans) return true;
-
-      // Show tasks from selected ideas
-      if (task.idea_id && selectedIdeaIds.has(task.idea_id)) return true;
-
-      // If no filters selected, show all
-      if (selectedIdeaIds.size === 0) return true;
-
-      return false;
-    });
-  }, [tasks, selectedIdeaIds, showOrphans]);
-
-  // Group ideas by those with tasks vs without
+  // Count board tasks per idea (only tasks with column_id)
   const ideasWithTasks = useMemo(() => {
     const ideaTaskCounts: Record<string, number> = {};
-    tasks.forEach((task) => {
+    boardTasks.forEach((task) => {
       if (task.idea_id) {
         ideaTaskCounts[task.idea_id] = (ideaTaskCounts[task.idea_id] || 0) + 1;
       }
@@ -142,23 +144,20 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
       ...idea,
       taskCount: ideaTaskCounts[idea.id] || 0,
     }));
-  }, [ideas, tasks]);
+  }, [ideas, boardTasks]);
 
-  const orphanTaskCount = tasks.filter((t) => !t.idea_id).length;
+  // Filter ideas by search
+  const filteredIdeas = useMemo(() => {
+    if (!searchQuery) return ideasWithTasks;
+    return ideasWithTasks.filter((idea) =>
+      idea.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [ideasWithTasks, searchQuery]);
 
-  const toggleIdeaFilter = (ideaId: string) => {
-    const newSet = new Set(selectedIdeaIds);
-    if (newSet.has(ideaId)) {
-      newSet.delete(ideaId);
-    } else {
-      newSet.add(ideaId);
-    }
-    setSelectedIdeaIds(newSet);
-  };
-
-  const clearFilters = () => {
-    setSelectedIdeaIds(new Set());
-    setShowOrphans(true);
+  const selectIdea = (ideaId: string | null) => {
+    setSelectedIdeaId(ideaId);
+    setShowDropdown(false);
+    setSearchQuery("");
   };
 
   const handleTasksChange = (updatedTasks: DbTask[]) => {
@@ -204,6 +203,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
       title,
       column_id: columnId,
       completed: false,
+      idea_id: selectedIdeaId,  // Auto-link to filtered idea
     });
     setTasks((prev) => [...prev, newTask]);
   };
@@ -234,180 +234,157 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
     );
   }
 
-  const hasActiveFilters = selectedIdeaIds.size > 0 || !showOrphans;
-
-  // Filter content component to reuse in sidebar and bottom sheet
-  const FilterContent = () => (
-    <>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold">Filter by Idea</h3>
-        {hasActiveFilters && (
-          <button
-            onClick={clearFilters}
-            className="text-xs text-primary hover:text-primary-hover"
-          >
-            Clear all
-          </button>
-        )}
-      </div>
-
-      {/* Orphan tasks toggle */}
-      <label className="flex items-center gap-2 mb-4 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={showOrphans}
-          onChange={(e) => setShowOrphans(e.target.checked)}
-          className="h-4 w-4 rounded border-border bg-bg-secondary text-primary"
-        />
-        <span className="text-sm">Unassigned tasks</span>
-        <span className="text-xs text-muted-foreground ml-auto">
-          ({orphanTaskCount})
-        </span>
-      </label>
-
-      <div className="h-px bg-border mb-4" />
-
-      {/* Ideas list */}
-      {ideasWithTasks.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          No active ideas. Accept an idea to start tracking tasks.
-        </p>
-      ) : (
-        <div className="space-y-1">
-          {ideasWithTasks.map((idea) => (
-            <label
-              key={idea.id}
-              className={cn(
-                "flex items-start gap-2 p-2 rounded-md cursor-pointer transition-colors",
-                selectedIdeaIds.has(idea.id)
-                  ? "bg-primary/10"
-                  : "hover:bg-bg-hover"
-              )}
-            >
-              <input
-                type="checkbox"
-                checked={selectedIdeaIds.has(idea.id)}
-                onChange={() => toggleIdeaFilter(idea.id)}
-                className="h-4 w-4 mt-0.5 rounded border-border bg-bg-secondary text-primary"
-              />
-              <div className="flex-1 min-w-0">
-                <span className="text-sm block truncate">{idea.title}</span>
-                <span className="text-xs text-muted-foreground">
-                  {idea.taskCount} task{idea.taskCount !== 1 ? "s" : ""}
-                </span>
-              </div>
-              <Link
-                href={`/dashboard/ideas?selected=${idea.id}`}
-                onClick={(e) => e.stopPropagation()}
-                className="p-1 text-muted-foreground hover:text-primary shrink-0"
-                title="View idea"
-              >
-                <ExternalLink className="h-3 w-3" />
-              </Link>
-            </label>
-          ))}
-        </div>
-      )}
-    </>
-  );
+  // Get selected idea title for header display
+  const selectedIdea = selectedIdeaId
+    ? ideas.find((i) => i.id === selectedIdeaId)
+    : null;
 
   return (
-    <div className="flex h-full">
-      {/* Filter Sidebar - Desktop only */}
-      {!isMobile && (
-        <div
-          className={cn(
-            "shrink-0 border-r border-border bg-bg-secondary transition-all duration-200 overflow-hidden",
-            showFilterPanel ? "w-64" : "w-0"
-          )}
-        >
-          <div className="w-64 p-4 h-full overflow-y-auto">
-            <FilterContent />
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Filter Bottom Sheet */}
-      {isMobile && showFilterPanel && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/40 z-40"
-            onClick={() => setShowFilterPanel(false)}
-          />
-          <div className="fixed bottom-0 left-0 right-0 z-50 bg-bg-secondary rounded-t-2xl border-t border-border shadow-lg max-h-[70vh] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="font-semibold">Filter by Idea</h3>
-              <button
-                onClick={() => setShowFilterPanel(false)}
-                className="p-2 hover:bg-bg-hover rounded-lg"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="p-4 overflow-y-auto max-h-[calc(70vh-60px)]">
-              <FilterContent />
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <div className="flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 border-b border-border shrink-0">
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 md:px-6 py-3 md:py-4 border-b border-border shrink-0">
+        {/* Idea Filter Dropdown */}
+        <div className="relative" ref={dropdownRef}>
           <button
-            onClick={() => setShowFilterPanel(!showFilterPanel)}
+            onClick={() => setShowDropdown(!showDropdown)}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors",
-              showFilterPanel || hasActiveFilters
+              "flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors min-w-[200px] max-w-[300px]",
+              selectedIdeaId
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-border hover:bg-bg-hover"
             )}
           >
-            <Filter className="h-4 w-4" />
-            <span className="text-sm font-medium">Ideas</span>
-            {hasActiveFilters && (
-              <span className="flex items-center justify-center h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                {selectedIdeaIds.size + (showOrphans ? 0 : 1)}
-              </span>
-            )}
+            <Lightbulb className="h-4 w-4 shrink-0" />
+            <span className="text-sm font-medium truncate flex-1 text-left">
+              {selectedIdea ? selectedIdea.title : "All Ideas"}
+            </span>
             <ChevronDown
               className={cn(
-                "h-4 w-4 transition-transform",
-                showFilterPanel && "rotate-180"
+                "h-4 w-4 shrink-0 transition-transform",
+                showDropdown && "rotate-180"
               )}
             />
           </button>
 
-          <div className="text-sm text-muted-foreground">
-            {filteredTasks.length} task{filteredTasks.length !== 1 ? "s" : ""}
-            {hasActiveFilters && ` (filtered)`}
-          </div>
-        </div>
+          {/* Dropdown */}
+          {showDropdown && (
+            <div className="absolute left-0 top-full mt-1 w-80 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+              {/* Search */}
+              <div className="p-2 border-b border-border">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search ideas..."
+                    className="w-full pl-9 pr-3 py-2 text-sm bg-bg-tertiary border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                    autoFocus
+                  />
+                </div>
+              </div>
 
-        {/* Kanban Board */}
-        <div className="flex-1 p-4 md:p-6 overflow-hidden">
-          {columns.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full gap-4">
-              <p className="text-muted-foreground">No columns configured</p>
-              <button className="btn btn-primary" onClick={loadData}>
-                Reload
-              </button>
+              {/* Options */}
+              <div className="max-h-64 overflow-y-auto p-1">
+                {/* All Ideas option */}
+                <button
+                  onClick={() => selectIdea(null)}
+                  className={cn(
+                    "w-full flex items-center gap-2 px-3 py-2 text-sm text-left rounded-md transition-colors",
+                    !selectedIdeaId ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                  )}
+                >
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    {!selectedIdeaId && <div className="w-2 h-2 rounded-full bg-primary" />}
+                  </div>
+                  <span className="font-medium">All Ideas</span>
+                  <span className="text-xs text-muted-foreground ml-auto">
+                    {boardTasks.length} tasks
+                  </span>
+                </button>
+
+                {filteredIdeas.length > 0 && (
+                  <div className="h-px bg-border my-1" />
+                )}
+
+                {/* Ideas list */}
+                {filteredIdeas.length === 0 && searchQuery && (
+                  <div className="px-3 py-4 text-sm text-muted-foreground text-center">
+                    No ideas match &quot;{searchQuery}&quot;
+                  </div>
+                )}
+                {filteredIdeas.map((idea) => (
+                  <button
+                    key={idea.id}
+                    onClick={() => selectIdea(idea.id)}
+                    className={cn(
+                      "w-full flex items-center gap-2 px-3 py-2 text-sm text-left rounded-md transition-colors group",
+                      selectedIdeaId === idea.id ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                    )}
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      {selectedIdeaId === idea.id && (
+                        <div className="w-2 h-2 rounded-full bg-primary" />
+                      )}
+                    </div>
+                    <span className="flex-1 truncate">{idea.title}</span>
+                    <span className="text-xs text-muted-foreground shrink-0">
+                      {idea.taskCount} {idea.taskCount === 1 ? "task" : "tasks"}
+                    </span>
+                    <Link
+                      href={`/dashboard/ideas?selected=${idea.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-1 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary transition-opacity shrink-0"
+                      title="View idea"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                    </Link>
+                  </button>
+                ))}
+              </div>
             </div>
-          ) : (
-            <TaskKanbanBoard
-              columns={columns}
-              tasks={filteredTasks}
-              taskLabels={taskLabels}
-              checklistProgress={checklistProgress}
-              onTasksChange={handleTasksChange}
-              onAddTask={handleAddTask}
-              onTaskClick={handleTaskClick}
-              onToggleTask={handleToggleTask}
-              onDeleteTask={handleTaskDelete}
-            />
           )}
         </div>
+
+        {/* Task count */}
+        <div className="text-sm text-muted-foreground">
+          {filteredTasks.length} {filteredTasks.length === 1 ? "task" : "tasks"}
+        </div>
+
+        {/* Clear filter button */}
+        {selectedIdeaId && (
+          <button
+            onClick={() => selectIdea(null)}
+            className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <X className="h-3 w-3" />
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* Kanban Board */}
+      <div className="flex-1 p-4 md:p-6 overflow-hidden">
+        {columns.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <p className="text-muted-foreground">No columns configured</p>
+            <button className="btn btn-primary" onClick={loadData}>
+              Reload
+            </button>
+          </div>
+        ) : (
+          <TaskKanbanBoard
+            columns={columns}
+            tasks={filteredTasks}
+            taskLabels={taskLabels}
+            checklistProgress={checklistProgress}
+            onTasksChange={handleTasksChange}
+            onAddTask={handleAddTask}
+            onTaskClick={handleTaskClick}
+            onToggleTask={handleToggleTask}
+            onDeleteTask={handleTaskDelete}
+          />
+        )}
       </div>
 
       {/* Task Detail Modal */}
