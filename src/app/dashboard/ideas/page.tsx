@@ -243,23 +243,23 @@ export default function IdeasPage() {
   });
 
   return (
-    <div className="p-6">
-      <header className="mb-6 flex items-center justify-between">
+    <div className="p-4 md:p-6 pb-24 md:pb-6">
+      <header className="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Ideas</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl md:text-2xl font-bold">Ideas</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Capture and evaluate automation ideas
           </p>
         </div>
-        <button className="btn btn-primary" onClick={handleCreateNew}>
+        <button className="btn btn-primary w-full sm:w-auto" onClick={handleCreateNew}>
           <Plus className="h-4 w-4 mr-2" />
           New Idea
         </button>
       </header>
 
       {/* Search bar and Saved Views */}
-      <div className="mb-4 flex items-center gap-4">
-        <div className="relative flex-1 max-w-md">
+      <div className="mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"

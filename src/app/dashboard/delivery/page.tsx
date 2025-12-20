@@ -10,7 +10,7 @@ function DeliveryContent() {
   const ideaFilter = searchParams.get("idea");
 
   return (
-    <div className="h-[calc(100vh-4rem)]">
+    <div className="h-[calc(100vh-4rem)] pb-16 md:pb-0">
       <DeliveryBoard initialIdeaFilter={ideaFilter || undefined} />
     </div>
   );

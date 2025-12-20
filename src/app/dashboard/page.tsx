@@ -61,11 +61,11 @@ export default function DashboardPage() {
     : 0;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto pb-24 md:pb-6">
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-[28px] font-bold tracking-tight">Dashboard</h1>
-        <p className="text-foreground-muted mt-1">
+      <header className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-[28px] font-bold tracking-tight">Dashboard</h1>
+        <p className="text-foreground-muted mt-1 text-sm md:text-base">
           Welcome back. Here&apos;s your automation overview.
         </p>
       </header>
@@ -165,8 +165,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right Column - Activity Feed */}
-        <ActivityFeed />
+        {/* Right Column - Activity Feed (hidden on mobile) */}
+        <div className="hidden lg:block">
+          <ActivityFeed />
+        </div>
       </div>
     </div>
   );

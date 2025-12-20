@@ -131,7 +131,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
       {/* Dialog */}
       <div
         className={cn(
-          "fixed top-[20%] left-1/2 -translate-x-1/2 z-50 w-full max-w-lg transition-all duration-150",
+          "fixed top-[10%] sm:top-[20%] left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] sm:w-full max-w-lg transition-all duration-150",
           isVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-4"

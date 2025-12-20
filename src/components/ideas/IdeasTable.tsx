@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { ChevronUp, ChevronDown, GripVertical, Settings2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronUp, ChevronDown, GripVertical, Settings2, ChevronRight } from "lucide-react";
+import { cn, formatRelativeTime } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { IdeasTableRow } from "./IdeasTableRow";
+import { StatusBadge } from "./StatusBadge";
 import type { DbIdea, DbLabel, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 
 export type SortField = "title" | "status" | "score" | "updated_at" | "created_at";
@@ -59,6 +61,7 @@ export function IdeasTable({
   ideaLabels = {},
   loading = false,
 }: IdeasTableProps) {
+  const isMobile = useIsMobile();
   const [showColumnSettings, setShowColumnSettings] = useState(false);
   const [resizingColumn, setResizingColumn] = useState<string | null>(null);
   const [dragColumn, setDragColumn] = useState<string | null>(null);
@@ -186,6 +189,82 @@ export function IdeasTable({
       <ChevronDown className="h-3 w-3 text-primary" />
     );
   };
+
+  // Mobile card view
+  if (isMobile) {
+    return (
+      <div className="space-y-2">
+        {loading ? (
+          // Skeleton loading
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="p-4 bg-bg-secondary rounded-lg border border-border animate-pulse">
+              <div className="h-5 bg-bg-tertiary rounded w-3/4 mb-2" />
+              <div className="h-4 bg-bg-tertiary rounded w-1/4" />
+            </div>
+          ))
+        ) : ideas.length === 0 ? (
+          <div className="p-8 text-center text-muted-foreground">
+            No ideas found
+          </div>
+        ) : (
+          ideas.map((idea) => {
+            const labels = ideaLabels[idea.id] || [];
+            return (
+              <button
+                key={idea.id}
+                onClick={() => onIdeaClick(idea)}
+                className="w-full text-left p-4 bg-bg-secondary rounded-lg border border-border hover:border-primary/50 hover:bg-bg-hover transition-colors"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-foreground truncate mb-1">
+                      {idea.title}
+                    </h3>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <StatusBadge status={idea.status} size="sm" />
+                      {idea.rice_score !== null && idea.rice_score !== undefined && (
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">
+                          RICE: {idea.rice_score}
+                        </span>
+                      )}
+                      {labels.slice(0, 2).map((label) => (
+                        <span
+                          key={label.id}
+                          className="text-xs px-1.5 py-0.5 rounded"
+                          style={{
+                            backgroundColor: `${label.color}20`,
+                            color: label.color,
+                          }}
+                        >
+                          {label.name}
+                        </span>
+                      ))}
+                      {labels.length > 2 && (
+                        <span className="text-xs text-muted-foreground">
+                          +{labels.length - 2}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      Updated {formatRelativeTime(idea.updated_at)}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                </div>
+              </button>
+            );
+          })
+        )}
+
+        {/* Selection info */}
+        {selectedIds.size > 0 && (
+          <div className="mt-2 text-sm text-muted-foreground">
+            {selectedIds.size} idea{selectedIds.size !== 1 ? "s" : ""} selected
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="relative">

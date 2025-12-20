@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Loader2, Filter, ChevronDown, ExternalLink } from "lucide-react";
+import { Loader2, Filter, ChevronDown, ExternalLink, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
 import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
 import { getGlobalColumns } from "@/lib/api/columns";
@@ -17,6 +18,7 @@ interface DeliveryBoardProps {
 }
 
 export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
+  const isMobile = useIsMobile();
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
@@ -225,92 +227,125 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
 
   const hasActiveFilters = selectedIdeaIds.size > 0 || !showOrphans;
 
+  // Filter content component to reuse in sidebar and bottom sheet
+  const FilterContent = () => (
+    <>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold">Filter by Idea</h3>
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-xs text-primary hover:text-primary-hover"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
+
+      {/* Orphan tasks toggle */}
+      <label className="flex items-center gap-2 mb-4 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={showOrphans}
+          onChange={(e) => setShowOrphans(e.target.checked)}
+          className="h-4 w-4 rounded border-border bg-bg-secondary text-primary"
+        />
+        <span className="text-sm">Unassigned tasks</span>
+        <span className="text-xs text-muted-foreground ml-auto">
+          ({orphanTaskCount})
+        </span>
+      </label>
+
+      <div className="h-px bg-border mb-4" />
+
+      {/* Ideas list */}
+      {ideasWithTasks.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          No active ideas. Accept an idea to start tracking tasks.
+        </p>
+      ) : (
+        <div className="space-y-1">
+          {ideasWithTasks.map((idea) => (
+            <label
+              key={idea.id}
+              className={cn(
+                "flex items-start gap-2 p-2 rounded-md cursor-pointer transition-colors",
+                selectedIdeaIds.has(idea.id)
+                  ? "bg-primary/10"
+                  : "hover:bg-bg-hover"
+              )}
+            >
+              <input
+                type="checkbox"
+                checked={selectedIdeaIds.has(idea.id)}
+                onChange={() => toggleIdeaFilter(idea.id)}
+                className="h-4 w-4 mt-0.5 rounded border-border bg-bg-secondary text-primary"
+              />
+              <div className="flex-1 min-w-0">
+                <span className="text-sm block truncate">{idea.title}</span>
+                <span className="text-xs text-muted-foreground">
+                  {idea.taskCount} task{idea.taskCount !== 1 ? "s" : ""}
+                </span>
+              </div>
+              <Link
+                href={`/dashboard/ideas?selected=${idea.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="p-1 text-muted-foreground hover:text-primary shrink-0"
+                title="View idea"
+              >
+                <ExternalLink className="h-3 w-3" />
+              </Link>
+            </label>
+          ))}
+        </div>
+      )}
+    </>
+  );
+
   return (
     <div className="flex h-full">
-      {/* Filter Sidebar */}
-      <div
-        className={cn(
-          "shrink-0 border-r border-border bg-bg-secondary transition-all duration-200 overflow-hidden",
-          showFilterPanel ? "w-64" : "w-0"
-        )}
-      >
-        <div className="w-64 p-4 h-full overflow-y-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold">Filter by Idea</h3>
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="text-xs text-primary hover:text-primary-hover"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-
-          {/* Orphan tasks toggle */}
-          <label className="flex items-center gap-2 mb-4 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={showOrphans}
-              onChange={(e) => setShowOrphans(e.target.checked)}
-              className="h-4 w-4 rounded border-border bg-bg-secondary text-primary"
-            />
-            <span className="text-sm">Unassigned tasks</span>
-            <span className="text-xs text-muted-foreground ml-auto">
-              ({orphanTaskCount})
-            </span>
-          </label>
-
-          <div className="h-px bg-border mb-4" />
-
-          {/* Ideas list */}
-          {ideasWithTasks.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No active ideas. Accept an idea to start tracking tasks.
-            </p>
-          ) : (
-            <div className="space-y-1">
-              {ideasWithTasks.map((idea) => (
-                <label
-                  key={idea.id}
-                  className={cn(
-                    "flex items-start gap-2 p-2 rounded-md cursor-pointer transition-colors",
-                    selectedIdeaIds.has(idea.id)
-                      ? "bg-primary/10"
-                      : "hover:bg-bg-hover"
-                  )}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedIdeaIds.has(idea.id)}
-                    onChange={() => toggleIdeaFilter(idea.id)}
-                    className="h-4 w-4 mt-0.5 rounded border-border bg-bg-secondary text-primary"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm block truncate">{idea.title}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {idea.taskCount} task{idea.taskCount !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  <Link
-                    href={`/dashboard/ideas?selected=${idea.id}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="p-1 text-muted-foreground hover:text-primary shrink-0"
-                    title="View idea"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                  </Link>
-                </label>
-              ))}
-            </div>
+      {/* Filter Sidebar - Desktop only */}
+      {!isMobile && (
+        <div
+          className={cn(
+            "shrink-0 border-r border-border bg-bg-secondary transition-all duration-200 overflow-hidden",
+            showFilterPanel ? "w-64" : "w-0"
           )}
+        >
+          <div className="w-64 p-4 h-full overflow-y-auto">
+            <FilterContent />
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Mobile Filter Bottom Sheet */}
+      {isMobile && showFilterPanel && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 z-40"
+            onClick={() => setShowFilterPanel(false)}
+          />
+          <div className="fixed bottom-0 left-0 right-0 z-50 bg-bg-secondary rounded-t-2xl border-t border-border shadow-lg max-h-[70vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <h3 className="font-semibold">Filter by Idea</h3>
+              <button
+                onClick={() => setShowFilterPanel(false)}
+                className="p-2 hover:bg-bg-hover rounded-lg"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-[calc(70vh-60px)]">
+              <FilterContent />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="flex items-center gap-4 px-6 py-4 border-b border-border shrink-0">
+        <div className="flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 border-b border-border shrink-0">
           <button
             onClick={() => setShowFilterPanel(!showFilterPanel)}
             className={cn(
@@ -342,7 +377,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
         </div>
 
         {/* Kanban Board */}
-        <div className="flex-1 p-6 overflow-hidden">
+        <div className="flex-1 p-4 md:p-6 overflow-hidden">
           {columns.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-4">
               <p className="text-muted-foreground">No columns configured</p>
