@@ -20,14 +20,20 @@ export async function getTasksForProject(projectId: string): Promise<DbTask[]> {
 export async function createTask(task: DbTaskInsert): Promise<DbTask> {
   const supabase = createClient();
 
-  // Get max position for the project
-  const { data: maxPosData } = await supabase
+  // Get max position - use column_id if available, otherwise project_id
+  let maxPosQuery = supabase
     .from("tasks")
     .select("position")
-    .eq("project_id", task.project_id)
     .order("position", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(1);
+
+  if (task.column_id) {
+    maxPosQuery = maxPosQuery.eq("column_id", task.column_id);
+  } else if (task.project_id) {
+    maxPosQuery = maxPosQuery.eq("project_id", task.project_id);
+  }
+
+  const { data: maxPosData } = await maxPosQuery.maybeSingle();
 
   const nextPosition = maxPosData ? maxPosData.position + 1 : 0;
 

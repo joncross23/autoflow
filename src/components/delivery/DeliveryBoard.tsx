@@ -9,7 +9,7 @@ import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
 import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
 import { getGlobalColumns } from "@/lib/api/columns";
 import { getIdeas } from "@/lib/api/ideas";
-import { updateTask, deleteTask } from "@/lib/api/tasks";
+import { createTask, updateTask, deleteTask } from "@/lib/api/tasks";
 import { createClient } from "@/lib/supabase/client";
 import type { DbColumn, DbTask, DbIdea, DbLabel } from "@/types/database";
 
@@ -197,6 +197,15 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
     } catch (err) {
       console.error("Failed to toggle task:", err);
     }
+  };
+
+  const handleAddTask = async (columnId: string, title: string) => {
+    const newTask = await createTask({
+      title,
+      column_id: columnId,
+      completed: false,
+    });
+    setTasks((prev) => [...prev, newTask]);
   };
 
   // Get parent idea title for task modal
@@ -392,6 +401,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
               taskLabels={taskLabels}
               checklistProgress={checklistProgress}
               onTasksChange={handleTasksChange}
+              onAddTask={handleAddTask}
               onTaskClick={handleTaskClick}
               onToggleTask={handleToggleTask}
               onDeleteTask={handleTaskDelete}
