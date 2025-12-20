@@ -42,18 +42,23 @@ export default function DashboardPage() {
     loadStats();
   }, []);
 
-  const inProgressCount = ideaCounts
-    ? (ideaCounts.doing || 0)
-    : 0;
-
-  const completedCount = ideaCounts
-    ? (ideaCounts.complete || 0)
+  // Total ideas logged (all statuses)
+  const totalIdeas = ideaCounts
+    ? Object.values(ideaCounts).reduce((sum, count) => sum + (count || 0), 0)
     : 0;
 
   const pipelineCount = ideaCounts
     ? (ideaCounts.new || 0) +
       (ideaCounts.evaluating || 0) +
       (ideaCounts.accepted || 0)
+    : 0;
+
+  const inProgressCount = ideaCounts
+    ? (ideaCounts.doing || 0)
+    : 0;
+
+  const doneCount = ideaCounts
+    ? (ideaCounts.complete || 0)
     : 0;
 
   return (
@@ -74,10 +79,17 @@ export default function DashboardPage() {
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <DashboardStatCard
-          label="In Pipeline"
-          value={loading ? "-" : pipelineCount.toString()}
+          label="Ideas Logged"
+          value={loading ? "-" : totalIdeas.toString()}
           icon={<Lightbulb className="h-5 w-5" />}
           color="#3B82F6"
+          href="/dashboard/ideas"
+        />
+        <DashboardStatCard
+          label="In Pipeline"
+          value={loading ? "-" : pipelineCount.toString()}
+          icon={<Clock className="h-5 w-5" />}
+          color="#F59E0B"
           href="/dashboard/ideas?status=new,evaluating,accepted"
         />
         <DashboardStatCard
@@ -88,17 +100,11 @@ export default function DashboardPage() {
           href="/dashboard/delivery"
         />
         <DashboardStatCard
-          label="Completed"
-          value={loading ? "-" : completedCount.toString()}
+          label="Done"
+          value={loading ? "-" : doneCount.toString()}
           icon={<CheckCircle className="h-5 w-5" />}
           color="#22C55E"
           href="/dashboard/ideas?status=complete"
-        />
-        <DashboardStatCard
-          label="Hours Saved"
-          value="127.5"
-          icon={<Clock className="h-5 w-5" />}
-          color="#F59E0B"
         />
       </div>
 
@@ -123,7 +129,7 @@ export default function DashboardPage() {
                 {[
                   { label: "This Week", value: "2", href: "/dashboard/ideas?status=complete&period=week" },
                   { label: "This Month", value: "5", href: "/dashboard/ideas?status=complete&period=month" },
-                  { label: "All Time", value: completedCount.toString(), href: "/dashboard/ideas?status=complete" },
+                  { label: "All Time", value: doneCount.toString(), href: "/dashboard/ideas?status=complete" },
                 ].map((item) => (
                   <Link
                     key={item.label}
