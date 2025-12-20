@@ -14,7 +14,87 @@ import type {
 } from "@/types/database";
 
 // ============================================
-// CHECKLISTS
+// IDEA CHECKLISTS (V1.3)
+// ============================================
+
+/**
+ * Get all checklists for an idea
+ */
+export async function getIdeaChecklists(ideaId: string): Promise<DbChecklist[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("checklists")
+    .select("*")
+    .eq("idea_id", ideaId)
+    .order("position", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching idea checklists:", error);
+    throw new Error(`Failed to fetch checklists: ${error.message}`);
+  }
+
+  return data || [];
+}
+
+/**
+ * Create a new checklist for an idea
+ */
+export async function createIdeaChecklist(
+  ideaId: string,
+  title: string,
+  position: number = 0
+): Promise<DbChecklist> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("checklists")
+    .insert({
+      idea_id: ideaId,
+      title,
+      position,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating idea checklist:", error);
+    throw new Error(`Failed to create checklist: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Get all checklists with items and progress for an idea
+ */
+export async function getIdeaChecklistsWithItems(ideaId: string): Promise<
+  Array<{
+    checklist: DbChecklist;
+    items: DbChecklistItem[];
+    progress: { total: number; completed: number; percentage: number };
+  }>
+> {
+  const checklists = await getIdeaChecklists(ideaId);
+
+  const checklistsWithItems = await Promise.all(
+    checklists.map(async (checklist) => {
+      const items = await getChecklistItems(checklist.id);
+      const progress = await getChecklistProgress(checklist.id);
+
+      return {
+        checklist,
+        items,
+        progress,
+      };
+    })
+  );
+
+  return checklistsWithItems;
+}
+
+// ============================================
+// TASK CHECKLISTS
 // ============================================
 
 /**

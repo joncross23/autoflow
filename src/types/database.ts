@@ -289,34 +289,36 @@ export interface DbColumnUpdate {
 // LABEL TYPES
 // ============================================
 
-export type LabelColor =
-  | "red"
-  | "orange"
-  | "yellow"
-  | "green"
-  | "blue"
-  | "purple"
-  | "pink"
-  | "slate"
-  | "emerald"
-  | "indigo";
+// V1.3: Labels store hex colors directly for flexibility
+export const LABEL_COLORS = [
+  "#EF4444", // Red
+  "#F59E0B", // Amber
+  "#10B981", // Emerald
+  "#06B6D4", // Cyan
+  "#3B82F6", // Blue
+  "#8B5CF6", // Violet
+  "#EC4899", // Pink
+  "#64748B", // Slate
+] as const;
+
+export type LabelColorHex = (typeof LABEL_COLORS)[number];
 
 export interface DbLabel {
   id: string;
   user_id: string;
   name: string;
-  color: LabelColor;
+  color: string; // Hex color e.g. '#3B82F6'
   created_at: string;
 }
 
 export interface DbLabelInsert {
   name: string;
-  color: LabelColor;
+  color: string;
 }
 
 export interface DbLabelUpdate {
   name?: string;
-  color?: LabelColor;
+  color?: string;
 }
 
 // Label junction tables
@@ -416,6 +418,60 @@ export interface DbChecklistItemUpdate {
   done?: boolean;
   position?: number;
   updated_at?: string;
+}
+
+// ============================================
+// ATTACHMENT TYPES (V1.3)
+// ============================================
+
+export interface DbAttachment {
+  id: string;
+  idea_id: string | null;
+  task_id: string | null;
+  name: string;
+  file_path: string;
+  file_type: string | null;
+  file_size: number | null;
+  uploaded_by: string | null;
+  created_at: string;
+}
+
+export interface DbAttachmentInsert {
+  idea_id?: string | null;
+  task_id?: string | null;
+  name: string;
+  file_path: string;
+  file_type?: string | null;
+  file_size?: number | null;
+  uploaded_by?: string | null;
+}
+
+// ============================================
+// LINK TYPES (V1.3)
+// ============================================
+
+export interface DbLink {
+  id: string;
+  idea_id: string | null;
+  task_id: string | null;
+  url: string;
+  title: string | null;
+  favicon: string | null;
+  created_at: string;
+}
+
+export interface DbLinkInsert {
+  idea_id?: string | null;
+  task_id?: string | null;
+  url: string;
+  title?: string | null;
+  favicon?: string | null;
+}
+
+export interface DbLinkUpdate {
+  url?: string;
+  title?: string | null;
+  favicon?: string | null;
 }
 
 // ============================================

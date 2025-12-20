@@ -127,6 +127,31 @@ export async function deleteLabel(labelId: string): Promise<void> {
 // ============================================
 
 /**
+ * Get all idea labels for the current user (bulk fetch)
+ * Returns a map of idea_id -> labels[]
+ */
+export async function getAllIdeaLabels(): Promise<Record<string, DbLabel[]>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("idea_labels")
+    .select("idea_id, labels(*)");
+
+  if (error) {
+    console.error("Error fetching all idea labels:", error);
+    return {};
+  }
+
+  const labelsMap: Record<string, DbLabel[]> = {};
+  data?.forEach((row: any) => {
+    if (!labelsMap[row.idea_id]) labelsMap[row.idea_id] = [];
+    if (row.labels) labelsMap[row.idea_id].push(row.labels as DbLabel);
+  });
+
+  return labelsMap;
+}
+
+/**
  * Get labels for an idea
  */
 export async function getIdeaLabels(ideaId: string): Promise<DbLabel[]> {

@@ -21,6 +21,10 @@ import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
 import { IdeaTasksSection } from "./IdeaTasksSection";
 import { CommentsSection } from "./CommentsSection";
 import { ActivityLog } from "./ActivityLog";
+import { LabelsSection } from "@/components/shared/LabelsSection";
+import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
+import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
+import { LinksSection } from "@/components/shared/LinksSection";
 import { updateIdea, updateIdeaStatus, deleteIdea } from "@/lib/api/ideas";
 import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon } from "@/types/database";
 
@@ -220,7 +224,7 @@ export function IdeaDetailSlider({
       {/* Slider Panel */}
       <div
         className={cn(
-          "fixed top-0 right-0 bottom-0 z-50 w-full max-w-xl bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
+          "fixed top-0 right-0 bottom-0 z-50 w-1/2 min-w-[500px] max-w-[800px] bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
           isVisible ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -498,6 +502,9 @@ export function IdeaDetailSlider({
               )}
             </div>
 
+            {/* Labels (V1.3) */}
+            <LabelsSection ideaId={idea.id} />
+
             {/* Description */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-2">
@@ -557,6 +564,9 @@ export function IdeaDetailSlider({
               </div>
             )}
 
+            {/* Checklists (V1.3) */}
+            <ChecklistsSection ideaId={idea.id} />
+
             {/* RICE Score (V1.1) */}
             <RiceScorePanel idea={idea} onUpdate={onUpdate} />
 
@@ -568,6 +578,16 @@ export function IdeaDetailSlider({
             {/* AI Evaluation */}
             <div className="pt-4 border-t border-border">
               <AiEvaluationPanel ideaId={idea.id} />
+            </div>
+
+            {/* Attachments (V1.3) */}
+            <div className="pt-4 border-t border-border">
+              <AttachmentsSection ideaId={idea.id} />
+            </div>
+
+            {/* Links (V1.3) */}
+            <div className="pt-4 border-t border-border">
+              <LinksSection ideaId={idea.id} />
             </div>
 
             {/* Comments (V1.2) */}

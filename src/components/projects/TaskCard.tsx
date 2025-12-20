@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Circle,
   MoreHorizontal,
-  Pencil,
   Trash2,
   Clock,
   Paperclip,
@@ -210,17 +209,6 @@ export function TaskCard({
 
           {showMenu && (
             <div className="absolute right-0 top-full mt-1 w-32 bg-bg-elevated border border-border rounded-lg py-1 shadow-lg z-10">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit?.(task);
-                  setShowMenu(false);
-                }}
-                className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-left hover:bg-bg-secondary"
-              >
-                <Pencil className="h-3 w-3" />
-                Edit
-              </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
