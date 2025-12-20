@@ -25,7 +25,7 @@ interface TaskKanbanBoardProps {
   taskLabels?: Record<string, DbLabel[]>;
   checklistProgress?: Record<string, { completed: number; total: number }>;
   onTasksChange: (tasks: DbTask[]) => void;
-  onAddTask?: (columnId: string) => void;
+  onAddTask?: (columnId: string, title: string) => Promise<void>;
   onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
@@ -204,7 +204,7 @@ export function TaskKanbanBoard({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto pb-4 h-full">
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 h-full snap-x snap-mandatory sm:snap-none scroll-smooth px-4 sm:px-0 -mx-4 sm:mx-0">
         {sortedColumns.map((column) => (
           <TaskColumn
             key={column.id}

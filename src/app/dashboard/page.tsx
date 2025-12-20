@@ -42,16 +42,9 @@ export default function DashboardPage() {
     loadStats();
   }, []);
 
+  // Total ideas logged (all statuses)
   const totalIdeas = ideaCounts
-    ? Object.values(ideaCounts).reduce((sum, count) => sum + count, 0)
-    : 0;
-
-  const inProgressCount = ideaCounts
-    ? (ideaCounts.doing || 0)
-    : 0;
-
-  const completedCount = ideaCounts
-    ? (ideaCounts.complete || 0)
+    ? Object.values(ideaCounts).reduce((sum, count) => sum + (count || 0), 0)
     : 0;
 
   const pipelineCount = ideaCounts
@@ -60,12 +53,20 @@ export default function DashboardPage() {
       (ideaCounts.accepted || 0)
     : 0;
 
+  const inProgressCount = ideaCounts
+    ? (ideaCounts.doing || 0)
+    : 0;
+
+  const doneCount = ideaCounts
+    ? (ideaCounts.complete || 0)
+    : 0;
+
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto pb-24 md:pb-6">
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-[28px] font-bold tracking-tight">Dashboard</h1>
-        <p className="text-foreground-muted mt-1">
+      <header className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-[28px] font-bold tracking-tight">Dashboard</h1>
+        <p className="text-foreground-muted mt-1 text-sm md:text-base">
           Welcome back. Here&apos;s your automation overview.
         </p>
       </header>
@@ -78,28 +79,32 @@ export default function DashboardPage() {
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <DashboardStatCard
-          label="In Pipeline"
-          value={loading ? "-" : pipelineCount.toString()}
+          label="Ideas Logged"
+          value={loading ? "-" : totalIdeas.toString()}
           icon={<Lightbulb className="h-5 w-5" />}
           color="#3B82F6"
+          href="/dashboard/ideas"
+        />
+        <DashboardStatCard
+          label="In Pipeline"
+          value={loading ? "-" : pipelineCount.toString()}
+          icon={<Clock className="h-5 w-5" />}
+          color="#F59E0B"
+          href="/dashboard/ideas?status=new,evaluating,accepted"
         />
         <DashboardStatCard
           label="In Progress"
           value={loading ? "-" : inProgressCount.toString()}
           icon={<ListTodo className="h-5 w-5" />}
           color="#8B5CF6"
+          href="/dashboard/delivery"
         />
         <DashboardStatCard
-          label="Completed"
-          value={loading ? "-" : completedCount.toString()}
+          label="Done"
+          value={loading ? "-" : doneCount.toString()}
           icon={<CheckCircle className="h-5 w-5" />}
           color="#22C55E"
-        />
-        <DashboardStatCard
-          label="Hours Saved"
-          value="127.5"
-          icon={<Clock className="h-5 w-5" />}
-          color="#F59E0B"
+          href="/dashboard/ideas?status=complete"
         />
       </div>
 
@@ -114,20 +119,26 @@ export default function DashboardPage() {
 
             {/* Completed Stats */}
             <div className="card p-5">
-              <h3 className="text-[15px] font-semibold mb-4">Completed Ideas</h3>
+              <Link
+                href="/dashboard/ideas?status=complete"
+                className="text-[15px] font-semibold mb-4 block hover:text-primary transition-colors"
+              >
+                Completed Ideas
+              </Link>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: "This Week", value: "2" },
-                  { label: "This Month", value: "5" },
-                  { label: "All Time", value: completedCount.toString() },
+                  { label: "This Week", value: "2", href: "/dashboard/ideas?status=complete&period=week" },
+                  { label: "This Month", value: "5", href: "/dashboard/ideas?status=complete&period=month" },
+                  { label: "All Time", value: doneCount.toString(), href: "/dashboard/ideas?status=complete" },
                 ].map((item) => (
-                  <div
+                  <Link
                     key={item.label}
-                    className="text-center p-3 bg-bg-tertiary rounded-lg"
+                    href={item.href}
+                    className="text-center p-3 bg-bg-tertiary rounded-lg hover:bg-bg-hover transition-colors"
                   >
                     <div className="text-2xl font-bold mb-1">{item.value}</div>
                     <div className="text-[11px] text-foreground-muted">{item.label}</div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -165,8 +176,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right Column - Activity Feed */}
-        <ActivityFeed />
+        {/* Right Column - Activity Feed (hidden on mobile) */}
+        <div className="hidden lg:block">
+          <ActivityFeed />
+        </div>
       </div>
     </div>
   );
@@ -177,14 +190,16 @@ function DashboardStatCard({
   value,
   icon,
   color,
+  href,
 }: {
   label: string;
   value: string;
   icon: React.ReactNode;
   color: string;
+  href?: string;
 }) {
-  return (
-    <div className="card p-5">
+  const content = (
+    <>
       <div className="flex justify-between items-start mb-3">
         <span className="text-[13px] text-foreground-muted font-medium">{label}</span>
         <span
@@ -197,8 +212,18 @@ function DashboardStatCard({
       <div className="flex items-baseline gap-2.5">
         <span className="text-[32px] font-bold tracking-tight">{value}</span>
       </div>
-    </div>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="card p-5 hover:border-primary transition-colors cursor-pointer">
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className="card p-5">{content}</div>;
 }
 
 function PipelineWidget({
@@ -209,10 +234,10 @@ function PipelineWidget({
   loading: boolean;
 }) {
   const stages = [
-    { key: "new", label: "New", color: "#3B82F6" },
-    { key: "evaluating", label: "Evaluating", color: "#F59E0B" },
-    { key: "accepted", label: "Accepted", color: "#8B5CF6" },
-    { key: "doing", label: "In Progress", color: "#10B981" },
+    { key: "new", label: "New", color: "#3B82F6", href: "/dashboard/ideas?status=new" },
+    { key: "evaluating", label: "Evaluating", color: "#F59E0B", href: "/dashboard/ideas?status=evaluating" },
+    { key: "accepted", label: "Accepted", color: "#8B5CF6", href: "/dashboard/ideas?status=accepted" },
+    { key: "doing", label: "In Progress", color: "#10B981", href: "/dashboard/delivery" },
   ] as const;
 
   const total = ideaCounts
@@ -222,7 +247,9 @@ function PipelineWidget({
   return (
     <div className="card p-5">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-[15px] font-semibold">Ideas Pipeline</h3>
+        <Link href="/dashboard/ideas" className="text-[15px] font-semibold hover:text-primary transition-colors">
+          Ideas Pipeline
+        </Link>
         <span className="text-xs text-foreground-muted">{total} active</span>
       </div>
 
@@ -237,12 +264,14 @@ function PipelineWidget({
             {stages.map((stage) => {
               const count = ideaCounts?.[stage.key as IdeaStatus] || 0;
               return (
-                <div
+                <Link
                   key={stage.key}
+                  href={stage.href}
                   style={{
                     flex: count || 0.01,
                     backgroundColor: stage.color,
                   }}
+                  className="hover:opacity-80 transition-opacity"
                 />
               );
             })}
@@ -251,7 +280,11 @@ function PipelineWidget({
           {/* Legend */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             {stages.map((stage) => (
-              <div key={stage.key} className="flex items-center gap-2">
+              <Link
+                key={stage.key}
+                href={stage.href}
+                className="flex items-center gap-2 p-1 -m-1 rounded hover:bg-bg-hover transition-colors"
+              >
                 <div
                   className="w-2.5 h-2.5 rounded"
                   style={{ backgroundColor: stage.color }}
@@ -262,7 +295,7 @@ function PipelineWidget({
                 <span className="text-[13px] font-semibold">
                   {ideaCounts?.[stage.key as IdeaStatus] || 0}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </>

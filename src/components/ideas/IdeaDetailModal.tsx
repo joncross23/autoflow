@@ -67,7 +67,7 @@ export function IdeaDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -75,16 +75,16 @@ export function IdeaDetailModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden bg-bg-elevated rounded-xl shadow-xl border border-border flex flex-col">
+      <div className="relative w-full max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-hidden bg-bg-elevated rounded-xl shadow-xl border border-border flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold">{idea.title}</h2>
-            <span className={cn("badge", STATUS_COLORS[idea.status])}>
+        <div className="flex items-center justify-between p-3 md:p-4 border-b border-border shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+            <h2 className="text-base md:text-lg font-semibold truncate">{idea.title}</h2>
+            <span className={cn("badge shrink-0", STATUS_COLORS[idea.status])}>
               {idea.status}
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2 shrink-0">
             {/* Accept / View Delivery button */}
             {idea.status !== "parked" && idea.status !== "dropped" && idea.status !== "complete" && (
               <button

@@ -27,7 +27,9 @@ import {
   MoreHorizontal,
   ExternalLink,
   FileText,
+  ArrowLeft,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import { updateTask } from "@/lib/api/tasks";
 import type { DbTask } from "@/types/database";
@@ -36,6 +38,7 @@ import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { AISuggestionsSection } from "@/components/shared/AISuggestionsSection";
+import { ParentIdeaSection } from "@/components/shared/ParentIdeaSection";
 
 interface TaskDetailModalProps {
   task: DbTask;
@@ -132,17 +135,23 @@ export function TaskDetailModal({
   onSave,
   onDelete,
 }: TaskDetailModalProps) {
+  const isMobile = useIsMobile();
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
+  const [ideaId, setIdeaId] = useState<string | null>(task.idea_id);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
+  const [showMobileActions, setShowMobileActions] = useState(false);
 
   // Track changes
   useEffect(() => {
-    const changed = title !== task.title || description !== (task.description || "");
+    const changed =
+      title !== task.title ||
+      description !== (task.description || "") ||
+      ideaId !== task.idea_id;
     setHasChanges(changed);
-  }, [title, description, task.title, task.description]);
+  }, [title, description, ideaId, task.title, task.description, task.idea_id]);
 
   // Save task
   const handleSave = useCallback(async () => {
@@ -153,6 +162,7 @@ export function TaskDetailModal({
       const updated = await updateTask(task.id, {
         title,
         description: description || null,
+        idea_id: ideaId,
       });
       onSave(updated);
     } catch (error) {
@@ -160,7 +170,7 @@ export function TaskDetailModal({
     } finally {
       setSaving(false);
     }
-  }, [hasChanges, task.id, title, description, onSave]);
+  }, [hasChanges, task.id, title, description, ideaId, onSave]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -187,30 +197,57 @@ export function TaskDetailModal({
       />
 
       {/* Modal */}
-      <div className="relative w-1/2 min-w-[600px] max-w-[900px] my-8 mx-4">
-        <div className="bg-bg-secondary rounded-xl overflow-hidden shadow-2xl border border-border">
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg bg-bg-tertiary hover:bg-bg-hover text-foreground-muted hover:text-foreground transition-colors z-10"
-          >
-            <X className="h-5 w-5" />
-          </button>
-
-          <div className="flex">
-            {/* Main Content */}
-            <div className="flex-1 p-6 min-w-0 overflow-y-auto max-h-[80vh]">
-              {/* Parent Idea Badge */}
-              {ideaTitle && task.idea_id && (
-                <Link
-                  href={`/dashboard/ideas?selected=${task.idea_id}`}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-4 text-xs font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-md transition-colors"
+      <div className="relative w-full md:w-1/2 md:min-w-[600px] md:max-w-[900px] md:my-8 md:mx-4 min-h-screen md:min-h-0">
+        <div className="bg-bg-secondary md:rounded-xl overflow-hidden shadow-2xl md:border md:border-border min-h-screen md:min-h-0">
+          {/* Mobile Header */}
+          {isMobile && (
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-secondary sticky top-0 z-10">
+              <button
+                onClick={onClose}
+                className="p-2 -ml-2 rounded-lg hover:bg-bg-hover transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+              <div className="flex items-center gap-2">
+                {hasChanges && (
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="btn btn-primary btn-sm"
+                  >
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowMobileActions(!showMobileActions)}
+                  className="p-2 rounded-lg hover:bg-bg-hover transition-colors"
                 >
-                  <FileText className="h-3 w-3" />
-                  {ideaTitle}
-                  <ExternalLink className="h-3 w-3" />
-                </Link>
-              )}
+                  <MoreHorizontal className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Desktop Close button */}
+          {!isMobile && (
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 rounded-lg bg-bg-tertiary hover:bg-bg-hover text-foreground-muted hover:text-foreground transition-colors z-10"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
+
+          <div className="flex flex-col md:flex-row">
+            {/* Main Content */}
+            <div className="flex-1 p-4 md:p-6 min-w-0 overflow-y-auto md:max-h-[80vh]">
+              {/* Parent Idea Selector */}
+              <div className="mb-4">
+                <ParentIdeaSection
+                  ideaId={ideaId}
+                  onIdeaChange={setIdeaId}
+                />
+              </div>
 
               {/* Header */}
               <div className="mb-4">
@@ -325,8 +362,8 @@ export function TaskDetailModal({
               </Section>
             </div>
 
-            {/* Sidebar */}
-            <div className="w-48 p-4 bg-bg-tertiary border-l border-border shrink-0">
+            {/* Sidebar - hidden on mobile */}
+            <div className="hidden md:block w-48 p-4 bg-bg-tertiary border-l border-border shrink-0">
               {/* Save button */}
               {hasChanges && (
                 <button
@@ -414,6 +451,48 @@ export function TaskDetailModal({
               </div>
             </div>
           </div>
+
+          {/* Mobile Actions Dropdown */}
+          {isMobile && showMobileActions && (
+            <>
+              <div
+                className="fixed inset-0 z-20"
+                onClick={() => setShowMobileActions(false)}
+              />
+              <div className="absolute top-14 right-4 z-30 w-48 bg-bg-elevated border border-border rounded-lg shadow-lg py-2">
+                <div className="px-3 py-1 text-xs font-semibold text-foreground-muted uppercase">
+                  Add to card
+                </div>
+                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                  <Users className="h-4 w-4" /> Members
+                </button>
+                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                  <Tag className="h-4 w-4" /> Labels
+                </button>
+                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                  <CheckCircle2 className="h-4 w-4" /> Checklist
+                </button>
+                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                  <Paperclip className="h-4 w-4" /> Attachment
+                </button>
+                <div className="my-1 border-t border-border" />
+                <div className="px-3 py-1 text-xs font-semibold text-foreground-muted uppercase">
+                  Actions
+                </div>
+                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                  <Archive className="h-4 w-4" /> Archive
+                </button>
+                {onDelete && (
+                  <button
+                    onClick={() => onDelete(task)}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-error hover:bg-error/10"
+                  >
+                    <Trash2 className="h-4 w-4" /> Delete
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

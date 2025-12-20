@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Plus, MoreVertical } from "lucide-react";
@@ -12,7 +12,7 @@ interface TaskColumnProps {
   tasks: DbTask[];
   taskLabels?: Record<string, DbLabel[]>;
   checklistProgress?: Record<string, { completed: number; total: number }>;
-  onAddTask?: (columnId: string) => void;
+  onAddTask?: (columnId: string, title: string) => Promise<void>;
   onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
@@ -46,10 +46,67 @@ export function TaskColumn({
   onDeleteTask,
 }: TaskColumnProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newCardTitle, setNewCardTitle] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
   });
+
+  // Auto-focus input when adding
+  useEffect(() => {
+    if (isAdding && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isAdding]);
+
+  const cancelAdding = useCallback(() => {
+    setIsAdding(false);
+    setNewCardTitle("");
+  }, []);
+
+  // Click outside to cancel
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        cancelAdding();
+      }
+    };
+
+    if (isAdding) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isAdding, cancelAdding]);
+
+  const handleSaveCard = useCallback(async () => {
+    const title = newCardTitle.trim();
+    if (!title || !onAddTask || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      await onAddTask(column.id, title);
+      setNewCardTitle("");
+      // Keep input focused for sequential adding
+      inputRef.current?.focus();
+    } catch (error) {
+      console.error("Failed to add card:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [newCardTitle, onAddTask, column.id, isSaving]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSaveCard();
+    } else if (e.key === "Escape") {
+      cancelAdding();
+    }
+  }, [handleSaveCard, cancelAdding]);
 
   const colorHex = columnColors[column.color || "slate"] || columnColors.slate;
   const isOverLimit = column.wip_limit && tasks.length >= column.wip_limit;
@@ -60,9 +117,10 @@ export function TaskColumn({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
-        flex flex-col w-[280px] min-w-[280px] max-h-[calc(100vh-200px)]
+        flex flex-col w-[85vw] sm:w-[280px] min-w-[85vw] sm:min-w-[280px] max-h-[calc(100vh-200px)]
         bg-bg-secondary rounded-xl
         transition-all duration-150 ease-out
+        snap-center sm:snap-align-none
         ${isOver ? "ring-2 ring-primary/50" : ""}
       `}
     >
@@ -130,21 +188,53 @@ export function TaskColumn({
         )}
       </div>
 
-      {/* Quick Add Card Button */}
+      {/* Quick Add Card Section */}
       <div className="p-2 pt-0">
-        <button
-          onClick={() => onAddTask?.(column.id)}
-          className="
-            flex items-center gap-2 w-full px-3 py-2.5
-            text-foreground-muted text-[13px]
-            border border-dashed border-border rounded-[10px]
-            transition-all duration-150
-            hover:border-primary hover:text-primary
-          "
-        >
-          <Plus className="h-4 w-4" />
-          Add card
-        </button>
+        {isAdding ? (
+          <div ref={formRef} className="space-y-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={newCardTitle}
+              onChange={(e) => setNewCardTitle(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Enter card title..."
+              disabled={isSaving}
+              className="
+                w-full px-3 py-2.5
+                text-[13px] text-foreground
+                bg-bg-elevated border border-primary rounded-[10px]
+                placeholder:text-foreground-muted
+                focus:outline-none focus:ring-2 focus:ring-primary/50
+                disabled:opacity-50
+              "
+            />
+            <div className="flex items-center gap-2 text-xs text-foreground-muted">
+              <span>Press <kbd className="px-1.5 py-0.5 bg-bg-tertiary rounded">Enter</kbd> to add</span>
+              <span>·</span>
+              <button
+                onClick={cancelAdding}
+                className="hover:text-foreground transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsAdding(true)}
+            className="
+              flex items-center gap-2 w-full px-3 py-2.5
+              text-foreground-muted text-[13px]
+              border border-dashed border-border rounded-[10px]
+              transition-all duration-150
+              hover:border-primary hover:text-primary
+            "
+          >
+            <Plus className="h-4 w-4" />
+            Add card
+          </button>
+        )}
       </div>
 
       {/* WIP limit warning */}

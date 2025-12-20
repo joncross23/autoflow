@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { getGlobalColumns } from "@/lib/api/columns";
 import type { DbTask } from "@/types/database";
 
 interface IdeaTasksSectionProps {
@@ -20,13 +21,22 @@ interface IdeaTasksSectionProps {
 
 export function IdeaTasksSection({ ideaId }: IdeaTasksSectionProps) {
   const [tasks, setTasks] = useState<DbTask[]>([]);
+  const [defaultColumnId, setDefaultColumnId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
 
-  const loadTasks = async () => {
+  const loadData = async () => {
     try {
       const supabase = createClient();
+
+      // Load columns to get the default column (Backlog)
+      const columns = await getGlobalColumns();
+      if (columns.length > 0) {
+        setDefaultColumnId(columns[0].id);
+      }
+
+      // Load tasks for this idea
       const { data, error } = await supabase
         .from("tasks")
         .select("*")
@@ -36,14 +46,14 @@ export function IdeaTasksSection({ ideaId }: IdeaTasksSectionProps) {
       if (error) throw error;
       setTasks(data || []);
     } catch (error) {
-      console.error("Failed to load tasks:", error);
+      console.error("Failed to load data:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadTasks();
+    loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ideaId]);
 
@@ -60,6 +70,7 @@ export function IdeaTasksSection({ ideaId }: IdeaTasksSectionProps) {
           title: newTaskTitle.trim(),
           position: tasks.length,
           completed: false,
+          column_id: defaultColumnId, // Add to Backlog so it appears on board
         })
         .select()
         .single();

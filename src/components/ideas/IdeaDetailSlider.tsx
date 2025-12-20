@@ -7,6 +7,7 @@ import {
   Pencil,
   Trash2,
   ArrowRight,
+  ArrowLeft,
   Loader2,
   ChevronDown,
   Calendar,
@@ -14,6 +15,7 @@ import {
   User,
   Tag,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
 import { RiceScorePanel } from "./RiceScorePanel";
@@ -67,6 +69,7 @@ export function IdeaDetailSlider({
   onDelete,
 }: IdeaDetailSliderProps) {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [isVisible, setIsVisible] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
@@ -224,13 +227,25 @@ export function IdeaDetailSlider({
       {/* Slider Panel */}
       <div
         className={cn(
-          "fixed top-0 right-0 bottom-0 z-50 w-1/2 min-w-[500px] max-w-[800px] bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
+          "fixed top-0 right-0 bottom-0 z-50 bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
+          // Full-screen on mobile, half-width on desktop
+          "w-full md:w-1/2 md:min-w-[500px] md:max-w-[800px]",
           isVisible ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-border shrink-0">
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Back button on mobile */}
+            {isMobile && (
+              <button
+                onClick={handleClose}
+                className="p-2 -ml-2 rounded-lg hover:bg-bg-hover transition-colors"
+                title="Back"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
             {/* Status dropdown */}
             <div className="relative">
               <button
@@ -309,9 +324,10 @@ export function IdeaDetailSlider({
               <Trash2 className="h-4 w-4" />
             </button>
 
+            {/* Hide X on mobile since we have back button */}
             <button
               onClick={handleClose}
-              className="p-2 rounded hover:bg-bg-hover transition-colors"
+              className="hidden md:block p-2 rounded hover:bg-bg-hover transition-colors"
               title="Close (Esc)"
             >
               <X className="h-5 w-5" />
@@ -321,7 +337,7 @@ export function IdeaDetailSlider({
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="p-6 space-y-6">
+          <div className="p-4 space-y-4 md:p-6 md:space-y-6">
             {/* Title */}
             <div>
               {editingTitle ? (
@@ -351,7 +367,7 @@ export function IdeaDetailSlider({
             </div>
 
             {/* Metadata Grid */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 text-sm">
               {/* Effort Estimate */}
               <div>
                 <div className="flex items-center gap-1.5 text-muted-foreground mb-1.5">
