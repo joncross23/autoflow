@@ -38,13 +38,13 @@ const ACTION_ICONS: Record<ActivityAction, React.ElementType> = {
 };
 
 const ACTION_COLORS: Record<ActivityAction, string> = {
-  created: "text-green-500 bg-green-500/10",
-  deleted: "text-red-500 bg-red-500/10",
-  status_changed: "text-blue-500 bg-blue-500/10",
-  archived: "text-slate-500 bg-slate-500/10",
-  unarchived: "text-slate-500 bg-slate-500/10",
-  commented: "text-purple-500 bg-purple-500/10",
-  updated: "text-yellow-500 bg-yellow-500/10",
+  created: "text-green-400 bg-green-500/20",
+  deleted: "text-red-400 bg-red-500/20",
+  status_changed: "text-blue-400 bg-blue-500/20",
+  archived: "text-slate-400 bg-slate-500/20",
+  unarchived: "text-slate-400 bg-slate-500/20",
+  commented: "text-cyan-400 bg-cyan-500/20",
+  updated: "text-amber-400 bg-amber-500/20",
 };
 
 function ActivityItem({ entry }: { entry: ActivityLogEntry }) {

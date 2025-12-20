@@ -18,6 +18,7 @@ import {
   DEFAULT_THEME,
   DEFAULT_MODE,
   DEFAULT_ACCENT,
+  migrateAccent,
 } from "@/lib/themes";
 
 interface ThemeContextType {
@@ -86,14 +87,18 @@ export function ThemeProvider({
     [getSystemMode]
   );
 
-  // Load saved theme on mount (backward compatible)
+  // Load saved theme on mount (backward compatible with accent migration)
   useEffect(() => {
     const savedTheme = localStorage.getItem(storageKey);
     if (savedTheme) {
       try {
         const parsed: PersistedTheme = JSON.parse(savedTheme);
         if (parsed.mode) setModeState(parsed.mode);
-        if (parsed.accent) setAccentState(parsed.accent);
+        // Migrate legacy accent names (orange→amber, purple→violet, pink→rose, slate→cyan)
+        if (parsed.accent) {
+          const migratedAccent = migrateAccent(parsed.accent);
+          setAccentState(migratedAccent);
+        }
         // New: load system theme if present, otherwise default to 'autoflow'
         if (parsed.systemTheme && themes[parsed.systemTheme]) {
           setSystemThemeState(parsed.systemTheme);
@@ -131,10 +136,16 @@ export function ThemeProvider({
     if (!mounted) return;
 
     const root = document.documentElement;
-    // Remove all accent classes
+    // Remove all accent classes (new + legacy names)
     root.classList.remove(
+      // New palette
+      "accent-cyan",
       "accent-blue",
       "accent-emerald",
+      "accent-amber",
+      "accent-violet",
+      "accent-rose",
+      // Legacy names (for cleanup)
       "accent-orange",
       "accent-purple",
       "accent-pink",

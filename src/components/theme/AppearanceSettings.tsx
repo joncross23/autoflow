@@ -14,12 +14,12 @@ const modeOptions: { value: Mode; label: string; icon: typeof Sun }[] = [
 ];
 
 const accentOptions: { value: Accent; label: string }[] = [
+  { value: "cyan", label: "Cyan" },
   { value: "blue", label: "Blue" },
   { value: "emerald", label: "Emerald" },
-  { value: "orange", label: "Orange" },
-  { value: "purple", label: "Purple" },
-  { value: "pink", label: "Pink" },
-  { value: "slate", label: "Slate" },
+  { value: "amber", label: "Amber" },
+  { value: "violet", label: "Violet" },
+  { value: "rose", label: "Rose" },
 ];
 
 export function AppearanceSettings() {

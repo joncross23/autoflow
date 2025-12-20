@@ -12,9 +12,11 @@ import type {
   DbProjectLabel,
   DbTaskLabel,
 } from "@/types/database";
+import { LABEL_COLORS } from "@/types/database";
 
 /**
  * Get all labels for the current user
+ * Auto-seeds 6 default color labels if user has none
  */
 export async function getLabels(): Promise<DbLabel[]> {
   const supabase = createClient();
@@ -22,11 +24,51 @@ export async function getLabels(): Promise<DbLabel[]> {
   const { data, error } = await supabase
     .from("labels")
     .select("*")
-    .order("name", { ascending: true });
+    .order("created_at", { ascending: true });
 
   if (error) {
     console.error("Error fetching labels:", error);
     throw new Error(`Failed to fetch labels: ${error.message}`);
+  }
+
+  // Auto-seed default labels if user has none
+  if (!data || data.length === 0) {
+    const seededLabels = await seedDefaultLabels();
+    return seededLabels;
+  }
+
+  return data;
+}
+
+/**
+ * Seed default color labels for new users
+ * Creates 6 labels with colors only (no names)
+ */
+async function seedDefaultLabels(): Promise<DbLabel[]> {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return [];
+  }
+
+  const defaultLabels = LABEL_COLORS.map((color) => ({
+    user_id: user.id,
+    name: "",
+    color: color,
+  }));
+
+  const { data, error } = await supabase
+    .from("labels")
+    .insert(defaultLabels)
+    .select();
+
+  if (error) {
+    console.error("Error seeding default labels:", error);
+    return [];
   }
 
   return data || [];

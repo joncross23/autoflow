@@ -86,6 +86,12 @@ export const windowsTheme: ThemeDefinition = {
   },
 
   accents: {
+    cyan: {
+      primary: "#00B7C3",
+      primaryHover: "#009DA6",
+      primaryMuted: "#0A3D4D",
+      primaryGradient: "linear-gradient(135deg, #00B7C3 0%, #009DA6 100%)",
+    },
     blue: {
       primary: "#0078D4",
       primaryHover: "#005A9E",
@@ -98,29 +104,23 @@ export const windowsTheme: ThemeDefinition = {
       primaryMuted: "#0A3D0A",
       primaryGradient: "linear-gradient(135deg, #107C10 0%, #0E6B0E 100%)",
     },
-    orange: {
+    amber: {
       primary: "#FF8C00",
       primaryHover: "#E67E00",
       primaryMuted: "#4D2A00",
       primaryGradient: "linear-gradient(135deg, #FF8C00 0%, #E67E00 100%)",
     },
-    purple: {
+    violet: {
       primary: "#881798",
       primaryHover: "#6B126B",
       primaryMuted: "#3D0A3D",
       primaryGradient: "linear-gradient(135deg, #881798 0%, #6B126B 100%)",
     },
-    pink: {
+    rose: {
       primary: "#E3008C",
       primaryHover: "#C4007A",
       primaryMuted: "#4D002D",
       primaryGradient: "linear-gradient(135deg, #E3008C 0%, #C4007A 100%)",
-    },
-    slate: {
-      primary: "#7A7574",
-      primaryHover: "#5D5A58",
-      primaryMuted: "#2D2B2A",
-      primaryGradient: "linear-gradient(135deg, #7A7574 0%, #5D5A58 100%)",
     },
   },
 

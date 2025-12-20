@@ -37,6 +37,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
 
   // Task detail modal state
   const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
+  const [isNewTask, setIsNewTask] = useState(false);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -167,6 +168,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   // Task modal handlers
   const handleTaskClick = (task: DbTask) => {
     setSelectedTask(task);
+    setIsNewTask(false); // Clicking existing task
   };
 
   const handleTaskSave = (updatedTask: DbTask) => {
@@ -206,6 +208,9 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
       idea_id: selectedIdeaId,  // Auto-link to filtered idea
     });
     setTasks((prev) => [...prev, newTask]);
+    // Open modal for the new task
+    setSelectedTask(newTask);
+    setIsNewTask(true);
   };
 
   // Get parent idea title for task modal
@@ -392,7 +397,11 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
         <TaskDetailModal
           task={selectedTask}
           ideaTitle={getIdeaTitle(selectedTask.idea_id)}
-          onClose={() => setSelectedTask(null)}
+          isNew={isNewTask}
+          onClose={() => {
+            setSelectedTask(null);
+            setIsNewTask(false);
+          }}
           onSave={handleTaskSave}
           onDelete={handleTaskDelete}
         />

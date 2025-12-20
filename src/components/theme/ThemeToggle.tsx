@@ -11,6 +11,12 @@ const modes = [
 
 const accents = [
   {
+    value: "cyan",
+    label: "Ocean Cyan",
+    color: "#06B6D4",
+    gradient: "linear-gradient(135deg, #164E63 0%, #06B6D4 100%)",
+  },
+  {
     value: "blue",
     label: "Midnight Blue",
     color: "#3B82F6",
@@ -23,28 +29,22 @@ const accents = [
     gradient: "linear-gradient(135deg, #064E3B 0%, #10B981 100%)",
   },
   {
-    value: "orange",
-    label: "Sunset Orange",
+    value: "amber",
+    label: "Golden Amber",
     color: "#F59E0B",
-    gradient: "linear-gradient(135deg, #92400E 0%, #F59E0B 100%)",
+    gradient: "linear-gradient(135deg, #78350F 0%, #F59E0B 100%)",
   },
   {
-    value: "purple",
-    label: "Royal Purple",
+    value: "violet",
+    label: "Royal Violet",
     color: "#8B5CF6",
     gradient: "linear-gradient(135deg, #4C1D95 0%, #8B5CF6 100%)",
   },
   {
-    value: "pink",
-    label: "Rose Pink",
-    color: "#EC4899",
-    gradient: "linear-gradient(135deg, #831843 0%, #EC4899 100%)",
-  },
-  {
-    value: "slate",
-    label: "Slate Grey",
-    color: "#64748B",
-    gradient: "linear-gradient(135deg, #1E293B 0%, #64748B 100%)",
+    value: "rose",
+    label: "Coral Rose",
+    color: "#F43F5E",
+    gradient: "linear-gradient(135deg, #881337 0%, #F43F5E 100%)",
   },
 ] as const;
 

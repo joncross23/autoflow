@@ -7,6 +7,15 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  // Safelist label colors to prevent Tailwind purging dynamically-used classes
+  safelist: [
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-yellow-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-cyan-500",
+  ],
   theme: {
   	extend: {
   		colors: {
@@ -85,20 +94,22 @@ const config: Config = {
   		},
   		fontFamily: {
   			sans: [
-  				'Inter',
   				'-apple-system',
   				'BlinkMacSystemFont',
   				'Segoe UI',
   				'Roboto',
   				'Oxygen',
   				'Ubuntu',
+  				'Cantarell',
+  				'Open Sans',
+  				'Helvetica Neue',
   				'sans-serif'
   			],
   			mono: [
+  				'SF Mono',
+  				'Cascadia Code',
   				'JetBrains Mono',
-  				'Fira Code',
   				'Consolas',
-  				'Monaco',
   				'monospace'
   			]
   		},

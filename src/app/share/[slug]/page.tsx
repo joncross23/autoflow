@@ -10,13 +10,13 @@ import type { DbPublishedView, DbIdea, SavedViewFilters, ColumnConfig } from "@/
 // Read-only status badge
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    new: "bg-blue-500/10 text-blue-500",
-    evaluating: "bg-yellow-500/10 text-yellow-500",
-    accepted: "bg-green-500/10 text-green-500",
-    doing: "bg-purple-500/10 text-purple-500",
-    complete: "bg-emerald-500/10 text-emerald-500",
-    parked: "bg-slate-500/10 text-slate-500",
-    dropped: "bg-red-500/10 text-red-500",
+    new: "bg-blue-500/25 text-blue-400",
+    evaluating: "bg-amber-500/25 text-amber-400",
+    accepted: "bg-cyan-500/25 text-cyan-300",
+    doing: "bg-emerald-500/25 text-emerald-400",
+    complete: "bg-green-500/25 text-green-400",
+    parked: "bg-slate-500/25 text-slate-300",
+    dropped: "bg-red-500/25 text-red-300",
   };
 
   return (

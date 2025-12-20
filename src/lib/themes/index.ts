@@ -11,7 +11,9 @@
 
 export type SystemTheme = "autoflow" | "macos" | "windows";
 export type Mode = "dark" | "light" | "system";
-export type Accent = "blue" | "emerald" | "orange" | "purple" | "pink" | "slate";
+export type Accent = "cyan" | "blue" | "emerald" | "amber" | "violet" | "rose";
+// Legacy accent aliases (map to new names)
+export type LegacyAccent = "orange" | "purple" | "pink" | "slate";
 
 export interface ThemeColors {
   // Background layers
@@ -133,4 +135,28 @@ export function getThemeAccent(
 
 export const DEFAULT_THEME: SystemTheme = "autoflow";
 export const DEFAULT_MODE: Mode = "dark";
-export const DEFAULT_ACCENT: Accent = "blue";
+export const DEFAULT_ACCENT: Accent = "cyan";
+
+// Legacy accent migration map
+export const LEGACY_ACCENT_MAP: Record<LegacyAccent, Accent> = {
+  orange: "amber",
+  purple: "violet",
+  pink: "rose",
+  slate: "cyan",
+};
+
+/**
+ * Migrate legacy accent names to new palette
+ */
+export function migrateAccent(accent: string): Accent {
+  if (accent in LEGACY_ACCENT_MAP) {
+    return LEGACY_ACCENT_MAP[accent as LegacyAccent];
+  }
+  // Return as-is if it's already a valid new accent
+  const validAccents: Accent[] = ["cyan", "blue", "emerald", "amber", "violet", "rose"];
+  if (validAccents.includes(accent as Accent)) {
+    return accent as Accent;
+  }
+  // Fallback to default
+  return DEFAULT_ACCENT;
+}

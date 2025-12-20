@@ -15,38 +15,38 @@ const STATUS_CONFIG: Record<
 > = {
   new: {
     label: "New",
-    bgClass: "bg-blue-500/15",
-    textClass: "text-blue-500",
+    bgClass: "bg-blue-500/25",
+    textClass: "text-blue-400",
   },
   evaluating: {
     label: "Evaluating",
-    bgClass: "bg-amber-500/15",
-    textClass: "text-amber-500",
+    bgClass: "bg-amber-500/25",
+    textClass: "text-amber-400",
   },
   accepted: {
     label: "Accepted",
-    bgClass: "bg-violet-500/15",
-    textClass: "text-violet-500",
+    bgClass: "bg-cyan-500/25",
+    textClass: "text-cyan-300",
   },
   doing: {
     label: "In Progress",
-    bgClass: "bg-emerald-500/15",
-    textClass: "text-emerald-500",
+    bgClass: "bg-emerald-500/25",
+    textClass: "text-emerald-400",
   },
   complete: {
     label: "Complete",
-    bgClass: "bg-green-500/15",
-    textClass: "text-green-500",
+    bgClass: "bg-green-500/25",
+    textClass: "text-green-400",
   },
   parked: {
     label: "Parked",
-    bgClass: "bg-slate-500/15",
-    textClass: "text-slate-400",
+    bgClass: "bg-slate-500/25",
+    textClass: "text-slate-300",
   },
   dropped: {
     label: "Dropped",
-    bgClass: "bg-red-500/15",
-    textClass: "text-red-400",
+    bgClass: "bg-red-500/25",
+    textClass: "text-red-300",
   },
 };
 

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import type { DbTask, DbLabel } from "@/types/database";
+import { LABEL_COLOR_CLASSES } from "@/types/database";
 import { AvatarStack } from "@/components/ui/Avatar";
 
 interface TaskCardAssignee {
@@ -81,17 +82,10 @@ export function TaskCard({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const labelColorClasses: Record<string, string> = {
-    red: "bg-red-500/20 text-red-400",
-    orange: "bg-orange-500/20 text-orange-400",
-    yellow: "bg-yellow-500/20 text-yellow-400",
-    green: "bg-green-500/20 text-green-400",
-    blue: "bg-blue-500/20 text-blue-400",
-    purple: "bg-purple-500/20 text-purple-400",
-    pink: "bg-pink-500/20 text-pink-400",
-    slate: "bg-slate-500/20 text-slate-400",
-    emerald: "bg-emerald-500/20 text-emerald-400",
-    indigo: "bg-indigo-500/20 text-indigo-400",
+  // Helper to get label colour class from hex (normalizes case)
+  const getLabelColorClass = (hex: string): string => {
+    const normalized = hex.toLowerCase();
+    return LABEL_COLOR_CLASSES[normalized] || "bg-blue-500";
   };
 
   // Format due date
@@ -145,13 +139,13 @@ export function TaskCard({
           {labels.map((label) => (
             <span
               key={label.id}
-              className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded ${
+              className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded text-white min-w-[16px] ${
                 isGhost
                   ? "bg-border text-foreground-muted"
-                  : labelColorClasses[label.color] || labelColorClasses.slate
+                  : getLabelColorClass(label.color)
               }`}
             >
-              {label.name}
+              {label.name || "\u00A0"}
             </span>
           ))}
         </div>

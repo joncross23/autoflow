@@ -86,6 +86,12 @@ export const macosTheme: ThemeDefinition = {
   },
 
   accents: {
+    cyan: {
+      primary: "#5AC8FA",
+      primaryHover: "#4AB8EA",
+      primaryMuted: "#0A3D4D",
+      primaryGradient: "linear-gradient(135deg, #5AC8FA 0%, #32ADE6 100%)",
+    },
     blue: {
       primary: "#007AFF",
       primaryHover: "#0056CC",
@@ -98,29 +104,23 @@ export const macosTheme: ThemeDefinition = {
       primaryMuted: "#0A3D1C",
       primaryGradient: "linear-gradient(135deg, #30D158 0%, #28CD41 100%)",
     },
-    orange: {
+    amber: {
       primary: "#FF9500",
       primaryHover: "#E68600",
       primaryMuted: "#4D3000",
       primaryGradient: "linear-gradient(135deg, #FF9500 0%, #FF8000 100%)",
     },
-    purple: {
+    violet: {
       primary: "#AF52DE",
       primaryHover: "#9B47C4",
       primaryMuted: "#3D1A54",
       primaryGradient: "linear-gradient(135deg, #AF52DE 0%, #5856D6 100%)",
     },
-    pink: {
+    rose: {
       primary: "#FF2D55",
       primaryHover: "#E6294D",
       primaryMuted: "#4D0F1A",
       primaryGradient: "linear-gradient(135deg, #FF2D55 0%, #FF375F 100%)",
-    },
-    slate: {
-      primary: "#8E8E93",
-      primaryHover: "#7A7A7E",
-      primaryMuted: "#2C2C2E",
-      primaryGradient: "linear-gradient(135deg, #8E8E93 0%, #636366 100%)",
     },
   },
 

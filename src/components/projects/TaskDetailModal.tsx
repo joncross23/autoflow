@@ -15,23 +15,18 @@ import {
   Users,
   Paperclip,
   Link as LinkIcon,
-  MessageSquare,
   Activity,
   Sparkles,
-  Move,
-  Copy,
-  Eye,
-  Archive,
-  Share2,
-  Plus,
   MoreHorizontal,
-  ExternalLink,
-  FileText,
   ArrowLeft,
+  FileText,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import Link from "next/link";
 import { updateTask } from "@/lib/api/tasks";
+import { getTaskLabels } from "@/lib/api/labels";
+import { getTaskChecklists } from "@/lib/api/checklists";
+import { getTaskAttachments } from "@/lib/api/attachments";
+import { getTaskLinks } from "@/lib/api/links";
 import type { DbTask } from "@/types/database";
 import { LabelsSection } from "@/components/shared/LabelsSection";
 import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
@@ -42,7 +37,8 @@ import { ParentIdeaSection } from "@/components/shared/ParentIdeaSection";
 
 interface TaskDetailModalProps {
   task: DbTask;
-  ideaTitle?: string;  // Parent idea title for badge
+  ideaTitle?: string;
+  isNew?: boolean; // When true, shows minimal UI for new cards
   onClose: () => void;
   onSave: (task: DbTask) => void;
   onDelete?: (task: DbTask) => void;
@@ -56,6 +52,7 @@ function Section({
   onAdd,
   addLabel,
   defaultOpen = true,
+  onRemove,
 }: {
   icon: React.ElementType;
   title: string;
@@ -63,6 +60,7 @@ function Section({
   onAdd?: () => void;
   addLabel?: string;
   defaultOpen?: boolean;
+  onRemove?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -81,14 +79,24 @@ function Section({
             <ChevronRight className="h-3 w-3 text-foreground-muted" />
           )}
         </button>
-        {onAdd && isOpen && (
-          <button
-            onClick={onAdd}
-            className="text-xs text-foreground-muted hover:text-primary transition-colors"
-          >
-            + {addLabel || "Add"}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {onAdd && isOpen && (
+            <button
+              onClick={onAdd}
+              className="text-xs text-foreground-muted hover:text-primary transition-colors"
+            >
+              + {addLabel || "Add"}
+            </button>
+          )}
+          {onRemove && (
+            <button
+              onClick={onRemove}
+              className="w-5 h-5 flex items-center justify-center rounded text-foreground-muted hover:bg-error/10 hover:text-error transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
       </div>
       {isOpen && children}
     </div>
@@ -111,10 +119,12 @@ function SidebarButton({
 }) {
   const variantClasses = {
     default: active
-      ? "bg-primary/20 text-primary"
-      : "bg-bg-tertiary hover:bg-bg-hover text-foreground-secondary hover:text-foreground",
-    ai: "bg-purple-500/20 text-purple-400 hover:bg-purple-500/30",
-    danger: "bg-error/10 text-error hover:bg-error/20",
+      ? "bg-bg-hover text-primary"
+      : "text-foreground-secondary hover:bg-bg-hover hover:text-foreground",
+    ai: active
+      ? "bg-cyan-500/10 text-cyan-400"
+      : "text-cyan-400/70 hover:bg-cyan-500/10 hover:text-cyan-400",
+    danger: "text-error hover:bg-error/10 hover:text-error",
   };
 
   return (
@@ -128,9 +138,21 @@ function SidebarButton({
   );
 }
 
+// Enabled sections type
+interface EnabledSections {
+  labels: boolean;
+  members: boolean;
+  checklists: boolean;
+  dates: boolean;
+  aiSuggestions: boolean;
+  attachments: boolean;
+  links: boolean;
+}
+
 export function TaskDetailModal({
   task,
   ideaTitle,
+  isNew = false,
   onClose,
   onSave,
   onDelete,
@@ -143,6 +165,66 @@ export function TaskDetailModal({
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
   const [showMobileActions, setShowMobileActions] = useState(false);
+
+  // Track which sections are enabled (start minimal, populate based on data)
+  const [enabledSections, setEnabledSections] = useState<EnabledSections>({
+    labels: false,
+    members: false, // Members not implemented yet
+    checklists: false,
+    dates: false,
+    aiSuggestions: false,
+    attachments: false,
+    links: false,
+  });
+  const [sectionsLoaded, setSectionsLoaded] = useState(isNew);
+
+  // On mount, check which sections have data and enable only those
+  useEffect(() => {
+    if (isNew) return; // New cards start with no sections
+
+    async function loadSectionData() {
+      try {
+        const [labels, checklists, attachments, links] = await Promise.all([
+          getTaskLabels(task.id),
+          getTaskChecklists(task.id),
+          getTaskAttachments(task.id),
+          getTaskLinks(task.id),
+        ]);
+
+        setEnabledSections({
+          labels: labels.length > 0,
+          members: false,
+          checklists: checklists.length > 0,
+          dates: task.due_date != null,
+          aiSuggestions: false, // AI is manual-trigger only
+          attachments: attachments.length > 0,
+          links: links.length > 0,
+        });
+      } catch (error) {
+        console.error("Failed to load section data:", error);
+      } finally {
+        setSectionsLoaded(true);
+      }
+    }
+
+    loadSectionData();
+  }, [task.id, task.due_date, isNew]);
+
+  // Enable a section (sidebar buttons only enable, × removes)
+  const enableSection = (section: keyof EnabledSections) => {
+    setEnabledSections((prev) => ({
+      ...prev,
+      [section]: true,
+    }));
+  };
+
+  // Disable a section (used by × button)
+  const disableSection = (section: keyof EnabledSections) => {
+    setEnabledSections((prev) => ({
+      ...prev,
+      [section]: false,
+    }));
+  };
 
   // Track changes
   useEffect(() => {
@@ -228,11 +310,11 @@ export function TaskDetailModal({
             </div>
           )}
 
-          {/* Desktop Close button */}
+          {/* Desktop Close button - top right corner, prominent */}
           {!isMobile && (
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-lg bg-bg-tertiary hover:bg-bg-hover text-foreground-muted hover:text-foreground transition-colors z-10"
+              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-lg bg-bg-tertiary/80 hover:bg-bg-hover text-foreground-secondary hover:text-foreground transition-colors z-10"
             >
               <X className="h-5 w-5" />
             </button>
@@ -241,6 +323,18 @@ export function TaskDetailModal({
           <div className="flex flex-col md:flex-row">
             {/* Main Content */}
             <div className="flex-1 p-4 md:p-6 min-w-0 overflow-y-auto md:max-h-[80vh]">
+              {/* Title - Editable (always at top) */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full text-xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-foreground-muted"
+                  placeholder="Card title"
+                  autoFocus={isNew}
+                />
+              </div>
+
               {/* Parent Idea Selector */}
               <div className="mb-4">
                 <ParentIdeaSection
@@ -249,121 +343,146 @@ export function TaskDetailModal({
                 />
               </div>
 
-              {/* Header */}
-              <div className="mb-4">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full text-xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-foreground-muted"
-                  placeholder="Task title"
-                />
-              </div>
-
-              {/* Status Row */}
-              <div className="flex items-center gap-3 mb-6">
-                {/* Status badge */}
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${
-                  task.completed
-                    ? "bg-success/20 text-success"
-                    : "bg-cyan-500/20 text-cyan-400"
-                }`}>
-                  {task.completed ? (
-                    <CheckCircle2 className="h-3 w-3" />
-                  ) : (
-                    <Circle className="h-3 w-3" />
-                  )}
-                  {task.completed ? "Complete" : "In Progress"}
-                </span>
-
-                {/* Due date if exists */}
-                {task.due_date && (
+              {/* Status Row - Only show for existing cards */}
+              {!isNew && (
+                <div className="flex items-center gap-3 mb-6">
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${
-                    new Date(task.due_date) < new Date() && !task.completed
-                      ? "bg-error/20 text-error"
-                      : "bg-bg-tertiary text-foreground-muted"
+                    task.completed
+                      ? "bg-success/20 text-success"
+                      : "bg-cyan-500/20 text-cyan-400"
                   }`}>
-                    <Calendar className="h-3 w-3" />
-                    {new Date(task.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                    {task.completed ? (
+                      <CheckCircle2 className="h-3 w-3" />
+                    ) : (
+                      <Circle className="h-3 w-3" />
+                    )}
+                    {task.completed ? "Complete" : "In Progress"}
                   </span>
-                )}
-              </div>
 
-              {/* Labels */}
-              <LabelsSection taskId={task.id} />
-
-              {/* Dates - Placeholder */}
-              <Section icon={Calendar} title="Dates">
-                <div className="flex gap-4">
-                  <div>
-                    <div className="text-xs text-foreground-muted mb-1">Start</div>
-                    <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
-                      Set date
-                    </button>
-                  </div>
-                  <div>
-                    <div className="text-xs text-foreground-muted mb-1">Due</div>
-                    <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
-                      Set date
-                    </button>
-                  </div>
+                  {task.due_date && (
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${
+                      new Date(task.due_date) < new Date() && !task.completed
+                        ? "bg-error/20 text-error"
+                        : "bg-bg-tertiary text-foreground-muted"
+                    }`}>
+                      <Calendar className="h-3 w-3" />
+                      {new Date(task.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                    </span>
+                  )}
                 </div>
-              </Section>
+              )}
 
-              {/* Description */}
-              <Section icon={MoreHorizontal} title="Description">
+              {/* Labels - Only if enabled */}
+              {enabledSections.labels && (
+                <LabelsSection
+                  taskId={task.id}
+                  onRemove={() => disableSection("labels")}
+                />
+              )}
+
+              {/* Members - Placeholder, only if enabled */}
+              {enabledSections.members && (
+                <Section
+                  icon={Users}
+                  title="Members"
+                  onRemove={() => disableSection("members")}
+                >
+                  <div className="text-sm text-foreground-muted">
+                    No members assigned yet
+                  </div>
+                </Section>
+              )}
+
+              {/* Description - Always shown */}
+              <Section icon={FileText} title="Description">
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  rows={4}
+                  rows={isNew ? 3 : 4}
                   className="w-full p-3 bg-bg-tertiary border border-border rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Add a more detailed description..."
                 />
               </Section>
 
-              {/* Checklists */}
-              <ChecklistsSection taskId={task.id} />
+              {/* Checklists - Only if enabled */}
+              {enabledSections.checklists && (
+                <ChecklistsSection
+                  taskId={task.id}
+                />
+              )}
 
-              {/* AI Suggestions */}
-              <AISuggestionsSection
-                taskId={task.id}
-                taskTitle={title}
-                taskDescription={description}
-              />
-
-              {/* Attachments */}
-              <AttachmentsSection taskId={task.id} />
-
-              {/* Links */}
-              <LinksSection taskId={task.id} />
-
-              {/* Activity */}
-              <Section icon={Activity} title="Activity" defaultOpen={false}>
-                <button
-                  onClick={() => setShowActivity(!showActivity)}
-                  className="text-xs text-foreground-muted hover:text-foreground"
+              {/* Dates - Only if enabled */}
+              {enabledSections.dates && (
+                <Section
+                  icon={Calendar}
+                  title="Dates"
+                  onRemove={() => disableSection("dates")}
                 >
-                  {showActivity ? "Hide" : "Show"} details
-                </button>
-                {showActivity && (
-                  <div className="mt-3 space-y-2 text-sm text-foreground-muted">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs">●</span>
-                      Created {new Date(task.created_at).toLocaleDateString()}
+                  <div className="flex gap-4">
+                    <div>
+                      <div className="text-xs text-foreground-muted mb-1">Start</div>
+                      <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
+                        Set date
+                      </button>
                     </div>
-                    {task.updated_at && task.updated_at !== task.created_at && (
+                    <div>
+                      <div className="text-xs text-foreground-muted mb-1">Due</div>
+                      <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
+                        Set date
+                      </button>
+                    </div>
+                  </div>
+                </Section>
+              )}
+
+              {/* AI Suggestions - Only if enabled */}
+              {enabledSections.aiSuggestions && (
+                <AISuggestionsSection
+                  taskId={task.id}
+                  taskTitle={title}
+                  taskDescription={description}
+                />
+              )}
+
+              {/* Attachments - Only if enabled */}
+              {enabledSections.attachments && (
+                <AttachmentsSection taskId={task.id} />
+              )}
+
+              {/* Links - Only if enabled */}
+              {enabledSections.links && (
+                <LinksSection taskId={task.id} />
+              )}
+
+              {/* Activity - Only show for existing cards */}
+              {!isNew && (
+                <Section icon={Activity} title="Activity" defaultOpen={false}>
+                  <button
+                    onClick={() => setShowActivity(!showActivity)}
+                    className="text-xs text-foreground-muted hover:text-foreground"
+                  >
+                    {showActivity ? "Hide" : "Show"} details
+                  </button>
+                  {showActivity && (
+                    <div className="mt-3 space-y-2 text-sm text-foreground-muted">
                       <div className="flex items-center gap-2">
                         <span className="text-xs">●</span>
-                        Updated {new Date(task.updated_at).toLocaleDateString()}
+                        Created {new Date(task.created_at).toLocaleDateString()}
                       </div>
-                    )}
-                  </div>
-                )}
-              </Section>
+                      {task.updated_at && task.updated_at !== task.created_at && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">●</span>
+                          Updated {new Date(task.updated_at).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </Section>
+              )}
             </div>
 
             {/* Sidebar - hidden on mobile */}
-            <div className="hidden md:block w-48 p-4 bg-bg-tertiary border-l border-border shrink-0">
+            <div className="hidden md:block w-48 p-4 bg-bg-tertiary shrink-0">
               {/* Save button */}
               {hasChanges && (
                 <button
@@ -389,12 +508,42 @@ export function TaskDetailModal({
                     Add to card
                   </div>
                   <div className="space-y-1">
-                    <SidebarButton icon={Users} label="Members" />
-                    <SidebarButton icon={Tag} label="Labels" />
-                    <SidebarButton icon={CheckCircle2} label="Checklist" />
-                    <SidebarButton icon={Calendar} label="Dates" />
-                    <SidebarButton icon={Paperclip} label="Attachment" />
-                    <SidebarButton icon={LinkIcon} label="Link" />
+                    <SidebarButton
+                      icon={Tag}
+                      label="Labels"
+                      active={enabledSections.labels}
+                      onClick={() => enableSection("labels")}
+                    />
+                    <SidebarButton
+                      icon={Users}
+                      label="Members"
+                      active={enabledSections.members}
+                      onClick={() => enableSection("members")}
+                    />
+                    <SidebarButton
+                      icon={CheckCircle2}
+                      label="Checklist"
+                      active={enabledSections.checklists}
+                      onClick={() => enableSection("checklists")}
+                    />
+                    <SidebarButton
+                      icon={Calendar}
+                      label="Dates"
+                      active={enabledSections.dates}
+                      onClick={() => enableSection("dates")}
+                    />
+                    <SidebarButton
+                      icon={Paperclip}
+                      label="Attachment"
+                      active={enabledSections.attachments}
+                      onClick={() => enableSection("attachments")}
+                    />
+                    <SidebarButton
+                      icon={LinkIcon}
+                      label="Link"
+                      active={enabledSections.links}
+                      onClick={() => enableSection("links")}
+                    />
                   </div>
                 </div>
 
@@ -404,41 +553,31 @@ export function TaskDetailModal({
                     AI
                   </div>
                   <div className="space-y-1">
-                    <SidebarButton icon={Sparkles} label="Analyse" variant="ai" />
+                    <SidebarButton
+                      icon={Sparkles}
+                      label="Analyse"
+                      variant="ai"
+                      active={enabledSections.aiSuggestions}
+                      onClick={() => enableSection("aiSuggestions")}
+                    />
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div>
-                  <div className="text-xs font-semibold text-foreground-muted uppercase mb-2">
-                    Actions
-                  </div>
-                  <div className="space-y-1">
-                    <SidebarButton icon={Move} label="Move" />
-                    <SidebarButton icon={Copy} label="Copy" />
-                    <SidebarButton icon={Eye} label="Watch" />
-                    <SidebarButton icon={Archive} label="Archive" />
-                    <SidebarButton icon={Share2} label="Share" />
-                  </div>
-                </div>
-
-                {/* Danger zone */}
+                {/* Delete */}
                 {onDelete && (
-                  <div>
-                    <div className="space-y-1">
-                      <SidebarButton
-                        icon={Trash2}
-                        label="Delete"
-                        variant="danger"
-                        onClick={() => onDelete(task)}
-                      />
-                    </div>
+                  <div className="space-y-1">
+                    <SidebarButton
+                      icon={Trash2}
+                      label="Delete"
+                      variant="danger"
+                      onClick={() => onDelete(task)}
+                    />
                   </div>
                 )}
               </div>
 
               {/* Footer hint */}
-              <div className="mt-6 pt-4 border-t border-border">
+              <div className="mt-6 pt-4">
                 <p className="text-[10px] text-foreground-muted leading-relaxed">
                   <kbd className="px-1 py-0.5 bg-bg-secondary rounded">Esc</kbd> close
                   {hasChanges && (
@@ -463,32 +602,62 @@ export function TaskDetailModal({
                 <div className="px-3 py-1 text-xs font-semibold text-foreground-muted uppercase">
                   Add to card
                 </div>
-                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
-                  <Users className="h-4 w-4" /> Members
-                </button>
-                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                <button
+                  onClick={() => { enableSection("labels"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.labels ? "text-primary" : ""}`}
+                >
                   <Tag className="h-4 w-4" /> Labels
                 </button>
-                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                <button
+                  onClick={() => { enableSection("members"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.members ? "text-primary" : ""}`}
+                >
+                  <Users className="h-4 w-4" /> Members
+                </button>
+                <button
+                  onClick={() => { enableSection("checklists"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.checklists ? "text-primary" : ""}`}
+                >
                   <CheckCircle2 className="h-4 w-4" /> Checklist
                 </button>
-                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
+                <button
+                  onClick={() => { enableSection("dates"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.dates ? "text-primary" : ""}`}
+                >
+                  <Calendar className="h-4 w-4" /> Dates
+                </button>
+                <button
+                  onClick={() => { enableSection("attachments"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.attachments ? "text-primary" : ""}`}
+                >
                   <Paperclip className="h-4 w-4" /> Attachment
+                </button>
+                <button
+                  onClick={() => { enableSection("links"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.links ? "text-primary" : ""}`}
+                >
+                  <LinkIcon className="h-4 w-4" /> Link
                 </button>
                 <div className="my-1 border-t border-border" />
                 <div className="px-3 py-1 text-xs font-semibold text-foreground-muted uppercase">
-                  Actions
+                  AI
                 </div>
-                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover">
-                  <Archive className="h-4 w-4" /> Archive
+                <button
+                  onClick={() => { enableSection("aiSuggestions"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.aiSuggestions ? "text-cyan-400" : "text-cyan-400/70"}`}
+                >
+                  <Sparkles className="h-4 w-4" /> Analyse
                 </button>
                 {onDelete && (
-                  <button
-                    onClick={() => onDelete(task)}
-                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-error hover:bg-error/10"
-                  >
-                    <Trash2 className="h-4 w-4" /> Delete
-                  </button>
+                  <>
+                    <div className="my-1 border-t border-border" />
+                    <button
+                      onClick={() => onDelete(task)}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-error hover:bg-error/10"
+                    >
+                      <Trash2 className="h-4 w-4" /> Delete
+                    </button>
+                  </>
                 )}
               </div>
             </>

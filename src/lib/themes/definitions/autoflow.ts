@@ -85,6 +85,12 @@ export const autoflowTheme: ThemeDefinition = {
   },
 
   accents: {
+    cyan: {
+      primary: "#06B6D4",
+      primaryHover: "#0891B2",
+      primaryMuted: "#164E63",
+      primaryGradient: "linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)",
+    },
     blue: {
       primary: "#3B82F6",
       primaryHover: "#2563EB",
@@ -97,36 +103,29 @@ export const autoflowTheme: ThemeDefinition = {
       primaryMuted: "#064E3B",
       primaryGradient: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
     },
-    orange: {
+    amber: {
       primary: "#F59E0B",
       primaryHover: "#D97706",
       primaryMuted: "#78350F",
       primaryGradient: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
     },
-    purple: {
+    violet: {
       primary: "#8B5CF6",
       primaryHover: "#7C3AED",
       primaryMuted: "#4C1D95",
       primaryGradient: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
     },
-    pink: {
-      primary: "#EC4899",
-      primaryHover: "#DB2777",
-      primaryMuted: "#831843",
-      primaryGradient: "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
-    },
-    slate: {
-      primary: "#64748B",
-      primaryHover: "#475569",
-      primaryMuted: "#1E293B",
-      primaryGradient: "linear-gradient(135deg, #64748B 0%, #475569 100%)",
+    rose: {
+      primary: "#F43F5E",
+      primaryHover: "#E11D48",
+      primaryMuted: "#881337",
+      primaryGradient: "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)",
     },
   },
 
   typography: {
-    fontSans: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    fontMono: '"JetBrains Mono", "Fira Code", Consolas, monospace',
-    fontHeading: '"Plus Jakarta Sans", sans-serif',
+    fontSans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+    fontMono: '"SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace',
     headingWeight: 700,
     headingTracking: "-0.025em",
   },

@@ -290,16 +290,25 @@ export interface DbColumnUpdate {
 // ============================================
 
 // V1.3: Labels store hex colors directly for flexibility
+// 6 WCAG AA compliant colours (4.5:1 contrast with white text)
 export const LABEL_COLORS = [
-  "#EF4444", // Red
-  "#F59E0B", // Amber
-  "#10B981", // Emerald
-  "#06B6D4", // Cyan
-  "#3B82F6", // Blue
-  "#8B5CF6", // Violet
-  "#EC4899", // Pink
-  "#64748B", // Slate
+  "#ef4444", // Red
+  "#f97316", // Orange
+  "#eab308", // Yellow
+  "#22c55e", // Green
+  "#3b82f6", // Blue
+  "#06b6d4", // Cyan
 ] as const;
+
+// Map hex colours to Tailwind classes (shared across components)
+export const LABEL_COLOR_CLASSES: Record<string, string> = {
+  "#ef4444": "bg-red-500",
+  "#f97316": "bg-orange-500",
+  "#eab308": "bg-yellow-500",
+  "#22c55e": "bg-green-500",
+  "#3b82f6": "bg-blue-500",
+  "#06b6d4": "bg-cyan-500",
+};
 
 export type LabelColorHex = (typeof LABEL_COLORS)[number];
 

@@ -68,9 +68,9 @@
     --space-10: 2.5rem;
     --space-12: 3rem;
 
-    /* Typography */
-    --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+    /* Typography - System fonts for performance */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
 
     /* Transitions */
     --transition-fast: 100ms;
@@ -158,7 +158,18 @@
 
   /* ============================================================================
    * Accent Colour Themes
+   * New palette: Cyan (default), Blue, Emerald, Amber, Violet, Rose
    * ============================================================================ */
+
+  /* Cyan - NEW DEFAULT accent */
+  .accent-cyan {
+    --primary-color: #06B6D4;
+    --primary-hover: #0891B2;
+    --primary-muted: #164E63;
+    --primary-gradient: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    --primary: 188 94% 43%;
+    --ring: 188 94% 43%;
+  }
 
   .accent-blue {
     --primary-color: #3B82F6;
@@ -178,16 +189,18 @@
     --ring: 160 84% 39%;
   }
 
-  .accent-orange {
+  /* Amber - replaces Orange */
+  .accent-amber {
     --primary-color: #F59E0B;
     --primary-hover: #D97706;
     --primary-muted: #78350F;
     --primary-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-    --primary: 38 92% 50%;
-    --ring: 38 92% 50%;
+    --primary: 43 96% 50%;
+    --ring: 43 96% 50%;
   }
 
-  .accent-purple {
+  /* Violet - replaces Purple */
+  .accent-violet {
     --primary-color: #8B5CF6;
     --primary-hover: #7C3AED;
     --primary-muted: #4C1D95;
@@ -196,25 +209,55 @@
     --ring: 258 90% 66%;
   }
 
-  .accent-pink {
-    --primary-color: #EC4899;
-    --primary-hover: #DB2777;
-    --primary-muted: #831843;
-    --primary-gradient: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
-    --primary: 330 81% 60%;
-    --ring: 330 81% 60%;
+  /* Rose - replaces Pink */
+  .accent-rose {
+    --primary-color: #F43F5E;
+    --primary-hover: #E11D48;
+    --primary-muted: #881337;
+    --primary-gradient: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+    --primary: 350 89% 60%;
+    --ring: 350 89% 60%;
   }
 
+  /* Legacy accent aliases for migration (same values as new names) */
+  .accent-orange {
+    --primary-color: #F59E0B;
+    --primary-hover: #D97706;
+    --primary-muted: #78350F;
+    --primary-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    --primary: 43 96% 50%;
+    --ring: 43 96% 50%;
+  }
+  .accent-purple {
+    --primary-color: #8B5CF6;
+    --primary-hover: #7C3AED;
+    --primary-muted: #4C1D95;
+    --primary-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    --primary: 258 90% 66%;
+    --ring: 258 90% 66%;
+  }
+  .accent-pink {
+    --primary-color: #F43F5E;
+    --primary-hover: #E11D48;
+    --primary-muted: #881337;
+    --primary-gradient: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+    --primary: 350 89% 60%;
+    --ring: 350 89% 60%;
+  }
   .accent-slate {
-    --primary-color: #64748B;
-    --primary-hover: #475569;
-    --primary-muted: #1E293B;
-    --primary-gradient: linear-gradient(135deg, #64748B 0%, #475569 100%);
-    --primary: 215 16% 47%;
-    --ring: 215 16% 47%;
+    --primary-color: #06B6D4;
+    --primary-hover: #0891B2;
+    --primary-muted: #164E63;
+    --primary-gradient: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    --primary: 188 94% 43%;
+    --ring: 188 94% 43%;
   }
 
   /* Light mode accent adjustments */
+  .light.accent-cyan {
+    --primary-muted: #CFFAFE;
+  }
+
   .light.accent-blue {
     --primary-muted: #DBEAFE;
   }
@@ -223,21 +266,23 @@
     --primary-muted: #D1FAE5;
   }
 
-  .light.accent-orange {
+  .light.accent-amber {
     --primary-muted: #FEF3C7;
   }
 
-  .light.accent-purple {
+  .light.accent-violet {
     --primary-muted: #EDE9FE;
   }
 
-  .light.accent-pink {
-    --primary-muted: #FCE7F3;
+  .light.accent-rose {
+    --primary-muted: #FFE4E6;
   }
 
-  .light.accent-slate {
-    --primary-muted: #E2E8F0;
-  }
+  /* Legacy light mode fallbacks */
+  .light.accent-orange { --primary-muted: #FEF3C7; }
+  .light.accent-purple { --primary-muted: #EDE9FE; }
+  .light.accent-pink { --primary-muted: #FFE4E6; }
+  .light.accent-slate { --primary-muted: #CFFAFE; }
 
   /* ============================================================================
    * System Themes
@@ -246,8 +291,8 @@
 
   /* Theme: AutoFlow (Luxury/Refined) - Default */
   [data-theme="autoflow"] {
-    --font-sans: var(--font-plus-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+    /* Uses system fonts defined in :root */
+    --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
     --radius: 0.5rem;
     --radius-sm: 0.25rem;
     --radius-lg: 0.75rem;
@@ -418,7 +463,16 @@
    * Each theme has its own accent palette that matches its design language
    * ============================================================================ */
 
-  /* macOS Accents */
+  /* macOS Accents - New palette: Cyan, Blue, Emerald, Amber, Violet, Rose */
+  [data-theme="macos"].accent-cyan {
+    --primary-color: #5AC8FA;
+    --primary-hover: #4AB8EA;
+    --primary-muted: #0A3D4D;
+    --primary-gradient: linear-gradient(135deg, #5AC8FA 0%, #32ADE6 100%);
+    --primary: 199 95% 67%;
+    --ring: 199 95% 67%;
+  }
+
   [data-theme="macos"].accent-blue {
     --primary-color: #007AFF;
     --primary-hover: #0056CC;
@@ -437,7 +491,7 @@
     --ring: 135 64% 50%;
   }
 
-  [data-theme="macos"].accent-orange {
+  [data-theme="macos"].accent-amber {
     --primary-color: #FF9500;
     --primary-hover: #E68600;
     --primary-muted: #4D3000;
@@ -446,7 +500,7 @@
     --ring: 35 100% 50%;
   }
 
-  [data-theme="macos"].accent-purple {
+  [data-theme="macos"].accent-violet {
     --primary-color: #AF52DE;
     --primary-hover: #9B47C4;
     --primary-muted: #3D1A54;
@@ -455,7 +509,7 @@
     --ring: 283 66% 60%;
   }
 
-  [data-theme="macos"].accent-pink {
+  [data-theme="macos"].accent-rose {
     --primary-color: #FF2D55;
     --primary-hover: #E6294D;
     --primary-muted: #4D0F1A;
@@ -464,24 +518,63 @@
     --ring: 349 100% 59%;
   }
 
+  /* macOS Legacy accent aliases */
+  [data-theme="macos"].accent-orange {
+    --primary-color: #FF9500;
+    --primary-hover: #E68600;
+    --primary-muted: #4D3000;
+    --primary-gradient: linear-gradient(135deg, #FF9500 0%, #FF8000 100%);
+    --primary: 35 100% 50%;
+    --ring: 35 100% 50%;
+  }
+  [data-theme="macos"].accent-purple {
+    --primary-color: #AF52DE;
+    --primary-hover: #9B47C4;
+    --primary-muted: #3D1A54;
+    --primary-gradient: linear-gradient(135deg, #AF52DE 0%, #5856D6 100%);
+    --primary: 283 66% 60%;
+    --ring: 283 66% 60%;
+  }
+  [data-theme="macos"].accent-pink {
+    --primary-color: #FF2D55;
+    --primary-hover: #E6294D;
+    --primary-muted: #4D0F1A;
+    --primary-gradient: linear-gradient(135deg, #FF2D55 0%, #FF375F 100%);
+    --primary: 349 100% 59%;
+    --ring: 349 100% 59%;
+  }
   [data-theme="macos"].accent-slate {
-    --primary-color: #8E8E93;
-    --primary-hover: #7A7A7E;
-    --primary-muted: #2C2C2E;
-    --primary-gradient: linear-gradient(135deg, #8E8E93 0%, #636366 100%);
-    --primary: 240 1% 56%;
-    --ring: 240 1% 56%;
+    --primary-color: #5AC8FA;
+    --primary-hover: #4AB8EA;
+    --primary-muted: #0A3D4D;
+    --primary-gradient: linear-gradient(135deg, #5AC8FA 0%, #32ADE6 100%);
+    --primary: 199 95% 67%;
+    --ring: 199 95% 67%;
   }
 
   /* macOS Light Mode Accent Adjustments */
+  [data-theme="macos"].light.accent-cyan { --primary-muted: #D6F4FF; }
   [data-theme="macos"].light.accent-blue { --primary-muted: #E0F0FF; }
   [data-theme="macos"].light.accent-emerald { --primary-muted: #D4F5DB; }
+  [data-theme="macos"].light.accent-amber { --primary-muted: #FFF4E0; }
+  [data-theme="macos"].light.accent-violet { --primary-muted: #F3E8FF; }
+  [data-theme="macos"].light.accent-rose { --primary-muted: #FFE5EA; }
+  /* Legacy light mode */
   [data-theme="macos"].light.accent-orange { --primary-muted: #FFF4E0; }
   [data-theme="macos"].light.accent-purple { --primary-muted: #F3E8FF; }
   [data-theme="macos"].light.accent-pink { --primary-muted: #FFE5EA; }
-  [data-theme="macos"].light.accent-slate { --primary-muted: #E5E5E5; }
+  [data-theme="macos"].light.accent-slate { --primary-muted: #D6F4FF; }
 
-  /* Windows Accents */
+  /* Windows Accents - New palette: Cyan, Blue, Emerald, Amber, Violet, Rose */
+  [data-theme="windows"].accent-cyan {
+    --primary-color: #00B7C3;
+    --primary-hover: #009DA6;
+    --primary-muted: #0A3D4D;
+    --primary-gradient: linear-gradient(135deg, #00B7C3 0%, #009DA6 100%);
+    --primary: 184 100% 38%;
+    --ring: 184 100% 38%;
+  }
+
   [data-theme="windows"].accent-blue {
     --primary-color: #0078D4;
     --primary-hover: #005A9E;
@@ -500,7 +593,7 @@
     --ring: 120 78% 27%;
   }
 
-  [data-theme="windows"].accent-orange {
+  [data-theme="windows"].accent-amber {
     --primary-color: #FF8C00;
     --primary-hover: #E67E00;
     --primary-muted: #4D2A00;
@@ -509,7 +602,7 @@
     --ring: 33 100% 50%;
   }
 
-  [data-theme="windows"].accent-purple {
+  [data-theme="windows"].accent-violet {
     --primary-color: #881798;
     --primary-hover: #6B126B;
     --primary-muted: #3D0A3D;
@@ -518,7 +611,7 @@
     --ring: 294 76% 34%;
   }
 
-  [data-theme="windows"].accent-pink {
+  [data-theme="windows"].accent-rose {
     --primary-color: #E3008C;
     --primary-hover: #C4007A;
     --primary-muted: #4D002D;
@@ -527,22 +620,52 @@
     --ring: 323 100% 45%;
   }
 
+  /* Windows Legacy accent aliases */
+  [data-theme="windows"].accent-orange {
+    --primary-color: #FF8C00;
+    --primary-hover: #E67E00;
+    --primary-muted: #4D2A00;
+    --primary-gradient: linear-gradient(135deg, #FF8C00 0%, #E67E00 100%);
+    --primary: 33 100% 50%;
+    --ring: 33 100% 50%;
+  }
+  [data-theme="windows"].accent-purple {
+    --primary-color: #881798;
+    --primary-hover: #6B126B;
+    --primary-muted: #3D0A3D;
+    --primary-gradient: linear-gradient(135deg, #881798 0%, #6B126B 100%);
+    --primary: 294 76% 34%;
+    --ring: 294 76% 34%;
+  }
+  [data-theme="windows"].accent-pink {
+    --primary-color: #E3008C;
+    --primary-hover: #C4007A;
+    --primary-muted: #4D002D;
+    --primary-gradient: linear-gradient(135deg, #E3008C 0%, #C4007A 100%);
+    --primary: 323 100% 45%;
+    --ring: 323 100% 45%;
+  }
   [data-theme="windows"].accent-slate {
-    --primary-color: #7A7574;
-    --primary-hover: #5D5A58;
-    --primary-muted: #2D2B2A;
-    --primary-gradient: linear-gradient(135deg, #7A7574 0%, #5D5A58 100%);
-    --primary: 6 2% 47%;
-    --ring: 6 2% 47%;
+    --primary-color: #00B7C3;
+    --primary-hover: #009DA6;
+    --primary-muted: #0A3D4D;
+    --primary-gradient: linear-gradient(135deg, #00B7C3 0%, #009DA6 100%);
+    --primary: 184 100% 38%;
+    --ring: 184 100% 38%;
   }
 
   /* Windows Light Mode Accent Adjustments */
+  [data-theme="windows"].light.accent-cyan { --primary-muted: #D6F4FF; }
   [data-theme="windows"].light.accent-blue { --primary-muted: #D0E8F7; }
   [data-theme="windows"].light.accent-emerald { --primary-muted: #DFF6DD; }
+  [data-theme="windows"].light.accent-amber { --primary-muted: #FFF4CE; }
+  [data-theme="windows"].light.accent-violet { --primary-muted: #F3E8FF; }
+  [data-theme="windows"].light.accent-rose { --primary-muted: #FFDEE9; }
+  /* Legacy light mode */
   [data-theme="windows"].light.accent-orange { --primary-muted: #FFF4CE; }
   [data-theme="windows"].light.accent-purple { --primary-muted: #F3E8FF; }
   [data-theme="windows"].light.accent-pink { --primary-muted: #FFDEE9; }
-  [data-theme="windows"].light.accent-slate { --primary-muted: #E5E5E5; }
+  [data-theme="windows"].light.accent-slate { --primary-muted: #D6F4FF; }
 }
 
 /* ============================================================================
