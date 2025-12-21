@@ -335,13 +335,15 @@ export function TaskDetailModal({
                 />
               </div>
 
-              {/* Parent Idea Selector */}
-              <div className="mb-4">
-                <ParentIdeaSection
-                  ideaId={ideaId}
-                  onIdeaChange={setIdeaId}
-                />
-              </div>
+              {/* Parent Idea Selector - Only for existing cards */}
+              {!isNew && (
+                <div className="mb-4">
+                  <ParentIdeaSection
+                    ideaId={ideaId}
+                    onIdeaChange={setIdeaId}
+                  />
+                </div>
+              )}
 
               {/* Status Row - Only show for existing cards */}
               {!isNew && (
@@ -453,32 +455,6 @@ export function TaskDetailModal({
               {enabledSections.links && (
                 <LinksSection taskId={task.id} />
               )}
-
-              {/* Activity - Only show for existing cards */}
-              {!isNew && (
-                <Section icon={Activity} title="Activity" defaultOpen={false}>
-                  <button
-                    onClick={() => setShowActivity(!showActivity)}
-                    className="text-xs text-foreground-muted hover:text-foreground"
-                  >
-                    {showActivity ? "Hide" : "Show"} details
-                  </button>
-                  {showActivity && (
-                    <div className="mt-3 space-y-2 text-sm text-foreground-muted">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs">●</span>
-                        Created {new Date(task.created_at).toLocaleDateString()}
-                      </div>
-                      {task.updated_at && task.updated_at !== task.created_at && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs">●</span>
-                          Updated {new Date(task.updated_at).toLocaleDateString()}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </Section>
-              )}
             </div>
 
             {/* Sidebar - hidden on mobile */}
@@ -576,8 +552,34 @@ export function TaskDetailModal({
                 )}
               </div>
 
+              {/* Activity - at bottom of sidebar for existing cards */}
+              {!isNew && (
+                <div className="mt-6 pt-4 border-t border-border">
+                  <button
+                    onClick={() => setShowActivity(!showActivity)}
+                    className="flex items-center gap-2 text-xs font-medium text-foreground-muted hover:text-foreground transition-colors w-full"
+                  >
+                    <Activity className="h-3.5 w-3.5" />
+                    Activity
+                    {showActivity ? (
+                      <ChevronDown className="h-3 w-3 ml-auto" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3 ml-auto" />
+                    )}
+                  </button>
+                  {showActivity && (
+                    <div className="mt-2 space-y-1.5 text-[11px] text-foreground-muted">
+                      <div>Created {new Date(task.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</div>
+                      {task.updated_at && task.updated_at !== task.created_at && (
+                        <div>Updated {new Date(task.updated_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Footer hint */}
-              <div className="mt-6 pt-4">
+              <div className="mt-4 pt-4 border-t border-border">
                 <p className="text-[10px] text-foreground-muted leading-relaxed">
                   <kbd className="px-1 py-0.5 bg-bg-secondary rounded">Esc</kbd> close
                   {hasChanges && (
