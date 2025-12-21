@@ -5,6 +5,7 @@ import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { ScoreBadge } from "./ScoreBadge";
 import type { DbIdea, DbLabel, ColumnConfig, EffortEstimate, PlanningHorizon, PLANNING_HORIZON_LABELS } from "@/types/database";
+import type { IdeaTaskProgress } from "@/lib/api/ideas";
 
 const HORIZON_COLORS: Record<NonNullable<PlanningHorizon>, string> = {
   now: "bg-green-500/10 text-green-500 border-green-500/20",
@@ -20,6 +21,7 @@ interface IdeasTableRowProps {
   onClick: (idea: DbIdea) => void;
   aiScore?: number | null;
   labels?: DbLabel[];
+  progress?: IdeaTaskProgress;
 }
 
 const EFFORT_LABELS: Record<EffortEstimate, string> = {
@@ -38,6 +40,7 @@ function IdeasTableRowComponent({
   onClick,
   aiScore,
   labels = [],
+  progress,
 }: IdeasTableRowProps) {
   const visibleColumns = columns
     .filter((col) => col.visible)
@@ -221,6 +224,39 @@ function IdeasTableRowComponent({
         return (
           <td key={columnId} className={cn(cellClass, "text-sm")} style={style}>
             {idea.rice_effort ?? "-"}
+          </td>
+        );
+      case "progress":
+        // Hide/empty cell when no tasks (per user requirement)
+        if (!progress || progress.totalTasks === 0) {
+          return (
+            <td key={columnId} className={cellClass} style={style}>
+              <span className="text-muted-foreground text-sm">-</span>
+            </td>
+          );
+        }
+        return (
+          <td key={columnId} className={cellClass} style={style}>
+            <div className="flex items-center gap-2">
+              {/* Progress bar */}
+              <div className="flex-1 h-1.5 bg-bg-tertiary rounded-full overflow-hidden min-w-[40px]">
+                <div
+                  className={cn(
+                    "h-full rounded-full transition-all",
+                    progress.percentage === 100 ? "bg-green-500" : "bg-primary"
+                  )}
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
+              {/* Count */}
+              <span className="text-xs text-muted-foreground shrink-0">
+                {progress.completedTasks}/{progress.totalTasks}
+              </span>
+              {/* Check mark for complete */}
+              {progress.percentage === 100 && (
+                <span className="text-green-500 text-xs">✓</span>
+              )}
+            </div>
           </td>
         );
       default:

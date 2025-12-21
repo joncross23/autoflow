@@ -16,6 +16,7 @@ import {
   getTaskBacklinks,
   type BacklinkInfo,
 } from "@/lib/api/links";
+import { RELATIONSHIP_TYPE_PAIRS, RELATIONSHIP_TYPE_LABELS, type LinkRelationshipType } from "@/types/database";
 
 interface BacklinksSectionProps {
   /** ID of the idea (mutually exclusive with taskId) */
@@ -24,6 +25,16 @@ interface BacklinksSectionProps {
   taskId?: string;
   /** Custom class name */
   className?: string;
+}
+
+/**
+ * Get the inverse relationship label for a backlink
+ * e.g., if source says "blocks", target shows "is blocked by"
+ */
+function getInverseRelationshipLabel(relationshipType: LinkRelationshipType | null): string | null {
+  if (!relationshipType) return null;
+  const inverse = RELATIONSHIP_TYPE_PAIRS[relationshipType];
+  return RELATIONSHIP_TYPE_LABELS[inverse];
 }
 
 export function BacklinksSection({
@@ -99,28 +110,41 @@ export function BacklinksSection({
           {isLoading ? (
             <div className="text-xs text-foreground-muted py-2">Loading...</div>
           ) : (
-            backlinks.map((backlink) => (
-              <button
-                key={backlink.link.id}
-                onClick={() => handleBacklinkClick(backlink)}
-                className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded hover:bg-bg-hover transition-colors group"
-              >
-                {/* Source type icon */}
-                {backlink.sourceType === "idea" ? (
-                  <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
-                ) : (
-                  <CheckSquare className="w-4 h-4 text-blue-500 shrink-0" />
-                )}
+            backlinks.map((backlink) => {
+              const inverseLabel = getInverseRelationshipLabel(backlink.link.relationship_type as LinkRelationshipType | null);
+              return (
+                <button
+                  key={backlink.link.id}
+                  onClick={() => handleBacklinkClick(backlink)}
+                  className="flex items-start gap-2 w-full px-2 py-1.5 text-sm text-left rounded hover:bg-bg-hover transition-colors group"
+                >
+                  {/* Source type icon */}
+                  {backlink.sourceType === "idea" ? (
+                    <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                  ) : (
+                    <CheckSquare className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                  )}
 
-                {/* Source title */}
-                <span className="flex-1 truncate">{backlink.sourceTitle}</span>
+                  {/* Source title and relationship */}
+                  <div className="flex-1 min-w-0">
+                    {/* For task backlinks with relationship, show "relationship [taskname]" format */}
+                    {inverseLabel && backlink.sourceType === "task" ? (
+                      <span className="text-sm">
+                        <span className="text-foreground-muted">{inverseLabel}</span>{" "}
+                        <span className="font-medium truncate">{backlink.sourceTitle}</span>
+                      </span>
+                    ) : (
+                      <span className="truncate block">{backlink.sourceTitle}</span>
+                    )}
+                  </div>
 
-                {/* Arrow indicator */}
-                <span className="text-foreground-muted text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                  →
-                </span>
-              </button>
-            ))
+                  {/* Arrow indicator */}
+                  <span className="text-foreground-muted text-xs opacity-0 group-hover:opacity-100 transition-opacity mt-0.5">
+                    →
+                  </span>
+                </button>
+              );
+            })
           )}
 
           {/* Help text */}

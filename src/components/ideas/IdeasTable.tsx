@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { IdeasTableRow } from "./IdeasTableRow";
 import { StatusBadge } from "./StatusBadge";
 import type { DbIdea, DbLabel, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+import type { IdeaTaskProgress } from "@/lib/api/ideas";
 
 export type SortField = "title" | "status" | "score" | "updated_at" | "created_at";
 export type SortOrder = "asc" | "desc";
@@ -23,6 +24,7 @@ interface IdeasTableProps {
   onSort: (field: SortField, order: SortOrder) => void;
   aiScores?: Record<string, number>;
   ideaLabels?: Record<string, DbLabel[]>;
+  ideaProgress?: Record<string, IdeaTaskProgress>;
   loading?: boolean;
 }
 
@@ -33,6 +35,7 @@ const COLUMN_LABELS: Record<string, string> = {
   score: "Score",
   horizon: "Horizon",
   rice_score: "RICE",
+  progress: "Progress",
   updated_at: "Updated",
   created_at: "Created",
   description: "Description",
@@ -59,6 +62,7 @@ export function IdeasTable({
   onSort,
   aiScores = {},
   ideaLabels = {},
+  ideaProgress = {},
   loading = false,
 }: IdeasTableProps) {
   const isMobile = useIsMobile();
@@ -402,6 +406,7 @@ export function IdeasTable({
                   onClick={onIdeaClick}
                   aiScore={aiScores[idea.id]}
                   labels={ideaLabels[idea.id] || []}
+                  progress={ideaProgress[idea.id]}
                 />
               ))
             )}

@@ -676,3 +676,91 @@ export async function getTimeAudit(): Promise<TimeAuditSummary> {
     items,
   };
 }
+
+// ============================================
+// Task Progress Operations (V1.5)
+// ============================================
+
+/**
+ * Progress information for an idea's tasks
+ */
+export interface IdeaTaskProgress {
+  totalTasks: number;
+  completedTasks: number;
+  percentage: number;
+}
+
+/**
+ * Get task progress for a single idea
+ */
+export async function getIdeaTaskProgress(ideaId: string): Promise<IdeaTaskProgress> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("id, completed")
+    .eq("idea_id", ideaId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const tasks = data || [];
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((t) => t.completed).length;
+  const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  return {
+    totalTasks,
+    completedTasks,
+    percentage,
+  };
+}
+
+/**
+ * Get task progress for all ideas (for ideas table)
+ * Returns a map of ideaId -> progress
+ */
+export async function getAllIdeasTaskProgress(): Promise<Record<string, IdeaTaskProgress>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("id, idea_id, completed")
+    .not("idea_id", "is", null);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const tasks = data || [];
+  const progressMap: Record<string, IdeaTaskProgress> = {};
+
+  // Group tasks by idea_id
+  tasks.forEach((task) => {
+    if (!task.idea_id) return;
+
+    if (!progressMap[task.idea_id]) {
+      progressMap[task.idea_id] = {
+        totalTasks: 0,
+        completedTasks: 0,
+        percentage: 0,
+      };
+    }
+
+    progressMap[task.idea_id].totalTasks++;
+    if (task.completed) {
+      progressMap[task.idea_id].completedTasks++;
+    }
+  });
+
+  // Calculate percentages
+  Object.keys(progressMap).forEach((ideaId) => {
+    const progress = progressMap[ideaId];
+    progress.percentage = progress.totalTasks > 0
+      ? Math.round((progress.completedTasks / progress.totalTasks) * 100)
+      : 0;
+  });
+
+  return progressMap;
+}

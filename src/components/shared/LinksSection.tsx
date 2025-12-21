@@ -38,7 +38,8 @@ import {
 } from "@/lib/api/links";
 import { getIdeas } from "@/lib/api/ideas";
 import { getAllTasks } from "@/lib/api/tasks";
-import type { DbLink, DbIdea, DbTask } from "@/types/database";
+import type { DbLink, DbIdea, DbTask, LinkRelationshipType } from "@/types/database";
+import { RELATIONSHIP_TYPE_OPTIONS, RELATIONSHIP_TYPE_LABELS } from "@/types/database";
 import { BacklinksSection } from "./BacklinksSection";
 
 // Link type for the enhanced linking system
@@ -97,7 +98,10 @@ export function LinksSection({
   const [isLoadingItems, setIsLoadingItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DbIdea | DbTask | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [relationshipType, setRelationshipType] = useState<LinkRelationshipType>("related");
+  const [showRelationshipDropdown, setShowRelationshipDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const relationshipDropdownRef = useRef<HTMLDivElement>(null);
 
   // Load links on mount
   useEffect(() => {
@@ -123,6 +127,9 @@ export function LinksSection({
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
+      }
+      if (relationshipDropdownRef.current && !relationshipDropdownRef.current.contains(event.target as Node)) {
+        setShowRelationshipDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -180,6 +187,8 @@ export function LinksSection({
     setSearchQuery("");
     setSelectedItem(null);
     setShowDropdown(false);
+    setRelationshipType("related");
+    setShowRelationshipDropdown(false);
     setError(null);
   }
 
@@ -243,6 +252,8 @@ export function LinksSection({
         url: internalUrl,
         title: selectedItem.title,
         favicon: linkType === "idea" ? "💡" : "📋",
+        // Only include relationship_type for task-to-task links
+        relationship_type: linkType === "task" ? relationshipType : null,
       };
 
       if (ideaId) {
@@ -444,7 +455,31 @@ export function LinksSection({
 
               {/* Dropdown */}
               {showDropdown && (
-                <div className="absolute left-0 right-0 top-full mt-1 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto">
+                <div className="absolute left-0 right-0 top-full mt-1 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 max-h-64 overflow-hidden flex flex-col">
+                  {/* Sticky search input at top of dropdown */}
+                  <div className="p-2 border-b border-border shrink-0">
+                    <div className="flex items-center gap-2 px-2 py-1.5 bg-bg-tertiary rounded">
+                      <Search className="w-4 h-4 text-foreground-muted shrink-0" />
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder={`Search ${linkType === "idea" ? "ideas" : "tasks"}...`}
+                        className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground-muted focus:outline-none"
+                        autoFocus
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="text-foreground-muted hover:text-foreground"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  {/* Results list */}
+                  <div className="overflow-y-auto flex-1">
                   {isLoadingItems ? (
                     <div className="flex items-center justify-center gap-2 py-4 text-xs text-foreground-muted">
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -493,6 +528,7 @@ export function LinksSection({
                       ))
                     )
                   )}
+                  </div>
                 </div>
               )}
 
@@ -504,6 +540,49 @@ export function LinksSection({
                 >
                   <X className="w-3 h-3" />
                 </button>
+              )}
+            </div>
+          )}
+
+          {/* Relationship Type Selector (only for task-to-task links) */}
+          {linkType === "task" && taskId && (
+            <div className="relative" ref={relationshipDropdownRef}>
+              <div className="text-xs text-foreground-muted mb-1.5">Relationship</div>
+              <button
+                onClick={() => setShowRelationshipDropdown(!showRelationshipDropdown)}
+                className={cn(
+                  "w-full flex items-center justify-between px-3 py-2 text-sm bg-bg-tertiary border rounded transition-colors",
+                  showRelationshipDropdown ? "border-primary ring-1 ring-primary" : "border-border"
+                )}
+              >
+                <span className="text-foreground">
+                  {RELATIONSHIP_TYPE_LABELS[relationshipType]}
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "w-4 h-4 text-foreground-muted transition-transform",
+                    showRelationshipDropdown && "rotate-180"
+                  )}
+                />
+              </button>
+              {showRelationshipDropdown && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto">
+                  {RELATIONSHIP_TYPE_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setRelationshipType(option.value);
+                        setShowRelationshipDropdown(false);
+                      }}
+                      className={cn(
+                        "w-full px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors",
+                        relationshipType === option.value && "bg-primary/10 text-primary"
+                      )}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -632,22 +711,39 @@ function LinkRow({ link, onDelete, onUpdate }: LinkRowProps) {
           <>
             {/* Internal links use Next.js Link, external use <a> */}
             {internalPath ? (
-              <Link
-                href={internalPath}
-                className="text-sm text-foreground hover:text-primary flex items-center gap-1"
-              >
-                {displayTitle}
-                {linkType === "idea" && (
-                  <span className="text-[10px] text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
-                    Idea
-                  </span>
+              <div className="flex flex-col gap-0.5">
+                {/* For task links with relationship, show "relationship → taskname" format */}
+                {linkType === "task" && link.relationship_type ? (
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <span className="text-foreground-muted">
+                      {RELATIONSHIP_TYPE_LABELS[link.relationship_type]}
+                    </span>
+                    <Link
+                      href={internalPath}
+                      className="text-foreground hover:text-primary font-medium"
+                    >
+                      {displayTitle}
+                    </Link>
+                  </div>
+                ) : (
+                  <Link
+                    href={internalPath}
+                    className="text-sm text-foreground hover:text-primary flex items-center gap-1"
+                  >
+                    {displayTitle}
+                    {linkType === "idea" && (
+                      <span className="text-[10px] text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                        Idea
+                      </span>
+                    )}
+                    {linkType === "task" && (
+                      <span className="text-[10px] text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded">
+                        Task
+                      </span>
+                    )}
+                  </Link>
                 )}
-                {linkType === "task" && (
-                  <span className="text-[10px] text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded">
-                    Task
-                  </span>
-                )}
-              </Link>
+              </div>
             ) : (
               <>
                 <a

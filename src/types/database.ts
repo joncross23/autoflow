@@ -459,6 +459,49 @@ export interface DbAttachmentInsert {
 // LINK TYPES (V1.3)
 // ============================================
 
+// Relationship types for task-to-task links (V1.4)
+export type LinkRelationshipType =
+  | "related"
+  | "blocks"
+  | "is_blocked_by"
+  | "duplicates"
+  | "is_duplicated_by"
+  | "split_to"
+  | "split_from";
+
+// Maps each relationship to its inverse (for displaying in backlinks)
+export const RELATIONSHIP_TYPE_PAIRS: Record<LinkRelationshipType, LinkRelationshipType> = {
+  related: "related",
+  blocks: "is_blocked_by",
+  is_blocked_by: "blocks",
+  duplicates: "is_duplicated_by",
+  is_duplicated_by: "duplicates",
+  split_to: "split_from",
+  split_from: "split_to",
+};
+
+// Human-readable labels for relationship types
+export const RELATIONSHIP_TYPE_LABELS: Record<LinkRelationshipType, string> = {
+  related: "related to",
+  blocks: "blocks",
+  is_blocked_by: "is blocked by",
+  duplicates: "duplicates",
+  is_duplicated_by: "is duplicated by",
+  split_to: "split to",
+  split_from: "split from",
+};
+
+// All available relationship type options for dropdown
+export const RELATIONSHIP_TYPE_OPTIONS: { value: LinkRelationshipType; label: string }[] = [
+  { value: "is_blocked_by", label: "is blocked by" },
+  { value: "blocks", label: "blocks" },
+  { value: "is_duplicated_by", label: "is duplicated by" },
+  { value: "duplicates", label: "duplicates" },
+  { value: "split_from", label: "split from" },
+  { value: "split_to", label: "split to" },
+  { value: "related", label: "related to" },
+];
+
 export interface DbLink {
   id: string;
   idea_id: string | null;
@@ -466,6 +509,7 @@ export interface DbLink {
   url: string;
   title: string | null;
   favicon: string | null;
+  relationship_type: LinkRelationshipType | null; // null for URL and idea links
   created_at: string;
 }
 
@@ -475,12 +519,14 @@ export interface DbLinkInsert {
   url: string;
   title?: string | null;
   favicon?: string | null;
+  relationship_type?: LinkRelationshipType | null;
 }
 
 export interface DbLinkUpdate {
   url?: string;
   title?: string | null;
   favicon?: string | null;
+  relationship_type?: LinkRelationshipType | null;
 }
 
 // ============================================

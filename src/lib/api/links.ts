@@ -111,14 +111,22 @@ export async function createTaskLink(
 ): Promise<DbLink> {
   const supabase = createClient();
 
+  const insertData: Record<string, unknown> = {
+    task_id: taskId,
+    url: link.url,
+    title: link.title || null,
+    favicon: link.favicon || "🔗",
+  };
+
+  // Only include relationship_type if it has a value (for task-to-task links)
+  // This avoids errors if the column doesn't exist yet
+  if (link.relationship_type) {
+    insertData.relationship_type = link.relationship_type;
+  }
+
   const { data, error } = await supabase
     .from("links")
-    .insert({
-      task_id: taskId,
-      url: link.url,
-      title: link.title || null,
-      favicon: link.favicon || "🔗",
-    })
+    .insert(insertData)
     .select()
     .single();
 

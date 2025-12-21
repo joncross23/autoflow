@@ -3,10 +3,91 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2025-12-19
-> **Current Version:** 1.3.0
-> **Current Phase:** V1.3 Rich Cards (COMPLETE)
-> **Next Phase:** Deploy & Stabilize
+> **Last Updated:** 2025-12-21
+> **Current Version:** 1.5.0
+> **Current Phase:** V1.5 Task Relationships & Progress (IN PROGRESS)
+> **Next Phase:** Dynamic Delivery Filters
+
+---
+
+## V1.5 Task Relationships & Progress Status: IN PROGRESS
+
+V1.5 adds task-to-task relationship types (Jira-style) and idea task progress tracking.
+
+### V1.5 Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Relationship Types | **Done** | Task-to-task links with types: blocks, is blocked by, duplicates, etc. |
+| Relationship Dropdown | **Done** | Select relationship when linking tasks |
+| Display Order Swap | **Done** | Shows "is blocked by [taskname]" format |
+| Quick Search | **Done** | Sticky search in task/idea link dropdown |
+| Backlinks Inverse | **Done** | Backlinks show inverse relationship labels |
+| Progress Column | **Done** | Toggleable progress column in Ideas table |
+| Progress API | **Done** | `getAllIdeasTaskProgress()` for bulk progress data |
+
+### Database Migration (V1.5)
+
+| File | Description |
+|------|-------------|
+| `20241221_add_link_relationship_type.sql` | Adds `relationship_type` column to links table |
+
+**⚠️ PENDING:** Run migration in Supabase SQL editor:
+```sql
+ALTER TABLE links ADD COLUMN IF NOT EXISTS relationship_type VARCHAR(50) DEFAULT NULL;
+```
+
+### Modified Components (V1.5)
+
+| Component | Changes |
+|-----------|---------|
+| `LinksSection.tsx` | Added relationship dropdown, sticky search, "relationship [taskname]" display |
+| `BacklinksSection.tsx` | Shows inverse relationship labels |
+| `IdeasTableRow.tsx` | Added progress column with bar and count |
+| `IdeasTable.tsx` | Added "Progress" to COLUMN_LABELS |
+| `ideas/page.tsx` | Loads progress data, added progress column config |
+
+### New API Functions (V1.5)
+
+| Function | Location | Description |
+|----------|----------|-------------|
+| `getIdeaTaskProgress` | `src/lib/api/ideas.ts` | Get progress for single idea |
+| `getAllIdeasTaskProgress` | `src/lib/api/ideas.ts` | Get progress for all ideas (bulk) |
+
+### Types Added (V1.5)
+
+| Type | Location | Description |
+|------|----------|-------------|
+| `LinkRelationshipType` | `src/types/database.ts` | Union type for relationship types |
+| `RELATIONSHIP_TYPE_PAIRS` | `src/types/database.ts` | Maps relationships to inverses |
+| `RELATIONSHIP_TYPE_LABELS` | `src/types/database.ts` | Human-readable labels |
+| `IdeaTaskProgress` | `src/lib/api/ideas.ts` | Progress info interface |
+
+---
+
+## V1.4 TaskDetailModal Redesign Status: COMPLETE
+
+V1.4 focused on modal redesign with UI polish, enhanced linking, and AI features.
+
+### V1.4 Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Labels Accessibility | **Done** | Solid coloured backgrounds with white text (WCAG AA) |
+| Button Hover States | **Done** | Background hover on sidebar buttons |
+| Close Button Visibility | **Done** | Increased opacity and size |
+| Modal Close Position | **Done** | Repositioned to top-right corner |
+| Remove Separators | **Done** | Cleaner look without section dividers |
+| Empty Sections | **Done** | Only show sections with data |
+| Label Picker Redesign | **Done** | Trello-style full-width bars with checkboxes |
+| Unified Linking | **Done** | Single LinksSection for ideas, tasks, URLs |
+| Backlinks Section | **Done** | Shows links pointing TO this entity |
+| AI Rename | **Done** | "AI Suggestions" → "AI Analysis" |
+| AI Manual Trigger | **Done** | Removed auto-trigger, manual only |
+| Activity in Sidebar | **Done** | Moved to bottom of right sidebar |
+| Simple New Card | **Done** | Title + Description only on creation |
+| AI Description | **Done** | "Create with AI" button for description generation |
+| Actions Section | **Done** | Trello-style: Move, Copy, Watch, Archive, Share |
 
 ---
 
@@ -177,11 +258,19 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 
 | Issue | Severity | Description |
 |-------|----------|-------------|
+| Migration Pending | **High** | V1.5 `relationship_type` column needs to be added to links table |
+| Add Link Fails | High | Adding links may fail if migration not run - fixed with conditional insert |
 | AI Suggestions Fail | Medium | "Failed to get AI suggestions" error in TaskDetailModal. Likely missing/invalid ANTHROPIC_API_KEY in Vercel. |
-| Slow Response Times | Medium | General sluggishness on page loads. Need to optimise Supabase queries and add loading states. |
 | Attachments Bucket | Low | Supabase Storage bucket `attachments` needs to be manually created in dashboard. |
 
-### Optimisation Opportunities (V1.4)
+### Immediate Action Required
+
+1. Run the V1.5 migration in Supabase SQL editor:
+   ```sql
+   ALTER TABLE links ADD COLUMN IF NOT EXISTS relationship_type VARCHAR(50) DEFAULT NULL;
+   ```
+
+### Optimisation Opportunities
 
 - Add database indexes for common queries
 - Implement query batching for related data (labels, checklists, etc.)
@@ -190,15 +279,23 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 
 ---
 
-## Next Steps (V1.4+)
+## Next Steps (V1.6+)
 
-### V1.4 — Power Features
+### V1.6 — Dynamic Delivery Filters (PLANNED)
+| Feature | Description |
+|---------|-------------|
+| Smart Filter Chips | Dynamic add/remove filters (like Notion/Linear) |
+| Multi-Criteria Filtering | Filter by linked idea, labels, due date, priority |
+| URL-Persisted Filters | Shareable filtered board URLs |
+| Auto-Link on Task Create | Creating task from idea also creates link record |
+
+### V1.7+ — Power Features
 | Feature | Description |
 |---------|-------------|
 | Time Tracking | Track time spent on tasks |
 | Custom Fields | User-defined fields per idea |
-| Dependencies | Blocked-by relationships |
 | PWA | Service worker, offline capture |
+| Bulk Edit | Edit multiple cards at once |
 
 ### V2.0+ — Future
 | Feature | Description |
@@ -213,6 +310,29 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2025-12-21 — V1.5 Task Relationships & Progress
+- Added `relationship_type` column migration for links table
+- Implemented relationship dropdown when linking tasks (blocks, is blocked by, etc.)
+- Added sticky search input at top of task/idea dropdown
+- Swapped display order to show "is blocked by [taskname]" format
+- Updated BacklinksSection to show inverse relationship labels
+- Added Progress column to Ideas table (toggleable, hidden by default)
+- Created `getIdeaTaskProgress` and `getAllIdeasTaskProgress` API functions
+- Fixed conditional insert in `createTaskLink` to avoid errors when column doesn't exist
+- Added troubleshooting section to DEVELOPMENT_GUIDE.md for cache issues
+
+### 2025-12-20 — V1.4 TaskDetailModal Redesign Complete
+- UI Polish: Labels accessibility, button hovers, close button visibility
+- Removed section separators for cleaner look
+- Redesigned label picker to Trello-style with full-width bars and checkboxes
+- Enhanced LinksSection with type selector (URL, Idea, Task)
+- Added BacklinksSection showing links pointing TO this entity
+- Renamed "AI Suggestions" to "AI Analysis", made trigger manual only
+- Moved Activity section to bottom of right sidebar
+- Added "Create with AI" for description generation
+- Added Actions section (Move, Copy, Watch, Archive, Share)
+- Simplified new card view to Title + Description only
 
 ### 2025-12-19 — V1.3 Bugfixes
 - Fixed: TaskCard click now opens TaskDetailModal (was missing handler in DeliveryBoard)
