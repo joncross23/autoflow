@@ -2,7 +2,7 @@
 
 /**
  * FilterBar Component
- * Smart filter chips for the Delivery Board
+ * Smart filter chips for the Task Board
  * V1.4: Dynamic filtering feature
  */
 

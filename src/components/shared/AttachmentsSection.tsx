@@ -31,6 +31,8 @@ interface AttachmentsSectionProps {
   className?: string;
   /** Callback when attachments change */
   onAttachmentsChange?: (count: number) => void;
+  /** Hide the section header (when wrapped in CollapsibleSection) */
+  hideHeader?: boolean;
 }
 
 export function AttachmentsSection({
@@ -38,6 +40,7 @@ export function AttachmentsSection({
   taskId,
   className,
   onAttachmentsChange,
+  hideHeader = false,
 }: AttachmentsSectionProps) {
   const [attachments, setAttachments] = useState<DbAttachment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -174,33 +177,37 @@ export function AttachmentsSection({
 
   return (
     <div className={cn("space-y-2", className)}>
-      {/* Section Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
-          <Paperclip className="w-4 h-4 text-zinc-500" />
-          Attachments
-          {attachments.length > 0 && (
-            <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
-              {attachments.length}
-            </span>
-          )}
+      {/* Section Header - hidden when wrapped in CollapsibleSection */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+            <Paperclip className="w-4 h-4 text-zinc-500" />
+            Attachments
+            {attachments.length > 0 && (
+              <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
+                {attachments.length}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1 disabled:opacity-50"
+          >
+            <Plus className="w-3 h-3" />
+            Add
+          </button>
         </div>
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isUploading}
-          className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1 disabled:opacity-50"
-        >
-          <Plus className="w-3 h-3" />
-          Add
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={(e) => handleUpload(e.target.files)}
-        />
-      </div>
+      )}
+
+      {/* Hidden file input - always present */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        className="hidden"
+        onChange={(e) => handleUpload(e.target.files)}
+      />
 
       {/* Error Message */}
       {error && (

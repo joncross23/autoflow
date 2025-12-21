@@ -12,12 +12,12 @@ import { createTask, updateTask, deleteTask } from "@/lib/api/tasks";
 import { createClient } from "@/lib/supabase/client";
 import type { DbColumn, DbTask, DbIdea, DbLabel } from "@/types/database";
 
-interface DeliveryBoardProps {
+interface TaskBoardProps {
   initialIdeaFilter?: string;
   initialTaskId?: string;
 }
 
-export function DeliveryBoard({ initialIdeaFilter, initialTaskId }: DeliveryBoardProps) {
+export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) {
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
@@ -144,7 +144,7 @@ export function DeliveryBoard({ initialIdeaFilter, initialTaskId }: DeliveryBoar
         }
       }
     } catch (err) {
-      console.error("Failed to load delivery data:", err);
+      console.error("Failed to load task board data:", err);
       setError(err instanceof Error ? err.message : "Failed to load data");
     } finally {
       setLoading(false);

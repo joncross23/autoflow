@@ -46,19 +46,19 @@ export function IdeaDetailModal({
   const [converting, setConverting] = useState(false);
 
   const handleAcceptIdea = async () => {
-    // If already accepted/doing, navigate to delivery board
+    // If already accepted/doing, navigate to task board
     if (idea.status === "accepted" || idea.status === "doing") {
-      router.push("/dashboard/delivery");
+      router.push("/dashboard/tasks");
       onClose();
       return;
     }
 
     setConverting(true);
     try {
-      // Update status to "accepted" to move to delivery board
+      // Update status to "accepted" to move to task board
       await updateIdeaStatus(idea.id, "accepted");
       onConvert?.();
-      router.push("/dashboard/delivery");
+      router.push("/dashboard/tasks");
       onClose();
     } catch (error) {
       console.error("Failed to accept idea:", error);
@@ -85,7 +85,7 @@ export function IdeaDetailModal({
             </span>
           </div>
           <div className="flex items-center gap-1 md:gap-2 shrink-0">
-            {/* Accept / View Delivery button */}
+            {/* Accept / View Tasks button */}
             {idea.status !== "parked" && idea.status !== "dropped" && idea.status !== "complete" && (
               <button
                 onClick={handleAcceptIdea}
@@ -98,7 +98,7 @@ export function IdeaDetailModal({
                 )}
                 title={
                   idea.status === "accepted" || idea.status === "doing"
-                    ? "View in Delivery Board"
+                    ? "View in Task Board"
                     : "Accept & Start"
                 }
               >

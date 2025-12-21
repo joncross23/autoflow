@@ -17,7 +17,7 @@ interface IdeasTableRowProps {
   idea: DbIdea;
   columns: ColumnConfig[];
   selected: boolean;
-  onSelect: (id: string, selected: boolean) => void;
+  onSelect: (id: string, selected: boolean, shiftKey?: boolean) => void;
   onClick: (idea: DbIdea) => void;
   aiScore?: number | null;
   labels?: DbLabel[];
@@ -48,7 +48,7 @@ function IdeasTableRowComponent({
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onSelect(idea.id, !selected);
+    onSelect(idea.id, !selected, e.shiftKey);
   };
 
   const handleRowClick = () => {

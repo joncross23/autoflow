@@ -58,6 +58,8 @@ interface LinksSectionProps {
   className?: string;
   /** Callback when links change */
   onLinksChange?: (count: number) => void;
+  /** Hide the section header (when wrapped in CollapsibleSection) */
+  hideHeader?: boolean;
 }
 
 // Helper to detect link type from URL
@@ -78,6 +80,7 @@ export function LinksSection({
   ideaId,
   taskId,
   className,
+  hideHeader = false,
   onLinksChange,
 }: LinksSectionProps) {
   const [links, setLinks] = useState<DbLink[]>([]);
@@ -303,28 +306,30 @@ export function LinksSection({
 
   return (
     <div className={cn("space-y-2", className)}>
-      {/* Section Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-          <Link2 className="w-4 h-4 text-foreground-muted" />
-          Links
-          {links.length > 0 && (
-            <span className="text-xs text-foreground-muted bg-bg-tertiary px-1.5 py-0.5 rounded">
-              {links.length}
-            </span>
-          )}
+      {/* Section Header - hidden when wrapped in CollapsibleSection */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Link2 className="w-4 h-4 text-foreground-muted" />
+            Links
+            {links.length > 0 && (
+              <span className="text-xs text-foreground-muted bg-bg-tertiary px-1.5 py-0.5 rounded">
+                {links.length}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              setShowAddForm(true);
+              setTimeout(() => inputRef.current?.focus(), 0);
+            }}
+            className="px-2.5 py-1 text-xs font-medium bg-primary text-white rounded hover:bg-primary/90 flex items-center gap-1 transition-colors"
+          >
+            <Plus className="w-3 h-3" />
+            Add
+          </button>
         </div>
-        <button
-          onClick={() => {
-            setShowAddForm(true);
-            setTimeout(() => inputRef.current?.focus(), 0);
-          }}
-          className="px-2.5 py-1 text-xs font-medium bg-primary text-white rounded hover:bg-primary/90 flex items-center gap-1 transition-colors"
-        >
-          <Plus className="w-3 h-3" />
-          Add
-        </button>
-      </div>
+      )}
 
       {/* Add Link Form */}
       {showAddForm && (

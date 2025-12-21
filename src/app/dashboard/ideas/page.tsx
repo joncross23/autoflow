@@ -10,10 +10,13 @@ import {
   bulkArchiveIdeas,
   bulkDeleteIdeas,
   bulkUpdateStatus,
+  bulkUpdateEffort,
+  bulkUpdateHorizon,
+  bulkAddLabel,
   getAllIdeasTaskProgress,
   type IdeaTaskProgress,
 } from "@/lib/api/ideas";
-import { getAllIdeaLabels } from "@/lib/api/labels";
+import { getAllIdeaLabels, getLabels } from "@/lib/api/labels";
 import { NoIdeasEmptyState } from "@/components/shared";
 import {
   IdeasTable,
@@ -80,6 +83,7 @@ export default function IdeasPage() {
   const [ideaLabels, setIdeaLabels] = useState<Record<string, DbLabel[]>>({});
   const [ideaProgress, setIdeaProgress] = useState<Record<string, IdeaTaskProgress>>({});
   const [ideaCounts, setIdeaCounts] = useState<Record<IdeaStatus, number> | null>(null);
+  const [availableLabels, setAvailableLabels] = useState<DbLabel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -125,17 +129,19 @@ export default function IdeasPage() {
         filterParams.search = filters.search || searchQuery;
       }
 
-      const [data, counts, labels, progress] = await Promise.all([
+      const [data, counts, labels, progress, allLabels] = await Promise.all([
         getIdeas(filterParams),
         getIdeaCounts(),
         getAllIdeaLabels(),
         getAllIdeasTaskProgress(),
+        getLabels(),
       ]);
 
       setIdeas(data);
       setIdeaCounts(counts);
       setIdeaLabels(labels);
       setIdeaProgress(progress);
+      setAvailableLabels(allLabels.filter((l) => l.name)); // Only show labels with names
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load ideas");
     } finally {
@@ -224,6 +230,30 @@ export default function IdeasPage() {
     loadIdeas();
   };
 
+  const handleBulkLabelChange = async (labelId: string, action: "add" | "remove") => {
+    const ids = Array.from(selectedIds);
+    if (action === "add") {
+      await bulkAddLabel(ids, labelId);
+    }
+    // Note: Remove not implemented yet - would need a bulkRemoveLabel function
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
+  const handleBulkEffortChange = async (effort: DbIdea["effort_estimate"]) => {
+    const ids = Array.from(selectedIds);
+    await bulkUpdateEffort(ids, effort);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
+  const handleBulkHorizonChange = async (horizon: DbIdea["horizon"]) => {
+    const ids = Array.from(selectedIds);
+    await bulkUpdateHorizon(ids, horizon);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
   // Handle loading a saved view
   const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[]) => {
     setFilters(viewFilters);
@@ -238,14 +268,47 @@ export default function IdeasPage() {
     setShowShareDialog(true);
   };
 
-  // Filter ideas by search query (client-side for instant feedback)
+  // Extract unique owners from ideas for filter dropdown
+  const availableOwners = Array.from(
+    new Set(ideas.map((idea) => idea.owner).filter(Boolean))
+  ) as string[];
+
+  // Filter ideas by search query and other filters (client-side for instant feedback)
   const filteredIdeas = ideas.filter((idea) => {
-    if (!searchQuery) return true;
-    const query = searchQuery.toLowerCase();
-    return (
-      idea.title.toLowerCase().includes(query) ||
-      idea.description?.toLowerCase().includes(query)
-    );
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch =
+        idea.title.toLowerCase().includes(query) ||
+        idea.description?.toLowerCase().includes(query);
+      if (!matchesSearch) return false;
+    }
+
+    // Label filter (OR logic - idea matches if it has ANY of the selected labels)
+    if (filters.labelIds.length > 0) {
+      const ideaLabelIds = (ideaLabels[idea.id] || []).map((l) => l.id);
+      const hasMatchingLabel = filters.labelIds.some((labelId) =>
+        ideaLabelIds.includes(labelId)
+      );
+      if (!hasMatchingLabel) return false;
+    }
+
+    // Owner filter
+    if (filters.owners.length > 0) {
+      if (!idea.owner || !filters.owners.includes(idea.owner)) return false;
+    }
+
+    // Effort filter
+    if (filters.efforts.length > 0) {
+      if (!idea.effort_estimate || !filters.efforts.includes(idea.effort_estimate)) return false;
+    }
+
+    // Horizon filter (already handled by API, but double-check client-side)
+    if (filters.horizons.length > 0) {
+      if (!filters.horizons.includes(idea.horizon)) return false;
+    }
+
+    return true;
   });
 
   return (
@@ -288,6 +351,8 @@ export default function IdeasPage() {
         filters={filters}
         onFiltersChange={setFilters}
         ideaCounts={ideaCounts || undefined}
+        availableLabels={availableLabels}
+        availableOwners={availableOwners}
       />
 
       {/* Content */}
@@ -336,7 +401,11 @@ export default function IdeasPage() {
         onArchive={handleBulkArchive}
         onDelete={handleBulkDelete}
         onStatusChange={handleBulkStatusChange}
+        onLabelChange={handleBulkLabelChange}
+        onEffortChange={handleBulkEffortChange}
+        onHorizonChange={handleBulkHorizonChange}
         onClearSelection={() => setSelectedIds(new Set())}
+        availableLabels={availableLabels}
       />
 
       {/* Idea Detail Slider */}

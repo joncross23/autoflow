@@ -19,11 +19,14 @@ import type { DbAiEvaluation } from "@/types/database";
 interface AiEvaluationPanelProps {
   ideaId: string;
   onEvaluationComplete?: () => void;
+  /** Hide the section header (when wrapped in CollapsibleSection) */
+  hideHeader?: boolean;
 }
 
 export function AiEvaluationPanel({
   ideaId,
   onEvaluationComplete,
+  hideHeader = false,
 }: AiEvaluationPanelProps) {
   const [evaluation, setEvaluation] = useState<DbAiEvaluation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -81,7 +84,7 @@ export function AiEvaluationPanel({
     return (
       <div className="text-center py-8">
         <Sparkles className="h-12 w-12 mx-auto mb-4 text-primary/50" />
-        <h3 className="font-semibold mb-2">AI Evaluation</h3>
+        {!hideHeader && <h3 className="font-semibold mb-2">AI Evaluation</h3>}
         <p className="text-sm text-muted-foreground mb-4">
           Get AI-powered insights on complexity, ROI, and implementation recommendations.
         </p>
@@ -121,25 +124,27 @@ export function AiEvaluationPanel({
 
   return (
     <div className="space-y-6">
-      {/* Header with re-evaluate button */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">AI Evaluation</h3>
+      {/* Header with re-evaluate button - hidden when wrapped in CollapsibleSection */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <h3 className="font-semibold">AI Evaluation</h3>
+          </div>
+          <button
+            onClick={runEvaluation}
+            disabled={evaluating}
+            className="btn btn-ghost text-xs px-2 py-1"
+            title="Re-evaluate"
+          >
+            {evaluating ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <RefreshCw className="h-3 w-3" />
+            )}
+          </button>
         </div>
-        <button
-          onClick={runEvaluation}
-          disabled={evaluating}
-          className="btn btn-ghost text-xs px-2 py-1"
-          title="Re-evaluate"
-        >
-          {evaluating ? (
-            <Loader2 className="h-3 w-3 animate-spin" />
-          ) : (
-            <RefreshCw className="h-3 w-3" />
-          )}
-        </button>
-      </div>
+      )}
 
       {error && (
         <div className="p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm flex items-center gap-2">

@@ -19,7 +19,7 @@ import { useIsMobile } from "@/hooks";
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
-  { href: "/dashboard/delivery", label: "Delivery", icon: Kanban },
+  { href: "/dashboard/tasks", label: "Tasks", icon: Kanban },
   { href: "/dashboard/matrix", label: "Matrix", icon: Grid3X3 },
   { href: "/dashboard/time-audit", label: "Time Audit", icon: Clock },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },

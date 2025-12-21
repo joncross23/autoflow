@@ -124,7 +124,7 @@ export function IdeaTasksSection({ ideaId, ideaTitle }: IdeaTasksSectionProps) {
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-medium text-muted-foreground">Tasks</h3>
         <Link
-          href={`/dashboard/delivery?idea=${ideaId}`}
+          href={`/dashboard/tasks?idea=${ideaId}`}
           className="flex items-center gap-1 text-xs text-primary hover:text-primary-hover transition-colors"
         >
           View Board

@@ -9,7 +9,19 @@ import { StatusBadge } from "./StatusBadge";
 import type { DbIdea, DbLabel, ColumnConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 import type { IdeaTaskProgress } from "@/lib/api/ideas";
 
-export type SortField = "title" | "status" | "score" | "updated_at" | "created_at";
+export type SortField =
+  | "title"
+  | "status"
+  | "score"
+  | "updated_at"
+  | "created_at"
+  | "horizon"
+  | "rice_score"
+  | "rice_reach"
+  | "rice_impact"
+  | "rice_confidence"
+  | "rice_effort"
+  | "effort_estimate";
 export type SortOrder = "asc" | "desc";
 
 interface IdeasTableProps {
@@ -72,6 +84,8 @@ export function IdeasTable({
   const tableRef = useRef<HTMLTableElement>(null);
   const resizeStartX = useRef(0);
   const resizeStartWidth = useRef(0);
+  const lastSelectedId = useRef<string | null>(null);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
   const visibleColumns = columns
     .filter((col) => col.visible)
@@ -89,14 +103,52 @@ export function IdeasTable({
     }
   };
 
-  const handleSelectOne = (id: string, selected: boolean) => {
+  const handleSelectOne = (id: string, selected: boolean, shiftKey?: boolean) => {
     const newSelection = new Set(selectedIds);
-    if (selected) {
+
+    // Shift-click range selection
+    if (shiftKey && lastSelectedId.current && selected) {
+      const lastIndex = ideas.findIndex((i) => i.id === lastSelectedId.current);
+      const currentIndex = ideas.findIndex((i) => i.id === id);
+
+      if (lastIndex !== -1 && currentIndex !== -1) {
+        const start = Math.min(lastIndex, currentIndex);
+        const end = Math.max(lastIndex, currentIndex);
+
+        for (let i = start; i <= end; i++) {
+          newSelection.add(ideas[i].id);
+        }
+      }
+    } else if (selected) {
       newSelection.add(id);
     } else {
       newSelection.delete(id);
     }
+
+    // Track last selected for shift-click
+    if (selected) {
+      lastSelectedId.current = id;
+    }
+
     onSelectionChange(newSelection);
+  };
+
+  // Mobile long-press to start selection mode
+  const handleMobileLongPress = (id: string) => {
+    handleSelectOne(id, true);
+  };
+
+  const handleMobileTouchStart = (id: string) => {
+    longPressTimer.current = setTimeout(() => {
+      handleMobileLongPress(id);
+    }, 500);
+  };
+
+  const handleMobileTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
   };
 
   // Handle column sorting
@@ -213,14 +265,37 @@ export function IdeasTable({
         ) : (
           ideas.map((idea) => {
             const labels = ideaLabels[idea.id] || [];
+            const isSelected = selectedIds.has(idea.id);
             return (
-              <button
+              <div
                 key={idea.id}
-                onClick={() => onIdeaClick(idea)}
-                className="w-full text-left p-4 bg-bg-secondary rounded-lg border border-border hover:border-primary/50 hover:bg-bg-hover transition-colors"
+                className={cn(
+                  "w-full text-left p-4 bg-bg-secondary rounded-lg border transition-colors",
+                  isSelected
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50 hover:bg-bg-hover"
+                )}
+                onTouchStart={() => handleMobileTouchStart(idea.id)}
+                onTouchEnd={handleMobileTouchEnd}
+                onTouchCancel={handleMobileTouchEnd}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
+                <div className="flex items-start gap-3">
+                  {/* Checkbox for selection */}
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleSelectOne(idea.id, e.target.checked);
+                    }}
+                    className="h-4 w-4 mt-0.5 rounded border-border bg-bg-secondary text-primary focus:ring-primary focus:ring-offset-0 shrink-0"
+                  />
+
+                  {/* Card content - clickable */}
+                  <button
+                    onClick={() => onIdeaClick(idea)}
+                    className="flex-1 min-w-0 text-left"
+                  >
                     <h3 className="font-medium text-foreground truncate mb-1">
                       {idea.title}
                     </h3>
@@ -252,10 +327,11 @@ export function IdeasTable({
                     <p className="text-xs text-muted-foreground mt-1.5">
                       Updated {formatRelativeTime(idea.updated_at)}
                     </p>
-                  </div>
+                  </button>
+
                   <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                 </div>
-              </button>
+              </div>
             );
           })
         )}
@@ -332,9 +408,20 @@ export function IdeasTable({
 
               {/* Column headers */}
               {visibleColumns.map((col) => {
-                const isSortable = ["title", "status", "score", "updated_at", "created_at"].includes(
-                  col.id
-                );
+                const isSortable = [
+                  "title",
+                  "status",
+                  "score",
+                  "updated_at",
+                  "created_at",
+                  "horizon",
+                  "rice_score",
+                  "rice_reach",
+                  "rice_impact",
+                  "rice_confidence",
+                  "rice_effort",
+                  "effort_estimate",
+                ].includes(col.id);
 
                 return (
                   <th

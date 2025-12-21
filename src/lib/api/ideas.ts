@@ -20,7 +20,18 @@ export interface IdeaFilters {
   maxRiceScore?: number;
   hasRiceScore?: boolean;  // Filter to only show scored/unscored ideas
   // Sorting
-  sortBy?: "created_at" | "updated_at" | "title" | "status" | "rice_score";
+  sortBy?:
+    | "created_at"
+    | "updated_at"
+    | "title"
+    | "status"
+    | "rice_score"
+    | "horizon"
+    | "rice_reach"
+    | "rice_impact"
+    | "rice_confidence"
+    | "rice_effort"
+    | "effort_estimate";
   sortOrder?: "asc" | "desc";
   limit?: number;
   offset?: number;
@@ -167,7 +178,7 @@ export async function getIdeaCounts(): Promise<Record<IdeaStatus, number>> {
 }
 
 /**
- * Get ideas for delivery board (accepted or doing status)
+ * Get ideas for task board (accepted or doing status)
  */
 export async function getDeliveryIdeas(): Promise<DbIdea[]> {
   return getIdeas({
@@ -392,6 +403,59 @@ export async function bulkDeleteIdeas(ids: string[]): Promise<void> {
     .from("ideas")
     .delete()
     .in("id", ids);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Update effort estimate for multiple ideas
+ */
+export async function bulkUpdateEffort(ids: string[], effort: DbIdea["effort_estimate"]): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("ideas")
+    .update({ effort_estimate: effort, updated_at: new Date().toISOString() })
+    .in("id", ids);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Update planning horizon for multiple ideas
+ */
+export async function bulkUpdateHorizon(ids: string[], horizon: DbIdea["horizon"]): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("ideas")
+    .update({ horizon: horizon, updated_at: new Date().toISOString() })
+    .in("id", ids);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Add a label to multiple ideas
+ */
+export async function bulkAddLabel(ideaIds: string[], labelId: string): Promise<void> {
+  const supabase = createClient();
+
+  // Create idea_labels entries for each idea
+  const insertData = ideaIds.map((ideaId) => ({
+    idea_id: ideaId,
+    label_id: labelId,
+  }));
+
+  const { error } = await supabase
+    .from("idea_labels")
+    .upsert(insertData, { onConflict: "idea_id,label_id" });
 
   if (error) {
     throw new Error(error.message);

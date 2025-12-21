@@ -14,7 +14,7 @@ const SHORTCUTS: Shortcut[] = [
   // Navigation
   { keys: ["g", "h"], description: "Go to Dashboard", category: "Navigation" },
   { keys: ["g", "i"], description: "Go to Ideas", category: "Navigation" },
-  { keys: ["g", "d"], description: "Go to Delivery Board", category: "Navigation" },
+  { keys: ["g", "d"], description: "Go to Task Board", category: "Navigation" },
   { keys: ["g", "m"], description: "Go to Matrix", category: "Navigation" },
   { keys: ["g", "t"], description: "Go to Time Audit", category: "Navigation" },
   { keys: ["g", "s"], description: "Go to Settings", category: "Navigation" },

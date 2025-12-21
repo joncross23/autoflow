@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Filter, X, ChevronDown } from "lucide-react";
+import { Filter, X, ChevronDown, Tag, User, Gauge } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
-import type { IdeaStatus, PlanningHorizon } from "@/types/database";
+import type { IdeaStatus, PlanningHorizon, EffortEstimate, DbLabel } from "@/types/database";
 
 export interface IdeaFilters {
   statuses: IdeaStatus[];
   horizons: PlanningHorizon[];
+  labelIds: string[];
+  owners: string[];
+  efforts: EffortEstimate[];
   archived: boolean;
   dateRange: "all" | "today" | "week" | "month" | "quarter";
   search: string;
@@ -18,6 +21,8 @@ interface FilterPanelProps {
   filters: IdeaFilters;
   onFiltersChange: (filters: IdeaFilters) => void;
   ideaCounts?: Record<IdeaStatus, number>;
+  availableLabels?: DbLabel[];
+  availableOwners?: string[];
 }
 
 const ALL_STATUSES: IdeaStatus[] = [
@@ -37,9 +42,20 @@ const ALL_HORIZONS: { value: PlanningHorizon; label: string; color: string }[] =
   { value: null, label: "Unplanned", color: "bg-bg-tertiary text-muted-foreground" },
 ];
 
+const ALL_EFFORTS: { value: EffortEstimate; label: string }[] = [
+  { value: "trivial", label: "Trivial" },
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+  { value: "xlarge", label: "X-Large" },
+];
+
 export const DEFAULT_FILTERS: IdeaFilters = {
   statuses: [],
   horizons: [],
+  labelIds: [],
+  owners: [],
+  efforts: [],
   archived: false,
   dateRange: "all",
   search: "",
@@ -57,12 +73,17 @@ export function FilterPanel({
   filters,
   onFiltersChange,
   ideaCounts,
+  availableLabels = [],
+  availableOwners = [],
 }: FilterPanelProps) {
   const [expanded, setExpanded] = useState(false);
 
   const activeFilterCount =
     filters.statuses.length +
     filters.horizons.length +
+    filters.labelIds.length +
+    filters.owners.length +
+    filters.efforts.length +
     (filters.archived ? 1 : 0) +
     (filters.dateRange !== "all" ? 1 : 0);
 
@@ -80,10 +101,34 @@ export function FilterPanel({
     onFiltersChange({ ...filters, horizons: newHorizons });
   };
 
+  const toggleLabel = (labelId: string) => {
+    const newLabelIds = filters.labelIds.includes(labelId)
+      ? filters.labelIds.filter((id) => id !== labelId)
+      : [...filters.labelIds, labelId];
+    onFiltersChange({ ...filters, labelIds: newLabelIds });
+  };
+
+  const toggleOwner = (owner: string) => {
+    const newOwners = filters.owners.includes(owner)
+      ? filters.owners.filter((o) => o !== owner)
+      : [...filters.owners, owner];
+    onFiltersChange({ ...filters, owners: newOwners });
+  };
+
+  const toggleEffort = (effort: EffortEstimate) => {
+    const newEfforts = filters.efforts.includes(effort)
+      ? filters.efforts.filter((e) => e !== effort)
+      : [...filters.efforts, effort];
+    onFiltersChange({ ...filters, efforts: newEfforts });
+  };
+
   const clearFilters = () => {
     onFiltersChange({
       statuses: [],
       horizons: [],
+      labelIds: [],
+      owners: [],
+      efforts: [],
       archived: false,
       dateRange: "all",
       search: "",
@@ -156,7 +201,7 @@ export function FilterPanel({
       {/* Expanded filter panel */}
       {expanded && (
         <div className="mt-3 p-4 rounded-lg border border-border bg-bg-secondary">
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Status filter */}
             <div>
               <h4 className="text-sm font-medium mb-3">Status</h4>
@@ -201,6 +246,90 @@ export function FilterPanel({
                     <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", horizon.color)}>
                       {horizon.label}
                     </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Labels filter */}
+            {availableLabels.length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                  <Tag className="h-3.5 w-3.5" />
+                  Labels
+                </h4>
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                  {availableLabels.map((label) => (
+                    <button
+                      key={label.id}
+                      onClick={() => toggleLabel(label.id)}
+                      className={cn(
+                        "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
+                        filters.labelIds.includes(label.id)
+                          ? "border-primary bg-primary/10"
+                          : "border-border-subtle hover:bg-bg-hover"
+                      )}
+                    >
+                      <span
+                        className="px-2 py-0.5 rounded-full text-xs font-medium"
+                        style={{
+                          backgroundColor: `${label.color}20`,
+                          color: label.color,
+                        }}
+                      >
+                        {label.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Owner filter */}
+            {availableOwners.length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                  <User className="h-3.5 w-3.5" />
+                  Owner
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {availableOwners.map((owner) => (
+                    <button
+                      key={owner}
+                      onClick={() => toggleOwner(owner)}
+                      className={cn(
+                        "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
+                        filters.owners.includes(owner)
+                          ? "border-primary bg-primary/10"
+                          : "border-border-subtle hover:bg-bg-hover"
+                      )}
+                    >
+                      {owner}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Effort filter */}
+            <div>
+              <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                <Gauge className="h-3.5 w-3.5" />
+                Effort Estimate
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {ALL_EFFORTS.map((effort) => (
+                  <button
+                    key={effort.value}
+                    onClick={() => toggleEffort(effort.value)}
+                    className={cn(
+                      "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
+                      filters.efforts.includes(effort.value)
+                        ? "border-primary bg-primary/10"
+                        : "border-border-subtle hover:bg-bg-hover"
+                    )}
+                  >
+                    {effort.label}
                   </button>
                 ))}
               </div>

@@ -105,11 +105,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     if (result.type === "idea") {
       router.push(`/dashboard/ideas?selected=${result.id}`);
     } else {
-      // For tasks, navigate to the idea if it has one, otherwise to delivery
+      // For tasks, navigate to the idea if it has one, otherwise to task board
       if (result.ideaId) {
         router.push(`/dashboard/ideas?selected=${result.ideaId}`);
       } else {
-        router.push("/dashboard/delivery");
+        router.push("/dashboard/tasks");
       }
     }
     onOpenChange(false);

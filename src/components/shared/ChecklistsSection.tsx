@@ -37,6 +37,8 @@ interface ChecklistsSectionProps {
   className?: string;
   /** Callback when progress changes */
   onProgressChange?: (total: number, completed: number) => void;
+  /** Hide the section header (when wrapped in CollapsibleSection) */
+  hideHeader?: boolean;
 }
 
 export function ChecklistsSection({
@@ -44,6 +46,7 @@ export function ChecklistsSection({
   taskId,
   className,
   onProgressChange,
+  hideHeader = false,
 }: ChecklistsSectionProps) {
   const [checklists, setChecklists] = useState<ChecklistsData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -154,28 +157,44 @@ export function ChecklistsSection({
 
   return (
     <div className={cn("space-y-3", className)}>
-      {/* Section Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
-          <CheckSquare className="w-4 h-4 text-zinc-500" />
-          Checklists
-          {totalItems > 0 && (
-            <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
-              {completedItems}/{totalItems}
-            </span>
-          )}
+      {/* Section Header - hidden when wrapped in CollapsibleSection */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+            <CheckSquare className="w-4 h-4 text-zinc-500" />
+            Checklists
+            {totalItems > 0 && (
+              <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
+                {completedItems}/{totalItems}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              setShowAddChecklist(true);
+              setTimeout(() => inputRef.current?.focus(), 0);
+            }}
+            className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
+          >
+            <Plus className="w-3 h-3" />
+            Add
+          </button>
         </div>
+      )}
+
+      {/* Add button when header is hidden */}
+      {hideHeader && !showAddChecklist && (
         <button
           onClick={() => {
             setShowAddChecklist(true);
             setTimeout(() => inputRef.current?.focus(), 0);
           }}
-          className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
+          className="text-xs text-muted-foreground hover:text-text flex items-center gap-1"
         >
           <Plus className="w-3 h-3" />
-          Add
+          Add checklist
         </button>
-      </div>
+      )}
 
       {/* Overall Progress Bar */}
       {totalItems > 0 && (

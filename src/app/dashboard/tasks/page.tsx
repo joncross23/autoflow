@@ -3,16 +3,16 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { DeliveryBoard } from "@/components/delivery";
+import { TaskBoard } from "@/components/tasks";
 
-function DeliveryContent() {
+function TasksContent() {
   const searchParams = useSearchParams();
   const ideaFilter = searchParams.get("idea");
   const taskId = searchParams.get("task");
 
   return (
     <div className="h-[calc(100vh-4rem)] pb-16 md:pb-0">
-      <DeliveryBoard
+      <TaskBoard
         initialIdeaFilter={ideaFilter || undefined}
         initialTaskId={taskId || undefined}
       />
@@ -20,7 +20,7 @@ function DeliveryContent() {
   );
 }
 
-export default function DeliveryPage() {
+export default function TasksPage() {
   return (
     <Suspense
       fallback={
@@ -29,7 +29,7 @@ export default function DeliveryPage() {
         </div>
       }
     >
-      <DeliveryContent />
+      <TasksContent />
     </Suspense>
   );
 }

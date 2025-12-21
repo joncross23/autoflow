@@ -97,7 +97,7 @@ export default function DashboardPage() {
           value={loading ? "-" : inProgressCount.toString()}
           icon={<ListTodo className="h-5 w-5" />}
           color="#8B5CF6"
-          href="/dashboard/delivery"
+          href="/dashboard/tasks"
         />
         <DashboardStatCard
           label="Done"
@@ -149,10 +149,10 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-[15px] font-semibold">Ideas in Progress</h3>
               <Link
-                href="/dashboard/delivery"
+                href="/dashboard/tasks"
                 className="text-[13px] font-medium text-primary hover:text-primary-hover flex items-center gap-1"
               >
-                Delivery Board <ArrowRight className="h-3.5 w-3.5" />
+                Task Board <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
             {loading ? (
@@ -237,7 +237,7 @@ function PipelineWidget({
     { key: "new", label: "New", color: "#3B82F6", href: "/dashboard/ideas?status=new" },
     { key: "evaluating", label: "Evaluating", color: "#F59E0B", href: "/dashboard/ideas?status=evaluating" },
     { key: "accepted", label: "Accepted", color: "#8B5CF6", href: "/dashboard/ideas?status=accepted" },
-    { key: "doing", label: "In Progress", color: "#10B981", href: "/dashboard/delivery" },
+    { key: "doing", label: "In Progress", color: "#10B981", href: "/dashboard/tasks" },
   ] as const;
 
   const total = ideaCounts

@@ -1,6 +1,6 @@
 /**
  * Columns API
- * V1.0: Global columns (user-scoped) for delivery board
+ * V1.0: Global columns (user-scoped) for task board
  * Legacy: Project-scoped columns kept for migration compatibility
  */
 
@@ -139,7 +139,7 @@ export async function reorderGlobalColumns(columnIds: string[]): Promise<void> {
 }
 
 /**
- * Get all tasks grouped by column (global delivery board)
+ * Get all tasks grouped by column (global task board)
  */
 export async function getDeliveryBoardData(ideaIds?: string[]): Promise<{
   columns: DbColumn[];

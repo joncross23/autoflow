@@ -74,7 +74,7 @@ export function BacklinksSection({
     if (backlink.sourceType === "idea") {
       router.push(`/dashboard/ideas?selected=${backlink.sourceId}`);
     } else {
-      router.push(`/dashboard/delivery?task=${backlink.sourceId}`);
+      router.push(`/dashboard/tasks?task=${backlink.sourceId}`);
     }
   }
 

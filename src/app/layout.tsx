@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { ToastProvider } from "@/hooks/useToast";
 
 // Inter - fallback font
 const inter = Inter({
@@ -83,7 +84,9 @@ export default function RootLayout({
           defaultSystemTheme="autoflow"
           storageKey="autoflow-theme"
         >
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
