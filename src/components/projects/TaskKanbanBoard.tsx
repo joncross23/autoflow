@@ -25,7 +25,7 @@ interface TaskKanbanBoardProps {
   taskLabels?: Record<string, DbLabel[]>;
   checklistProgress?: Record<string, { completed: number; total: number }>;
   onTasksChange: (tasks: DbTask[]) => void;
-  onAddTask?: (columnId: string, title: string) => Promise<void>;
+  onAddTask?: (columnId: string, title: string) => Promise<DbTask | void>;
   onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;

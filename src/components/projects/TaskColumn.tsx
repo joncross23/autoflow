@@ -12,7 +12,7 @@ interface TaskColumnProps {
   tasks: DbTask[];
   taskLabels?: Record<string, DbLabel[]>;
   checklistProgress?: Record<string, { completed: number; total: number }>;
-  onAddTask?: (columnId: string, title: string) => Promise<void>;
+  onAddTask?: (columnId: string, title: string) => Promise<DbTask | void>;
   onTaskClick?: (task: DbTask) => void;
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
@@ -82,27 +82,35 @@ export function TaskColumn({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isAdding, cancelAdding]);
 
-  const handleSaveCard = useCallback(async () => {
+  const handleSaveCard = useCallback(async (openAfterSave: boolean = false) => {
     const title = newCardTitle.trim();
     if (!title || !onAddTask || isSaving) return;
 
     setIsSaving(true);
     try {
-      await onAddTask(column.id, title);
+      const newTask = await onAddTask(column.id, title);
       setNewCardTitle("");
-      // Keep input focused for sequential adding
-      inputRef.current?.focus();
+
+      if (openAfterSave && newTask && onTaskClick) {
+        // CMD+Enter: Add and open for editing
+        cancelAdding();
+        onTaskClick(newTask);
+      } else {
+        // Enter: Quick add and keep input focused
+        inputRef.current?.focus();
+      }
     } catch (error) {
       console.error("Failed to add card:", error);
     } finally {
       setIsSaving(false);
     }
-  }, [newCardTitle, onAddTask, column.id, isSaving]);
+  }, [newCardTitle, onAddTask, column.id, isSaving, onTaskClick, cancelAdding]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter") {
       e.preventDefault();
-      handleSaveCard();
+      const openAfterSave = e.metaKey || e.ctrlKey;
+      handleSaveCard(openAfterSave);
     } else if (e.key === "Escape") {
       cancelAdding();
     }
@@ -209,8 +217,10 @@ export function TaskColumn({
                 disabled:opacity-50
               "
             />
-            <div className="flex items-center gap-2 text-xs text-foreground-muted">
-              <span>Press <kbd className="px-1.5 py-0.5 bg-bg-tertiary rounded">Enter</kbd> to add</span>
+            <div className="flex items-center gap-2 text-xs text-foreground-muted flex-wrap">
+              <span><kbd className="px-1.5 py-0.5 bg-bg-tertiary rounded">Enter</kbd> to add</span>
+              <span>·</span>
+              <span><kbd className="px-1.5 py-0.5 bg-bg-tertiary rounded">⌘ Enter</kbd> to open</span>
               <span>·</span>
               <button
                 onClick={cancelAdding}

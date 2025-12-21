@@ -208,9 +208,8 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
       idea_id: selectedIdeaId,  // Auto-link to filtered idea
     });
     setTasks((prev) => [...prev, newTask]);
-    // Open modal for the new task
-    setSelectedTask(newTask);
-    setIsNewTask(true);
+    // Return the task so CMD+Enter can open it
+    return newTask;
   };
 
   // Get parent idea title for task modal

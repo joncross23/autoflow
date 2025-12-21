@@ -338,32 +338,17 @@ export function TaskDetailModal({
                 />
               </div>
 
-              {/* Status Row - Only show for existing cards */}
-              {!isNew && (
+              {/* Due Date Row - Only show for existing cards with due date */}
+              {!isNew && task.due_date && (
                 <div className="flex items-center gap-3 mb-6">
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${
-                    task.completed
-                      ? "bg-success/20 text-success"
-                      : "bg-cyan-500/20 text-cyan-400"
+                    new Date(task.due_date) < new Date() && !task.completed
+                      ? "bg-error/20 text-error"
+                      : "bg-bg-tertiary text-foreground-muted"
                   }`}>
-                    {task.completed ? (
-                      <CheckCircle2 className="h-3 w-3" />
-                    ) : (
-                      <Circle className="h-3 w-3" />
-                    )}
-                    {task.completed ? "Complete" : "In Progress"}
+                    <Calendar className="h-3 w-3" />
+                    {new Date(task.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                   </span>
-
-                  {task.due_date && (
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${
-                      new Date(task.due_date) < new Date() && !task.completed
-                        ? "bg-error/20 text-error"
-                        : "bg-bg-tertiary text-foreground-muted"
-                    }`}>
-                      <Calendar className="h-3 w-3" />
-                      {new Date(task.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
-                    </span>
-                  )}
                 </div>
               )}
 
