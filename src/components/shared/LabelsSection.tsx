@@ -111,6 +111,12 @@ export function LabelsSection({
 
   // Toggle label assignment (add if not assigned, remove if assigned)
   async function handleToggleLabel(label: DbLabel) {
+    // Guard: require either ideaId or taskId to persist
+    if (!ideaId && !taskId) {
+      console.error("LabelsSection: No ideaId or taskId provided - cannot persist label toggle");
+      return;
+    }
+
     const assigned = isLabelAssigned(label);
 
     // Optimistic update - update UI immediately
@@ -152,6 +158,12 @@ export function LabelsSection({
   }
 
   async function handleRemoveLabel(label: DbLabel) {
+    // Guard: require either ideaId or taskId to persist
+    if (!ideaId && !taskId) {
+      console.error("LabelsSection: No ideaId or taskId provided - cannot persist label removal");
+      return;
+    }
+
     try {
       if (ideaId) {
         await removeIdeaLabel(ideaId, label.id);
