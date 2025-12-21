@@ -20,6 +20,12 @@ import {
   MoreHorizontal,
   ArrowLeft,
   FileText,
+  // Actions icons
+  ArrowRightLeft,
+  Copy,
+  Eye,
+  Archive,
+  Share2,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { updateTask } from "@/lib/api/tasks";
@@ -535,6 +541,59 @@ export function TaskDetailModal({
                   </div>
                 </div>
 
+                {/* Actions */}
+                {!isNew && (
+                  <div>
+                    <div className="text-xs font-semibold text-foreground-muted uppercase mb-2">
+                      Actions
+                    </div>
+                    <div className="space-y-1">
+                      <SidebarButton
+                        icon={ArrowRightLeft}
+                        label="Move"
+                        onClick={() => {
+                          // TODO: Open move modal
+                          alert("Move functionality coming soon");
+                        }}
+                      />
+                      <SidebarButton
+                        icon={Copy}
+                        label="Copy"
+                        onClick={() => {
+                          // TODO: Copy card
+                          alert("Copy functionality coming soon");
+                        }}
+                      />
+                      <SidebarButton
+                        icon={Eye}
+                        label="Watch"
+                        onClick={() => {
+                          // TODO: Toggle watch
+                          alert("Watch functionality coming soon");
+                        }}
+                      />
+                      <SidebarButton
+                        icon={Archive}
+                        label="Archive"
+                        onClick={() => {
+                          // TODO: Archive card
+                          alert("Archive functionality coming soon");
+                        }}
+                      />
+                      <SidebarButton
+                        icon={Share2}
+                        label="Share"
+                        onClick={() => {
+                          // Copy link to clipboard
+                          const url = `${window.location.origin}/dashboard/projects?task=${task.id}`;
+                          navigator.clipboard.writeText(url);
+                          alert("Link copied to clipboard!");
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Delete */}
                 {onDelete && (
                   <div className="space-y-1">
@@ -646,6 +705,49 @@ export function TaskDetailModal({
                 >
                   <Sparkles className="h-4 w-4" /> Analyse
                 </button>
+                {!isNew && (
+                  <>
+                    <div className="my-1 border-t border-border" />
+                    <div className="px-3 py-1 text-xs font-semibold text-foreground-muted uppercase">
+                      Actions
+                    </div>
+                    <button
+                      onClick={() => { setShowMobileActions(false); alert("Move functionality coming soon"); }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                    >
+                      <ArrowRightLeft className="h-4 w-4" /> Move
+                    </button>
+                    <button
+                      onClick={() => { setShowMobileActions(false); alert("Copy functionality coming soon"); }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                    >
+                      <Copy className="h-4 w-4" /> Copy
+                    </button>
+                    <button
+                      onClick={() => { setShowMobileActions(false); alert("Watch functionality coming soon"); }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                    >
+                      <Eye className="h-4 w-4" /> Watch
+                    </button>
+                    <button
+                      onClick={() => { setShowMobileActions(false); alert("Archive functionality coming soon"); }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                    >
+                      <Archive className="h-4 w-4" /> Archive
+                    </button>
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}/dashboard/projects?task=${task.id}`;
+                        navigator.clipboard.writeText(url);
+                        setShowMobileActions(false);
+                        alert("Link copied to clipboard!");
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                    >
+                      <Share2 className="h-4 w-4" /> Share
+                    </button>
+                  </>
+                )}
                 {onDelete && (
                   <>
                     <div className="my-1 border-t border-border" />
