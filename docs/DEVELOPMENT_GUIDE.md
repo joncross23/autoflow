@@ -323,6 +323,36 @@ Required:
 
 ## Troubleshooting
 
+### Dev Server Cache Issues (404 Errors)
+
+After significant changes (new components, renamed files, major refactors), the `.next` cache can become stale, causing 404 errors on static chunks.
+
+**Symptoms:**
+- Browser shows blank page or fails to load
+- Console shows 404 errors for `/_next/static/chunks/*`
+- Page worked before the change
+
+**Fix:**
+
+```bash
+# 1. Stop the dev server
+pkill -f "next dev"
+
+# 2. Clear the cache
+rm -rf .next
+
+# 3. Restart
+npm run dev
+```
+
+**When to check:**
+- After creating/deleting/renaming files
+- After modifying imports across multiple files
+- After changing `tailwind.config.ts` or `next.config.js`
+- After major feature branches are merged
+
+**Best practice:** Always verify `http://localhost:3000` loads correctly after completing a set of changes before committing.
+
 ### Build Fails
 
 ```bash
