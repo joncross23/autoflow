@@ -299,7 +299,7 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 
 ## Session Log
 
-### 2025-12-21 — V1.5 Task Relationships & Progress
+### 2025-12-21 — V1.5 Task Relationships & Progress + Delivery Search
 - Added `relationship_type` column migration for links table
 - Implemented relationship dropdown when linking tasks (blocks, is blocked by, etc.)
 - Added sticky search input at top of task/idea dropdown
@@ -309,7 +309,10 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 - Created `getIdeaTaskProgress` and `getAllIdeasTaskProgress` API functions
 - Fixed conditional insert in `createTaskLink` to avoid errors when column doesn't exist
 - Added RLS policies for links table (SELECT, INSERT, UPDATE, DELETE)
-- Pushed to staging branch
+- **Added search bar to Delivery Board** — filters cards by title, description, linked idea, and labels
+- **Fixed backlinks navigation** — delivery page now handles `?task=` parameter, auto-opens task modal
+- Compact single-row layout for search + filter chips
+- Deployed to staging and production
 
 ### 2025-12-20 — V1.4 TaskDetailModal Redesign Complete
 - UI Polish: Labels accessibility, button hovers, close button visibility
