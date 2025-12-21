@@ -39,6 +39,7 @@ import {
 import { getIdeas } from "@/lib/api/ideas";
 import { getAllTasks } from "@/lib/api/tasks";
 import type { DbLink, DbIdea, DbTask } from "@/types/database";
+import { BacklinksSection } from "./BacklinksSection";
 
 // Link type for the enhanced linking system
 type LinkType = "url" | "idea" | "task";
@@ -550,6 +551,9 @@ export function LinksSection({
           ))}
         </div>
       )}
+
+      {/* Backlinks Section - shows links that point TO this idea/task */}
+      <BacklinksSection ideaId={ideaId} taskId={taskId} className="mt-4 pt-4 border-t border-border" />
     </div>
   );
 }

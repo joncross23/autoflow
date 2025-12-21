@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
-import Link from "next/link";
-import { Loader2, ChevronDown, ExternalLink, X, Search, Lightbulb } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState, useEffect, useMemo } from "react";
+import { Loader2 } from "lucide-react";
 import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
 import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
+import { FilterBar, type FilterChip } from "./FilterBar";
 import { getGlobalColumns } from "@/lib/api/columns";
 import { getIdeas } from "@/lib/api/ideas";
+import { getLabels } from "@/lib/api/labels";
 import { createTask, updateTask, deleteTask } from "@/lib/api/tasks";
 import { createClient } from "@/lib/supabase/client";
 import type { DbColumn, DbTask, DbIdea, DbLabel } from "@/types/database";
@@ -20,6 +20,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
+  const [allLabels, setAllLabels] = useState<DbLabel[]>([]);
   const [taskLabels, setTaskLabels] = useState<Record<string, DbLabel[]>>({});
   const [checklistProgress, setChecklistProgress] = useState<
     Record<string, { completed: number; total: number }>
@@ -27,29 +28,23 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter state - single idea selection for "project board" feel
-  const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(
-    initialIdeaFilter || null
-  );
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  // Dynamic filter state - smart chips for multi-criteria filtering
+  const [filters, setFilters] = useState<FilterChip[]>(() => {
+    // Initialise with idea filter if provided
+    if (initialIdeaFilter) {
+      return [{
+        id: `idea-${initialIdeaFilter}`,
+        type: "idea" as const,
+        value: initialIdeaFilter,
+        label: "Loading...", // Will be updated after ideas load
+      }];
+    }
+    return [];
+  });
 
   // Task detail modal state
   const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
   const [isNewTask, setIsNewTask] = useState(false);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-        setSearchQuery("");
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   useEffect(() => {
     loadData();
@@ -68,6 +63,9 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
         status: ["accepted", "doing"],
         archived: false,
       });
+
+      // Load all labels for filtering
+      const labelsData = await getLabels();
 
       // Load all tasks
       const supabase = createClient();
@@ -112,8 +110,23 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
       setColumns(columnsData);
       setTasks(tasksData || []);
       setIdeas(ideasData);
+      setAllLabels(labelsData);
       setTaskLabels(labelsMap);
       setChecklistProgress(progressMap);
+
+      // Update initial idea filter label if present
+      if (initialIdeaFilter) {
+        const matchingIdea = ideasData.find((i) => i.id === initialIdeaFilter);
+        if (matchingIdea) {
+          setFilters((prev) =>
+            prev.map((f) =>
+              f.type === "idea" && f.value === initialIdeaFilter
+                ? { ...f, label: matchingIdea.title }
+                : f
+            )
+          );
+        }
+      }
     } catch (err) {
       console.error("Failed to load delivery data:", err);
       setError(err instanceof Error ? err.message : "Failed to load data");
@@ -125,41 +138,69 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   // Only count tasks that are on the board (have column_id)
   const boardTasks = useMemo(() => tasks.filter(t => t.column_id), [tasks]);
 
-  // Filter tasks based on selected idea
+  // Filter tasks based on active filter chips
   const filteredTasks = useMemo(() => {
-    if (!selectedIdeaId) {
+    if (filters.length === 0) {
       return boardTasks;
     }
-    return boardTasks.filter(t => t.idea_id === selectedIdeaId);
-  }, [boardTasks, selectedIdeaId]);
 
-  // Count board tasks per idea (only tasks with column_id)
-  const ideasWithTasks = useMemo(() => {
-    const ideaTaskCounts: Record<string, number> = {};
-    boardTasks.forEach((task) => {
-      if (task.idea_id) {
-        ideaTaskCounts[task.idea_id] = (ideaTaskCounts[task.idea_id] || 0) + 1;
+    return boardTasks.filter((task) => {
+      // Check each filter type - all must match (AND logic)
+      const ideaFilters = filters.filter((f) => f.type === "idea");
+      const labelFilters = filters.filter((f) => f.type === "label");
+      const dueDateFilters = filters.filter((f) => f.type === "dueDate");
+      const priorityFilters = filters.filter((f) => f.type === "priority");
+
+      // Idea filters - task must be linked to at least one of the selected ideas (OR within type)
+      if (ideaFilters.length > 0) {
+        const matchesIdea = ideaFilters.some((f) => task.idea_id === f.value);
+        if (!matchesIdea) return false;
       }
+
+      // Label filters - task must have at least one of the selected labels (OR within type)
+      if (labelFilters.length > 0) {
+        const taskLabelIds = (taskLabels[task.id] || []).map((l) => l.id);
+        const matchesLabel = labelFilters.some((f) => taskLabelIds.includes(f.value));
+        if (!matchesLabel) return false;
+      }
+
+      // Due date filters
+      if (dueDateFilters.length > 0) {
+        const matchesDueDate = dueDateFilters.some((f) => {
+          if (!task.due_date) {
+            return f.value === "no-date";
+          }
+          const dueDate = new Date(task.due_date);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const endOfWeek = new Date(today);
+          endOfWeek.setDate(today.getDate() + (7 - today.getDay()));
+
+          switch (f.value) {
+            case "overdue":
+              return dueDate < today;
+            case "today":
+              return dueDate.toDateString() === today.toDateString();
+            case "this-week":
+              return dueDate >= today && dueDate <= endOfWeek;
+            case "no-date":
+              return false; // Already handled above
+            default:
+              return true;
+          }
+        });
+        if (!matchesDueDate) return false;
+      }
+
+      // Priority filters
+      if (priorityFilters.length > 0) {
+        const matchesPriority = priorityFilters.some((f) => task.priority === f.value);
+        if (!matchesPriority) return false;
+      }
+
+      return true;
     });
-    return ideas.map((idea) => ({
-      ...idea,
-      taskCount: ideaTaskCounts[idea.id] || 0,
-    }));
-  }, [ideas, boardTasks]);
-
-  // Filter ideas by search
-  const filteredIdeas = useMemo(() => {
-    if (!searchQuery) return ideasWithTasks;
-    return ideasWithTasks.filter((idea) =>
-      idea.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [ideasWithTasks, searchQuery]);
-
-  const selectIdea = (ideaId: string | null) => {
-    setSelectedIdeaId(ideaId);
-    setShowDropdown(false);
-    setSearchQuery("");
-  };
+  }, [boardTasks, filters, taskLabels]);
 
   const handleTasksChange = (updatedTasks: DbTask[]) => {
     setTasks(updatedTasks);
@@ -201,11 +242,15 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   };
 
   const handleAddTask = async (columnId: string, title: string) => {
+    // Auto-link to first idea in filter if there's exactly one idea filter
+    const ideaFilters = filters.filter((f) => f.type === "idea");
+    const ideaId = ideaFilters.length === 1 ? ideaFilters[0].value : null;
+
     const newTask = await createTask({
       title,
       column_id: columnId,
       completed: false,
-      idea_id: selectedIdeaId,  // Auto-link to filtered idea
+      idea_id: ideaId,
     });
     setTasks((prev) => [...prev, newTask]);
     // Return the task so CMD+Enter can open it
@@ -238,133 +283,22 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
     );
   }
 
-  // Get selected idea title for header display
-  const selectedIdea = selectedIdeaId
-    ? ideas.find((i) => i.id === selectedIdeaId)
-    : null;
-
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
+      {/* Header with FilterBar */}
       <div className="flex items-center gap-3 px-4 md:px-6 py-3 md:py-4 border-b border-border shrink-0">
-        {/* Idea Filter Dropdown */}
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors min-w-[200px] max-w-[300px]",
-              selectedIdeaId
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border hover:bg-bg-hover"
-            )}
-          >
-            <Lightbulb className="h-4 w-4 shrink-0" />
-            <span className="text-sm font-medium truncate flex-1 text-left">
-              {selectedIdea ? selectedIdea.title : "All Ideas"}
-            </span>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 shrink-0 transition-transform",
-                showDropdown && "rotate-180"
-              )}
-            />
-          </button>
-
-          {/* Dropdown */}
-          {showDropdown && (
-            <div className="absolute left-0 top-full mt-1 w-80 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-              {/* Search */}
-              <div className="p-2 border-b border-border">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search ideas..."
-                    className="w-full pl-9 pr-3 py-2 text-sm bg-bg-tertiary border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
-                    autoFocus
-                  />
-                </div>
-              </div>
-
-              {/* Options */}
-              <div className="max-h-64 overflow-y-auto p-1">
-                {/* All Ideas option */}
-                <button
-                  onClick={() => selectIdea(null)}
-                  className={cn(
-                    "w-full flex items-center gap-2 px-3 py-2 text-sm text-left rounded-md transition-colors",
-                    !selectedIdeaId ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
-                  )}
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    {!selectedIdeaId && <div className="w-2 h-2 rounded-full bg-primary" />}
-                  </div>
-                  <span className="font-medium">All Ideas</span>
-                  <span className="text-xs text-muted-foreground ml-auto">
-                    {boardTasks.length} tasks
-                  </span>
-                </button>
-
-                {filteredIdeas.length > 0 && (
-                  <div className="h-px bg-border my-1" />
-                )}
-
-                {/* Ideas list */}
-                {filteredIdeas.length === 0 && searchQuery && (
-                  <div className="px-3 py-4 text-sm text-muted-foreground text-center">
-                    No ideas match &quot;{searchQuery}&quot;
-                  </div>
-                )}
-                {filteredIdeas.map((idea) => (
-                  <button
-                    key={idea.id}
-                    onClick={() => selectIdea(idea.id)}
-                    className={cn(
-                      "w-full flex items-center gap-2 px-3 py-2 text-sm text-left rounded-md transition-colors group",
-                      selectedIdeaId === idea.id ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
-                    )}
-                  >
-                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      {selectedIdeaId === idea.id && (
-                        <div className="w-2 h-2 rounded-full bg-primary" />
-                      )}
-                    </div>
-                    <span className="flex-1 truncate">{idea.title}</span>
-                    <span className="text-xs text-muted-foreground shrink-0">
-                      {idea.taskCount} {idea.taskCount === 1 ? "task" : "tasks"}
-                    </span>
-                    <Link
-                      href={`/dashboard/ideas?selected=${idea.id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="p-1 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary transition-opacity shrink-0"
-                      title="View idea"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                    </Link>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <FilterBar
+          filters={filters}
+          onFiltersChange={setFilters}
+          ideas={ideas}
+          labels={allLabels}
+          className="flex-1"
+        />
 
         {/* Task count */}
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground shrink-0">
           {filteredTasks.length} {filteredTasks.length === 1 ? "task" : "tasks"}
         </div>
-
-        {/* Clear filter button */}
-        {selectedIdeaId && (
-          <button
-            onClick={() => selectIdea(null)}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="h-3 w-3" />
-            Clear
-          </button>
-        )}
       </div>
 
       {/* Kanban Board */}

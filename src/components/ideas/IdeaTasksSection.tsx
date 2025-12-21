@@ -13,13 +13,15 @@ import {
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { getGlobalColumns } from "@/lib/api/columns";
+import { createTaskLink } from "@/lib/api/links";
 import type { DbTask } from "@/types/database";
 
 interface IdeaTasksSectionProps {
   ideaId: string;
+  ideaTitle?: string; // Used for auto-linking
 }
 
-export function IdeaTasksSection({ ideaId }: IdeaTasksSectionProps) {
+export function IdeaTasksSection({ ideaId, ideaTitle }: IdeaTasksSectionProps) {
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [defaultColumnId, setDefaultColumnId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,6 +78,19 @@ export function IdeaTasksSection({ ideaId }: IdeaTasksSectionProps) {
         .single();
 
       if (error) throw error;
+
+      // Auto-create link from task back to idea (for bidirectional linking)
+      try {
+        await createTaskLink(data.id, {
+          url: `idea://${ideaId}`,
+          title: ideaTitle || "Parent idea",
+          favicon: "💡",
+        });
+      } catch (linkError) {
+        // Don't fail the task creation if link creation fails
+        console.error("Failed to create task-idea link:", linkError);
+      }
+
       setTasks([...tasks, data]);
       setNewTaskTitle("");
     } catch (error) {

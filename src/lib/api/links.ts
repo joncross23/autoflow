@@ -196,6 +196,138 @@ export async function deleteLink(linkId: string): Promise<void> {
 }
 
 // ============================================
+// BACKLINKS (links pointing TO this entity)
+// ============================================
+
+/**
+ * Backlink info with source entity details
+ */
+export interface BacklinkInfo {
+  link: DbLink;
+  sourceType: "idea" | "task";
+  sourceId: string;
+  sourceTitle: string;
+}
+
+/**
+ * Get backlinks pointing TO this idea
+ * These are links from other tasks/ideas that have url = `idea://{ideaId}`
+ */
+export async function getIdeaBacklinks(ideaId: string): Promise<BacklinkInfo[]> {
+  const supabase = createClient();
+
+  // Find all links where url matches idea://ideaId
+  const { data, error } = await supabase
+    .from("links")
+    .select("*")
+    .eq("url", `idea://${ideaId}`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching idea backlinks:", error);
+    return [];
+  }
+
+  if (!data || data.length === 0) return [];
+
+  // Enrich with source entity titles
+  const backlinks: BacklinkInfo[] = [];
+
+  for (const link of data) {
+    if (link.task_id) {
+      // Link is from a task - get task title
+      const { data: task } = await supabase
+        .from("tasks")
+        .select("title")
+        .eq("id", link.task_id)
+        .single();
+
+      backlinks.push({
+        link,
+        sourceType: "task",
+        sourceId: link.task_id,
+        sourceTitle: task?.title || "Untitled task",
+      });
+    } else if (link.idea_id) {
+      // Link is from another idea - get idea title
+      const { data: idea } = await supabase
+        .from("ideas")
+        .select("title")
+        .eq("id", link.idea_id)
+        .single();
+
+      backlinks.push({
+        link,
+        sourceType: "idea",
+        sourceId: link.idea_id,
+        sourceTitle: idea?.title || "Untitled idea",
+      });
+    }
+  }
+
+  return backlinks;
+}
+
+/**
+ * Get backlinks pointing TO this task
+ * These are links from other ideas/tasks that have url = `task://{taskId}`
+ */
+export async function getTaskBacklinks(taskId: string): Promise<BacklinkInfo[]> {
+  const supabase = createClient();
+
+  // Find all links where url matches task://taskId
+  const { data, error } = await supabase
+    .from("links")
+    .select("*")
+    .eq("url", `task://${taskId}`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching task backlinks:", error);
+    return [];
+  }
+
+  if (!data || data.length === 0) return [];
+
+  // Enrich with source entity titles
+  const backlinks: BacklinkInfo[] = [];
+
+  for (const link of data) {
+    if (link.idea_id) {
+      // Link is from an idea - get idea title
+      const { data: idea } = await supabase
+        .from("ideas")
+        .select("title")
+        .eq("id", link.idea_id)
+        .single();
+
+      backlinks.push({
+        link,
+        sourceType: "idea",
+        sourceId: link.idea_id,
+        sourceTitle: idea?.title || "Untitled idea",
+      });
+    } else if (link.task_id) {
+      // Link is from another task - get task title
+      const { data: task } = await supabase
+        .from("tasks")
+        .select("title")
+        .eq("id", link.task_id)
+        .single();
+
+      backlinks.push({
+        link,
+        sourceType: "task",
+        sourceId: link.task_id,
+        sourceTitle: task?.title || "Untitled task",
+      });
+    }
+  }
+
+  return backlinks;
+}
+
+// ============================================
 // UTILITY FUNCTIONS
 // ============================================
 

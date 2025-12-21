@@ -588,7 +588,7 @@ export function IdeaDetailSlider({
 
             {/* Tasks Section */}
             {(idea.status === "accepted" || idea.status === "doing") && (
-              <IdeaTasksSection ideaId={idea.id} />
+              <IdeaTasksSection ideaId={idea.id} ideaTitle={idea.title} />
             )}
 
             {/* AI Evaluation */}
