@@ -1,6 +1,27 @@
 import { createClient } from "@/lib/supabase/client";
 import type { DbTask, DbTaskInsert, DbTaskUpdate } from "@/types/database";
 
+/**
+ * Fetch all tasks for the current user (across all projects)
+ * Used for linking tasks together
+ */
+export async function getAllTasks(): Promise<DbTask[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .order("updated_at", { ascending: false })
+    .limit(100); // Limit to most recent 100 tasks
+
+  if (error) {
+    console.error("Error fetching all tasks:", error);
+    throw new Error(`Failed to fetch tasks: ${error.message}`);
+  }
+
+  return data || [];
+}
+
 export async function getTasksForProject(projectId: string): Promise<DbTask[]> {
   const supabase = createClient();
 

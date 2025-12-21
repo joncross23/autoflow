@@ -33,7 +33,6 @@ import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { AIAnalysisSection } from "@/components/shared/AIAnalysisSection";
-import { ParentIdeaSection } from "@/components/shared/ParentIdeaSection";
 
 interface TaskDetailModalProps {
   task: DbTask;
@@ -160,7 +159,6 @@ export function TaskDetailModal({
   const isMobile = useIsMobile();
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
-  const [ideaId, setIdeaId] = useState<string | null>(task.idea_id);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
@@ -230,10 +228,9 @@ export function TaskDetailModal({
   useEffect(() => {
     const changed =
       title !== task.title ||
-      description !== (task.description || "") ||
-      ideaId !== task.idea_id;
+      description !== (task.description || "");
     setHasChanges(changed);
-  }, [title, description, ideaId, task.title, task.description, task.idea_id]);
+  }, [title, description, task.title, task.description]);
 
   // Save task
   const handleSave = useCallback(async () => {
@@ -244,7 +241,6 @@ export function TaskDetailModal({
       const updated = await updateTask(task.id, {
         title,
         description: description || null,
-        idea_id: ideaId,
       });
       onSave(updated);
     } catch (error) {
@@ -252,7 +248,7 @@ export function TaskDetailModal({
     } finally {
       setSaving(false);
     }
-  }, [hasChanges, task.id, title, description, ideaId, onSave]);
+  }, [hasChanges, task.id, title, description, onSave]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -334,16 +330,6 @@ export function TaskDetailModal({
                   autoFocus={isNew}
                 />
               </div>
-
-              {/* Parent Idea Selector - Only for existing cards */}
-              {!isNew && (
-                <div className="mb-4">
-                  <ParentIdeaSection
-                    ideaId={ideaId}
-                    onIdeaChange={setIdeaId}
-                  />
-                </div>
-              )}
 
               {/* Status Row - Only show for existing cards */}
               {!isNew && (

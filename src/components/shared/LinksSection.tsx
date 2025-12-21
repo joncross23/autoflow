@@ -2,12 +2,27 @@
 
 /**
  * LinksSection Component
- * External links for ideas and tasks
+ * Unified linking for ideas, tasks, and external URLs
  * V1.3: Rich Cards feature
+ * V1.4: Enhanced linking (Phase 3)
  */
 
 import { useState, useEffect, useRef } from "react";
-import { Link2, Plus, Trash2, ExternalLink, Pencil, Check, X } from "lucide-react";
+import Link from "next/link";
+import {
+  Link2,
+  Plus,
+  Trash2,
+  ExternalLink,
+  Pencil,
+  Check,
+  X,
+  Lightbulb,
+  ListTodo,
+  ChevronDown,
+  Search,
+  Loader2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   getIdeaLinks,
@@ -21,7 +36,16 @@ import {
   normaliseUrl,
   LINK_FAVICONS,
 } from "@/lib/api/links";
-import type { DbLink } from "@/types/database";
+import { getIdeas } from "@/lib/api/ideas";
+import { getAllTasks } from "@/lib/api/tasks";
+import type { DbLink, DbIdea, DbTask } from "@/types/database";
+
+// Link type for the enhanced linking system
+type LinkType = "url" | "idea" | "task";
+
+// Internal link prefixes
+const IDEA_PREFIX = "idea://";
+const TASK_PREFIX = "task://";
 
 interface LinksSectionProps {
   /** ID of the idea (mutually exclusive with taskId) */
@@ -34,6 +58,20 @@ interface LinksSectionProps {
   onLinksChange?: (count: number) => void;
 }
 
+// Helper to detect link type from URL
+function detectLinkType(url: string): LinkType {
+  if (url.startsWith(IDEA_PREFIX)) return "idea";
+  if (url.startsWith(TASK_PREFIX)) return "task";
+  return "url";
+}
+
+// Helper to extract ID from internal link
+function extractInternalId(url: string): string | null {
+  if (url.startsWith(IDEA_PREFIX)) return url.slice(IDEA_PREFIX.length);
+  if (url.startsWith(TASK_PREFIX)) return url.slice(TASK_PREFIX.length);
+  return null;
+}
+
 export function LinksSection({
   ideaId,
   taskId,
@@ -43,12 +81,22 @@ export function LinksSection({
   const [links, setLinks] = useState<DbLink[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [linkType, setLinkType] = useState<LinkType>("url");
   const [newUrl, setNewUrl] = useState("");
   const [newTitle, setNewTitle] = useState("");
   const [newFavicon, setNewFavicon] = useState("🔗");
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // For idea/task search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [ideas, setIdeas] = useState<DbIdea[]>([]);
+  const [tasks, setTasks] = useState<DbTask[]>([]);
+  const [isLoadingItems, setIsLoadingItems] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<DbIdea | DbTask | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Load links on mount
   useEffect(() => {
@@ -59,6 +107,26 @@ export function LinksSection({
   useEffect(() => {
     onLinksChange?.(links.length);
   }, [links, onLinksChange]);
+
+  // Load ideas/tasks when link type changes
+  useEffect(() => {
+    if (linkType === "idea") {
+      loadIdeas();
+    } else if (linkType === "task") {
+      loadTasks();
+    }
+  }, [linkType]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   async function loadLinks() {
     setIsLoading(true);
@@ -77,24 +145,103 @@ export function LinksSection({
     }
   }
 
-  async function handleAddLink() {
-    if (!newUrl.trim()) return;
+  async function loadIdeas() {
+    setIsLoadingItems(true);
+    try {
+      const data = await getIdeas({ archived: false });
+      // Filter out current idea if linking from an idea
+      setIdeas(ideaId ? data.filter((i) => i.id !== ideaId) : data);
+    } catch (error) {
+      console.error("Error loading ideas:", error);
+    } finally {
+      setIsLoadingItems(false);
+    }
+  }
 
-    const normalised = normaliseUrl(newUrl.trim());
-    if (!isValidUrl(normalised)) {
-      setError("Please enter a valid URL");
+  async function loadTasks() {
+    setIsLoadingItems(true);
+    try {
+      const data = await getAllTasks();
+      // Filter out current task if linking from a task
+      setTasks(taskId ? data.filter((t) => t.id !== taskId) : data);
+    } catch (error) {
+      console.error("Error loading tasks:", error);
+    } finally {
+      setIsLoadingItems(false);
+    }
+  }
+
+  function resetForm() {
+    setLinkType("url");
+    setNewUrl("");
+    setNewTitle("");
+    setNewFavicon("🔗");
+    setSearchQuery("");
+    setSelectedItem(null);
+    setShowDropdown(false);
+    setError(null);
+  }
+
+  async function handleAddLink() {
+    setError(null);
+
+    // For URL type
+    if (linkType === "url") {
+      if (!newUrl.trim()) return;
+
+      const normalised = normaliseUrl(newUrl.trim());
+      if (!isValidUrl(normalised)) {
+        setError("Please enter a valid URL");
+        return;
+      }
+
+      setIsAdding(true);
+      try {
+        let link: DbLink;
+        const linkData = {
+          url: normalised,
+          title: newTitle.trim() || null,
+          favicon: newFavicon,
+        };
+
+        if (ideaId) {
+          link = await createIdeaLink(ideaId, linkData);
+        } else if (taskId) {
+          link = await createTaskLink(taskId, linkData);
+        } else {
+          return;
+        }
+
+        setLinks([link, ...links]);
+        resetForm();
+        setShowAddForm(false);
+      } catch (error) {
+        console.error("Error adding link:", error);
+        setError("Failed to add link");
+      } finally {
+        setIsAdding(false);
+      }
       return;
     }
 
-    setError(null);
-    setIsAdding(true);
+    // For idea/task type
+    if (!selectedItem) {
+      setError(`Please select ${linkType === "idea" ? "an idea" : "a task"}`);
+      return;
+    }
 
+    setIsAdding(true);
     try {
+      const internalUrl =
+        linkType === "idea"
+          ? `${IDEA_PREFIX}${selectedItem.id}`
+          : `${TASK_PREFIX}${selectedItem.id}`;
+
       let link: DbLink;
       const linkData = {
-        url: normalised,
-        title: newTitle.trim() || null,
-        favicon: newFavicon,
+        url: internalUrl,
+        title: selectedItem.title,
+        favicon: linkType === "idea" ? "💡" : "📋",
       };
 
       if (ideaId) {
@@ -106,9 +253,7 @@ export function LinksSection({
       }
 
       setLinks([link, ...links]);
-      setNewUrl("");
-      setNewTitle("");
-      setNewFavicon("🔗");
+      resetForm();
       setShowAddForm(false);
     } catch (error) {
       console.error("Error adding link:", error);
@@ -136,15 +281,23 @@ export function LinksSection({
     }
   }
 
+  // Filter items by search query
+  const filteredIdeas = ideas.filter((i) =>
+    i.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const filteredTasks = tasks.filter((t) =>
+    t.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className={cn("space-y-2", className)}>
       {/* Section Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
-          <Link2 className="w-4 h-4 text-zinc-500" />
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <Link2 className="w-4 h-4 text-foreground-muted" />
           Links
           {links.length > 0 && (
-            <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
+            <span className="text-xs text-foreground-muted bg-bg-tertiary px-1.5 py-0.5 rounded">
               {links.length}
             </span>
           )}
@@ -154,7 +307,7 @@ export function LinksSection({
             setShowAddForm(true);
             setTimeout(() => inputRef.current?.focus(), 0);
           }}
-          className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
+          className="px-2.5 py-1 text-xs font-medium bg-primary text-white rounded hover:bg-primary/90 flex items-center gap-1 transition-colors"
         >
           <Plus className="w-3 h-3" />
           Add
@@ -163,71 +316,216 @@ export function LinksSection({
 
       {/* Add Link Form */}
       {showAddForm && (
-        <div className="p-3 bg-zinc-800/50 rounded-lg space-y-3">
-          {error && (
-            <div className="text-xs text-red-400">{error}</div>
-          )}
-          <input
-            ref={inputRef}
-            type="text"
-            value={newUrl}
-            onChange={(e) => setNewUrl(e.target.value)}
-            placeholder="https://example.com"
-            className="w-full px-3 py-2 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:ring-1 focus:ring-cyan-500"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleAddLink();
-              if (e.key === "Escape") {
-                setShowAddForm(false);
-                setNewUrl("");
-                setNewTitle("");
-                setError(null);
-              }
-            }}
-          />
-          <input
-            type="text"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Title (optional)"
-            className="w-full px-3 py-2 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:ring-1 focus:ring-cyan-500"
-          />
-          {/* Favicon picker */}
-          <div>
-            <div className="text-xs text-zinc-500 mb-2">Icon</div>
-            <div className="flex flex-wrap gap-1">
-              {LINK_FAVICONS.map((emoji) => (
-                <button
-                  key={emoji}
-                  onClick={() => setNewFavicon(emoji)}
-                  className={cn(
-                    "w-8 h-8 flex items-center justify-center rounded text-lg transition-colors",
-                    newFavicon === emoji
-                      ? "bg-cyan-500/20 ring-1 ring-cyan-500"
-                      : "hover:bg-zinc-700"
-                  )}
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
+        <div className="p-3 bg-bg-tertiary/50 rounded-lg space-y-3">
+          {error && <div className="text-xs text-error">{error}</div>}
+
+          {/* Link Type Selector */}
+          <div className="flex gap-1 p-1 bg-bg-tertiary rounded-lg">
+            {(["url", "idea", "task"] as LinkType[]).map((type) => (
+              <button
+                key={type}
+                onClick={() => {
+                  setLinkType(type);
+                  setSelectedItem(null);
+                  setSearchQuery("");
+                }}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors",
+                  linkType === type
+                    ? "bg-primary text-white"
+                    : "text-foreground-muted hover:text-foreground hover:bg-bg-hover"
+                )}
+              >
+                {type === "url" && <Link2 className="w-3 h-3" />}
+                {type === "idea" && <Lightbulb className="w-3 h-3" />}
+                {type === "task" && <ListTodo className="w-3 h-3" />}
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
           </div>
+
+          {/* URL Input */}
+          {linkType === "url" && (
+            <>
+              <input
+                ref={inputRef}
+                type="text"
+                value={newUrl}
+                onChange={(e) => setNewUrl(e.target.value)}
+                placeholder="https://example.com"
+                className="w-full px-3 py-2 text-sm bg-bg-tertiary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAddLink();
+                  if (e.key === "Escape") {
+                    setShowAddForm(false);
+                    resetForm();
+                  }
+                }}
+              />
+              <input
+                type="text"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Title (optional)"
+                className="w-full px-3 py-2 text-sm bg-bg-tertiary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              {/* Favicon picker */}
+              <div>
+                <div className="text-xs text-foreground-muted mb-2">Icon</div>
+                <div className="flex flex-wrap gap-1">
+                  {LINK_FAVICONS.map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => setNewFavicon(emoji)}
+                      className={cn(
+                        "w-8 h-8 flex items-center justify-center rounded text-lg transition-colors",
+                        newFavicon === emoji
+                          ? "bg-primary/20 ring-1 ring-primary"
+                          : "hover:bg-bg-hover"
+                      )}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Idea/Task Selector */}
+          {(linkType === "idea" || linkType === "task") && (
+            <div className="relative" ref={dropdownRef}>
+              {/* Search Input */}
+              <div
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 bg-bg-tertiary border rounded cursor-pointer",
+                  showDropdown ? "border-primary ring-1 ring-primary" : "border-border"
+                )}
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {selectedItem ? (
+                  <div className="flex items-center gap-2 flex-1">
+                    {linkType === "idea" ? (
+                      <Lightbulb className="w-4 h-4 text-amber-500" />
+                    ) : (
+                      <ListTodo className="w-4 h-4 text-blue-500" />
+                    )}
+                    <span className="text-sm text-foreground truncate">
+                      {selectedItem.title}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 flex-1">
+                    <Search className="w-4 h-4 text-foreground-muted" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setShowDropdown(true);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDropdown(true);
+                      }}
+                      placeholder={`Search ${linkType === "idea" ? "ideas" : "tasks"}...`}
+                      className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground-muted focus:outline-none"
+                    />
+                  </div>
+                )}
+                <ChevronDown
+                  className={cn(
+                    "w-4 h-4 text-foreground-muted transition-transform",
+                    showDropdown && "rotate-180"
+                  )}
+                />
+              </div>
+
+              {/* Dropdown */}
+              {showDropdown && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto">
+                  {isLoadingItems ? (
+                    <div className="flex items-center justify-center gap-2 py-4 text-xs text-foreground-muted">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Loading...
+                    </div>
+                  ) : linkType === "idea" ? (
+                    filteredIdeas.length === 0 ? (
+                      <div className="px-3 py-2 text-xs text-foreground-muted">
+                        {searchQuery ? `No ideas match "${searchQuery}"` : "No ideas available"}
+                      </div>
+                    ) : (
+                      filteredIdeas.map((idea) => (
+                        <button
+                          key={idea.id}
+                          onClick={() => {
+                            setSelectedItem(idea);
+                            setShowDropdown(false);
+                            setSearchQuery("");
+                          }}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
+                        >
+                          <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
+                          <span className="truncate">{idea.title}</span>
+                        </button>
+                      ))
+                    )
+                  ) : (
+                    filteredTasks.length === 0 ? (
+                      <div className="px-3 py-2 text-xs text-foreground-muted">
+                        {searchQuery ? `No tasks match "${searchQuery}"` : "No tasks available"}
+                      </div>
+                    ) : (
+                      filteredTasks.map((task) => (
+                        <button
+                          key={task.id}
+                          onClick={() => {
+                            setSelectedItem(task);
+                            setShowDropdown(false);
+                            setSearchQuery("");
+                          }}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
+                        >
+                          <ListTodo className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="truncate">{task.title}</span>
+                        </button>
+                      ))
+                    )
+                  )}
+                </div>
+              )}
+
+              {/* Clear selection button */}
+              {selectedItem && (
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="absolute right-10 top-1/2 -translate-y-1/2 p-1 text-foreground-muted hover:text-foreground"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex justify-end gap-2">
             <button
               onClick={() => {
                 setShowAddForm(false);
-                setNewUrl("");
-                setNewTitle("");
-                setError(null);
+                resetForm();
               }}
-              className="px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-300"
+              className="px-3 py-1.5 text-xs text-foreground-muted hover:text-foreground"
             >
               Cancel
             </button>
             <button
               onClick={handleAddLink}
-              disabled={!newUrl.trim() || isAdding}
-              className="px-3 py-1.5 text-xs bg-cyan-500 text-white rounded hover:bg-cyan-600 disabled:opacity-50"
+              disabled={
+                isAdding ||
+                (linkType === "url" && !newUrl.trim()) ||
+                ((linkType === "idea" || linkType === "task") && !selectedItem)
+              }
+              className="px-3 py-1.5 text-xs bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50"
             >
               {isAdding ? "Adding..." : "Add Link"}
             </button>
@@ -237,9 +535,9 @@ export function LinksSection({
 
       {/* Links List */}
       {isLoading ? (
-        <div className="text-xs text-zinc-500">Loading...</div>
+        <div className="text-xs text-foreground-muted">Loading...</div>
       ) : links.length === 0 && !showAddForm ? (
-        <div className="text-xs text-zinc-500">No links</div>
+        <div className="text-xs text-foreground-muted">No links</div>
       ) : (
         <div className="space-y-1">
           {links.map((link) => (
@@ -270,16 +568,28 @@ function LinkRow({ link, onDelete, onUpdate }: LinkRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(link.title || "");
 
-  const domain = extractDomain(link.url);
-  const displayTitle = link.title || domain;
+  const linkType = detectLinkType(link.url);
+  const internalId = extractInternalId(link.url);
+
+  // For external URLs
+  const domain = linkType === "url" ? extractDomain(link.url) : null;
+  const displayTitle = link.title || domain || link.url;
 
   function handleSaveEdit() {
     onUpdate({ title: editTitle.trim() || undefined });
     setIsEditing(false);
   }
 
+  // Internal link navigation path
+  const internalPath =
+    linkType === "idea"
+      ? `/dashboard/ideas?selected=${internalId}`
+      : linkType === "task"
+      ? `/dashboard/projects?task=${internalId}`
+      : null;
+
   return (
-    <div className="flex items-start gap-3 px-3 py-2 bg-zinc-800/50 rounded-lg group hover:bg-zinc-800">
+    <div className="flex items-start gap-3 px-3 py-2 bg-bg-tertiary/50 rounded-lg group hover:bg-bg-tertiary">
       <span className="text-lg mt-0.5">{link.favicon || "🔗"}</span>
       <div className="flex-1 min-w-0">
         {isEditing ? (
@@ -288,7 +598,7 @@ function LinkRow({ link, onDelete, onUpdate }: LinkRowProps) {
               type="text"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
-              className="flex-1 px-2 py-1 text-sm bg-zinc-700 border border-zinc-600 rounded focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="flex-1 px-2 py-1 text-sm bg-bg-tertiary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveEdit();
                 if (e.key === "Escape") {
@@ -300,7 +610,7 @@ function LinkRow({ link, onDelete, onUpdate }: LinkRowProps) {
             />
             <button
               onClick={handleSaveEdit}
-              className="p-1 text-cyan-400 hover:text-cyan-300"
+              className="p-1 text-primary hover:text-primary/80"
             >
               <Check className="w-4 h-4" />
             </button>
@@ -309,23 +619,45 @@ function LinkRow({ link, onDelete, onUpdate }: LinkRowProps) {
                 setIsEditing(false);
                 setEditTitle(link.title || "");
               }}
-              className="p-1 text-zinc-400 hover:text-zinc-300"
+              className="p-1 text-foreground-muted hover:text-foreground"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         ) : (
           <>
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-zinc-300 hover:text-cyan-400 flex items-center gap-1"
-            >
-              {displayTitle}
-              <ExternalLink className="w-3 h-3 opacity-50" />
-            </a>
-            <div className="text-xs text-zinc-500 truncate">{link.url}</div>
+            {/* Internal links use Next.js Link, external use <a> */}
+            {internalPath ? (
+              <Link
+                href={internalPath}
+                className="text-sm text-foreground hover:text-primary flex items-center gap-1"
+              >
+                {displayTitle}
+                {linkType === "idea" && (
+                  <span className="text-[10px] text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                    Idea
+                  </span>
+                )}
+                {linkType === "task" && (
+                  <span className="text-[10px] text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded">
+                    Task
+                  </span>
+                )}
+              </Link>
+            ) : (
+              <>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-foreground hover:text-primary flex items-center gap-1"
+                >
+                  {displayTitle}
+                  <ExternalLink className="w-3 h-3 opacity-50" />
+                </a>
+                <div className="text-xs text-foreground-muted truncate">{link.url}</div>
+              </>
+            )}
           </>
         )}
       </div>
@@ -333,14 +665,14 @@ function LinkRow({ link, onDelete, onUpdate }: LinkRowProps) {
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => setIsEditing(true)}
-            className="p-1.5 text-zinc-400 hover:text-cyan-400"
+            className="p-1.5 text-foreground-muted hover:text-primary"
             title="Edit"
           >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={onDelete}
-            className="p-1.5 text-zinc-400 hover:text-red-400"
+            className="p-1.5 text-foreground-muted hover:text-error"
             title="Delete"
           >
             <Trash2 className="w-4 h-4" />
