@@ -8,10 +8,14 @@ import { DeliveryBoard } from "@/components/delivery";
 function DeliveryContent() {
   const searchParams = useSearchParams();
   const ideaFilter = searchParams.get("idea");
+  const taskId = searchParams.get("task");
 
   return (
     <div className="h-[calc(100vh-4rem)] pb-16 md:pb-0">
-      <DeliveryBoard initialIdeaFilter={ideaFilter || undefined} />
+      <DeliveryBoard
+        initialIdeaFilter={ideaFilter || undefined}
+        initialTaskId={taskId || undefined}
+      />
     </div>
   );
 }

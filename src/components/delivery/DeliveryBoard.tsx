@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Loader2 } from "lucide-react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { Loader2, Search, X } from "lucide-react";
 import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
 import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
 import { FilterBar, type FilterChip } from "./FilterBar";
@@ -14,9 +14,10 @@ import type { DbColumn, DbTask, DbIdea, DbLabel } from "@/types/database";
 
 interface DeliveryBoardProps {
   initialIdeaFilter?: string;
+  initialTaskId?: string;
 }
 
-export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
+export function DeliveryBoard({ initialIdeaFilter, initialTaskId }: DeliveryBoardProps) {
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
@@ -46,9 +47,24 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   const [selectedTask, setSelectedTask] = useState<DbTask | null>(null);
   const [isNewTask, setIsNewTask] = useState(false);
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     loadData();
   }, []);
+
+  // Auto-open task modal when initialTaskId is provided
+  useEffect(() => {
+    if (initialTaskId && tasks.length > 0 && !selectedTask) {
+      const task = tasks.find((t) => t.id === initialTaskId);
+      if (task) {
+        setSelectedTask(task);
+        setIsNewTask(false);
+      }
+    }
+  }, [initialTaskId, tasks, selectedTask]);
 
   const loadData = async () => {
     try {
@@ -138,13 +154,36 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
   // Only count tasks that are on the board (have column_id)
   const boardTasks = useMemo(() => tasks.filter(t => t.column_id), [tasks]);
 
-  // Filter tasks based on active filter chips
+  // Filter tasks based on active filter chips and search query
   const filteredTasks = useMemo(() => {
-    if (filters.length === 0) {
-      return boardTasks;
+    let result = boardTasks;
+
+    // Apply search filter first
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter((task) => {
+        // Search in task title
+        if (task.title?.toLowerCase().includes(query)) return true;
+        // Search in task description
+        if (task.description?.toLowerCase().includes(query)) return true;
+        // Search in linked idea title
+        if (task.idea_id) {
+          const idea = ideas.find((i) => i.id === task.idea_id);
+          if (idea?.title?.toLowerCase().includes(query)) return true;
+        }
+        // Search in task labels
+        const labels = taskLabels[task.id] || [];
+        if (labels.some((l) => l.name?.toLowerCase().includes(query))) return true;
+        return false;
+      });
     }
 
-    return boardTasks.filter((task) => {
+    // Then apply structured filters
+    if (filters.length === 0) {
+      return result;
+    }
+
+    return result.filter((task) => {
       // Check each filter type - all must match (AND logic)
       const ideaFilters = filters.filter((f) => f.type === "idea");
       const labelFilters = filters.filter((f) => f.type === "label");
@@ -200,7 +239,7 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
 
       return true;
     });
-  }, [boardTasks, filters, taskLabels]);
+  }, [boardTasks, filters, taskLabels, searchQuery, ideas]);
 
   const handleTasksChange = (updatedTasks: DbTask[]) => {
     setTasks(updatedTasks);
@@ -285,19 +324,47 @@ export function DeliveryBoard({ initialIdeaFilter }: DeliveryBoardProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header with FilterBar */}
-      <div className="flex items-center gap-3 px-4 md:px-6 py-3 md:py-4 border-b border-border shrink-0">
+      {/* Header with Search and FilterBar on single row */}
+      <div className="flex items-center gap-3 px-4 md:px-6 py-2 md:py-3 border-b border-border shrink-0 overflow-x-auto">
+        {/* Search input - compact */}
+        <div className="relative shrink-0 w-48 md:w-56">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search..."
+            className="w-full pl-8 pr-7 py-1.5 text-sm bg-bg-secondary border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                searchInputRef.current?.focus();
+              }}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 text-muted-foreground hover:text-foreground rounded transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="h-5 w-px bg-border shrink-0" />
+
+        {/* Filter chips - flex grow */}
         <FilterBar
           filters={filters}
           onFiltersChange={setFilters}
           ideas={ideas}
           labels={allLabels}
-          className="flex-1"
+          className="flex-1 min-w-0"
         />
 
-        {/* Task count */}
-        <div className="text-sm text-muted-foreground shrink-0">
-          {filteredTasks.length} {filteredTasks.length === 1 ? "task" : "tasks"}
+        {/* Task count - right side */}
+        <div className="text-xs text-muted-foreground shrink-0 ml-auto">
+          {filteredTasks.length}{(searchQuery || filters.length > 0) && boardTasks.length !== filteredTasks.length ? `/${boardTasks.length}` : ""} {filteredTasks.length === 1 ? "task" : "tasks"}
         </div>
       </div>
 
