@@ -32,7 +32,7 @@ import { LabelsSection } from "@/components/shared/LabelsSection";
 import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
-import { AISuggestionsSection } from "@/components/shared/AISuggestionsSection";
+import { AIAnalysisSection } from "@/components/shared/AIAnalysisSection";
 import { ParentIdeaSection } from "@/components/shared/ParentIdeaSection";
 
 interface TaskDetailModalProps {
@@ -435,9 +435,9 @@ export function TaskDetailModal({
                 </Section>
               )}
 
-              {/* AI Suggestions - Only if enabled */}
+              {/* AI Analysis - Only if enabled */}
               {enabledSections.aiSuggestions && (
-                <AISuggestionsSection
+                <AIAnalysisSection
                   taskId={task.id}
                   taskTitle={title}
                   taskDescription={description}

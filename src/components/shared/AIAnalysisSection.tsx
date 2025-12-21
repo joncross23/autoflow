@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * AISuggestionsSection Component
- * AI-powered suggestions for tasks
+ * AIAnalysisSection Component
+ * AI-powered analysis for tasks (manual trigger only)
  * V1.3: Rich Cards feature
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Sparkles, RefreshCw, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -15,13 +15,13 @@ interface AISuggestion {
   text: string;
 }
 
-interface AISuggestionsData {
+interface AIAnalysisData {
   suggestions: AISuggestion[];
   complexity: "low" | "medium" | "high";
   generatedAt: string;
 }
 
-interface AISuggestionsSectionProps {
+interface AIAnalysisSectionProps {
   /** ID of the task */
   taskId: string;
   /** Task title for context */
@@ -32,30 +32,21 @@ interface AISuggestionsSectionProps {
   className?: string;
 }
 
-export function AISuggestionsSection({
+export function AIAnalysisSection({
   taskId,
   taskTitle,
   taskDescription,
   className,
-}: AISuggestionsSectionProps) {
-  const [suggestions, setSuggestions] = useState<AISuggestionsData | null>(null);
+}: AIAnalysisSectionProps) {
+  const [analysis, setAnalysis] = useState<AIAnalysisData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasTriedLoad, setHasTriedLoad] = useState(false);
 
-  // Auto-load suggestions on mount if task has description
-  useEffect(() => {
-    if (taskDescription && !hasTriedLoad) {
-      loadSuggestions();
-    }
-  }, [taskId, taskDescription]);
-
-  async function loadSuggestions() {
+  async function runAnalysis() {
     if (isLoading) return;
 
     setIsLoading(true);
     setError(null);
-    setHasTriedLoad(true);
 
     try {
       const response = await fetch(`/api/tasks/${taskId}/analyse`, {
@@ -68,14 +59,14 @@ export function AISuggestionsSection({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get AI suggestions");
+        throw new Error("Failed to get AI analysis");
       }
 
       const data = await response.json();
-      setSuggestions(data);
+      setAnalysis(data);
     } catch (error) {
-      console.error("Error loading suggestions:", error);
-      setError(error instanceof Error ? error.message : "Failed to load suggestions");
+      console.error("Error running analysis:", error);
+      setError(error instanceof Error ? error.message : "Failed to run analysis");
     } finally {
       setIsLoading(false);
     }
@@ -99,60 +90,60 @@ export function AISuggestionsSection({
     <div className={cn("space-y-2", className)}>
       {/* Section Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
           <Sparkles className="w-4 h-4 text-cyan-400" />
-          AI Suggestions
+          AI Analysis
         </div>
         <button
-          onClick={loadSuggestions}
+          onClick={runAnalysis}
           disabled={isLoading}
-          className="text-xs text-zinc-500 hover:text-cyan-400 flex items-center gap-1 disabled:opacity-50"
+          className="text-xs text-foreground-muted hover:text-cyan-400 flex items-center gap-1 disabled:opacity-50"
         >
           {isLoading ? (
             <Loader2 className="w-3 h-3 animate-spin" />
           ) : (
             <RefreshCw className="w-3 h-3" />
           )}
-          {suggestions ? "Regenerate" : "Analyse"}
+          {analysis ? "Regenerate" : "Analyse"}
         </button>
       </div>
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex items-center gap-2 text-xs text-zinc-500 py-4">
+        <div className="flex items-center gap-2 text-xs text-foreground-muted py-4">
           <Loader2 className="w-4 h-4 animate-spin" />
           Analysing task...
         </div>
       ) : error ? (
-        <div className="text-xs text-red-400 py-2">{error}</div>
-      ) : !suggestions && !hasTriedLoad ? (
-        <div className="text-xs text-zinc-500 py-2">
-          Click Analyse to get AI-powered suggestions for this task.
+        <div className="text-xs text-error py-2">{error}</div>
+      ) : !analysis ? (
+        <div className="text-xs text-foreground-muted py-2">
+          Click Analyse to get AI-powered insights for this task.
         </div>
-      ) : suggestions ? (
+      ) : (
         <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-lg p-3 space-y-2">
           {/* Complexity Badge */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Complexity:</span>
+            <span className="text-xs text-foreground-muted">Complexity:</span>
             <span
               className={cn(
                 "text-xs px-2 py-0.5 rounded",
-                suggestions.complexity === "low" && "bg-green-500/20 text-green-400",
-                suggestions.complexity === "medium" && "bg-yellow-500/20 text-yellow-400",
-                suggestions.complexity === "high" && "bg-red-500/20 text-red-400"
+                analysis.complexity === "low" && "bg-green-500/20 text-green-400",
+                analysis.complexity === "medium" && "bg-yellow-500/20 text-yellow-400",
+                analysis.complexity === "high" && "bg-red-500/20 text-red-400"
               )}
             >
-              {suggestions.complexity.charAt(0).toUpperCase() + suggestions.complexity.slice(1)}
+              {analysis.complexity.charAt(0).toUpperCase() + analysis.complexity.slice(1)}
             </span>
           </div>
 
           {/* Suggestions List */}
-          {suggestions.suggestions.length > 0 ? (
+          {analysis.suggestions.length > 0 ? (
             <ul className="space-y-1.5">
-              {suggestions.suggestions.map((suggestion, index) => (
+              {analysis.suggestions.map((suggestion, index) => (
                 <li
                   key={index}
-                  className="flex items-start gap-2 text-sm text-zinc-300"
+                  className="flex items-start gap-2 text-sm text-foreground"
                 >
                   <span>{getTypeIcon(suggestion.type)}</span>
                   <span>{suggestion.text}</span>
@@ -160,10 +151,10 @@ export function AISuggestionsSection({
               ))}
             </ul>
           ) : (
-            <div className="text-xs text-zinc-500">No specific suggestions.</div>
+            <div className="text-xs text-foreground-muted">No specific suggestions.</div>
           )}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
