@@ -33,6 +33,7 @@ import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { AIAnalysisSection } from "@/components/shared/AIAnalysisSection";
+import { AIDescriptionHelper } from "@/components/shared/AIDescriptionHelper";
 
 interface TaskDetailModalProps {
   task: DbTask;
@@ -383,13 +384,22 @@ export function TaskDetailModal({
 
               {/* Description - Always shown */}
               <Section icon={FileText} title="Description">
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={isNew ? 3 : 4}
-                  className="w-full p-3 bg-bg-tertiary border border-border rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Add a more detailed description..."
-                />
+                <div className="space-y-3">
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={isNew ? 3 : 4}
+                    className="w-full p-3 bg-bg-tertiary border border-border rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="Add a more detailed description..."
+                  />
+                  {/* AI Description Helper - only show when description is empty */}
+                  <AIDescriptionHelper
+                    taskId={task.id}
+                    taskTitle={title}
+                    currentDescription={description}
+                    onAccept={(generated) => setDescription(generated)}
+                  />
+                </div>
               </Section>
 
               {/* Checklists - Only if enabled */}
