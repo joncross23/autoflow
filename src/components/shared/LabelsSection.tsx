@@ -112,30 +112,42 @@ export function LabelsSection({
   // Toggle label assignment (add if not assigned, remove if assigned)
   async function handleToggleLabel(label: DbLabel) {
     const assigned = isLabelAssigned(label);
+
+    // Optimistic update - update UI immediately
+    if (assigned) {
+      const newAssigned = assignedLabels.filter((l) => l.id !== label.id);
+      setAssignedLabels(newAssigned);
+      onLabelsChange?.(newAssigned);
+    } else {
+      const newAssigned = [...assignedLabels, label];
+      setAssignedLabels(newAssigned);
+      onLabelsChange?.(newAssigned);
+    }
+
     try {
       if (assigned) {
-        // Remove label
+        // Remove label from DB
         if (ideaId) {
           await removeIdeaLabel(ideaId, label.id);
         } else if (taskId) {
           await removeTaskLabel(taskId, label.id);
         }
-        const newAssigned = assignedLabels.filter((l) => l.id !== label.id);
-        setAssignedLabels(newAssigned);
-        onLabelsChange?.(newAssigned);
       } else {
-        // Add label
+        // Add label to DB
         if (ideaId) {
           await addIdeaLabel(ideaId, label.id);
         } else if (taskId) {
           await addTaskLabel(taskId, label.id);
         }
-        const newAssigned = [...assignedLabels, label];
-        setAssignedLabels(newAssigned);
-        onLabelsChange?.(newAssigned);
       }
     } catch (error) {
       console.error("Error toggling label:", error);
+      // Revert on error
+      if (assigned) {
+        setAssignedLabels([...assignedLabels, label]);
+      } else {
+        setAssignedLabels(assignedLabels.filter((l) => l.id !== label.id));
+      }
     }
   }
 
@@ -155,8 +167,6 @@ export function LabelsSection({
   }
 
   async function handleCreateLabel() {
-    if (!newLabelName.trim()) return;
-
     setIsCreating(true);
     try {
       const newLabel = await createLabel({
@@ -165,10 +175,15 @@ export function LabelsSection({
       });
       setAllLabels([...allLabels, newLabel]);
       setNewLabelName("");
+      setNewLabelColor(LABEL_COLORS[4]); // Reset to blue
       setShowCreateForm(false);
 
       // Automatically add the new label to the item
       await handleToggleLabel(newLabel);
+
+      // Close dropdown after successful creation
+      setShowDropdown(false);
+      setSearchQuery("");
     } catch (error) {
       console.error("Error creating label:", error);
     } finally {
@@ -225,7 +240,7 @@ export function LabelsSection({
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="text-xs text-foreground-muted hover:text-foreground flex items-center gap-1"
+              className="px-2.5 py-1 text-xs font-medium bg-primary text-white rounded hover:bg-primary/90 flex items-center gap-1 transition-colors"
             >
               <Plus className="w-3 h-3" />
               Add
@@ -342,13 +357,16 @@ export function LabelsSection({
                             <div key={label.id} className="flex items-center gap-2">
                               {/* Checkbox */}
                               <button
-                                onClick={() => handleToggleLabel(label)}
-                                className="p-0.5 text-foreground-muted hover:text-foreground transition-colors"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleToggleLabel(label);
+                                }}
+                                className="p-1.5 rounded hover:bg-bg-hover text-foreground-muted hover:text-foreground transition-colors"
                               >
                                 {assigned ? (
-                                  <CheckSquare className="w-4 h-4 text-primary" />
+                                  <CheckSquare className="w-5 h-5 text-primary" />
                                 ) : (
-                                  <Square className="w-4 h-4" />
+                                  <Square className="w-5 h-5" />
                                 )}
                               </button>
                               {/* Full-width coloured bar */}
