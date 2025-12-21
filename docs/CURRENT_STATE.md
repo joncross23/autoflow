@@ -32,10 +32,7 @@ V1.5 adds task-to-task relationship types (Jira-style) and idea task progress tr
 |------|-------------|
 | `20241221_add_link_relationship_type.sql` | Adds `relationship_type` column to links table |
 
-**⚠️ PENDING:** Run migration in Supabase SQL editor:
-```sql
-ALTER TABLE links ADD COLUMN IF NOT EXISTS relationship_type VARCHAR(50) DEFAULT NULL;
-```
+**✅ COMPLETE:** Migration and RLS policies applied.
 
 ### Modified Components (V1.5)
 
@@ -258,17 +255,8 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 
 | Issue | Severity | Description |
 |-------|----------|-------------|
-| Migration Pending | **High** | V1.5 `relationship_type` column needs to be added to links table |
-| Add Link Fails | High | Adding links may fail if migration not run - fixed with conditional insert |
 | AI Suggestions Fail | Medium | "Failed to get AI suggestions" error in TaskDetailModal. Likely missing/invalid ANTHROPIC_API_KEY in Vercel. |
 | Attachments Bucket | Low | Supabase Storage bucket `attachments` needs to be manually created in dashboard. |
-
-### Immediate Action Required
-
-1. Run the V1.5 migration in Supabase SQL editor:
-   ```sql
-   ALTER TABLE links ADD COLUMN IF NOT EXISTS relationship_type VARCHAR(50) DEFAULT NULL;
-   ```
 
 ### Optimisation Opportunities
 
@@ -320,7 +308,8 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 - Added Progress column to Ideas table (toggleable, hidden by default)
 - Created `getIdeaTaskProgress` and `getAllIdeasTaskProgress` API functions
 - Fixed conditional insert in `createTaskLink` to avoid errors when column doesn't exist
-- Added troubleshooting section to DEVELOPMENT_GUIDE.md for cache issues
+- Added RLS policies for links table (SELECT, INSERT, UPDATE, DELETE)
+- Pushed to staging branch
 
 ### 2025-12-20 — V1.4 TaskDetailModal Redesign Complete
 - UI Polish: Labels accessibility, button hovers, close button visibility
