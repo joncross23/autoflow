@@ -137,9 +137,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             : "opacity-0 -translate-y-4"
         )}
       >
-        <div className="bg-bg-elevated border border-border rounded-xl shadow-2xl overflow-hidden">
+        <div className="bg-bg-elevated border border-white/[0.06] rounded-xl shadow-2xl overflow-hidden">
           {/* Search Input */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-white/[0.06]">
             {loading ? (
               <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
             ) : (
@@ -216,7 +216,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-bg-secondary text-xs text-muted-foreground">
+          <div className="flex items-center justify-between px-4 py-2 border-t border-white/[0.04] text-xs text-muted-foreground/70">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <kbd className="px-1.5 py-0.5 bg-bg-tertiary rounded">↑</kbd>

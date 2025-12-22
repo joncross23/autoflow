@@ -237,12 +237,12 @@ export function IdeasTable({
 
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) {
-      return <ChevronDown className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-50" />;
+      return <ChevronDown className="h-3 w-3 text-muted-foreground/40 opacity-0 group-hover:opacity-100" />;
     }
     return sortOrder === "asc" ? (
-      <ChevronUp className="h-3 w-3 text-primary" />
+      <ChevronUp className="h-3 w-3 text-primary/70" />
     ) : (
-      <ChevronDown className="h-3 w-3 text-primary" />
+      <ChevronDown className="h-3 w-3 text-primary/70" />
     );
   };
 
@@ -389,10 +389,10 @@ export function IdeasTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div className="overflow-x-auto rounded-lg border border-border bg-bg-secondary">
         <table ref={tableRef} className="w-full border-collapse">
           <thead>
-            <tr className="bg-bg-secondary border-b border-border">
+            <tr className="border-b border-white/[0.06]">
               {/* Checkbox header */}
               <th className="w-12 px-3 py-3 text-left">
                 <input
@@ -435,12 +435,12 @@ export function IdeasTable({
                   >
                     <div
                       className={cn(
-                        "flex items-center gap-1 px-3 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wide",
+                        "relative flex items-center gap-1.5 px-3 py-3 text-[13px] font-normal text-muted-foreground/80",
                         isSortable && "cursor-pointer hover:text-foreground"
                       )}
                       onClick={() => isSortable && handleSort(col.id as SortField)}
                     >
-                      <GripVertical className="h-3 w-3 opacity-0 group-hover:opacity-50 cursor-grab mr-1" />
+                      <GripVertical className="absolute -left-1 h-3 w-3 opacity-0 group-hover:opacity-30 cursor-grab" />
                       {COLUMN_LABELS[col.id]}
                       {isSortable && renderSortIcon(col.id as SortField)}
                     </div>
@@ -459,7 +459,7 @@ export function IdeasTable({
             {loading ? (
               // Skeleton loading rows
               Array.from({ length: 5 }).map((_, i) => (
-                <tr key={i} className="border-b border-border-subtle animate-pulse">
+                <tr key={i} className="border-b border-white/[0.03] animate-pulse">
                   <td className="px-3 py-3">
                     <div className="h-4 w-4 bg-bg-tertiary rounded" />
                   </td>

@@ -134,7 +134,7 @@ export function TaskColumn({
     >
       {/* Column Header */}
       <div
-        className="flex items-center gap-2.5 px-3.5 py-3 border-b border-border-subtle select-none"
+        className="flex items-center gap-2.5 px-3.5 py-3 border-b border-white/[0.04] select-none"
       >
         {/* Colored indicator square */}
         <div

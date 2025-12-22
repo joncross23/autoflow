@@ -11,18 +11,18 @@
   :root {
     /* Dark mode by default (AutoFlow) */
 
-    /* Background layers */
-    --bg: #0A0A0B;
-    --bg-secondary: #131316;
-    --bg-tertiary: #1A1A1F;
-    --bg-elevated: #1F1F26;
-    --bg-hover: #252530;
-    --bg-active: #2D2D35;
+    /* Background layers - lightened for better contrast */
+    --bg: #101014;
+    --bg-secondary: #1C1C22;
+    --bg-tertiary: #242430;
+    --bg-elevated: #2C2C38;
+    --bg-hover: #34343F;
+    --bg-active: #3C3C48;
 
-    /* Borders */
-    --border-color: #27272A;
-    --border-subtle: #1F1F23;
-    --border-strong: #3F3F46;
+    /* Borders - using rgba for softer appearance */
+    --border-color: rgba(255, 255, 255, 0.06);
+    --border-subtle: rgba(255, 255, 255, 0.03);
+    --border-strong: rgba(255, 255, 255, 0.12);
 
     /* Text - higher contrast for better readability */
     --text: #FFFFFF;
@@ -697,23 +697,23 @@
     outline-offset: 2px;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar styling - refined, subtle appearance */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: rgba(255, 255, 255, 0.15);
   }
 
   /* Selection */

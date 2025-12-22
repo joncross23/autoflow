@@ -138,27 +138,27 @@ export function FilterBar({
     }
   }
 
-  // Get chip color based on type
+  // Get chip color based on type - softer, no borders
   function getChipClasses(chip: FilterChip) {
     switch (chip.type) {
       case "idea":
-        return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+        return "bg-amber-500/15 text-amber-300";
       case "label":
         return chip.color
-          ? `bg-[${chip.color}]/20 text-[${chip.color}] border-[${chip.color}]/30`
-          : "bg-blue-500/20 text-blue-400 border-blue-500/30";
+          ? `bg-[${chip.color}]/15 text-[${chip.color}]`
+          : "bg-blue-500/15 text-blue-300";
       case "dueDate":
         return chip.value === "overdue"
-          ? "bg-error/20 text-error border-error/30"
-          : "bg-purple-500/20 text-purple-400 border-purple-500/30";
+          ? "bg-error/15 text-red-300"
+          : "bg-purple-500/15 text-purple-300";
       case "priority":
         return chip.value === "high"
-          ? "bg-error/20 text-error border-error/30"
+          ? "bg-error/15 text-red-300"
           : chip.value === "medium"
-          ? "bg-warning/20 text-warning border-warning/30"
-          : "bg-success/20 text-success border-success/30";
+          ? "bg-warning/15 text-amber-300"
+          : "bg-success/15 text-green-300";
       default:
-        return "bg-bg-tertiary text-foreground-muted border-border";
+        return "bg-bg-tertiary text-foreground-muted";
     }
   }
 
@@ -169,7 +169,7 @@ export function FilterBar({
         <div
           key={chip.id}
           className={cn(
-            "inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full border",
+            "inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full",
             getChipClasses(chip)
           )}
         >
@@ -199,7 +199,7 @@ export function FilterBar({
 
         {/* Filter Type Menu */}
         {showAddMenu && !activeFilterType && (
-          <div className="absolute left-0 top-full mt-1 w-48 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+          <div className="absolute left-0 top-full mt-1 w-48 bg-bg-elevated border border-white/[0.06] rounded-lg shadow-xl z-50 overflow-hidden">
             <div className="p-1">
               <button
                 onClick={() => setActiveFilterType("idea")}
@@ -235,8 +235,8 @@ export function FilterBar({
 
         {/* Idea Selector */}
         {showAddMenu && activeFilterType === "idea" && (
-          <div className="absolute left-0 top-full mt-1 w-64 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-            <div className="p-2 border-b border-border">
+          <div className="absolute left-0 top-full mt-1 w-64 bg-bg-elevated border border-white/[0.06] rounded-lg shadow-xl z-50 overflow-hidden">
+            <div className="p-2 border-b border-white/[0.04]">
               <div className="flex items-center gap-2 px-2 py-1.5 bg-bg-tertiary rounded">
                 <Search className="w-4 h-4 text-foreground-muted" />
                 <input
@@ -291,8 +291,8 @@ export function FilterBar({
 
         {/* Label Selector */}
         {showAddMenu && activeFilterType === "label" && (
-          <div className="absolute left-0 top-full mt-1 w-64 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-            <div className="p-2 border-b border-border">
+          <div className="absolute left-0 top-full mt-1 w-64 bg-bg-elevated border border-white/[0.06] rounded-lg shadow-xl z-50 overflow-hidden">
+            <div className="p-2 border-b border-white/[0.04]">
               <div className="flex items-center gap-2 px-2 py-1.5 bg-bg-tertiary rounded">
                 <Search className="w-4 h-4 text-foreground-muted" />
                 <input
@@ -353,7 +353,7 @@ export function FilterBar({
 
         {/* Due Date Selector */}
         {showAddMenu && activeFilterType === "dueDate" && (
-          <div className="absolute left-0 top-full mt-1 w-48 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+          <div className="absolute left-0 top-full mt-1 w-48 bg-bg-elevated border border-white/[0.06] rounded-lg shadow-xl z-50 overflow-hidden">
             <div className="p-1">
               {DUE_DATE_OPTIONS.map((option) => {
                 const isSelected = filters.some(
@@ -389,7 +389,7 @@ export function FilterBar({
 
         {/* Priority Selector */}
         {showAddMenu && activeFilterType === "priority" && (
-          <div className="absolute left-0 top-full mt-1 w-48 bg-bg-elevated border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+          <div className="absolute left-0 top-full mt-1 w-48 bg-bg-elevated border border-white/[0.06] rounded-lg shadow-xl z-50 overflow-hidden">
             <div className="p-1">
               {PRIORITY_OPTIONS.map((option) => {
                 const isSelected = filters.some(

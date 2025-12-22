@@ -271,7 +271,7 @@ function IdeasTableRowComponent({
   return (
     <tr
       className={cn(
-        "group cursor-pointer border-b border-border-subtle transition-colors",
+        "group cursor-pointer border-b border-white/[0.03] transition-colors",
         "hover:bg-bg-hover",
         selected && "bg-primary/5"
       )}

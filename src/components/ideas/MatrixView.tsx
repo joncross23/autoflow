@@ -127,20 +127,20 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       </div>
 
       {/* Matrix Container */}
-      <div className="relative aspect-square max-w-2xl mx-auto border border-border rounded-lg bg-bg-secondary overflow-hidden">
+      <div className="relative aspect-square max-w-2xl mx-auto border border-white/[0.06] rounded-lg bg-bg-secondary overflow-hidden">
         {/* Axis Labels */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-medium text-muted-foreground whitespace-nowrap origin-center -translate-x-8">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-normal text-muted-foreground/70 whitespace-nowrap origin-center -translate-x-8">
           Impact (Low → High)
         </div>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-medium text-muted-foreground">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-normal text-muted-foreground/70">
           Effort (Low → High)
         </div>
 
         {/* Grid Lines */}
         <div className="absolute inset-8">
-          {/* Center lines */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border" />
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-border" />
+          {/* Center lines - very subtle */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/[0.06]" />
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-white/[0.06]" />
 
           {/* Quadrant backgrounds */}
           <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-green-500/5" /> {/* Quick Wins */}
@@ -184,7 +184,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
               {/* Tooltip */}
               {hoveredIdea === point.idea.id && (
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
-                  <div className="bg-bg-elevated border border-border rounded-lg shadow-lg p-3 min-w-[200px] max-w-[280px]">
+                  <div className="bg-bg-elevated border border-white/[0.08] rounded-lg shadow-lg p-3 min-w-[200px] max-w-[280px]">
                     <div className="font-medium text-sm line-clamp-2 mb-2">
                       {point.idea.title}
                     </div>
@@ -232,7 +232,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
                       </div>
                     )}
                   </div>
-                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-bg-elevated border-r border-b border-border rotate-45" />
+                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-bg-elevated border-r border-b border-white/[0.08] rotate-45" />
                 </div>
               )}
             </div>
@@ -256,7 +256,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
           ([key, quad]) => (
             <div
               key={key}
-              className="p-3 rounded-lg bg-bg-secondary border border-border"
+              className="p-3 rounded-lg bg-bg-secondary border border-white/[0.04]"
             >
               <div className={cn("text-2xl font-bold", quad.color)}>
                 {quadrantStats[key]}
