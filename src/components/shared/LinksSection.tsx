@@ -331,6 +331,20 @@ export function LinksSection({
         </div>
       )}
 
+      {/* Add Button - shown when header is hidden */}
+      {hideHeader && !showAddForm && (
+        <button
+          onClick={() => {
+            setShowAddForm(true);
+            setTimeout(() => inputRef.current?.focus(), 0);
+          }}
+          className="w-full px-3 py-2 text-xs font-medium text-foreground-muted hover:text-foreground border border-dashed border-border rounded-lg hover:border-primary hover:bg-bg-hover flex items-center justify-center gap-1.5 transition-colors"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          Add Link
+        </button>
+      )}
+
       {/* Add Link Form */}
       {showAddForm && (
         <div className="p-3 bg-bg-tertiary/50 rounded-lg space-y-3">

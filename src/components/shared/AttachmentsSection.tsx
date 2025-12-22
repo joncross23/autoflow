@@ -209,6 +209,18 @@ export function AttachmentsSection({
         onChange={(e) => handleUpload(e.target.files)}
       />
 
+      {/* Add Button - shown when header is hidden */}
+      {hideHeader && !isUploading && (
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="w-full px-3 py-2 text-xs font-medium text-foreground-muted hover:text-foreground border border-dashed border-border rounded-lg hover:border-primary hover:bg-bg-hover flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          Add Attachment
+        </button>
+      )}
+
       {/* Error Message */}
       {error && (
         <div className="text-xs text-red-400 bg-red-500/10 px-2 py-1 rounded">
