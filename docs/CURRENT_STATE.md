@@ -3,14 +3,51 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2025-12-21
-> **Current Version:** 1.5.0
-> **Current Phase:** V1.5 Task Relationships & Progress (IN PROGRESS)
+> **Last Updated:** 2025-12-22
+> **Current Version:** 1.6.0
+> **Current Phase:** V1.6 Theme System Redesign (COMPLETE)
 > **Next Phase:** Dynamic Delivery Filters
 
 ---
 
-## V1.5 Task Relationships & Progress Status: IN PROGRESS
+## V1.6 Theme System Redesign Status: COMPLETE
+
+V1.6 introduces a unified themes system with 6 default presets, custom theme creation, and an expanded slide-out panel for live preview customisation.
+
+### V1.6 Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Theme Presets | **Done** | 6 default themes (Ocean, Forest, Ember, Midnight, Rose, Carbon) |
+| Theme Preset Cards | **Done** | Visual preview cards with mini UI mockup |
+| Accent Swap | **Done** | Replaced violet with indigo accent |
+| Custom Themes | **Done** | Save up to 6 custom themes (localStorage) |
+| Slide-out Panel | **Done** | 50% width panel for live theme customisation |
+| Eyedropper Tool | **Done** | Pick colours from screen (Chrome/Edge only) |
+| Gradient Presets | **Done** | 6 preset gradients for backgrounds |
+| Custom Gradients | **Done** | Save up to 6 custom gradients |
+
+### New Files (V1.6)
+
+| File | Description |
+|------|-------------|
+| `src/lib/themes/presets.ts` | 6 default theme preset definitions |
+| `src/components/theme/ThemePresetCard.tsx` | Visual theme preview card component |
+| `src/components/theme/EyedropperButton.tsx` | Eyedropper with graceful degradation |
+| `src/components/ui/SlideOutPanel.tsx` | Reusable slide-out panel component |
+| `src/types/theme.ts` | Custom theme type definitions |
+
+### Modified Files (V1.6)
+
+| File | Changes |
+|------|---------|
+| `src/lib/themes/index.ts` | Updated Accent type (violet → indigo), added legacy mapping |
+| `src/components/theme/ThemeProvider.tsx` | Added theme preset state, custom colours/gradients/themes |
+| `src/components/theme/AppearanceSettings.tsx` | Complete redesign with themes grid, slide-out panel |
+
+---
+
+## V1.5 Task Relationships & Progress Status: COMPLETE
 
 V1.5 adds task-to-task relationship types (Jira-style) and idea task progress tracking.
 
@@ -298,6 +335,22 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2025-12-22 — V1.6 Theme System Redesign
+- Implemented 6 default theme presets (Ocean, Forest, Ember, Midnight, Rose, Carbon)
+- Created ThemePresetCard component with mini UI mockup preview
+- Added SlideOutPanel component (50% width, no backdrop for live preview)
+- Replaced violet accent with indigo across the codebase
+- Added EyedropperButton with graceful degradation for unsupported browsers
+- Custom themes save/delete (up to 6, localStorage)
+- Custom gradients save/delete (up to 6, localStorage)
+- Gradient presets for quick background selection
+- Redesigned AppearanceSettings with themes grid and customise panel
+- Widened slide-out panel to 50% screen width, max 1000px
+- Removed Preview section from customise panel
+- Reduced gradient bar heights by 10% (h-12 → h-11)
+- Added bottom padding to Save section in panel
+- Diagnosed Supabase outage causing dashboard/ideas/tasks pages to hang
 
 ### 2025-12-21 — V1.5 Task Relationships & Progress + Delivery Search
 - Added `relationship_type` column migration for links table
