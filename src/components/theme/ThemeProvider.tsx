@@ -13,6 +13,48 @@ import type {
   Accent,
   ThemeDefinition,
 } from "@/lib/themes";
+
+export type BackgroundType = "solid" | "gradient";
+
+export interface GradientConfig {
+  from: string;
+  to: string;
+  angle: number;
+}
+
+export interface BackgroundConfig {
+  type: BackgroundType;
+  solid: string;
+  gradient: GradientConfig;
+}
+
+export const DEFAULT_BACKGROUND: BackgroundConfig = {
+  type: "gradient",
+  solid: "#0a1418",
+  gradient: {
+    from: "#1a3a4a",
+    to: "#0a1418",
+    angle: 135,
+  },
+};
+
+export const PRESET_GRADIENTS: { name: string; config: GradientConfig }[] = [
+  { name: "Ocean", config: { from: "#1a3a4a", to: "#0a1418", angle: 135 } },
+  { name: "Midnight", config: { from: "#1e1b4b", to: "#0f0f23", angle: 135 } },
+  { name: "Forest", config: { from: "#14352a", to: "#0a1810", angle: 135 } },
+  { name: "Ember", config: { from: "#3d1c1c", to: "#1a0a0a", angle: 135 } },
+  { name: "Slate", config: { from: "#1e293b", to: "#0f172a", angle: 135 } },
+  { name: "Aurora", config: { from: "#1e3a5f", to: "#0d1f2d", angle: 160 } },
+];
+
+export const PRESET_SOLIDS: { name: string; color: string }[] = [
+  { name: "Charcoal", color: "#0a1418" },
+  { name: "Midnight", color: "#0f0f23" },
+  { name: "Forest", color: "#0a1810" },
+  { name: "Slate", color: "#0f172a" },
+  { name: "Obsidian", color: "#09090b" },
+  { name: "Navy", color: "#0c1929" },
+];
 import {
   themes,
   DEFAULT_THEME,
@@ -35,6 +77,13 @@ interface ThemeContextType {
   accent: Accent;
   setAccent: (accent: Accent) => void;
 
+  // Background
+  background: BackgroundConfig;
+  setBackground: (config: BackgroundConfig) => void;
+  setBackgroundType: (type: BackgroundType) => void;
+  setSolidColor: (color: string) => void;
+  setGradient: (gradient: GradientConfig) => void;
+
   // Current theme definition for reference
   themeDefinition: ThemeDefinition;
 }
@@ -53,6 +102,7 @@ interface PersistedTheme {
   mode?: Mode;
   accent?: Accent;
   systemTheme?: SystemTheme;
+  background?: BackgroundConfig;
 }
 
 export function ThemeProvider({
@@ -65,6 +115,7 @@ export function ThemeProvider({
   const [systemTheme, setSystemThemeState] = useState<SystemTheme>(defaultSystemTheme);
   const [mode, setModeState] = useState<Mode>(defaultMode);
   const [accent, setAccentState] = useState<Accent>(defaultAccent);
+  const [background, setBackgroundState] = useState<BackgroundConfig>(DEFAULT_BACKGROUND);
   const [resolvedMode, setResolvedMode] = useState<"dark" | "light">("dark");
   const [mounted, setMounted] = useState(false);
 
@@ -102,6 +153,10 @@ export function ThemeProvider({
         // New: load system theme if present, otherwise default to 'autoflow'
         if (parsed.systemTheme && themes[parsed.systemTheme]) {
           setSystemThemeState(parsed.systemTheme);
+        }
+        // Load background config
+        if (parsed.background) {
+          setBackgroundState(parsed.background);
         }
       } catch {
         // Invalid JSON, use defaults
@@ -154,6 +209,27 @@ export function ThemeProvider({
     root.classList.add(`accent-${accent}`);
   }, [accent, mounted]);
 
+  // Apply background (only in dark mode)
+  useEffect(() => {
+    if (!mounted) return;
+
+    const body = document.body;
+
+    if (resolvedMode === "light") {
+      // Light mode: use CSS variable
+      body.style.background = "var(--bg)";
+    } else {
+      // Dark mode: apply user's background choice
+      if (background.type === "solid") {
+        body.style.background = background.solid;
+      } else {
+        const { from, to, angle } = background.gradient;
+        body.style.background = `linear-gradient(${angle}deg, ${from} 0%, ${to} 100%)`;
+      }
+    }
+    body.style.backgroundAttachment = "fixed";
+  }, [background, resolvedMode, mounted]);
+
   // Listen for system theme changes
   useEffect(() => {
     if (!mounted || mode !== "system") return;
@@ -174,9 +250,9 @@ export function ThemeProvider({
   // Persist theme to localStorage
   useEffect(() => {
     if (!mounted) return;
-    const themeData: PersistedTheme = { mode, accent, systemTheme };
+    const themeData: PersistedTheme = { mode, accent, systemTheme, background };
     localStorage.setItem(storageKey, JSON.stringify(themeData));
-  }, [mode, accent, systemTheme, storageKey, mounted]);
+  }, [mode, accent, systemTheme, background, storageKey, mounted]);
 
   const setSystemTheme = useCallback((newTheme: SystemTheme) => {
     setSystemThemeState(newTheme);
@@ -188,6 +264,22 @@ export function ThemeProvider({
 
   const setAccent = useCallback((newAccent: Accent) => {
     setAccentState(newAccent);
+  }, []);
+
+  const setBackground = useCallback((config: BackgroundConfig) => {
+    setBackgroundState(config);
+  }, []);
+
+  const setBackgroundType = useCallback((type: BackgroundType) => {
+    setBackgroundState((prev) => ({ ...prev, type }));
+  }, []);
+
+  const setSolidColor = useCallback((color: string) => {
+    setBackgroundState((prev) => ({ ...prev, solid: color }));
+  }, []);
+
+  const setGradient = useCallback((gradient: GradientConfig) => {
+    setBackgroundState((prev) => ({ ...prev, gradient }));
   }, []);
 
   // Prevent flash of incorrect theme
@@ -209,6 +301,11 @@ export function ThemeProvider({
         resolvedMode,
         accent,
         setAccent,
+        background,
+        setBackground,
+        setBackgroundType,
+        setSolidColor,
+        setGradient,
         themeDefinition,
       }}
     >

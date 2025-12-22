@@ -682,11 +682,13 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Background is managed by ThemeProvider for customization */
+    min-height: 100vh;
   }
 
   /* Focus visible for accessibility */
