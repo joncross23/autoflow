@@ -126,12 +126,16 @@ export async function uploadIdeaAttachment(
   const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
   const filePath = `${user.id}/${ideaId}/${timestamp}_${sanitizedName}`;
 
+  // Convert file to ArrayBuffer to avoid "request body stream exhausted" error
+  const arrayBuffer = await file.arrayBuffer();
+
   // Upload to storage
   const { error: uploadError } = await supabase.storage
     .from(STORAGE_BUCKET)
-    .upload(filePath, file, {
+    .upload(filePath, arrayBuffer, {
       cacheControl: "3600",
       upsert: false,
+      contentType: file.type,
     });
 
   if (uploadError) {
@@ -163,6 +167,69 @@ export async function uploadIdeaAttachment(
   }
 
   return data;
+}
+
+/**
+ * Upload an attachment to an idea with pre-read data (Safari fix)
+ */
+export async function uploadIdeaAttachmentWithData(
+  ideaId: string,
+  file: File,
+  data: ArrayBuffer
+): Promise<DbAttachment> {
+  const supabase = createClient();
+
+  // Get current user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
+  // Generate storage path
+  const timestamp = Date.now();
+  const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const filePath = `${user.id}/${ideaId}/${timestamp}_${sanitizedName}`;
+
+  // Upload to storage with pre-read data
+  const { error: uploadError } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .upload(filePath, data, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type,
+    });
+
+  if (uploadError) {
+    console.error("Error uploading file:", uploadError);
+    throw new Error(`Failed to upload file: ${uploadError.message}`);
+  }
+
+  // Create attachment record
+  const attachmentData: DbAttachmentInsert = {
+    idea_id: ideaId,
+    name: file.name,
+    file_path: filePath,
+    file_type: file.type,
+    file_size: file.size,
+    uploaded_by: user.id,
+  };
+
+  const { data: attachment, error } = await supabase
+    .from("attachments")
+    .insert(attachmentData)
+    .select()
+    .single();
+
+  if (error) {
+    await supabase.storage.from(STORAGE_BUCKET).remove([filePath]);
+    console.error("Error creating attachment record:", error);
+    throw new Error(`Failed to create attachment: ${error.message}`);
+  }
+
+  return attachment;
 }
 
 // ============================================
@@ -218,12 +285,16 @@ export async function uploadTaskAttachment(
   const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
   const filePath = `${user.id}/tasks/${taskId}/${timestamp}_${sanitizedName}`;
 
+  // Convert file to ArrayBuffer to avoid "request body stream exhausted" error
+  const arrayBuffer = await file.arrayBuffer();
+
   // Upload to storage
   const { error: uploadError } = await supabase.storage
     .from(STORAGE_BUCKET)
-    .upload(filePath, file, {
+    .upload(filePath, arrayBuffer, {
       cacheControl: "3600",
       upsert: false,
+      contentType: file.type,
     });
 
   if (uploadError) {
@@ -255,6 +326,69 @@ export async function uploadTaskAttachment(
   }
 
   return data;
+}
+
+/**
+ * Upload an attachment to a task with pre-read data (Safari fix)
+ */
+export async function uploadTaskAttachmentWithData(
+  taskId: string,
+  file: File,
+  data: ArrayBuffer
+): Promise<DbAttachment> {
+  const supabase = createClient();
+
+  // Get current user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
+  // Generate storage path
+  const timestamp = Date.now();
+  const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const filePath = `${user.id}/tasks/${taskId}/${timestamp}_${sanitizedName}`;
+
+  // Upload to storage with pre-read data
+  const { error: uploadError } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .upload(filePath, data, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type,
+    });
+
+  if (uploadError) {
+    console.error("Error uploading file:", uploadError);
+    throw new Error(`Failed to upload file: ${uploadError.message}`);
+  }
+
+  // Create attachment record
+  const attachmentData: DbAttachmentInsert = {
+    task_id: taskId,
+    name: file.name,
+    file_path: filePath,
+    file_type: file.type,
+    file_size: file.size,
+    uploaded_by: user.id,
+  };
+
+  const { data: attachment, error } = await supabase
+    .from("attachments")
+    .insert(attachmentData)
+    .select()
+    .single();
+
+  if (error) {
+    await supabase.storage.from(STORAGE_BUCKET).remove([filePath]);
+    console.error("Error creating attachment record:", error);
+    throw new Error(`Failed to create attachment: ${error.message}`);
+  }
+
+  return attachment;
 }
 
 // ============================================

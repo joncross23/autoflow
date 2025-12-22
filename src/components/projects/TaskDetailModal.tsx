@@ -497,13 +497,13 @@ export function TaskDetailModal({
                     />
                     <SidebarButton
                       icon={Paperclip}
-                      label="Attachment"
+                      label="Attachments"
                       active={enabledSections.attachments}
                       onClick={() => enableSection("attachments")}
                     />
                     <SidebarButton
                       icon={LinkIcon}
-                      label="Link"
+                      label="Links"
                       active={enabledSections.links}
                       onClick={() => enableSection("links")}
                     />
