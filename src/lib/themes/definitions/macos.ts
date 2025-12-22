@@ -110,11 +110,11 @@ export const macosTheme: ThemeDefinition = {
       primaryMuted: "#4D3000",
       primaryGradient: "linear-gradient(135deg, #FF9500 0%, #FF8000 100%)",
     },
-    violet: {
-      primary: "#AF52DE",
-      primaryHover: "#9B47C4",
-      primaryMuted: "#3D1A54",
-      primaryGradient: "linear-gradient(135deg, #AF52DE 0%, #5856D6 100%)",
+    indigo: {
+      primary: "#5856D6",
+      primaryHover: "#4B49B8",
+      primaryMuted: "#1E1D4D",
+      primaryGradient: "linear-gradient(135deg, #5856D6 0%, #4B49B8 100%)",
     },
     rose: {
       primary: "#FF2D55",

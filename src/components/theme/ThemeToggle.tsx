@@ -35,10 +35,10 @@ const accents = [
     gradient: "linear-gradient(135deg, #78350F 0%, #F59E0B 100%)",
   },
   {
-    value: "violet",
-    label: "Royal Violet",
-    color: "#8B5CF6",
-    gradient: "linear-gradient(135deg, #4C1D95 0%, #8B5CF6 100%)",
+    value: "indigo",
+    label: "Royal Indigo",
+    color: "#6366F1",
+    gradient: "linear-gradient(135deg, #312E81 0%, #6366F1 100%)",
   },
   {
     value: "rose",

@@ -78,12 +78,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${plusJakarta.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          defaultMode="dark"
-          defaultAccent="blue"
-          defaultSystemTheme="autoflow"
-          storageKey="autoflow-theme"
-        >
+        <ThemeProvider>
           <ToastProvider>
             {children}
           </ToastProvider>

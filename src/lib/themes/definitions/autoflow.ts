@@ -109,11 +109,11 @@ export const autoflowTheme: ThemeDefinition = {
       primaryMuted: "#78350F",
       primaryGradient: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
     },
-    violet: {
-      primary: "#8B5CF6",
-      primaryHover: "#7C3AED",
-      primaryMuted: "#4C1D95",
-      primaryGradient: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
+    indigo: {
+      primary: "#6366F1",
+      primaryHover: "#4F46E5",
+      primaryMuted: "#312E81",
+      primaryGradient: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
     },
     rose: {
       primary: "#F43F5E",

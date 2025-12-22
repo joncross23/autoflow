@@ -110,11 +110,11 @@ export const windowsTheme: ThemeDefinition = {
       primaryMuted: "#4D2A00",
       primaryGradient: "linear-gradient(135deg, #FF8C00 0%, #E67E00 100%)",
     },
-    violet: {
-      primary: "#881798",
-      primaryHover: "#6B126B",
-      primaryMuted: "#3D0A3D",
-      primaryGradient: "linear-gradient(135deg, #881798 0%, #6B126B 100%)",
+    indigo: {
+      primary: "#6264A7",
+      primaryHover: "#545594",
+      primaryMuted: "#1F1F3D",
+      primaryGradient: "linear-gradient(135deg, #6264A7 0%, #545594 100%)",
     },
     rose: {
       primary: "#E3008C",

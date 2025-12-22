@@ -24,10 +24,10 @@
     --border-subtle: #1F1F23;
     --border-strong: #3F3F46;
 
-    /* Text */
-    --text: #FAFAFA;
-    --text-secondary: #A1A1AA;
-    --text-muted: #71717A;
+    /* Text - higher contrast for better readability */
+    --text: #FFFFFF;
+    --text-secondary: #C8C8D0;
+    --text-muted: #9A9AA6;
     --text-inverted: #000000;
 
     /* Shadows */
@@ -296,12 +296,12 @@
     --radius: 0.5rem;
     --radius-sm: 0.25rem;
     --radius-lg: 0.75rem;
-    --blur: 0px;
+    --blur: 16px;
     --transition-base: 150ms;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
 
   /* Theme: macOS Tahoe (Stylized) */
@@ -785,10 +785,26 @@
     border-color: rgba(0, 0, 0, 0.08);
   }
 
+  /* AutoFlow: Subtle glassmorphism for a fresh look */
+  [data-theme="autoflow"].dark .card {
+    background-color: rgba(31, 31, 38, 0.7);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  [data-theme="autoflow"].light .card {
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
   /* Fallback for browsers without backdrop-filter */
   @supports not (backdrop-filter: blur(1px)) {
     [data-theme="macos"] .card,
-    [data-theme="windows"] .card {
+    [data-theme="windows"] .card,
+    [data-theme="autoflow"] .card {
       background-color: var(--bg-elevated);
     }
   }
