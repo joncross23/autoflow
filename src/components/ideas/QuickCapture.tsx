@@ -36,13 +36,13 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
     useVoiceCapture();
 
   // Determine if voice UI should be shown
-  const isVoiceActive =
-    voiceState.status !== "idle" && voiceState.status !== "success";
   const isRecording = voiceState.status === "recording";
   const isProcessing = voiceState.status === "processing";
   const isReview = voiceState.status === "review";
   const isVoiceError =
     voiceState.status === "error" || voiceState.status === "permission_denied";
+  // Voice is "active" only during recording/processing/review - errors should allow retry
+  const isVoiceActive = isRecording || isProcessing || isReview;
 
   // Global keyboard shortcut Cmd/Ctrl+K
   useEffect(() => {
@@ -98,10 +98,14 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
     if (isRecording) {
       stopRecording();
     } else if (!isVoiceActive) {
+      // Reset any previous error state before starting new recording
+      if (isVoiceError) {
+        resetVoice();
+      }
       setError(null);
       startRecording();
     }
-  }, [isRecording, isVoiceActive, startRecording, stopRecording]);
+  }, [isRecording, isVoiceActive, isVoiceError, startRecording, stopRecording, resetVoice]);
 
   // Handle saving voice-generated idea
   const handleSaveVoiceIdea = useCallback(async () => {
@@ -247,9 +251,9 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
           )}
 
           {/* Help text */}
-          {!error && !voiceErrorMessage && !success && !isRecording && !isProcessing && (
+          {!error && !success && !isRecording && !isProcessing && (
             <p className="mt-2 text-xs text-muted-foreground">
-              {isVoiceError
+              {voiceErrorMessage
                 ? "Click mic to try again or type your idea."
                 : "Press Enter to save or click mic to speak."}
             </p>

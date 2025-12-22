@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+function getAnthropicClient() {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY is not configured");
+  }
+  return new Anthropic({ apiKey });
+}
 
 interface CreateIdeaResponse {
   title: string;
@@ -49,6 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Call Claude API to generate structured idea
+    const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
@@ -121,6 +126,15 @@ Respond ONLY with valid JSON in this exact format:
     });
   } catch (error) {
     console.error("Idea generation error:", error);
+
+    // Handle missing API key
+    if (error instanceof Error && error.message.includes("ANTHROPIC_API_KEY")) {
+      return NextResponse.json(
+        { error: "AI service is not configured" },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to generate idea. Please try again." },
       { status: 500 }
