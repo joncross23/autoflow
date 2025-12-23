@@ -20,6 +20,7 @@ import {
   MoreHorizontal,
   ArrowLeft,
   FileText,
+  AlertCircle,
   // Actions icons
   ArrowRightLeft,
   Copy,
@@ -27,13 +28,14 @@ import {
   Archive,
   Share2,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { updateTask } from "@/lib/api/tasks";
 import { getTaskLabels } from "@/lib/api/labels";
 import { getTaskChecklists } from "@/lib/api/checklists";
 import { getTaskAttachments } from "@/lib/api/attachments";
 import { getTaskLinks } from "@/lib/api/links";
-import type { DbTask } from "@/types/database";
+import type { DbTask, Priority } from "@/types/database";
 import { LabelsSection } from "@/components/shared/LabelsSection";
 import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
@@ -48,6 +50,8 @@ interface TaskDetailModalProps {
   onClose: () => void;
   onSave: (task: DbTask) => void;
   onDelete?: (task: DbTask) => void;
+  onAttachmentChange?: () => void;
+  onLabelsChange?: () => void;
 }
 
 // Section component for consistent styling
@@ -147,6 +151,7 @@ function SidebarButton({
 // Enabled sections type
 interface EnabledSections {
   labels: boolean;
+  priority: boolean;
   members: boolean;
   checklists: boolean;
   dates: boolean;
@@ -162,10 +167,14 @@ export function TaskDetailModal({
   onClose,
   onSave,
   onDelete,
+  onAttachmentChange,
+  onLabelsChange,
 }: TaskDetailModalProps) {
   const isMobile = useIsMobile();
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
+  const [priority, setPriority] = useState<Priority | null>(task.priority);
+  const [dueDate, setDueDate] = useState(task.due_date || "");
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
@@ -174,6 +183,7 @@ export function TaskDetailModal({
   // Track which sections are enabled (start minimal, populate based on data)
   const [enabledSections, setEnabledSections] = useState<EnabledSections>({
     labels: false,
+    priority: false,
     members: false, // Members not implemented yet
     checklists: false,
     dates: false,
@@ -198,6 +208,7 @@ export function TaskDetailModal({
 
         setEnabledSections({
           labels: labels.length > 0,
+          priority: task.priority != null,
           members: false,
           checklists: checklists.length > 0,
           dates: task.due_date != null,
@@ -235,9 +246,11 @@ export function TaskDetailModal({
   useEffect(() => {
     const changed =
       title !== task.title ||
-      description !== (task.description || "");
+      description !== (task.description || "") ||
+      priority !== task.priority ||
+      dueDate !== (task.due_date || "");
     setHasChanges(changed);
-  }, [title, description, task.title, task.description]);
+  }, [title, description, priority, dueDate, task.title, task.description, task.priority, task.due_date]);
 
   // Save task
   const handleSave = useCallback(async () => {
@@ -248,6 +261,8 @@ export function TaskDetailModal({
       const updated = await updateTask(task.id, {
         title,
         description: description || null,
+        priority,
+        due_date: dueDate || null,
       });
       onSave(updated);
     } catch (error) {
@@ -255,7 +270,7 @@ export function TaskDetailModal({
     } finally {
       setSaving(false);
     }
-  }, [hasChanges, task.id, title, description, onSave]);
+  }, [hasChanges, task.id, title, description, priority, dueDate, onSave]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -357,7 +372,43 @@ export function TaskDetailModal({
                 <LabelsSection
                   taskId={task.id}
                   onRemove={() => disableSection("labels")}
+                  onLabelsChange={onLabelsChange}
                 />
+              )}
+
+              {/* Priority - Only if enabled */}
+              {enabledSections.priority && (
+                <Section
+                  icon={AlertCircle}
+                  title="Priority"
+                  onRemove={() => {
+                    disableSection("priority");
+                    setPriority(null);
+                  }}
+                >
+                  <div className="flex gap-2">
+                    {(["low", "medium", "high", "critical"] as const).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setPriority(p)}
+                        className={cn(
+                          "px-3 py-1.5 rounded text-xs font-medium transition-colors",
+                          priority === p
+                            ? p === "critical"
+                              ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                              : p === "high"
+                              ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                              : p === "medium"
+                              ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                              : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                            : "bg-bg-tertiary text-foreground-secondary hover:text-foreground border border-transparent"
+                        )}
+                      >
+                        {p.charAt(0).toUpperCase() + p.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </Section>
               )}
 
               {/* Members - Placeholder, only if enabled */}
@@ -405,21 +456,29 @@ export function TaskDetailModal({
                 <Section
                   icon={Calendar}
                   title="Dates"
-                  onRemove={() => disableSection("dates")}
+                  onRemove={() => {
+                    disableSection("dates");
+                    setDueDate("");
+                  }}
                 >
                   <div className="flex gap-4">
                     <div>
-                      <div className="text-xs text-foreground-muted mb-1">Start</div>
-                      <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
-                        Set date
-                      </button>
+                      <div className="text-xs text-foreground-muted mb-1">Due Date</div>
+                      <input
+                        type="date"
+                        value={dueDate}
+                        onChange={(e) => setDueDate(e.target.value)}
+                        className="px-3 py-1.5 bg-bg-tertiary border border-border rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
                     </div>
-                    <div>
-                      <div className="text-xs text-foreground-muted mb-1">Due</div>
-                      <button className="px-3 py-1.5 bg-bg-tertiary rounded text-sm text-foreground-secondary hover:text-foreground">
-                        Set date
+                    {dueDate && (
+                      <button
+                        onClick={() => setDueDate("")}
+                        className="self-end px-2 py-1.5 text-xs text-foreground-muted hover:text-error transition-colors"
+                      >
+                        Clear
                       </button>
-                    </div>
+                    )}
                   </div>
                 </Section>
               )}
@@ -435,7 +494,7 @@ export function TaskDetailModal({
 
               {/* Attachments - Only if enabled */}
               {enabledSections.attachments && (
-                <AttachmentsSection taskId={task.id} />
+                <AttachmentsSection taskId={task.id} onAttachmentsChange={onAttachmentChange ? () => onAttachmentChange() : undefined} />
               )}
 
               {/* Links - Only if enabled */}
@@ -476,6 +535,12 @@ export function TaskDetailModal({
                       label="Labels"
                       active={enabledSections.labels}
                       onClick={() => enableSection("labels")}
+                    />
+                    <SidebarButton
+                      icon={AlertCircle}
+                      label="Priority"
+                      active={enabledSections.priority}
+                      onClick={() => enableSection("priority")}
                     />
                     <SidebarButton
                       icon={Users}
@@ -649,6 +714,12 @@ export function TaskDetailModal({
                   className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.labels ? "text-primary" : ""}`}
                 >
                   <Tag className="h-4 w-4" /> Labels
+                </button>
+                <button
+                  onClick={() => { enableSection("priority"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.priority ? "text-primary" : ""}`}
+                >
+                  <AlertCircle className="h-4 w-4" /> Priority
                 </button>
                 <button
                   onClick={() => { enableSection("members"); setShowMobileActions(false); }}

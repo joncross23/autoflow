@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Loader2, Search, X } from "lucide-react";
 import { TaskKanbanBoard } from "@/components/projects/TaskKanbanBoard";
 import { TaskDetailModal } from "@/components/projects/TaskDetailModal";
-import { FilterBar, type FilterChip } from "./FilterBar";
+import { UnifiedFilterBar, type FilterValue } from "@/components/filters";
 import { getGlobalColumns } from "@/lib/api/columns";
 import { getIdeas } from "@/lib/api/ideas";
 import { getLabels } from "@/lib/api/labels";
@@ -26,18 +26,19 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
   const [checklistProgress, setChecklistProgress] = useState<
     Record<string, { completed: number; total: number }>
   >({});
+  const [taskAttachmentCounts, setTaskAttachmentCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Dynamic filter state - smart chips for multi-criteria filtering
-  const [filters, setFilters] = useState<FilterChip[]>(() => {
+  const [filters, setFilters] = useState<FilterValue[]>(() => {
     // Initialise with idea filter if provided
     if (initialIdeaFilter) {
       return [{
-        id: `idea-${initialIdeaFilter}`,
-        type: "idea" as const,
-        value: initialIdeaFilter,
-        label: "Loading...", // Will be updated after ideas load
+        id: `linkedIdea-${initialIdeaFilter}`,
+        type: "linkedIdea" as const,
+        value: [initialIdeaFilter],
+        displayLabel: "Loading...", // Will be updated after ideas load
       }];
     }
     return [];
@@ -74,9 +75,8 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
       // Load columns (global user columns) - auto-seeds defaults if none exist
       const columnsData = await getGlobalColumns();
 
-      // Load ideas that have tasks (accepted or doing status)
+      // Load all non-archived ideas for linking
       const ideasData = await getIdeas({
-        status: ["accepted", "doing"],
         archived: false,
       });
 
@@ -123,12 +123,26 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
         }
       });
 
+      // Load task attachment counts
+      const { data: attachments } = await supabase
+        .from("attachments")
+        .select("task_id")
+        .not("task_id", "is", null);
+
+      const attachmentCounts: Record<string, number> = {};
+      attachments?.forEach((att: { task_id: string | null }) => {
+        if (att.task_id) {
+          attachmentCounts[att.task_id] = (attachmentCounts[att.task_id] || 0) + 1;
+        }
+      });
+
       setColumns(columnsData);
       setTasks(tasksData || []);
       setIdeas(ideasData);
       setAllLabels(labelsData);
       setTaskLabels(labelsMap);
       setChecklistProgress(progressMap);
+      setTaskAttachmentCounts(attachmentCounts);
 
       // Update initial idea filter label if present
       if (initialIdeaFilter) {
@@ -136,8 +150,8 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
         if (matchingIdea) {
           setFilters((prev) =>
             prev.map((f) =>
-              f.type === "idea" && f.value === initialIdeaFilter
-                ? { ...f, label: matchingIdea.title }
+              f.type === "linkedIdea" && Array.isArray(f.value) && f.value.includes(initialIdeaFilter)
+                ? { ...f, displayLabel: matchingIdea.title }
                 : f
             )
           );
@@ -184,62 +198,94 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     }
 
     return result.filter((task) => {
-      // Check each filter type - all must match (AND logic)
-      const ideaFilters = filters.filter((f) => f.type === "idea");
-      const labelFilters = filters.filter((f) => f.type === "label");
-      const dueDateFilters = filters.filter((f) => f.type === "dueDate");
-      const priorityFilters = filters.filter((f) => f.type === "priority");
+      // Check each filter type - all must match (AND logic between types, OR within type)
+      for (const filter of filters) {
+        const values = Array.isArray(filter.value) ? filter.value : [filter.value];
 
-      // Idea filters - task must be linked to at least one of the selected ideas (OR within type)
-      if (ideaFilters.length > 0) {
-        const matchesIdea = ideaFilters.some((f) => task.idea_id === f.value);
-        if (!matchesIdea) return false;
-      }
-
-      // Label filters - task must have at least one of the selected labels (OR within type)
-      if (labelFilters.length > 0) {
-        const taskLabelIds = (taskLabels[task.id] || []).map((l) => l.id);
-        const matchesLabel = labelFilters.some((f) => taskLabelIds.includes(f.value));
-        if (!matchesLabel) return false;
-      }
-
-      // Due date filters
-      if (dueDateFilters.length > 0) {
-        const matchesDueDate = dueDateFilters.some((f) => {
-          if (!task.due_date) {
-            return f.value === "no-date";
+        switch (filter.type) {
+          case "linkedIdea": {
+            // Task must be linked to one of the selected ideas
+            if (!task.idea_id || !values.includes(task.idea_id)) {
+              return false;
+            }
+            break;
           }
-          const dueDate = new Date(task.due_date);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const endOfWeek = new Date(today);
-          endOfWeek.setDate(today.getDate() + (7 - today.getDay()));
 
-          switch (f.value) {
-            case "overdue":
-              return dueDate < today;
-            case "today":
-              return dueDate.toDateString() === today.toDateString();
-            case "this-week":
-              return dueDate >= today && dueDate <= endOfWeek;
-            case "no-date":
-              return false; // Already handled above
-            default:
-              return true;
+          case "label": {
+            // Task must have at least one of the selected labels
+            const taskLabelIds = (taskLabels[task.id] || []).map((l) => l.id);
+            const hasMatchingLabel = values.some((v) => taskLabelIds.includes(v as string));
+            if (!hasMatchingLabel) return false;
+            break;
           }
-        });
-        if (!matchesDueDate) return false;
-      }
 
-      // Priority filters
-      if (priorityFilters.length > 0) {
-        const matchesPriority = priorityFilters.some((f) => task.priority === f.value);
-        if (!matchesPriority) return false;
+          case "priority": {
+            // Task must have one of the selected priorities
+            if (!task.priority || !values.includes(task.priority)) {
+              return false;
+            }
+            break;
+          }
+
+          case "dueDate": {
+            const dueDateValue = values[0] as string;
+            if (!task.due_date) {
+              if (dueDateValue !== "no-date") return false;
+            } else {
+              const dueDate = new Date(task.due_date);
+              dueDate.setHours(0, 0, 0, 0);
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              const endOfWeek = new Date(today);
+              endOfWeek.setDate(today.getDate() + (7 - today.getDay()));
+              const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+              switch (dueDateValue) {
+                case "overdue":
+                  if (dueDate >= today) return false;
+                  break;
+                case "today":
+                  if (dueDate.getTime() !== today.getTime()) return false;
+                  break;
+                case "this-week":
+                  if (dueDate < today || dueDate > endOfWeek) return false;
+                  break;
+                case "this-month":
+                  if (dueDate < today || dueDate > endOfMonth) return false;
+                  break;
+                case "no-date":
+                  return false; // Task has a due date
+              }
+            }
+            break;
+          }
+
+          case "column": {
+            // Task must be in one of the selected columns
+            if (!task.column_id || !values.includes(task.column_id)) {
+              return false;
+            }
+            break;
+          }
+
+          case "completed": {
+            // Boolean filter - task must be completed
+            if (!task.completed) return false;
+            break;
+          }
+
+          case "hasAttachment": {
+            // Check if task has any attachments
+            const attachmentCount = taskAttachmentCounts[task.id] || 0;
+            if (attachmentCount === 0) return false;
+            break;
+          }
+        }
       }
 
       return true;
     });
-  }, [boardTasks, filters, taskLabels, searchQuery, ideas]);
+  }, [boardTasks, filters, taskLabels, searchQuery, ideas, taskAttachmentCounts]);
 
   const handleTasksChange = (updatedTasks: DbTask[]) => {
     setTasks(updatedTasks);
@@ -281,9 +327,10 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
   };
 
   const handleAddTask = async (columnId: string, title: string) => {
-    // Auto-link to first idea in filter if there's exactly one idea filter
-    const ideaFilters = filters.filter((f) => f.type === "idea");
-    const ideaId = ideaFilters.length === 1 ? ideaFilters[0].value : null;
+    // Auto-link to first idea in filter if there's exactly one idea filter with one value
+    const ideaFilter = filters.find((f) => f.type === "linkedIdea");
+    const ideaValues = ideaFilter && Array.isArray(ideaFilter.value) ? ideaFilter.value : [];
+    const ideaId = ideaValues.length === 1 ? ideaValues[0] : null;
 
     const newTask = await createTask({
       title,
@@ -295,6 +342,38 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     // Return the task so CMD+Enter can open it
     return newTask;
   };
+
+  // Refresh attachment counts when attachments change in task modal
+  const refreshAttachmentCounts = useCallback(async () => {
+    const supabase = createClient();
+    const { data: attachments } = await supabase
+      .from("attachments")
+      .select("task_id")
+      .not("task_id", "is", null);
+
+    const counts: Record<string, number> = {};
+    attachments?.forEach((att: { task_id: string | null }) => {
+      if (att.task_id) {
+        counts[att.task_id] = (counts[att.task_id] || 0) + 1;
+      }
+    });
+    setTaskAttachmentCounts(counts);
+  }, []);
+
+  // Refresh task labels when labels change in task modal
+  const refreshLabels = useCallback(async () => {
+    const supabase = createClient();
+    const { data: labelRelations } = await supabase
+      .from("task_labels")
+      .select("task_id, labels(*)");
+
+    const labelsMap: Record<string, DbLabel[]> = {};
+    labelRelations?.forEach((rel: any) => {
+      if (!labelsMap[rel.task_id]) labelsMap[rel.task_id] = [];
+      if (rel.labels) labelsMap[rel.task_id].push(rel.labels as DbLabel);
+    });
+    setTaskLabels(labelsMap);
+  }, []);
 
   // Get parent idea title for task modal
   const getIdeaTitle = (ideaId: string | null) => {
@@ -325,7 +404,7 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
   return (
     <div className="flex flex-col h-full">
       {/* Header with Search and FilterBar on single row */}
-      <div className="flex items-center gap-3 px-4 md:px-6 py-2 md:py-3 border-b border-border shrink-0 overflow-x-auto">
+      <div className="relative z-20 flex items-center gap-3 px-4 md:px-6 py-2 md:py-3 border-b border-border shrink-0 overflow-x-auto overflow-y-visible">
         {/* Search input - compact */}
         <div className="relative shrink-0 w-48 md:w-56">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
@@ -354,11 +433,13 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
         <div className="h-5 w-px bg-border shrink-0" />
 
         {/* Filter chips - flex grow */}
-        <FilterBar
+        <UnifiedFilterBar
+          context="tasks"
           filters={filters}
           onFiltersChange={setFilters}
           ideas={ideas}
           labels={allLabels}
+          columns={columns}
           className="flex-1 min-w-0"
         />
 
@@ -369,7 +450,7 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
       </div>
 
       {/* Kanban Board */}
-      <div className="flex-1 p-4 md:p-6 overflow-hidden">
+      <div className="relative z-10 flex-1 p-4 md:p-6 overflow-hidden">
         {columns.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-4">
             <p className="text-muted-foreground">No columns configured</p>
@@ -404,6 +485,8 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
           }}
           onSave={handleTaskSave}
           onDelete={handleTaskDelete}
+          onAttachmentChange={refreshAttachmentCounts}
+          onLabelsChange={refreshLabels}
         />
       )}
     </div>

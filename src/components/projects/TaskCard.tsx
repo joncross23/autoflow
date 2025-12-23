@@ -13,6 +13,7 @@ import {
   MessageSquare,
   CheckSquare,
   Tag,
+  AlertCircle,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import type { DbTask, DbLabel } from "@/types/database";
@@ -109,7 +110,18 @@ export function TaskCard({
       : undefined;
 
   // Check if we have footer indicators to show
-  const hasFooterContent = dueDate || checklistProgress || commentCount || attachmentCount || assignees.length > 0;
+  const hasFooterContent = task.priority || dueDate || checklistProgress || commentCount || attachmentCount || assignees.length > 0;
+
+  // Priority color helper
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "critical": return "text-red-400";
+      case "high": return "text-orange-400";
+      case "medium": return "text-yellow-400";
+      case "low": return "text-blue-400";
+      default: return "text-foreground-muted";
+    }
+  };
 
   const showHover = isHovered && !isDragging && !isGhost;
   const isBeingDragged = isSortableDragging || isDragging;
@@ -243,6 +255,14 @@ export function TaskCard({
       {hasFooterContent && (
         <div className="flex items-center justify-between mt-2 ml-7">
           <div className="flex items-center gap-3">
+            {/* Priority */}
+            {task.priority && (
+              <span className={`flex items-center gap-1 text-[11px] font-medium ${getPriorityColor(task.priority)}`}>
+                <AlertCircle className="h-3 w-3" />
+                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+              </span>
+            )}
+
             {/* Checklist progress */}
             {checklistProgress && checklistProgress.total > 0 && (
               <span className={`flex items-center gap-1 text-[11px] ${

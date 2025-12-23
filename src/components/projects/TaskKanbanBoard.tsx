@@ -137,10 +137,25 @@ export function TaskKanbanBoard({
               : t
           );
           onTasksChange(updatedTasks);
-        } else {
-          // Reorder within same column
-          const reordered = arrayMove(tasks, activeIndex, overIndex);
-          onTasksChange(reordered);
+        } else if (activeTask.column_id) {
+          // Reorder within same column - use column-specific indices
+          const columnTasks = tasksByColumn[activeTask.column_id] || [];
+          const activeColumnIndex = columnTasks.findIndex((t: DbTask) => t.id === activeId);
+          const overColumnIndex = columnTasks.findIndex((t: DbTask) => t.id === overId);
+
+          if (activeColumnIndex !== -1 && overColumnIndex !== -1) {
+            // Reorder within the column array
+            const reorderedColumn = arrayMove(columnTasks, activeColumnIndex, overColumnIndex);
+
+            // Rebuild full tasks array with updated positions
+            const updatedTasks = tasks.map((t) => {
+              if (t.column_id !== activeTask.column_id) return t;
+              const newPos = reorderedColumn.findIndex((ct: DbTask) => ct.id === t.id);
+              return newPos !== -1 ? { ...t, position: newPos } : t;
+            });
+
+            onTasksChange(updatedTasks);
+          }
         }
       }
     },
