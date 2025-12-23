@@ -119,16 +119,11 @@ export function LabelsSection({
 
     const assigned = isLabelAssigned(label);
 
-    // Optimistic update - update UI immediately
-    if (assigned) {
-      const newAssigned = assignedLabels.filter((l) => l.id !== label.id);
-      setAssignedLabels(newAssigned);
-      onLabelsChange?.(newAssigned);
-    } else {
-      const newAssigned = [...assignedLabels, label];
-      setAssignedLabels(newAssigned);
-      onLabelsChange?.(newAssigned);
-    }
+    // Optimistic update - update UI immediately in the modal
+    const newAssigned = assigned
+      ? assignedLabels.filter((l) => l.id !== label.id)
+      : [...assignedLabels, label];
+    setAssignedLabels(newAssigned);
 
     try {
       if (assigned) {
@@ -146,6 +141,8 @@ export function LabelsSection({
           await addTaskLabel(taskId, label.id);
         }
       }
+      // Notify parent AFTER DB write succeeds so refreshLabels fetches fresh data
+      onLabelsChange?.(newAssigned);
     } catch (error) {
       console.error("Error toggling label:", error);
       // Revert on error

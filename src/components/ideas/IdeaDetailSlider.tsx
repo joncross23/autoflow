@@ -516,16 +516,14 @@ export function IdeaDetailSlider({
             )}
 
             {/* Tasks Section - Collapsible, open by default for active ideas */}
-            {(idea.status === "accepted" || idea.status === "doing") && (
-              <CollapsibleSection
-                title="Tasks"
-                icon={<ListTodo className="h-4 w-4" />}
-                defaultOpen={true}
-                showBorder={true}
-              >
-                <IdeaTasksSection ideaId={idea.id} ideaTitle={idea.title} />
-              </CollapsibleSection>
-            )}
+            <CollapsibleSection
+              title="Tasks"
+              icon={<ListTodo className="h-4 w-4" />}
+              defaultOpen={idea.status === "accepted" || idea.status === "doing"}
+              showBorder={true}
+            >
+              <IdeaTasksSection ideaId={idea.id} ideaTitle={idea.title} />
+            </CollapsibleSection>
 
             {/* Checklists - Collapsible, closed by default */}
             <CollapsibleSection

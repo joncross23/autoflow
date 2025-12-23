@@ -4,8 +4,8 @@
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
 > **Last Updated:** 2025-12-22
-> **Current Version:** 1.6.0
-> **Current Phase:** V1.6 Theme System Redesign (COMPLETE)
+> **Current Version:** 1.6.1
+> **Current Phase:** V1.6 Theme System + Safari Fixes (COMPLETE)
 > **Next Phase:** Dynamic Delivery Filters
 
 ---
@@ -335,6 +335,16 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2025-12-22 — V1.6.1 Safari File Uploads & Preview
+- Fixed Safari/WebKit file upload bug using XMLHttpRequest instead of fetch
+- Created API route `/api/attachments/upload` for server-side file handling
+- Added ownership verification in API route before upload
+- Added file preview modal for images and PDFs (click to view)
+- Fixed sidebar labels: "Attachment" → "Attachments", "Link" → "Links"
+- Added RLS policy migration for task attachments via project ownership
+- Simplified attachments RLS policy to `uploaded_by = auth.uid()` for inserts
+- Deployed to Vercel production
 
 ### 2025-12-22 — V1.6 Theme System Redesign
 - Implemented 6 default theme presets (Ocean, Forest, Ember, Midnight, Rose, Carbon)

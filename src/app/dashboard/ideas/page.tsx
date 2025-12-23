@@ -22,14 +22,61 @@ import {
   IdeasTable,
   IdeaForm,
   IdeaDetailSlider,
-  FilterPanel,
   BulkActionBar,
   SavedViewsDropdown,
   PublishViewDialog,
   DEFAULT_FILTERS,
 } from "@/components/ideas";
 import type { SortField, SortOrder, IdeaFilters } from "@/components/ideas";
+import {
+  UnifiedFilterBar,
+  ideaFiltersToValues,
+  valuesToIdeaFilters,
+  type FilterValue,
+} from "@/components/filters";
 import type { DbIdea, DbSavedView, DbLabel, IdeaStatus, ColumnConfig, SavedViewFilters, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+
+// Helper function for date filtering
+function isWithinDateRange(date: string | null, range: string): boolean {
+  // Handle "not started" / "not completed" filters
+  if (range === "not-started" || range === "not-completed") {
+    return date === null;
+  }
+
+  // If no date and we're looking for a specific range, exclude
+  if (!date) return false;
+
+  const d = new Date(date);
+  const now = new Date();
+
+  // Calculate date boundaries
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfWeek = new Date(startOfDay);
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfQuarter = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+
+  switch (range) {
+    case "today":
+      return d >= startOfDay;
+    case "yesterday": {
+      const startOfYesterday = new Date(startOfDay);
+      startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+      return d >= startOfYesterday && d < startOfDay;
+    }
+    case "week":
+    case "this-week":
+      return d >= startOfWeek;
+    case "month":
+    case "this-month":
+      return d >= startOfMonth;
+    case "quarter":
+    case "this-quarter":
+      return d >= startOfQuarter;
+    default:
+      return true;
+  }
+}
 
 // Default columns for the ideas table
 const DEFAULT_COLUMNS: ColumnConfig[] = [
@@ -273,6 +320,14 @@ export default function IdeasPage() {
     new Set(ideas.map((idea) => idea.owner).filter(Boolean))
   ) as string[];
 
+  // Convert IdeaFilters to FilterValue[] for UnifiedFilterBar
+  const filterValues = ideaFiltersToValues(filters);
+
+  // Handle filter changes from UnifiedFilterBar
+  const handleFilterValuesChange = (newValues: FilterValue[]) => {
+    setFilters(valuesToIdeaFilters(newValues, searchQuery));
+  };
+
   // Filter ideas by search query and other filters (client-side for instant feedback)
   const filteredIdeas = ideas.filter((idea) => {
     // Search filter
@@ -306,6 +361,28 @@ export default function IdeasPage() {
     // Horizon filter (already handled by API, but double-check client-side)
     if (filters.horizons.length > 0) {
       if (!filters.horizons.includes(idea.horizon)) return false;
+    }
+
+    // Date filters - use filterValues since they contain the raw filter data
+    // CreatedAt filter
+    const createdAtFilter = filterValues.find((f) => f.type === "createdAt");
+    if (createdAtFilter) {
+      const range = Array.isArray(createdAtFilter.value) ? createdAtFilter.value[0] : createdAtFilter.value;
+      if (!isWithinDateRange(idea.created_at, range as string)) return false;
+    }
+
+    // StartedAt filter
+    const startedAtFilter = filterValues.find((f) => f.type === "startedAt");
+    if (startedAtFilter) {
+      const range = Array.isArray(startedAtFilter.value) ? startedAtFilter.value[0] : startedAtFilter.value;
+      if (!isWithinDateRange(idea.started_at, range as string)) return false;
+    }
+
+    // CompletedAt filter
+    const completedAtFilter = filterValues.find((f) => f.type === "completedAt");
+    if (completedAtFilter) {
+      const range = Array.isArray(completedAtFilter.value) ? completedAtFilter.value[0] : completedAtFilter.value;
+      if (!isWithinDateRange(idea.completed_at, range as string)) return false;
     }
 
     return true;
@@ -346,14 +423,16 @@ export default function IdeasPage() {
         />
       </div>
 
-      {/* Filter panel */}
-      <FilterPanel
-        filters={filters}
-        onFiltersChange={setFilters}
-        ideaCounts={ideaCounts || undefined}
-        availableLabels={availableLabels}
-        availableOwners={availableOwners}
-      />
+      {/* Filter bar */}
+      <div className="mb-4">
+        <UnifiedFilterBar
+          context="ideas"
+          filters={filterValues}
+          onFiltersChange={handleFilterValuesChange}
+          labels={availableLabels}
+          owners={availableOwners}
+        />
+      </div>
 
       {/* Content */}
       {error ? (
