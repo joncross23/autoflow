@@ -130,6 +130,7 @@ export function TaskCard({
     <div
       ref={setNodeRef}
       style={style}
+      data-testid={`task-card-${task.id}`}
       onMouseEnter={() => !isBeingDragged && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
@@ -190,8 +191,11 @@ export function TaskCard({
           )}
         </button>
 
-        {/* Title */}
-        <p className={`flex-1 text-[13px] font-medium leading-snug ${
+        {/* Title - clickable to open modal */}
+        <p
+          data-testid={`task-title-${task.id}`}
+          onClick={() => onClick?.(task)}
+          className={`flex-1 text-[13px] font-medium leading-snug cursor-pointer ${
           isGhost
             ? "text-foreground-muted"
             : task.completed

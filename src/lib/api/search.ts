@@ -4,6 +4,7 @@
  */
 
 import { createClient } from "@/lib/supabase/client";
+import { escapeIlikePattern } from "@/lib/security/sanitise";
 import type { DbIdea, DbTask } from "@/types/database";
 
 export interface SearchResult {
@@ -32,7 +33,9 @@ export async function search(query: string, limit = 10): Promise<SearchResults> 
   }
 
   const supabase = createClient();
-  const searchTerm = `%${query.toLowerCase()}%`;
+  // Escape special ILIKE characters to prevent SQL injection
+  const escapedQuery = escapeIlikePattern(query.toLowerCase());
+  const searchTerm = `%${escapedQuery}%`;
 
   // Search ideas
   const { data: ideas, error: ideasError } = await supabase

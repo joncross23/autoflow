@@ -7,7 +7,7 @@
  * V1.4: Enhanced linking (Phase 3)
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import {
   Link2,
@@ -106,40 +106,8 @@ export function LinksSection({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const relationshipDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Load links on mount
-  useEffect(() => {
-    loadLinks();
-  }, [ideaId, taskId]);
-
-  // Update callback when links change
-  useEffect(() => {
-    onLinksChange?.(links.length);
-  }, [links, onLinksChange]);
-
-  // Load ideas/tasks when link type changes
-  useEffect(() => {
-    if (linkType === "idea") {
-      loadIdeas();
-    } else if (linkType === "task") {
-      loadTasks();
-    }
-  }, [linkType]);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-      if (relationshipDropdownRef.current && !relationshipDropdownRef.current.contains(event.target as Node)) {
-        setShowRelationshipDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  async function loadLinks() {
+  // Load links function wrapped in useCallback
+  const loadLinks = useCallback(async () => {
     setIsLoading(true);
     try {
       let data: DbLink[] = [];
@@ -154,9 +122,10 @@ export function LinksSection({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [ideaId, taskId]);
 
-  async function loadIdeas() {
+  // Load ideas function wrapped in useCallback
+  const loadIdeas = useCallback(async () => {
     setIsLoadingItems(true);
     try {
       const data = await getIdeas({ archived: false });
@@ -167,9 +136,10 @@ export function LinksSection({
     } finally {
       setIsLoadingItems(false);
     }
-  }
+  }, [ideaId]);
 
-  async function loadTasks() {
+  // Load tasks function wrapped in useCallback
+  const loadTasks = useCallback(async () => {
     setIsLoadingItems(true);
     try {
       const data = await getAllTasks();
@@ -180,7 +150,40 @@ export function LinksSection({
     } finally {
       setIsLoadingItems(false);
     }
-  }
+  }, [taskId]);
+
+  // Load links on mount
+  useEffect(() => {
+    loadLinks();
+  }, [loadLinks]);
+
+  // Update callback when links change
+  useEffect(() => {
+    onLinksChange?.(links.length);
+  }, [links, onLinksChange]);
+
+  // Load ideas/tasks when link type changes
+  useEffect(() => {
+    if (linkType === "idea") {
+      loadIdeas();
+    } else if (linkType === "task") {
+      loadTasks();
+    }
+  }, [linkType, loadIdeas, loadTasks]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+      if (relationshipDropdownRef.current && !relationshipDropdownRef.current.contains(event.target as Node)) {
+        setShowRelationshipDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function resetForm() {
     setLinkType("url");

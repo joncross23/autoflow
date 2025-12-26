@@ -6,7 +6,7 @@
  * V1.3: Rich Cards feature
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { CheckSquare, Plus, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -55,28 +55,8 @@ export function ChecklistsSection({
   const [expandedChecklists, setExpandedChecklists] = useState<Set<string>>(new Set());
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load checklists on mount
-  useEffect(() => {
-    loadChecklists();
-  }, [ideaId, taskId]);
-
-  // Update progress callback when checklists change
-  useEffect(() => {
-    if (onProgressChange) {
-      const total = checklists.reduce((sum, c) => sum + c.progress.total, 0);
-      const completed = checklists.reduce((sum, c) => sum + c.progress.completed, 0);
-      onProgressChange(total, completed);
-    }
-  }, [checklists, onProgressChange]);
-
-  // Auto-expand all checklists on first load
-  useEffect(() => {
-    if (checklists.length > 0 && expandedChecklists.size === 0) {
-      setExpandedChecklists(new Set(checklists.map((c) => c.checklist.id)));
-    }
-  }, [checklists]);
-
-  async function loadChecklists() {
+  // Load checklists function wrapped in useCallback
+  const loadChecklists = useCallback(async () => {
     setIsLoading(true);
     try {
       let data: ChecklistsData[] = [];
@@ -91,7 +71,30 @@ export function ChecklistsSection({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [ideaId, taskId]);
+
+  // Load checklists on mount
+  useEffect(() => {
+    loadChecklists();
+  }, [loadChecklists]);
+
+  // Update progress callback when checklists change
+  useEffect(() => {
+    if (onProgressChange) {
+      const total = checklists.reduce((sum, c) => sum + c.progress.total, 0);
+      const completed = checklists.reduce((sum, c) => sum + c.progress.completed, 0);
+      onProgressChange(total, completed);
+    }
+  }, [checklists, onProgressChange]);
+
+  // Auto-expand all checklists on first load
+  // Note: We intentionally omit expandedChecklists from deps to only run on first load
+  useEffect(() => {
+    if (checklists.length > 0 && expandedChecklists.size === 0) {
+      setExpandedChecklists(new Set(checklists.map((c) => c.checklist.id)));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checklists]);
 
   async function handleAddChecklist() {
     if (!newChecklistTitle.trim()) return;

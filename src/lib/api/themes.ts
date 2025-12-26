@@ -1,10 +1,31 @@
 /**
- * Themes API
+ * Theme (Category) API
+ *
+ * NOTE: These functions are currently NOT USED in the application.
+ * The "themes" here refer to idea categories/tags, NOT visual appearance themes.
+ * Visual theming uses localStorage via ThemeProvider.
+ *
+ * These functions are retained for potential future use when implementing
+ * a category/tagging system for ideas.
+ *
  * V1.0: Multi-select categories for ideas
  */
 
 import { createClient } from "@/lib/supabase/client";
 import type { DbTheme, DbThemeInsert, DbThemeUpdate, DbIdeaTheme } from "@/types/database";
+
+// Type for Supabase join results when selecting themes through junction tables
+type SupabaseThemeJoinResult = Array<{
+  idea_id?: string;
+  theme_id?: string;
+  themes: DbTheme | DbTheme[] | null;
+}>;
+
+// Helper to extract theme from join result (handles both single object and array)
+function extractTheme(themes: DbTheme | DbTheme[] | null): DbTheme | null {
+  if (!themes) return null;
+  return Array.isArray(themes) ? themes[0] ?? null : themes;
+}
 
 /**
  * Get all themes for the current user
@@ -131,7 +152,9 @@ export async function getIdeaThemes(ideaId: string): Promise<DbTheme[]> {
   }
 
   // Extract the theme objects from the join
-  return data?.map((item: any) => item.themes).filter(Boolean) || [];
+  return (data as unknown as SupabaseThemeJoinResult | null)
+    ?.map((item) => extractTheme(item.themes))
+    .filter((theme): theme is DbTheme => theme !== null) || [];
 }
 
 /**

@@ -8,10 +8,32 @@ import type {
   DbLabel,
   DbLabelInsert,
   DbLabelUpdate,
-  DbIdeaLabel,
-  DbProjectLabel,
-  DbTaskLabel,
 } from "@/types/database";
+
+// Type for Supabase join results when selecting labels through junction tables
+// Note: Supabase returns the joined relation as a single object (not array) when the FK relationship is correctly defined
+interface LabelJoinRow {
+  idea_id?: string;
+  project_id?: string;
+  task_id?: string;
+  label_id?: string;
+  labels: DbLabel | null;
+}
+
+// Type assertion helper for Supabase join results
+type SupabaseLabelJoinResult = Array<{
+  idea_id?: string;
+  project_id?: string;
+  task_id?: string;
+  label_id?: string;
+  labels: DbLabel | DbLabel[] | null;
+}>;
+
+// Helper to extract label from join result (handles both single object and array)
+function extractLabel(labels: DbLabel | DbLabel[] | null): DbLabel | null {
+  if (!labels) return null;
+  return Array.isArray(labels) ? labels[0] ?? null : labels;
+}
 import { LABEL_COLORS } from "@/types/database";
 
 /**
@@ -185,9 +207,15 @@ export async function getAllIdeaLabels(): Promise<Record<string, DbLabel[]>> {
   }
 
   const labelsMap: Record<string, DbLabel[]> = {};
-  data?.forEach((row: any) => {
-    if (!labelsMap[row.idea_id]) labelsMap[row.idea_id] = [];
-    if (row.labels) labelsMap[row.idea_id].push(row.labels as DbLabel);
+  (data as unknown as SupabaseLabelJoinResult | null)?.forEach((row) => {
+    if (row.idea_id) {
+      if (!labelsMap[row.idea_id]) labelsMap[row.idea_id] = [];
+      if (row.labels) {
+        // Handle both single object and array cases (Supabase returns single object for to-one relations)
+        const label = Array.isArray(row.labels) ? row.labels[0] : row.labels;
+        if (label) labelsMap[row.idea_id].push(label);
+      }
+    }
   });
 
   return labelsMap;
@@ -209,7 +237,9 @@ export async function getIdeaLabels(ideaId: string): Promise<DbLabel[]> {
     throw new Error(`Failed to fetch idea labels: ${error.message}`);
   }
 
-  return data?.map((row: any) => row.labels) || [];
+  return (data as unknown as SupabaseLabelJoinResult | null)
+    ?.map((row) => extractLabel(row.labels))
+    .filter((label): label is DbLabel => label !== null) || [];
 }
 
 /**
@@ -273,7 +303,9 @@ export async function getProjectLabels(projectId: string): Promise<DbLabel[]> {
     throw new Error(`Failed to fetch project labels: ${error.message}`);
   }
 
-  return data?.map((row: any) => row.labels) || [];
+  return (data as unknown as SupabaseLabelJoinResult | null)
+    ?.map((row) => extractLabel(row.labels))
+    .filter((label): label is DbLabel => label !== null) || [];
 }
 
 /**
@@ -337,7 +369,9 @@ export async function getTaskLabels(taskId: string): Promise<DbLabel[]> {
     throw new Error(`Failed to fetch task labels: ${error.message}`);
   }
 
-  return data?.map((row: any) => row.labels) || [];
+  return (data as unknown as SupabaseLabelJoinResult | null)
+    ?.map((row) => extractLabel(row.labels))
+    .filter((label): label is DbLabel => label !== null) || [];
 }
 
 /**

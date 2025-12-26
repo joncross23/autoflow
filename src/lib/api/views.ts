@@ -429,21 +429,70 @@ export async function isSlugAvailable(slug: string): Promise<boolean> {
 // ============================================
 
 /**
- * Simple password hashing (use bcrypt in production)
- * This is a placeholder - in production, use server-side hashing
+ * Hash a password using bcrypt via the API route.
+ * Uses server-side bcrypt with cost factor 12 for secure hashing.
+ *
+ * @param password - The plain text password to hash
+ * @returns The bcrypt hash string
+ * @throws Error if the API call fails
  */
 async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const response = await fetch("/api/views/hash-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      password,
+      action: "hash",
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || "Failed to hash password");
+  }
+
+  const data = await response.json();
+
+  if (!data.hash) {
+    throw new Error("No hash returned from password API");
+  }
+
+  return data.hash;
 }
 
 /**
- * Verify a password against a hash
+ * Verify a password against a bcrypt hash via the API route.
+ * Uses constant-time comparison to prevent timing attacks.
+ *
+ * @param password - The plain text password to verify
+ * @param hash - The bcrypt hash to compare against
+ * @returns True if the password matches the hash
  */
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  const passwordHash = await hashPassword(password);
-  return passwordHash === hash;
+  try {
+    const response = await fetch("/api/views/hash-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password,
+        action: "verify",
+        hash,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Password verification API error:", response.status);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.valid === true;
+  } catch (error) {
+    console.error("Password verification failed:", error);
+    return false;
+  }
 }

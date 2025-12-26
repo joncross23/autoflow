@@ -6,7 +6,7 @@
  * V1.3: Rich Cards feature
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Paperclip, Plus, Trash2, Download, Upload, Eye, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -51,17 +51,8 @@ export function AttachmentsSection({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
-  // Load attachments on mount
-  useEffect(() => {
-    loadAttachments();
-  }, [ideaId, taskId]);
-
-  // Update callback when attachments change
-  useEffect(() => {
-    onAttachmentsChange?.(attachments.length);
-  }, [attachments, onAttachmentsChange]);
-
-  async function loadAttachments() {
+  // Load attachments function wrapped in useCallback
+  const loadAttachments = useCallback(async () => {
     setIsLoading(true);
     try {
       let data: DbAttachment[] = [];
@@ -76,7 +67,17 @@ export function AttachmentsSection({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [ideaId, taskId]);
+
+  // Load attachments on mount
+  useEffect(() => {
+    loadAttachments();
+  }, [loadAttachments]);
+
+  // Update callback when attachments change
+  useEffect(() => {
+    onAttachmentsChange?.(attachments.length);
+  }, [attachments, onAttachmentsChange]);
 
   // Upload files via XMLHttpRequest - Safari/WebKit compatible
   // XHR has different implementation than fetch and may handle files better

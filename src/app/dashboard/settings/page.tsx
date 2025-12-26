@@ -2,20 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Mail, Loader2, LogOut, Lock } from "lucide-react";
+import { User, Mail, Loader2, LogOut, Lock, Download } from "lucide-react";
 import { useUser } from "@/hooks";
+import { useToast } from "@/hooks/useToast";
 import { createClient } from "@/lib/supabase/client";
 import { Avatar } from "@/components/shared";
+import { getIdeas, getArchivedIdeas } from "@/lib/api/ideas";
 
 export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: userLoading, signOut } = useUser();
+  const { toast } = useToast();
   const [signingOut, setSigningOut] = useState(false);
   const [updatingPassword, setUpdatingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -55,6 +59,42 @@ export default function SettingsPage() {
     setNewPassword("");
     setConfirmPassword("");
     setUpdatingPassword(false);
+  };
+
+  const handleExportData = async () => {
+    setExporting(true);
+    try {
+      // Fetch all user data
+      const [ideas, archivedIdeas] = await Promise.all([
+        getIdeas({ archived: false }),
+        getArchivedIdeas(),
+      ]);
+
+      const exportData = {
+        exportedAt: new Date().toISOString(),
+        ideas: [...ideas, ...archivedIdeas],
+      };
+
+      // Create and download JSON file
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `autoflow-export-${new Date().toISOString().split("T")[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast("Data exported successfully", "success");
+    } catch (error) {
+      console.error("Export failed:", error);
+      toast("Failed to export data", "error");
+    } finally {
+      setExporting(false);
+    }
   };
 
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
@@ -106,6 +146,7 @@ export default function SettingsPage() {
                 onClick={handleSignOut}
                 disabled={signingOut}
                 className="btn btn-outline flex items-center gap-2"
+                data-testid="user-menu"
               >
                 {signingOut ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -225,15 +266,34 @@ export default function SettingsPage() {
         </section>
       )}
 
-      {/* Data section placeholder */}
-      <section className="card">
-        <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--text)" }}>
-          Data & Privacy
-        </h2>
-        <p style={{ color: "var(--text-muted)" }}>
-          Export and privacy controls coming soon
-        </p>
-      </section>
+      {/* Data & Privacy section */}
+      {user && (
+        <section className="card">
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--text)" }}>
+            Data & Privacy
+          </h2>
+
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm mb-3" style={{ color: "var(--text-secondary)" }}>
+                Download a copy of all your ideas and data in JSON format.
+              </p>
+              <button
+                onClick={handleExportData}
+                disabled={exporting}
+                className="btn btn-outline flex items-center gap-2"
+              >
+                {exporting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                {exporting ? "Exporting..." : "Export My Data"}
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

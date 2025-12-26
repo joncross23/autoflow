@@ -13,6 +13,7 @@ import {
   bulkUpdateEffort,
   bulkUpdateHorizon,
   bulkAddLabel,
+  bulkRemoveLabel,
   getAllIdeasTaskProgress,
   type IdeaTaskProgress,
 } from "@/lib/api/ideas";
@@ -279,12 +280,17 @@ export default function IdeasPage() {
 
   const handleBulkLabelChange = async (labelId: string, action: "add" | "remove") => {
     const ids = Array.from(selectedIds);
-    if (action === "add") {
-      await bulkAddLabel(ids, labelId);
+    try {
+      if (action === "add") {
+        await bulkAddLabel(ids, labelId);
+      } else {
+        await bulkRemoveLabel(ids, labelId);
+      }
+      setSelectedIds(new Set());
+      loadIdeas();
+    } catch (err) {
+      console.error(`Failed to ${action} label:`, err);
     }
-    // Note: Remove not implemented yet - would need a bulkRemoveLabel function
-    setSelectedIds(new Set());
-    loadIdeas();
   };
 
   const handleBulkEffortChange = async (effort: DbIdea["effort_estimate"]) => {

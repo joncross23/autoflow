@@ -90,7 +90,7 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-bg-elevated rounded-xl shadow-xl border border-border">
+      <div data-testid="idea-form" className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-bg-elevated rounded-xl shadow-xl border border-border">
         {/* Header */}
         <div className="sticky top-0 flex items-center justify-between p-4 border-b border-border bg-bg-elevated">
           <h2 className="text-lg font-semibold">
@@ -119,6 +119,7 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
             </label>
             <input
               id="title"
+              data-testid="idea-form-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -263,6 +264,7 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
             </button>
             <button
               type="submit"
+              data-testid="idea-form-submit"
               className="btn btn-primary"
               disabled={loading}
             >
