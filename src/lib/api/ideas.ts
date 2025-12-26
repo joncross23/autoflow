@@ -465,6 +465,81 @@ export async function bulkAddLabel(ideaIds: string[], labelId: string): Promise<
   }
 }
 
+/**
+ * Remove a label from multiple ideas
+ */
+export async function bulkRemoveLabel(ideaIds: string[], labelId: string): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("idea_labels")
+    .delete()
+    .in("idea_id", ideaIds)
+    .eq("label_id", labelId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Duplicate an existing idea
+ * Creates a new idea with all fields copied except id, created_at, updated_at
+ * Appends " (Copy)" to the title
+ */
+export async function duplicateIdea(id: string): Promise<DbIdea> {
+  const supabase = createClient();
+
+  // Fetch the original idea
+  const original = await getIdea(id);
+
+  if (!original) {
+    throw new Error("Idea not found");
+  }
+
+  // Get the current user
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Not authenticated");
+  }
+
+  // Create a new idea with copied fields (excluding id, created_at, updated_at, user_id)
+  const { data, error } = await supabase
+    .from("ideas")
+    .insert({
+      user_id: user.id,
+      title: `${original.title} (Copy)`,
+      description: original.description,
+      status: original.status,
+      frequency: original.frequency,
+      time_spent: original.time_spent,
+      owner: original.owner,
+      owner_id: original.owner_id,
+      team_id: original.team_id,
+      pain_points: original.pain_points,
+      desired_outcome: original.desired_outcome,
+      effort_estimate: original.effort_estimate,
+      horizon: original.horizon,
+      position: original.position,
+      archived: false, // Reset archived status for the copy
+      started_at: null, // Reset timestamps for the copy
+      completed_at: null,
+      rice_reach: original.rice_reach,
+      rice_impact: original.rice_impact,
+      rice_confidence: original.rice_confidence,
+      rice_effort: original.rice_effort,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
 // ============================================
 // RICE Scoring Operations (V1.1)
 // ============================================

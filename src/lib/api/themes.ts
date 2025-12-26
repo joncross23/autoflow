@@ -1,5 +1,13 @@
 /**
- * Themes API
+ * Theme (Category) API
+ *
+ * NOTE: These functions are currently NOT USED in the application.
+ * The "themes" here refer to idea categories/tags, NOT visual appearance themes.
+ * Visual theming uses localStorage via ThemeProvider.
+ *
+ * These functions are retained for potential future use when implementing
+ * a category/tagging system for ideas.
+ *
  * V1.0: Multi-select categories for ideas
  */
 
