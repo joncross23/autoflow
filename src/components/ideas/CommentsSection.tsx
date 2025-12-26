@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   MessageSquare,
   Send,
@@ -264,7 +264,8 @@ export function CommentsSection({ ideaId }: CommentsSectionProps) {
   const [submitting, setSubmitting] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const loadComments = async () => {
+  // Load comments function wrapped in useCallback
+  const loadComments = useCallback(async () => {
     try {
       const data = await getIdeaComments(ideaId);
       setComments(data);
@@ -273,11 +274,11 @@ export function CommentsSection({ ideaId }: CommentsSectionProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [ideaId]);
 
   useEffect(() => {
     loadComments();
-  }, [ideaId]);
+  }, [loadComments]);
 
   useEffect(() => {
     if (replyingTo && inputRef.current) {

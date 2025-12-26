@@ -224,7 +224,7 @@ export function TaskDetailModal({
     }
 
     loadSectionData();
-  }, [task.id, task.due_date, isNew]);
+  }, [task.id, task.due_date, task.priority, isNew]);
 
   // Enable a section (sidebar buttons only enable, × removes)
   const enableSection = (section: keyof EnabledSections) => {

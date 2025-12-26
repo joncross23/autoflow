@@ -5,6 +5,7 @@
  */
 
 import { createClient } from "@/lib/supabase/client";
+import { escapeIlikePattern } from "@/lib/security/sanitise";
 import type { DbIdea, DbIdeaInsert, DbIdeaUpdate, IdeaStatus, RiceImpact } from "@/types/database";
 
 // ============================================
@@ -74,9 +75,11 @@ export async function getIdeas(filters?: IdeaFilters): Promise<DbIdea[]> {
   }
 
   // Search filter (title and description)
+  // Escape special ILIKE characters to prevent SQL injection
   if (filters?.search) {
+    const escapedSearch = escapeIlikePattern(filters.search);
     query = query.or(
-      `title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+      `title.ilike.%${escapedSearch}%,description.ilike.%${escapedSearch}%`
     );
   }
 

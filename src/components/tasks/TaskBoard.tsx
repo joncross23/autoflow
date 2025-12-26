@@ -52,22 +52,8 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // Auto-open task modal when initialTaskId is provided
-  useEffect(() => {
-    if (initialTaskId && tasks.length > 0 && !selectedTask) {
-      const task = tasks.find((t) => t.id === initialTaskId);
-      if (task) {
-        setSelectedTask(task);
-        setIsNewTask(false);
-      }
-    }
-  }, [initialTaskId, tasks, selectedTask]);
-
-  const loadData = async () => {
+  // Wrap loadData in useCallback for proper dependency tracking
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -163,7 +149,22 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [initialIdeaFilter]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Auto-open task modal when initialTaskId is provided
+  useEffect(() => {
+    if (initialTaskId && tasks.length > 0 && !selectedTask) {
+      const task = tasks.find((t) => t.id === initialTaskId);
+      if (task) {
+        setSelectedTask(task);
+        setIsNewTask(false);
+      }
+    }
+  }, [initialTaskId, tasks, selectedTask]);
 
   // Only count tasks that are on the board (have column_id)
   const boardTasks = useMemo(() => tasks.filter(t => t.column_id), [tasks]);
