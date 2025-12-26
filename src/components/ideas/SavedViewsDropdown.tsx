@@ -15,6 +15,7 @@ import {
   Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import {
   getSavedViews,
   createSavedView,
@@ -38,6 +39,7 @@ export function SavedViewsDropdown({
   onLoadView,
   onShareView,
 }: SavedViewsDropdownProps) {
+  const { confirm, dialog } = useConfirmDialog();
   const [isOpen, setIsOpen] = useState(false);
   const [views, setViews] = useState<DbSavedView[]>([]);
   const [loading, setLoading] = useState(true);
@@ -130,7 +132,14 @@ export function SavedViewsDropdown({
   };
 
   const handleDeleteView = async (view: DbSavedView) => {
-    if (!confirm(`Delete view "${view.name}"?`)) return;
+    const confirmed = await confirm({
+      title: "Delete View",
+      message: `Are you sure you want to delete the view "${view.name}"?`,
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
 
     try {
       await deleteSavedView(view.id);
@@ -399,6 +408,8 @@ export function SavedViewsDropdown({
           </div>
         </>
       )}
+
+      {dialog}
     </div>
   );
 }

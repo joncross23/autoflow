@@ -15,6 +15,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import {
   getPublishedViews,
   publishView,
@@ -41,6 +42,7 @@ export function PublishViewDialog({
   currentFilters,
   currentColumns,
 }: PublishViewDialogProps) {
+  const { confirm, dialog } = useConfirmDialog();
   const [mode, setMode] = useState<"publish" | "manage">("publish");
   const [publishedViews, setPublishedViews] = useState<DbPublishedView[]>([]);
   const [loading, setLoading] = useState(false);
@@ -163,7 +165,14 @@ export function PublishViewDialog({
   };
 
   const handleDelete = async (view: DbPublishedView) => {
-    if (!confirm(`Delete "${view.name}"? This cannot be undone.`)) return;
+    const confirmed = await confirm({
+      title: "Delete Published View",
+      message: `Are you sure you want to delete "${view.name}"? This cannot be undone.`,
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
 
     try {
       await deletePublishedView(view.id);
@@ -499,6 +508,8 @@ export function PublishViewDialog({
           )}
         </div>
       </div>
+
+      {dialog}
     </>
   );
 }

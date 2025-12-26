@@ -10,6 +10,7 @@ import { getIdeas } from "@/lib/api/ideas";
 import { getLabels } from "@/lib/api/labels";
 import { createTask, updateTask, deleteTask } from "@/lib/api/tasks";
 import { createClient } from "@/lib/supabase/client";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import type { DbColumn, DbTask, DbIdea, DbLabel, DbChecklistItem } from "@/types/database";
 
 // Type for Supabase join results when selecting labels through task_labels junction
@@ -44,6 +45,7 @@ interface TaskBoardProps {
 }
 
 export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) {
+  const { confirm, dialog } = useConfirmDialog();
   const [columns, setColumns] = useState<DbColumn[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
@@ -309,6 +311,41 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
             if (attachmentCount === 0) return false;
             break;
           }
+
+          case "createdAt": {
+            const createdAtValue = values[0] as string;
+            if (!task.created_at) return false;
+
+            const createdDate = new Date(task.created_at);
+            createdDate.setHours(0, 0, 0, 0);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const startOfQuarter = new Date(today.getFullYear(), Math.floor(today.getMonth() / 3) * 3, 1);
+
+            switch (createdAtValue) {
+              case "today":
+                if (createdDate.getTime() !== today.getTime()) return false;
+                break;
+              case "yesterday":
+                if (createdDate.getTime() !== yesterday.getTime()) return false;
+                break;
+              case "this-week":
+                if (createdDate < startOfWeek || createdDate > today) return false;
+                break;
+              case "this-month":
+                if (createdDate < startOfMonth || createdDate > today) return false;
+                break;
+              case "this-quarter":
+                if (createdDate < startOfQuarter || createdDate > today) return false;
+                break;
+            }
+            break;
+          }
         }
       }
 
@@ -334,7 +371,14 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
   };
 
   const handleTaskDelete = async (task: DbTask) => {
-    if (!confirm("Are you sure you want to delete this task?")) return;
+    const confirmed = await confirm({
+      title: "Delete Task",
+      message: "Are you sure you want to delete this task?",
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
     try {
       await deleteTask(task.id);
       setTasks((prev) => prev.filter((t) => t.id !== task.id));
@@ -519,6 +563,8 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
           onLabelsChange={refreshLabels}
         />
       )}
+
+      {dialog}
     </div>
   );
 }
