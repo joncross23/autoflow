@@ -254,11 +254,20 @@ export function AppearanceSettings() {
                 );
               })}
 
-              {/* Eyedropper */}
+              {/* Eyedropper - applies picked colour to background */}
               <EyedropperButton
                 onColorPicked={(hex) => {
-                  // For now, just log - could be used for custom accent in future
-                  console.log("Picked colour:", hex);
+                  // Apply to current background based on type
+                  if (currentBackground.type === "gradient") {
+                    // Apply to gradient start colour
+                    setCurrentBackground({
+                      ...currentBackground,
+                      gradient: { ...currentBackground.gradient, from: hex },
+                    });
+                  } else {
+                    // Apply to solid colour
+                    setCurrentBackground({ ...currentBackground, solid: hex });
+                  }
                 }}
                 className="self-start mt-3"
               />

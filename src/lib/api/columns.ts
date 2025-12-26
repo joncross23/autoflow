@@ -5,7 +5,7 @@
  */
 
 import { createClient } from "@/lib/supabase/client";
-import type { DbColumn, DbColumnInsert, DbColumnUpdate, ColumnColor } from "@/types/database";
+import type { DbColumn, DbColumnInsert, DbColumnUpdate, ColumnColor, DbTask } from "@/types/database";
 
 // Default columns for new users
 const DEFAULT_COLUMNS: { name: string; color: ColumnColor; position: number }[] = [
@@ -143,7 +143,7 @@ export async function reorderGlobalColumns(columnIds: string[]): Promise<void> {
  */
 export async function getDeliveryBoardData(ideaIds?: string[]): Promise<{
   columns: DbColumn[];
-  tasksByColumn: Record<string, any[]>;
+  tasksByColumn: Record<string, DbTask[]>;
 }> {
   const supabase = createClient();
 
@@ -169,7 +169,7 @@ export async function getDeliveryBoardData(ideaIds?: string[]): Promise<{
   }
 
   // Group tasks by column_id
-  const tasksByColumn: Record<string, any[]> = {};
+  const tasksByColumn: Record<string, DbTask[]> = {};
 
   // Initialize empty arrays for each column
   columns.forEach((column) => {
@@ -177,7 +177,7 @@ export async function getDeliveryBoardData(ideaIds?: string[]): Promise<{
   });
 
   // Add tasks to their respective columns
-  tasks?.forEach((task) => {
+  (tasks as DbTask[] | null)?.forEach((task) => {
     if (task.column_id && tasksByColumn[task.column_id]) {
       tasksByColumn[task.column_id].push(task);
     } else {
@@ -344,7 +344,7 @@ export async function reorderColumns(
  */
 export async function getProjectTasksByColumn(projectId: string): Promise<{
   columns: DbColumn[];
-  tasksByColumn: Record<string, any[]>;
+  tasksByColumn: Record<string, DbTask[]>;
 }> {
   const supabase = createClient();
 
@@ -361,13 +361,13 @@ export async function getProjectTasksByColumn(projectId: string): Promise<{
     throw new Error(`Failed to fetch tasks: ${error.message}`);
   }
 
-  const tasksByColumn: Record<string, any[]> = {};
+  const tasksByColumn: Record<string, DbTask[]> = {};
 
   columns.forEach((column) => {
     tasksByColumn[column.id] = [];
   });
 
-  tasks?.forEach((task) => {
+  (tasks as DbTask[] | null)?.forEach((task) => {
     if (task.column_id && tasksByColumn[task.column_id]) {
       tasksByColumn[task.column_id].push(task);
     }
