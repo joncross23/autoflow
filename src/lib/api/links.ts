@@ -220,6 +220,7 @@ export interface BacklinkInfo {
 /**
  * Get backlinks pointing TO this idea
  * These are links from other tasks/ideas that have url = `idea://{ideaId}`
+ * OPTIMISED: Batched source entity lookups instead of N+1
  */
 export async function getIdeaBacklinks(ideaId: string): Promise<BacklinkInfo[]> {
   const supabase = createClient();
@@ -238,47 +239,51 @@ export async function getIdeaBacklinks(ideaId: string): Promise<BacklinkInfo[]> 
 
   if (!data || data.length === 0) return [];
 
-  // Enrich with source entity titles
-  const backlinks: BacklinkInfo[] = [];
+  // Collect unique IDs for batch fetching
+  const taskIds = Array.from(new Set(data.filter(l => l.task_id).map(l => l.task_id!)));
+  const ideaIds = Array.from(new Set(data.filter(l => l.idea_id).map(l => l.idea_id!)));
 
-  for (const link of data) {
+  // Batch fetch titles in parallel
+  const [tasksResult, ideasResult] = await Promise.all([
+    taskIds.length > 0
+      ? supabase.from("tasks").select("id, title").in("id", taskIds)
+      : Promise.resolve({ data: [] as { id: string; title: string }[] }),
+    ideaIds.length > 0
+      ? supabase.from("ideas").select("id, title").in("id", ideaIds)
+      : Promise.resolve({ data: [] as { id: string; title: string }[] }),
+  ]);
+
+  // Build lookup maps
+  const taskTitles = new Map<string, string>();
+  (tasksResult.data || []).forEach(t => taskTitles.set(t.id, t.title));
+
+  const ideaTitles = new Map<string, string>();
+  (ideasResult.data || []).forEach(i => ideaTitles.set(i.id, i.title));
+
+  // Build backlinks with cached titles
+  return data.map(link => {
     if (link.task_id) {
-      // Link is from a task - get task title
-      const { data: task } = await supabase
-        .from("tasks")
-        .select("title")
-        .eq("id", link.task_id)
-        .single();
-
-      backlinks.push({
+      return {
         link,
-        sourceType: "task",
+        sourceType: "task" as const,
         sourceId: link.task_id,
-        sourceTitle: task?.title || "Untitled task",
-      });
-    } else if (link.idea_id) {
-      // Link is from another idea - get idea title
-      const { data: idea } = await supabase
-        .from("ideas")
-        .select("title")
-        .eq("id", link.idea_id)
-        .single();
-
-      backlinks.push({
+        sourceTitle: taskTitles.get(link.task_id) || "Untitled task",
+      };
+    } else {
+      return {
         link,
-        sourceType: "idea",
-        sourceId: link.idea_id,
-        sourceTitle: idea?.title || "Untitled idea",
-      });
+        sourceType: "idea" as const,
+        sourceId: link.idea_id!,
+        sourceTitle: ideaTitles.get(link.idea_id!) || "Untitled idea",
+      };
     }
-  }
-
-  return backlinks;
+  });
 }
 
 /**
  * Get backlinks pointing TO this task
  * These are links from other ideas/tasks that have url = `task://{taskId}`
+ * OPTIMISED: Batched source entity lookups instead of N+1
  */
 export async function getTaskBacklinks(taskId: string): Promise<BacklinkInfo[]> {
   const supabase = createClient();
@@ -297,42 +302,45 @@ export async function getTaskBacklinks(taskId: string): Promise<BacklinkInfo[]> 
 
   if (!data || data.length === 0) return [];
 
-  // Enrich with source entity titles
-  const backlinks: BacklinkInfo[] = [];
+  // Collect unique IDs for batch fetching
+  const ideaIds = Array.from(new Set(data.filter(l => l.idea_id).map(l => l.idea_id!)));
+  const taskIds = Array.from(new Set(data.filter(l => l.task_id).map(l => l.task_id!)));
 
-  for (const link of data) {
+  // Batch fetch titles in parallel
+  const [ideasResult, tasksResult] = await Promise.all([
+    ideaIds.length > 0
+      ? supabase.from("ideas").select("id, title").in("id", ideaIds)
+      : Promise.resolve({ data: [] as { id: string; title: string }[] }),
+    taskIds.length > 0
+      ? supabase.from("tasks").select("id, title").in("id", taskIds)
+      : Promise.resolve({ data: [] as { id: string; title: string }[] }),
+  ]);
+
+  // Build lookup maps
+  const ideaTitles = new Map<string, string>();
+  (ideasResult.data || []).forEach(i => ideaTitles.set(i.id, i.title));
+
+  const taskTitles = new Map<string, string>();
+  (tasksResult.data || []).forEach(t => taskTitles.set(t.id, t.title));
+
+  // Build backlinks with cached titles
+  return data.map(link => {
     if (link.idea_id) {
-      // Link is from an idea - get idea title
-      const { data: idea } = await supabase
-        .from("ideas")
-        .select("title")
-        .eq("id", link.idea_id)
-        .single();
-
-      backlinks.push({
+      return {
         link,
-        sourceType: "idea",
+        sourceType: "idea" as const,
         sourceId: link.idea_id,
-        sourceTitle: idea?.title || "Untitled idea",
-      });
-    } else if (link.task_id) {
-      // Link is from another task - get task title
-      const { data: task } = await supabase
-        .from("tasks")
-        .select("title")
-        .eq("id", link.task_id)
-        .single();
-
-      backlinks.push({
+        sourceTitle: ideaTitles.get(link.idea_id) || "Untitled idea",
+      };
+    } else {
+      return {
         link,
-        sourceType: "task",
-        sourceId: link.task_id,
-        sourceTitle: task?.title || "Untitled task",
-      });
+        sourceType: "task" as const,
+        sourceId: link.task_id!,
+        sourceTitle: taskTitles.get(link.task_id!) || "Untitled task",
+      };
     }
-  }
-
-  return backlinks;
+  });
 }
 
 // ============================================

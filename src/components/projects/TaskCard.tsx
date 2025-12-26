@@ -15,7 +15,7 @@ import {
   Tag,
   AlertCircle,
 } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo, useCallback } from "react";
 import type { DbTask, DbLabel } from "@/types/database";
 import { LABEL_COLOR_CLASSES } from "@/types/database";
 import { AvatarStack } from "@/components/ui/Avatar";
@@ -40,7 +40,7 @@ interface TaskCardProps {
   isGhost?: boolean;
 }
 
-export function TaskCard({
+function TaskCardComponent({
   task,
   labels = [],
   assignees = [],
@@ -315,3 +315,6 @@ export function TaskCard({
     </div>
   );
 }
+
+// Memoise to prevent re-renders when sibling cards change
+export const TaskCard = memo(TaskCardComponent);

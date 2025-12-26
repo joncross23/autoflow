@@ -353,24 +353,24 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     });
   }, [boardTasks, filters, taskLabels, searchQuery, ideas, taskAttachmentCounts]);
 
-  const handleTasksChange = (updatedTasks: DbTask[]) => {
+  const handleTasksChange = useCallback((updatedTasks: DbTask[]) => {
     setTasks(updatedTasks);
-  };
+  }, []);
 
-  // Task modal handlers
-  const handleTaskClick = (task: DbTask) => {
+  // Task modal handlers - memoised to prevent child re-renders
+  const handleTaskClick = useCallback((task: DbTask) => {
     setSelectedTask(task);
     setIsNewTask(false); // Clicking existing task
-  };
+  }, []);
 
-  const handleTaskSave = (updatedTask: DbTask) => {
+  const handleTaskSave = useCallback((updatedTask: DbTask) => {
     setTasks((prev) =>
       prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
     );
     setSelectedTask(updatedTask);
-  };
+  }, []);
 
-  const handleTaskDelete = async (task: DbTask) => {
+  const handleTaskDelete = useCallback(async (task: DbTask) => {
     const confirmed = await confirm({
       title: "Delete Task",
       message: "Are you sure you want to delete this task?",
@@ -386,9 +386,9 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     } catch (err) {
       console.error("Failed to delete task:", err);
     }
-  };
+  }, [confirm]);
 
-  const handleToggleTask = async (task: DbTask) => {
+  const handleToggleTask = useCallback(async (task: DbTask) => {
     try {
       const updated = await updateTask(task.id, { completed: !task.completed });
       setTasks((prev) =>
@@ -397,9 +397,9 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     } catch (err) {
       console.error("Failed to toggle task:", err);
     }
-  };
+  }, []);
 
-  const handleAddTask = async (columnId: string, title: string) => {
+  const handleAddTask = useCallback(async (columnId: string, title: string) => {
     // Auto-link to first idea in filter if there's exactly one idea filter with one value
     const ideaFilter = filters.find((f) => f.type === "linkedIdea");
     const ideaValues = ideaFilter && Array.isArray(ideaFilter.value) ? ideaFilter.value : [];
@@ -414,7 +414,7 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     setTasks((prev) => [...prev, newTask]);
     // Return the task so CMD+Enter can open it
     return newTask;
-  };
+  }, [filters]);
 
   // Refresh attachment counts when attachments change in task modal
   const refreshAttachmentCounts = useCallback(async () => {
@@ -449,12 +449,19 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     setTaskLabels(labelsMap);
   }, []);
 
-  // Get parent idea title for task modal
-  const getIdeaTitle = (ideaId: string | null) => {
+  // Get parent idea title for task modal - memoised lookup map
+  const ideaTitleMap = useMemo(() => {
+    const map = new Map<string, string>();
+    ideas.forEach((idea) => {
+      map.set(idea.id, idea.title);
+    });
+    return map;
+  }, [ideas]);
+
+  const getIdeaTitle = useCallback((ideaId: string | null) => {
     if (!ideaId) return undefined;
-    const idea = ideas.find((i) => i.id === ideaId);
-    return idea?.title;
-  };
+    return ideaTitleMap.get(ideaId);
+  }, [ideaTitleMap]);
 
   if (loading) {
     return (
