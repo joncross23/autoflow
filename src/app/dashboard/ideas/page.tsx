@@ -19,6 +19,7 @@ import {
 } from "@/lib/api/ideas";
 import { getAllIdeaLabels, getLabels } from "@/lib/api/labels";
 import { NoIdeasEmptyState } from "@/components/shared";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import {
   IdeasTable,
   IdeaForm,
@@ -125,6 +126,7 @@ export default function IdeasPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedId = searchParams.get("selected");
+  const { confirm, dialog } = useConfirmDialog();
 
   // Data state
   const [ideas, setIdeas] = useState<DbIdea[]>([]);
@@ -228,9 +230,14 @@ export default function IdeasPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this idea?")) {
-      return;
-    }
+    const confirmed = await confirm({
+      title: "Delete Idea",
+      message: "Are you sure you want to delete this idea? This cannot be undone.",
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
 
     try {
       await deleteIdea(id);
@@ -529,6 +536,8 @@ export default function IdeasPage() {
         currentFilters={filters as unknown as SavedViewFilters}
         currentColumns={columns}
       />
+
+      {dialog}
     </div>
   );
 }

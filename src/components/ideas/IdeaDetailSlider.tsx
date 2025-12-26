@@ -27,6 +27,7 @@ import {
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useToast } from "@/hooks/useToast";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { CollapsibleSection } from "@/components/shared/CollapsibleSection";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
@@ -83,6 +84,7 @@ export function IdeaDetailSlider({
   const router = useRouter();
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const { confirm, dialog } = useConfirmDialog();
 
   const [isVisible, setIsVisible] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
@@ -215,7 +217,14 @@ export function IdeaDetailSlider({
 
   const handleDelete = async () => {
     setShowMoreMenu(false);
-    if (!confirm("Are you sure you want to delete this idea? This cannot be undone.")) return;
+    const confirmed = await confirm({
+      title: "Delete Idea",
+      message: "Are you sure you want to delete this idea? This cannot be undone.",
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
 
     try {
       await deleteIdea(idea.id);
@@ -243,7 +252,14 @@ export function IdeaDetailSlider({
 
   const handleArchive = async () => {
     setShowMoreMenu(false);
-    if (!window.confirm("Archive this idea? It can be restored later.")) return;
+    const confirmed = await confirm({
+      title: "Archive Idea",
+      message: "Archive this idea? It can be restored later.",
+      confirmLabel: "Archive",
+      variant: "warning",
+      icon: "archive",
+    });
+    if (!confirmed) return;
 
     try {
       await archiveIdea(idea.id);
@@ -743,6 +759,8 @@ export function IdeaDetailSlider({
           </div>
         </div>
       </div>
+
+      {dialog}
     </>
   );
 }

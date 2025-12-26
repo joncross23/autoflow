@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Paperclip, Plus, Trash2, Download, Upload, Eye, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import {
   getIdeaAttachments,
   getTaskAttachments,
@@ -40,6 +41,7 @@ export function AttachmentsSection({
   onAttachmentsChange,
   hideHeader = false,
 }: AttachmentsSectionProps) {
+  const { confirm, dialog } = useConfirmDialog();
   const [attachments, setAttachments] = useState<DbAttachment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -156,7 +158,14 @@ export function AttachmentsSection({
 
 
   async function handleDelete(attachment: DbAttachment) {
-    if (!confirm("Delete this attachment?")) return;
+    const confirmed = await confirm({
+      title: "Delete Attachment",
+      message: "Are you sure you want to delete this attachment?",
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
 
     try {
       await deleteAttachment(attachment.id);
@@ -420,6 +429,8 @@ export function AttachmentsSection({
           </div>
         </div>
       )}
+
+      {dialog}
     </div>
   );
 }

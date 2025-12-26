@@ -13,6 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import {
   getIdeaComments,
   createComment,
@@ -40,6 +41,7 @@ function CommentItem({
   onUpdate,
   depth = 0,
 }: CommentItemProps) {
+  const { confirm, dialog } = useConfirmDialog();
   const [showMenu, setShowMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
@@ -78,7 +80,14 @@ function CommentItem({
   };
 
   const handleDelete = async () => {
-    if (!confirm("Delete this comment?")) return;
+    const confirmed = await confirm({
+      title: "Delete Comment",
+      message: "Are you sure you want to delete this comment?",
+      confirmLabel: "Delete",
+      variant: "danger",
+      icon: "trash",
+    });
+    if (!confirmed) return;
 
     try {
       setIsDeleting(true);
@@ -252,6 +261,8 @@ function CommentItem({
           )}
         </div>
       )}
+
+      {dialog}
     </div>
   );
 }

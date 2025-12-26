@@ -31,6 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useToast } from "@/hooks/useToast";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { updateTask, archiveTask, duplicateTask } from "@/lib/api/tasks";
 import { getTaskLabels } from "@/lib/api/labels";
 import { getTaskChecklists } from "@/lib/api/checklists";
@@ -173,6 +174,7 @@ export function TaskDetailModal({
 }: TaskDetailModalProps) {
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const { confirm, dialog } = useConfirmDialog();
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
   const [priority, setPriority] = useState<Priority | null>(task.priority);
@@ -277,9 +279,14 @@ export function TaskDetailModal({
 
   // Archive task handler
   const handleArchive = useCallback(async () => {
-    if (!window.confirm("Are you sure you want to archive this task? It will be marked as complete and removed from the board.")) {
-      return;
-    }
+    const confirmed = await confirm({
+      title: "Archive Task",
+      message: "Are you sure you want to archive this task? It will be marked as complete and removed from the board.",
+      confirmLabel: "Archive",
+      variant: "warning",
+      icon: "archive",
+    });
+    if (!confirmed) return;
 
     try {
       setActionLoading("archive");
@@ -293,7 +300,7 @@ export function TaskDetailModal({
     } finally {
       setActionLoading(null);
     }
-  }, [task.id, onSave, onClose, toast]);
+  }, [task.id, onSave, onClose, toast, confirm]);
 
   // Copy task handler
   const handleCopy = useCallback(async () => {
@@ -861,6 +868,8 @@ export function TaskDetailModal({
           )}
         </div>
       </div>
+
+      {dialog}
     </div>
   );
 }
