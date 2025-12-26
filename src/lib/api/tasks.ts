@@ -129,3 +129,76 @@ export async function deleteTask(id: string): Promise<void> {
     throw new Error(error.message);
   }
 }
+
+/**
+ * Archive a task (soft delete)
+ * Sets the task as completed and moves it out of view
+ */
+export async function archiveTask(id: string): Promise<DbTask> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({ completed: true, column_id: null })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as DbTask;
+}
+
+/**
+ * Duplicate a task (creates a copy with "(Copy)" suffix)
+ */
+export async function duplicateTask(id: string): Promise<DbTask> {
+  const supabase = createClient();
+
+  // Fetch original task
+  const { data: original, error: fetchError } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !original) {
+    throw new Error("Task not found");
+  }
+
+  // Get max position in the same column
+  const { data: maxPosData } = await supabase
+    .from("tasks")
+    .select("position")
+    .eq("column_id", original.column_id)
+    .order("position", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const nextPosition = maxPosData ? maxPosData.position + 1 : 0;
+
+  // Create copy (excluding id, created_at, updated_at which are auto-generated)
+  const { data, error } = await supabase
+    .from("tasks")
+    .insert({
+      idea_id: original.idea_id,
+      project_id: original.project_id,
+      column_id: original.column_id,
+      title: `${original.title} (Copy)`,
+      description: original.description,
+      completed: false, // New copy starts as incomplete
+      position: nextPosition,
+      due_date: original.due_date,
+      priority: original.priority,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as DbTask;
+}

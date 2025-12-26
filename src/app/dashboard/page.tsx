@@ -12,25 +12,38 @@ import {
   Sparkles,
   MessageSquare,
   ListTodo,
+  Plus,
+  Pencil,
+  Archive,
+  ArchiveRestore,
+  Trash2,
+  Activity,
 } from "lucide-react";
 import { QuickCapture } from "@/components/ideas";
 import { getIdeaCounts, getIdeas } from "@/lib/api/ideas";
+import { getRecentActivity, type ActivityLogEntry, type ActivityAction } from "@/lib/api/activity";
 import { StatusBadge } from "@/components/ideas/StatusBadge";
+import { useToast } from "@/hooks/useToast";
 import type { IdeaStatus, DbIdea } from "@/types/database";
 
 export default function DashboardPage() {
   const [ideaCounts, setIdeaCounts] = useState<Record<IdeaStatus, number> | null>(null);
   const [activeIdeas, setActiveIdeas] = useState<DbIdea[]>([]);
+  const [completedIdeas, setCompletedIdeas] = useState<DbIdea[]>([]);
+  const [activities, setActivities] = useState<ActivityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   const loadStats = async () => {
     try {
-      const [counts, ideas] = await Promise.all([
+      const [counts, ideas, completed] = await Promise.all([
         getIdeaCounts(),
         getIdeas({ status: ["accepted", "doing"], archived: false }),
+        getIdeas({ status: ["complete"], archived: false }),
       ]);
       setIdeaCounts(counts);
       setActiveIdeas(ideas);
+      setCompletedIdeas(completed);
     } catch (err) {
       console.error("Failed to load dashboard data:", err);
     } finally {
@@ -38,8 +51,20 @@ export default function DashboardPage() {
     }
   };
 
+  const loadActivities = async () => {
+    try {
+      const activityData = await getRecentActivity(10);
+      setActivities(activityData);
+    } catch (err) {
+      console.error("Failed to load activity data:", err);
+    } finally {
+      setActivitiesLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadStats();
+    loadActivities();
   }, []);
 
   // Total ideas logged (all statuses)
@@ -60,6 +85,19 @@ export default function DashboardPage() {
   const doneCount = ideaCounts
     ? (ideaCounts.complete || 0)
     : 0;
+
+  // Calculate completed this week and this month dynamically
+  const now = new Date();
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  const completedThisWeek = completedIdeas.filter(
+    (idea) => idea.completed_at && new Date(idea.completed_at) >= weekAgo
+  ).length;
+
+  const completedThisMonth = completedIdeas.filter(
+    (idea) => idea.completed_at && new Date(idea.completed_at) >= monthAgo
+  ).length;
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto pb-24 md:pb-6">
@@ -127,9 +165,9 @@ export default function DashboardPage() {
               </Link>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: "This Week", value: "2", href: "/dashboard/ideas?status=complete&period=week" },
-                  { label: "This Month", value: "5", href: "/dashboard/ideas?status=complete&period=month" },
-                  { label: "All Time", value: doneCount.toString(), href: "/dashboard/ideas?status=complete" },
+                  { label: "This Week", value: loading ? "-" : completedThisWeek.toString(), href: "/dashboard/ideas?status=complete&period=week" },
+                  { label: "This Month", value: loading ? "-" : completedThisMonth.toString(), href: "/dashboard/ideas?status=complete&period=month" },
+                  { label: "All Time", value: loading ? "-" : doneCount.toString(), href: "/dashboard/ideas?status=complete" },
                 ].map((item) => (
                   <Link
                     key={item.label}
@@ -178,7 +216,7 @@ export default function DashboardPage() {
 
         {/* Right Column - Activity Feed (hidden on mobile) */}
         <div className="hidden lg:block">
-          <ActivityFeed />
+          <ActivityFeed activities={activities} loading={activitiesLoading} />
         </div>
       </div>
     </div>
@@ -351,42 +389,152 @@ function IdeaCard({ idea }: { idea: DbIdea }) {
   );
 }
 
-function ActivityFeed() {
-  const activities = [
-    { id: 1, icon: Lightbulb, action: "captured", title: "New automation idea", time: "5m ago" },
-    { id: 2, icon: CheckCircle, action: "completed", title: "Set up email triggers", time: "23m ago" },
-    { id: 3, icon: ListTodo, action: "updated", title: "Email Automation System", time: "1h ago" },
-    { id: 4, icon: Sparkles, action: "analysed", title: "3 ideas evaluated", time: "2h ago" },
-    { id: 5, icon: TrendingUp, action: "accepted", title: "CRM data sync idea", time: "3h ago" },
-    { id: 6, icon: MessageSquare, action: "commented", title: "on Invoice Processing", time: "4h ago" },
-    { id: 7, icon: CheckCircle, action: "completed", title: "Design API endpoints", time: "5h ago" },
-  ];
+/**
+ * Get the appropriate icon component for an activity action
+ */
+function getActivityIconComponent(action: ActivityAction): React.ComponentType<{ className?: string }> {
+  switch (action) {
+    case "created":
+      return Plus;
+    case "deleted":
+      return Trash2;
+    case "status_changed":
+      return TrendingUp;
+    case "archived":
+      return Archive;
+    case "unarchived":
+      return ArchiveRestore;
+    case "commented":
+      return MessageSquare;
+    case "updated":
+      return Pencil;
+    default:
+      return Activity;
+  }
+}
+
+/**
+ * Get a human-readable action label for display
+ */
+function getActionLabel(entry: ActivityLogEntry): string {
+  const { action, field_name, old_value, new_value } = entry;
+
+  switch (action) {
+    case "created":
+      return "created";
+    case "deleted":
+      return "deleted";
+    case "status_changed":
+      return `moved to ${new_value || "unknown"}`;
+    case "archived":
+      return "archived";
+    case "unarchived":
+      return "unarchived";
+    case "commented":
+      return "commented on";
+    case "updated":
+      if (field_name === "title") {
+        return "renamed";
+      }
+      if (field_name === "description") {
+        return old_value ? "updated description of" : "added description to";
+      }
+      if (field_name === "status") {
+        return `moved to ${new_value || "unknown"}`;
+      }
+      return `updated ${field_name?.replace(/_/g, " ") || ""}`;
+    default:
+      return action;
+  }
+}
+
+/**
+ * Format a timestamp into a relative time string
+ */
+function formatRelativeTime(timestamp: string): string {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMins < 1) {
+    return "just now";
+  } else if (diffMins < 60) {
+    return `${diffMins}m ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours}h ago`;
+  } else if (diffDays < 7) {
+    return `${diffDays}d ago`;
+  } else {
+    return date.toLocaleDateString();
+  }
+}
+
+function ActivityFeed({
+  activities,
+  loading,
+}: {
+  activities: ActivityLogEntry[];
+  loading: boolean;
+}) {
+  const { toast } = useToast();
+
+  const handleViewAllClick = () => {
+    toast("Activity page coming soon", "info");
+  };
 
   return (
     <div className="card p-5 h-fit">
       <h3 className="text-[15px] font-semibold mb-4">Recent Activity</h3>
 
-      <div className="space-y-0">
-        {activities.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-start gap-3 py-2.5 border-b border-border-subtle last:border-0"
-          >
-            <span className="w-7 h-7 rounded-md bg-bg-tertiary flex items-center justify-center shrink-0">
-              <item.icon className="h-3.5 w-3.5 text-foreground-muted" />
-            </span>
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px]">
-                <span className="text-foreground-muted">{item.action}</span>{" "}
-                <span className="font-medium">{item.title}</span>
-              </div>
-              <div className="text-[11px] text-foreground-muted">{item.time}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-foreground-muted" />
+        </div>
+      ) : activities.length === 0 ? (
+        <div className="py-8 text-center">
+          <Activity className="h-8 w-8 mx-auto text-foreground-muted mb-2" />
+          <p className="text-sm text-foreground-muted">No recent activity</p>
+          <p className="text-xs text-foreground-muted mt-1">
+            Activity will appear here as you work on ideas
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-0">
+          {activities.map((entry) => {
+            const IconComponent = getActivityIconComponent(entry.action);
+            const actionLabel = getActionLabel(entry);
+            const title = entry.idea_title || "Unknown idea";
+            const timeAgo = formatRelativeTime(entry.created_at);
 
-      <button className="w-full mt-4 py-2.5 text-xs text-foreground-muted bg-bg-tertiary rounded-md hover:bg-bg-hover transition-colors">
+            return (
+              <Link
+                key={entry.id}
+                href={entry.idea_id ? `/dashboard/ideas?selected=${entry.idea_id}` : "/dashboard/ideas"}
+                className="flex items-start gap-3 py-2.5 border-b border-border-subtle last:border-0 hover:bg-bg-hover -mx-2 px-2 rounded transition-colors"
+              >
+                <span className="w-7 h-7 rounded-md bg-bg-tertiary flex items-center justify-center shrink-0">
+                  <IconComponent className="h-3.5 w-3.5 text-foreground-muted" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px]">
+                    <span className="text-foreground-muted">{actionLabel}</span>{" "}
+                    <span className="font-medium truncate">{title}</span>
+                  </div>
+                  <div className="text-[11px] text-foreground-muted">{timeAgo}</div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      <button
+        onClick={handleViewAllClick}
+        className="w-full mt-4 py-2.5 text-xs text-foreground-muted bg-bg-tertiary rounded-md hover:bg-bg-hover transition-colors"
+      >
         View all activity →
       </button>
     </div>

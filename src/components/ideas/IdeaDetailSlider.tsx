@@ -39,7 +39,7 @@ import { LabelsSection } from "@/components/shared/LabelsSection";
 import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
-import { updateIdea, updateIdeaStatus, deleteIdea } from "@/lib/api/ideas";
+import { updateIdea, updateIdeaStatus, deleteIdea, archiveIdea, duplicateIdea } from "@/lib/api/ideas";
 import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon } from "@/types/database";
 
 interface IdeaDetailSliderProps {
@@ -228,14 +228,32 @@ export function IdeaDetailSlider({
     }
   };
 
-  const handleDuplicate = () => {
+  const handleDuplicate = async () => {
     setShowMoreMenu(false);
-    toast("Duplicate feature coming soon", "info");
+
+    try {
+      const newIdea = await duplicateIdea(idea.id);
+      toast(`Created "${newIdea.title}"`, "success");
+      onUpdate(newIdea); // Trigger refresh of the ideas list
+    } catch (error) {
+      console.error("Failed to duplicate idea:", error);
+      toast("Failed to duplicate idea", "error");
+    }
   };
 
-  const handleArchive = () => {
+  const handleArchive = async () => {
     setShowMoreMenu(false);
-    toast("Archive feature coming soon", "info");
+    if (!window.confirm("Archive this idea? It can be restored later.")) return;
+
+    try {
+      await archiveIdea(idea.id);
+      toast("Idea archived", "success");
+      handleClose();
+      onDelete(idea.id); // Remove from list (archived ideas are hidden by default)
+    } catch (error) {
+      console.error("Failed to archive idea:", error);
+      toast("Failed to archive idea", "error");
+    }
   };
 
   const handleAcceptIdea = async () => {
