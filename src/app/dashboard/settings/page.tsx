@@ -146,6 +146,7 @@ export default function SettingsPage() {
                 onClick={handleSignOut}
                 disabled={signingOut}
                 className="btn btn-outline flex items-center gap-2"
+                data-testid="user-menu"
               >
                 {signingOut ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

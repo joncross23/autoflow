@@ -352,7 +352,7 @@ export function TaskDetailModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full md:w-1/2 md:min-w-[600px] md:max-w-[900px] md:my-8 md:mx-4 min-h-screen md:min-h-0">
+      <div className="relative w-full md:w-1/2 md:min-w-[600px] md:max-w-[900px] md:my-8 md:mx-4 min-h-screen md:min-h-0" data-testid="task-detail-modal">
         <div className="bg-bg-secondary md:rounded-xl overflow-hidden shadow-2xl md:border md:border-border min-h-screen md:min-h-0">
           {/* Mobile Header */}
           {isMobile && (
@@ -388,6 +388,7 @@ export function TaskDetailModal({
             <button
               onClick={onClose}
               className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-lg bg-bg-tertiary/80 hover:bg-bg-hover text-foreground-secondary hover:text-foreground transition-colors z-10"
+              data-testid="task-modal-close"
             >
               <X className="h-5 w-5" />
             </button>
@@ -405,6 +406,7 @@ export function TaskDetailModal({
                   className="w-full text-xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-foreground-muted"
                   placeholder="Card title"
                   autoFocus={isNew}
+                  data-testid="task-modal-title"
                 />
               </div>
 
@@ -488,6 +490,7 @@ export function TaskDetailModal({
                     rows={isNew ? 3 : 4}
                     className="w-full p-3 bg-bg-tertiary border border-border rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Add a more detailed description..."
+                    data-testid="task-modal-description"
                   />
                   {/* AI Description Helper - only show when description is empty */}
                   <AIDescriptionHelper
@@ -566,6 +569,7 @@ export function TaskDetailModal({
                   onClick={handleSave}
                   disabled={saving}
                   className="w-full btn btn-primary mb-4"
+                  data-testid="task-modal-save"
                 >
                   {saving ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

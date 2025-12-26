@@ -389,7 +389,7 @@ export function IdeasTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-border bg-bg-secondary">
+      <div data-testid="ideas-table" className="overflow-x-auto rounded-lg border border-border bg-bg-secondary">
         <table ref={tableRef} className="w-full border-collapse">
           <thead>
             <tr className="border-b border-white/[0.06]">

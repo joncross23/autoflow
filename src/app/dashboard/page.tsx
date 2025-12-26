@@ -115,7 +115,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div data-testid="dashboard-stats" className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <DashboardStatCard
           label="Ideas Logged"
           value={loading ? "-" : totalIdeas.toString()}
