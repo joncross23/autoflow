@@ -152,7 +152,7 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
         : "idle";
 
   return (
-    <div className="card">
+    <div className="card" data-testid="quick-capture">
       <div className="flex items-center gap-2 text-muted-foreground mb-2">
         <Lightbulb className="h-4 w-4" />
         <span className="text-sm font-medium">Quick Capture</span>
@@ -217,6 +217,7 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
                     placeholder="Type an idea or click mic to speak..."
                     className="input w-full pr-12"
                     disabled={loading || isVoiceActive}
+                    data-testid="quick-capture-input"
                   />
                   <div className="absolute right-1 top-1/2 -translate-y-1/2">
                     {loading ? (
@@ -245,7 +246,7 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
 
           {/* Success message */}
           {success && (
-            <p className="mt-2 text-xs text-success">
+            <p className="mt-2 text-xs text-success" data-testid="quick-capture-success">
               Idea captured! View it in the Ideas page.
             </p>
           )}

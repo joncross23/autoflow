@@ -6,7 +6,7 @@
  * V1.3: Rich Cards feature
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Tag, Plus, X, Check, Pencil, Square, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -64,25 +64,8 @@ export function LabelsSection({
   const [isSaving, setIsSaving] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Load labels on mount
-  useEffect(() => {
-    loadLabels();
-  }, [ideaId, taskId]);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-        setShowCreateForm(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  async function loadLabels() {
+  // Load labels function wrapped in useCallback
+  const loadLabels = useCallback(async () => {
     setIsLoading(true);
     try {
       // Get all user labels
@@ -102,7 +85,25 @@ export function LabelsSection({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [ideaId, taskId]);
+
+  // Load labels on mount
+  useEffect(() => {
+    loadLabels();
+  }, [loadLabels]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+        setShowCreateForm(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Check if a label is assigned
   function isLabelAssigned(label: DbLabel) {

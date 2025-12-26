@@ -10,7 +10,33 @@ import { getIdeas } from "@/lib/api/ideas";
 import { getLabels } from "@/lib/api/labels";
 import { createTask, updateTask, deleteTask } from "@/lib/api/tasks";
 import { createClient } from "@/lib/supabase/client";
-import type { DbColumn, DbTask, DbIdea, DbLabel } from "@/types/database";
+import type { DbColumn, DbTask, DbIdea, DbLabel, DbChecklistItem } from "@/types/database";
+
+// Type for Supabase join results when selecting labels through task_labels junction
+type SupabaseTaskLabelJoinResult = Array<{
+  task_id: string;
+  labels: DbLabel | DbLabel[] | null;
+}>;
+
+// Type for Supabase join results when selecting checklists with items
+type SupabaseChecklistJoinResult = Array<{
+  task_id: string | null;
+  checklist_items: Pick<DbChecklistItem, "done">[] | Pick<DbChecklistItem, "done">;
+}>;
+
+// Helper to extract label from join result
+function extractLabel(labels: DbLabel | DbLabel[] | null): DbLabel | null {
+  if (!labels) return null;
+  return Array.isArray(labels) ? labels[0] ?? null : labels;
+}
+
+// Helper to ensure checklist items is an array
+function ensureChecklistItemsArray(
+  items: Pick<DbChecklistItem, "done">[] | Pick<DbChecklistItem, "done"> | undefined
+): Pick<DbChecklistItem, "done">[] {
+  if (!items) return [];
+  return Array.isArray(items) ? items : [items];
+}
 
 interface TaskBoardProps {
   initialIdeaFilter?: string;
@@ -52,22 +78,8 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // Auto-open task modal when initialTaskId is provided
-  useEffect(() => {
-    if (initialTaskId && tasks.length > 0 && !selectedTask) {
-      const task = tasks.find((t) => t.id === initialTaskId);
-      if (task) {
-        setSelectedTask(task);
-        setIsNewTask(false);
-      }
-    }
-  }, [initialTaskId, tasks, selectedTask]);
-
-  const loadData = async () => {
+  // Wrap loadData in useCallback for proper dependency tracking
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -98,9 +110,10 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
         .select("task_id, labels(*)");
 
       const labelsMap: Record<string, DbLabel[]> = {};
-      labelRelations?.forEach((rel: any) => {
+      (labelRelations as unknown as SupabaseTaskLabelJoinResult | null)?.forEach((rel) => {
         if (!labelsMap[rel.task_id]) labelsMap[rel.task_id] = [];
-        if (rel.labels) labelsMap[rel.task_id].push(rel.labels as DbLabel);
+        const label = extractLabel(rel.labels);
+        if (label) labelsMap[rel.task_id].push(label);
       });
 
       // Load checklist progress
@@ -111,10 +124,11 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
 
       const progressMap: Record<string, { completed: number; total: number }> =
         {};
-      checklists?.forEach((cl: any) => {
-        if (cl.task_id && cl.checklist_items) {
-          const total = cl.checklist_items.length;
-          const completed = cl.checklist_items.filter((i: { done: boolean }) => i.done).length;
+      (checklists as unknown as SupabaseChecklistJoinResult | null)?.forEach((cl) => {
+        if (cl.task_id) {
+          const items = ensureChecklistItemsArray(cl.checklist_items);
+          const total = items.length;
+          const completed = items.filter((i) => i.done).length;
           if (!progressMap[cl.task_id]) {
             progressMap[cl.task_id] = { completed: 0, total: 0 };
           }
@@ -163,7 +177,22 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [initialIdeaFilter]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Auto-open task modal when initialTaskId is provided
+  useEffect(() => {
+    if (initialTaskId && tasks.length > 0 && !selectedTask) {
+      const task = tasks.find((t) => t.id === initialTaskId);
+      if (task) {
+        setSelectedTask(task);
+        setIsNewTask(false);
+      }
+    }
+  }, [initialTaskId, tasks, selectedTask]);
 
   // Only count tasks that are on the board (have column_id)
   const boardTasks = useMemo(() => tasks.filter(t => t.column_id), [tasks]);
@@ -368,9 +397,10 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
       .select("task_id, labels(*)");
 
     const labelsMap: Record<string, DbLabel[]> = {};
-    labelRelations?.forEach((rel: any) => {
+    (labelRelations as unknown as SupabaseTaskLabelJoinResult | null)?.forEach((rel) => {
       if (!labelsMap[rel.task_id]) labelsMap[rel.task_id] = [];
-      if (rel.labels) labelsMap[rel.task_id].push(rel.labels as DbLabel);
+      const label = extractLabel(rel.labels);
+      if (label) labelsMap[rel.task_id].push(label);
     });
     setTaskLabels(labelsMap);
   }, []);

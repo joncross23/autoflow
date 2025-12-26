@@ -526,7 +526,7 @@ export function UnifiedFilterBar({
   };
 
   return (
-    <div className={cn("flex items-center gap-2 flex-wrap", className)}>
+    <div data-testid="filter-panel" className={cn("flex items-center gap-2 flex-wrap", className)}>
       {/* Active Filter Chips */}
       {filters.map((filter) => (
         <div
@@ -550,6 +550,7 @@ export function UnifiedFilterBar({
       <div className="relative">
         <button
           ref={addButtonRef}
+          data-testid="filter-panel-toggle"
           onClick={() => {
             setShowAddMenu(!showAddMenu);
             setActiveControl(null);
@@ -565,6 +566,7 @@ export function UnifiedFilterBar({
       {/* Clear All Button */}
       {filters.length > 0 && (
         <button
+          data-testid="filter-panel-clear"
           onClick={handleClearAll}
           className="text-xs text-foreground-muted hover:text-foreground transition-colors"
         >

@@ -54,12 +54,15 @@ function LoginForm() {
       </p>
 
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
+        <div
+          data-testid="login-error"
+          className="mb-4 p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm"
+        >
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" data-testid="login-form">
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1.5">
             Email
@@ -75,6 +78,7 @@ function LoginForm() {
               className="input w-full pl-10"
               required
               disabled={loading}
+              data-testid="login-email"
             />
           </div>
         </div>
@@ -102,6 +106,7 @@ function LoginForm() {
               className="input w-full pl-10"
               required
               disabled={loading}
+              data-testid="login-password"
             />
           </div>
         </div>
@@ -110,6 +115,7 @@ function LoginForm() {
           type="submit"
           className="btn btn-primary w-full"
           disabled={loading}
+          data-testid="login-submit"
         >
           {loading ? (
             <>

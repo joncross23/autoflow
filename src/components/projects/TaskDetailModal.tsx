@@ -30,7 +30,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { updateTask } from "@/lib/api/tasks";
+import { useToast } from "@/hooks/useToast";
+import { updateTask, archiveTask, duplicateTask } from "@/lib/api/tasks";
 import { getTaskLabels } from "@/lib/api/labels";
 import { getTaskChecklists } from "@/lib/api/checklists";
 import { getTaskAttachments } from "@/lib/api/attachments";
@@ -171,6 +172,7 @@ export function TaskDetailModal({
   onLabelsChange,
 }: TaskDetailModalProps) {
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
   const [priority, setPriority] = useState<Priority | null>(task.priority);
@@ -179,6 +181,7 @@ export function TaskDetailModal({
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
   const [showMobileActions, setShowMobileActions] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   // Track which sections are enabled (start minimal, populate based on data)
   const [enabledSections, setEnabledSections] = useState<EnabledSections>({
@@ -224,7 +227,7 @@ export function TaskDetailModal({
     }
 
     loadSectionData();
-  }, [task.id, task.due_date, isNew]);
+  }, [task.id, task.due_date, task.priority, isNew]);
 
   // Enable a section (sidebar buttons only enable, × removes)
   const enableSection = (section: keyof EnabledSections) => {
@@ -272,6 +275,58 @@ export function TaskDetailModal({
     }
   }, [hasChanges, task.id, title, description, priority, dueDate, onSave]);
 
+  // Archive task handler
+  const handleArchive = useCallback(async () => {
+    if (!window.confirm("Are you sure you want to archive this task? It will be marked as complete and removed from the board.")) {
+      return;
+    }
+
+    try {
+      setActionLoading("archive");
+      const archived = await archiveTask(task.id);
+      toast("Task archived successfully", "success");
+      onSave(archived);
+      onClose();
+    } catch (error) {
+      console.error("Failed to archive task:", error);
+      toast("Failed to archive task", "error");
+    } finally {
+      setActionLoading(null);
+    }
+  }, [task.id, onSave, onClose, toast]);
+
+  // Copy task handler
+  const handleCopy = useCallback(async () => {
+    try {
+      setActionLoading("copy");
+      const copied = await duplicateTask(task.id);
+      toast(`Created "${copied.title}"`, "success");
+      onSave(copied);
+    } catch (error) {
+      console.error("Failed to copy task:", error);
+      toast("Failed to copy task", "error");
+    } finally {
+      setActionLoading(null);
+    }
+  }, [task.id, onSave, toast]);
+
+  // Move task handler (simplified - suggest drag and drop)
+  const handleMove = useCallback(() => {
+    toast("Use drag and drop to move tasks between columns", "info");
+  }, [toast]);
+
+  // Watch task handler (deferred feature)
+  const handleWatch = useCallback(() => {
+    toast("Watch notifications coming in a future update", "info");
+  }, [toast]);
+
+  // Share task handler
+  const handleShare = useCallback(() => {
+    const url = `${window.location.origin}/dashboard/delivery?task=${task.id}`;
+    navigator.clipboard.writeText(url);
+    toast("Link copied to clipboard", "success");
+  }, [task.id, toast]);
+
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -297,7 +352,7 @@ export function TaskDetailModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full md:w-1/2 md:min-w-[600px] md:max-w-[900px] md:my-8 md:mx-4 min-h-screen md:min-h-0">
+      <div className="relative w-full md:w-1/2 md:min-w-[600px] md:max-w-[900px] md:my-8 md:mx-4 min-h-screen md:min-h-0" data-testid="task-detail-modal">
         <div className="bg-bg-secondary md:rounded-xl overflow-hidden shadow-2xl md:border md:border-border min-h-screen md:min-h-0">
           {/* Mobile Header */}
           {isMobile && (
@@ -333,6 +388,7 @@ export function TaskDetailModal({
             <button
               onClick={onClose}
               className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-lg bg-bg-tertiary/80 hover:bg-bg-hover text-foreground-secondary hover:text-foreground transition-colors z-10"
+              data-testid="task-modal-close"
             >
               <X className="h-5 w-5" />
             </button>
@@ -350,6 +406,7 @@ export function TaskDetailModal({
                   className="w-full text-xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-foreground-muted"
                   placeholder="Card title"
                   autoFocus={isNew}
+                  data-testid="task-modal-title"
                 />
               </div>
 
@@ -433,6 +490,7 @@ export function TaskDetailModal({
                     rows={isNew ? 3 : 4}
                     className="w-full p-3 bg-bg-tertiary border border-border rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Add a more detailed description..."
+                    data-testid="task-modal-description"
                   />
                   {/* AI Description Helper - only show when description is empty */}
                   <AIDescriptionHelper
@@ -511,6 +569,7 @@ export function TaskDetailModal({
                   onClick={handleSave}
                   disabled={saving}
                   className="w-full btn btn-primary mb-4"
+                  data-testid="task-modal-save"
                 >
                   {saving ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -601,44 +660,27 @@ export function TaskDetailModal({
                       <SidebarButton
                         icon={ArrowRightLeft}
                         label="Move"
-                        onClick={() => {
-                          // TODO: Open move modal
-                          alert("Move functionality coming soon");
-                        }}
+                        onClick={handleMove}
                       />
                       <SidebarButton
-                        icon={Copy}
-                        label="Copy"
-                        onClick={() => {
-                          // TODO: Copy card
-                          alert("Copy functionality coming soon");
-                        }}
+                        icon={actionLoading === "copy" ? Loader2 : Copy}
+                        label={actionLoading === "copy" ? "Copying..." : "Copy"}
+                        onClick={handleCopy}
                       />
                       <SidebarButton
                         icon={Eye}
                         label="Watch"
-                        onClick={() => {
-                          // TODO: Toggle watch
-                          alert("Watch functionality coming soon");
-                        }}
+                        onClick={handleWatch}
                       />
                       <SidebarButton
-                        icon={Archive}
-                        label="Archive"
-                        onClick={() => {
-                          // TODO: Archive card
-                          alert("Archive functionality coming soon");
-                        }}
+                        icon={actionLoading === "archive" ? Loader2 : Archive}
+                        label={actionLoading === "archive" ? "Archiving..." : "Archive"}
+                        onClick={handleArchive}
                       />
                       <SidebarButton
                         icon={Share2}
                         label="Share"
-                        onClick={() => {
-                          // Copy link to clipboard
-                          const url = `${window.location.origin}/dashboard/projects?task=${task.id}`;
-                          navigator.clipboard.writeText(url);
-                          alert("Link copied to clipboard!");
-                        }}
+                        onClick={handleShare}
                       />
                     </div>
                   </div>
@@ -768,36 +810,35 @@ export function TaskDetailModal({
                       Actions
                     </div>
                     <button
-                      onClick={() => { setShowMobileActions(false); alert("Move functionality coming soon"); }}
+                      onClick={() => { setShowMobileActions(false); handleMove(); }}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
                     >
                       <ArrowRightLeft className="h-4 w-4" /> Move
                     </button>
                     <button
-                      onClick={() => { setShowMobileActions(false); alert("Copy functionality coming soon"); }}
-                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                      onClick={() => { setShowMobileActions(false); handleCopy(); }}
+                      disabled={actionLoading === "copy"}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover disabled:opacity-50"
                     >
-                      <Copy className="h-4 w-4" /> Copy
+                      {actionLoading === "copy" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Copy className="h-4 w-4" />}
+                      {actionLoading === "copy" ? "Copying..." : "Copy"}
                     </button>
                     <button
-                      onClick={() => { setShowMobileActions(false); alert("Watch functionality coming soon"); }}
+                      onClick={() => { setShowMobileActions(false); handleWatch(); }}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
                     >
                       <Eye className="h-4 w-4" /> Watch
                     </button>
                     <button
-                      onClick={() => { setShowMobileActions(false); alert("Archive functionality coming soon"); }}
-                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
+                      onClick={() => { setShowMobileActions(false); handleArchive(); }}
+                      disabled={actionLoading === "archive"}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover disabled:opacity-50"
                     >
-                      <Archive className="h-4 w-4" /> Archive
+                      {actionLoading === "archive" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Archive className="h-4 w-4" />}
+                      {actionLoading === "archive" ? "Archiving..." : "Archive"}
                     </button>
                     <button
-                      onClick={() => {
-                        const url = `${window.location.origin}/dashboard/projects?task=${task.id}`;
-                        navigator.clipboard.writeText(url);
-                        setShowMobileActions(false);
-                        alert("Link copied to clipboard!");
-                      }}
+                      onClick={() => { setShowMobileActions(false); handleShare(); }}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover"
                     >
                       <Share2 className="h-4 w-4" /> Share

@@ -46,3 +46,6 @@ yarn-error.log*
 # Misc
 *.pem
 .env*.local
+
+# Playwright auth state
+e2e/.auth/

@@ -39,7 +39,7 @@ import { LabelsSection } from "@/components/shared/LabelsSection";
 import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
-import { updateIdea, updateIdeaStatus, deleteIdea } from "@/lib/api/ideas";
+import { updateIdea, updateIdeaStatus, deleteIdea, archiveIdea, duplicateIdea } from "@/lib/api/ideas";
 import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon } from "@/types/database";
 
 interface IdeaDetailSliderProps {
@@ -228,14 +228,32 @@ export function IdeaDetailSlider({
     }
   };
 
-  const handleDuplicate = () => {
+  const handleDuplicate = async () => {
     setShowMoreMenu(false);
-    toast("Duplicate feature coming soon", "info");
+
+    try {
+      const newIdea = await duplicateIdea(idea.id);
+      toast(`Created "${newIdea.title}"`, "success");
+      onUpdate(newIdea); // Trigger refresh of the ideas list
+    } catch (error) {
+      console.error("Failed to duplicate idea:", error);
+      toast("Failed to duplicate idea", "error");
+    }
   };
 
-  const handleArchive = () => {
+  const handleArchive = async () => {
     setShowMoreMenu(false);
-    toast("Archive feature coming soon", "info");
+    if (!window.confirm("Archive this idea? It can be restored later.")) return;
+
+    try {
+      await archiveIdea(idea.id);
+      toast("Idea archived", "success");
+      handleClose();
+      onDelete(idea.id); // Remove from list (archived ideas are hidden by default)
+    } catch (error) {
+      console.error("Failed to archive idea:", error);
+      toast("Failed to archive idea", "error");
+    }
   };
 
   const handleAcceptIdea = async () => {
@@ -275,6 +293,7 @@ export function IdeaDetailSlider({
         role="dialog"
         aria-modal="true"
         aria-labelledby="slider-title"
+        data-testid="idea-detail-slider"
         className={cn(
           "fixed top-0 right-0 bottom-0 z-50 bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
           // Full-screen on mobile, half-width on desktop
@@ -301,6 +320,7 @@ export function IdeaDetailSlider({
               {editingTitle ? (
                 <input
                   type="text"
+                  data-testid="idea-slider-title-input"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   onBlur={handleSaveTitle}
@@ -317,6 +337,7 @@ export function IdeaDetailSlider({
               ) : (
                 <h1
                   id="slider-title"
+                  data-testid="idea-slider-title"
                   onClick={() => setEditingTitle(true)}
                   className="text-base font-semibold cursor-text hover:bg-bg-hover rounded px-2 py-1 -mx-2 transition-colors truncate"
                   title={idea.title}
@@ -329,6 +350,7 @@ export function IdeaDetailSlider({
             {/* Status dropdown */}
             <div className="relative shrink-0">
               <button
+                data-testid="idea-slider-status-button"
                 onClick={() => setShowStatusMenu(!showStatusMenu)}
                 className="flex items-center gap-1 hover:bg-bg-hover rounded-md p-1 transition-colors"
                 disabled={saving}
@@ -343,10 +365,11 @@ export function IdeaDetailSlider({
                     className="fixed inset-0 z-10"
                     onClick={() => setShowStatusMenu(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                  <div data-testid="idea-slider-status-menu" className="absolute right-0 top-full mt-1 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
                     {STATUS_OPTIONS.map((opt) => (
                       <button
                         key={opt.value}
+                        data-testid={opt.value === "evaluating" ? "idea-slider-status-evaluating" : undefined}
                         onClick={() => handleStatusChange(opt.value)}
                         className={cn(
                           "flex items-center gap-2 w-full px-3 py-2 text-sm text-left transition-colors",
@@ -371,6 +394,7 @@ export function IdeaDetailSlider({
             {/* More actions menu */}
             <div className="relative shrink-0">
               <button
+                data-testid="idea-slider-more-button"
                 onClick={() => setShowMoreMenu(!showMoreMenu)}
                 className="p-1.5 rounded hover:bg-bg-hover transition-colors"
                 title="More actions"
@@ -384,8 +408,9 @@ export function IdeaDetailSlider({
                     className="fixed inset-0 z-10"
                     onClick={() => setShowMoreMenu(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1 w-40 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                  <div data-testid="idea-slider-more-menu" className="absolute right-0 top-full mt-1 w-40 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
                     <button
+                      data-testid="idea-slider-duplicate"
                       onClick={handleDuplicate}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
                     >
@@ -393,6 +418,7 @@ export function IdeaDetailSlider({
                       Duplicate
                     </button>
                     <button
+                      data-testid="idea-slider-archive"
                       onClick={handleArchive}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
                     >
@@ -401,6 +427,7 @@ export function IdeaDetailSlider({
                     </button>
                     <div className="border-t border-border my-1" />
                     <button
+                      data-testid="idea-slider-delete"
                       onClick={handleDelete}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-error hover:bg-error/10 transition-colors"
                     >
@@ -414,6 +441,7 @@ export function IdeaDetailSlider({
 
             {/* Close button - desktop only */}
             <button
+              data-testid="idea-slider-close"
               onClick={handleClose}
               className="hidden md:block p-1.5 rounded hover:bg-bg-hover transition-colors shrink-0"
               title="Close (Esc)"
@@ -431,6 +459,7 @@ export function IdeaDetailSlider({
               idea.status !== "dropped" &&
               idea.status !== "complete" && (
                 <button
+                  data-testid="idea-slider-accept-button"
                   onClick={handleAcceptIdea}
                   disabled={converting}
                   className={cn(

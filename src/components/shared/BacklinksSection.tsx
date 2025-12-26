@@ -7,7 +7,7 @@
  * V1.4: Bidirectional linking feature
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link2, ChevronDown, ChevronRight, Lightbulb, CheckSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -47,12 +47,8 @@ export function BacklinksSection({
   const [isLoading, setIsLoading] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Load backlinks on mount
-  useEffect(() => {
-    loadBacklinks();
-  }, [ideaId, taskId]);
-
-  async function loadBacklinks() {
+  // Load backlinks function wrapped in useCallback
+  const loadBacklinks = useCallback(async () => {
     setIsLoading(true);
     try {
       let data: BacklinkInfo[] = [];
@@ -67,7 +63,12 @@ export function BacklinksSection({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [ideaId, taskId]);
+
+  // Load backlinks on mount
+  useEffect(() => {
+    loadBacklinks();
+  }, [loadBacklinks]);
 
   // Navigate to source entity
   function handleBacklinkClick(backlink: BacklinkInfo) {
