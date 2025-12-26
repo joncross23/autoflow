@@ -67,6 +67,7 @@ export async function createIdeaChecklist(
 
 /**
  * Get all checklists with items and progress for an idea
+ * OPTIMISED: Uses single query with eager loading instead of N+1
  */
 export async function getIdeaChecklistsWithItems(ideaId: string): Promise<
   Array<{
@@ -75,22 +76,41 @@ export async function getIdeaChecklistsWithItems(ideaId: string): Promise<
     progress: { total: number; completed: number; percentage: number };
   }>
 > {
-  const checklists = await getIdeaChecklists(ideaId);
+  const supabase = createClient();
 
-  const checklistsWithItems = await Promise.all(
-    checklists.map(async (checklist) => {
-      const items = await getChecklistItems(checklist.id);
-      const progress = await getChecklistProgress(checklist.id);
+  // Single query with eager loading
+  const { data, error } = await supabase
+    .from("checklists")
+    .select(`
+      *,
+      checklist_items (*)
+    `)
+    .eq("idea_id", ideaId)
+    .order("position", { ascending: true });
 
-      return {
-        checklist,
-        items,
-        progress,
-      };
-    })
-  );
+  if (error) {
+    console.error("Error fetching idea checklists with items:", error);
+    throw new Error(`Failed to fetch checklists: ${error.message}`);
+  }
 
-  return checklistsWithItems;
+  // Transform and calculate progress
+  return (data || []).map((checklist) => {
+    const items = ((checklist.checklist_items || []) as DbChecklistItem[])
+      .sort((a, b) => (a.position || 0) - (b.position || 0));
+
+    const total = items.length;
+    const completed = items.filter((item) => item.done).length;
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    // Remove the nested items from checklist object
+    const { checklist_items, ...checklistData } = checklist;
+
+    return {
+      checklist: checklistData as DbChecklist,
+      items,
+      progress: { total, completed, percentage },
+    };
+  });
 }
 
 // ============================================
@@ -429,6 +449,7 @@ export async function getChecklistProgress(checklistId: string): Promise<{
 
 /**
  * Get all checklists with items and progress for a task
+ * OPTIMISED: Uses single query with eager loading instead of N+1
  */
 export async function getTaskChecklistsWithItems(taskId: string): Promise<
   Array<{
@@ -437,20 +458,41 @@ export async function getTaskChecklistsWithItems(taskId: string): Promise<
     progress: { total: number; completed: number; percentage: number };
   }>
 > {
-  const checklists = await getTaskChecklists(taskId);
+  const supabase = createClient();
 
-  const checklistsWithItems = await Promise.all(
-    checklists.map(async (checklist) => {
-      const items = await getChecklistItems(checklist.id);
-      const progress = await getChecklistProgress(checklist.id);
+  // Single query with eager loading
+  const { data, error } = await supabase
+    .from("checklists")
+    .select(`
+      *,
+      checklist_items (*)
+    `)
+    .eq("task_id", taskId)
+    .order("position", { ascending: true });
 
-      return {
-        checklist,
-        items,
-        progress,
-      };
-    })
-  );
+  if (error) {
+    console.error("Error fetching task checklists with items:", error);
+    throw new Error(`Failed to fetch checklists: ${error.message}`);
+  }
+
+  // Transform and calculate progress
+  const checklistsWithItems = (data || []).map((checklist) => {
+    const items = ((checklist.checklist_items || []) as DbChecklistItem[])
+      .sort((a, b) => (a.position || 0) - (b.position || 0));
+
+    const total = items.length;
+    const completed = items.filter((item) => item.done).length;
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    // Remove the nested items from checklist object
+    const { checklist_items, ...checklistData } = checklist;
+
+    return {
+      checklist: checklistData as DbChecklist,
+      items,
+      progress: { total, completed, percentage },
+    };
+  });
 
   return checklistsWithItems;
 }

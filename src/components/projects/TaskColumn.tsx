@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Plus, MoreVertical } from "lucide-react";
@@ -34,7 +34,7 @@ const columnColors: Record<string, string> = {
   cyan: "#06B6D4",
 };
 
-export function TaskColumn({
+function TaskColumnComponent({
   column,
   tasks,
   taskLabels = {},
@@ -256,3 +256,6 @@ export function TaskColumn({
     </div>
   );
 }
+
+// Memoise to prevent re-renders when other columns change
+export const TaskColumn = memo(TaskColumnComponent);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { ChevronUp, ChevronDown, GripVertical, Settings2, ChevronRight } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -87,9 +87,11 @@ export function IdeasTable({
   const lastSelectedId = useRef<string | null>(null);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const visibleColumns = columns
-    .filter((col) => col.visible)
-    .sort((a, b) => a.order - b.order);
+  // Memoise visible columns to prevent recalculation on every render
+  const visibleColumns = useMemo(
+    () => columns.filter((col) => col.visible).sort((a, b) => a.order - b.order),
+    [columns]
+  );
 
   // Handle select all
   const allSelected = ideas.length > 0 && ideas.every((idea) => selectedIds.has(idea.id));

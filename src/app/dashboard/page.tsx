@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   Lightbulb,
@@ -223,7 +223,7 @@ export default function DashboardPage() {
   );
 }
 
-function DashboardStatCard({
+const DashboardStatCard = memo(function DashboardStatCard({
   label,
   value,
   icon,
@@ -262,9 +262,9 @@ function DashboardStatCard({
   }
 
   return <div className="card p-5">{content}</div>;
-}
+});
 
-function PipelineWidget({
+const PipelineWidget = memo(function PipelineWidget({
   ideaCounts,
   loading,
 }: {
@@ -340,17 +340,18 @@ function PipelineWidget({
       )}
     </div>
   );
-}
+});
 
-function IdeaCard({ idea }: { idea: DbIdea }) {
-  const effortColors: Record<string, string> = {
-    trivial: "#22C55E",
-    small: "#22C55E",
-    medium: "#F59E0B",
-    large: "#EF4444",
-    xlarge: "#EF4444",
-  };
+// Effort colours defined outside component to avoid recreation
+const EFFORT_COLORS: Record<string, string> = {
+  trivial: "#22C55E",
+  small: "#22C55E",
+  medium: "#F59E0B",
+  large: "#EF4444",
+  xlarge: "#EF4444",
+};
 
+const IdeaCard = memo(function IdeaCard({ idea }: { idea: DbIdea }) {
   return (
     <Link
       href={`/dashboard/ideas?selected=${idea.id}`}
@@ -359,7 +360,7 @@ function IdeaCard({ idea }: { idea: DbIdea }) {
       <div className="flex items-start gap-3 mb-3">
         <div
           className="w-1 h-10 rounded shrink-0"
-          style={{ backgroundColor: effortColors[idea.effort_estimate || "medium"] || "#64748B" }}
+          style={{ backgroundColor: EFFORT_COLORS[idea.effort_estimate || "medium"] || "#64748B" }}
         />
         <div className="flex-1 min-w-0">
           <h4 className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
@@ -387,7 +388,7 @@ function IdeaCard({ idea }: { idea: DbIdea }) {
       </div>
     </Link>
   );
-}
+});
 
 /**
  * Get the appropriate icon component for an activity action
@@ -472,7 +473,7 @@ function formatRelativeTime(timestamp: string): string {
   }
 }
 
-function ActivityFeed({
+const ActivityFeed = memo(function ActivityFeed({
   activities,
   loading,
 }: {
@@ -481,9 +482,9 @@ function ActivityFeed({
 }) {
   const { toast } = useToast();
 
-  const handleViewAllClick = () => {
+  const handleViewAllClick = useCallback(() => {
     toast("Activity page coming soon", "info");
-  };
+  }, [toast]);
 
   return (
     <div className="card p-5 h-fit">
@@ -539,4 +540,4 @@ function ActivityFeed({
       </button>
     </div>
   );
-}
+});
