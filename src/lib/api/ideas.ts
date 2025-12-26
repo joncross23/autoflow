@@ -529,6 +529,7 @@ export async function duplicateIdea(id: string): Promise<DbIdea> {
       rice_impact: original.rice_impact,
       rice_confidence: original.rice_confidence,
       rice_effort: original.rice_effort,
+      rice_score: original.rice_score, // Copy the calculated score
     })
     .select()
     .single();

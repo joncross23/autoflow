@@ -168,6 +168,11 @@ export async function duplicateTask(id: string): Promise<DbTask> {
     throw new Error("Task not found");
   }
 
+  // Guard against duplicating archived tasks (no column_id)
+  if (!original.column_id) {
+    throw new Error("Cannot duplicate an archived task - restore it first");
+  }
+
   // Get max position in the same column
   const { data: maxPosData } = await supabase
     .from("tasks")
