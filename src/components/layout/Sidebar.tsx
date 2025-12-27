@@ -44,10 +44,10 @@ export function Sidebar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Mobile bottom nav
+  // Mobile bottom nav with iOS safe area support
   if (isMobile) {
     return (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background-secondary">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background-secondary safe-bottom safe-x tap-transparent">
         <div className="flex justify-around py-2">
           {navItems.map(({ href, label, icon: Icon }) => {
             // Exact match for /dashboard, prefix match for others
@@ -59,7 +59,7 @@ export function Sidebar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors",
+                  "flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors touch-target-sm no-select",
                   isActive
                     ? "text-primary"
                     : "text-foreground-muted hover:text-foreground"
