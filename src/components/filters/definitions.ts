@@ -18,6 +18,7 @@ import {
   Gauge,
   Archive,
   ListTodo,
+  Layers,
 } from "lucide-react";
 import type { FilterDefinition, FilterContext } from "./types";
 
@@ -154,6 +155,14 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     icon: CheckCircle2,
     control: "dateRange",
     chipColor: "green",
+    context: "ideas",
+  },
+  {
+    type: "contentType",
+    label: "Content Type",
+    icon: Layers,
+    control: "multiSelect",
+    chipColor: "cyan",
     context: "ideas",
   },
 ];

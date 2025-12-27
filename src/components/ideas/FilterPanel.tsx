@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Filter, X, ChevronDown, Tag, User, Gauge } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
-import type { IdeaStatus, PlanningHorizon, EffortEstimate, DbLabel } from "@/types/database";
+import type { IdeaStatus, PlanningHorizon, EffortEstimate, DbLabel, ContentType } from "@/types/database";
 
 export interface IdeaFilters {
   statuses: IdeaStatus[];
@@ -12,6 +12,7 @@ export interface IdeaFilters {
   labelIds: string[];
   owners: string[];
   efforts: EffortEstimate[];
+  contentTypes: (ContentType | "unset")[];
   archived: boolean;
   dateRange: "all" | "today" | "week" | "month" | "quarter";
   search: string;
@@ -56,6 +57,7 @@ export const DEFAULT_FILTERS: IdeaFilters = {
   labelIds: [],
   owners: [],
   efforts: [],
+  contentTypes: [],
   archived: false,
   dateRange: "all",
   search: "",
@@ -84,6 +86,7 @@ export function FilterPanel({
     filters.labelIds.length +
     filters.owners.length +
     filters.efforts.length +
+    filters.contentTypes.length +
     (filters.archived ? 1 : 0) +
     (filters.dateRange !== "all" ? 1 : 0);
 
@@ -129,6 +132,7 @@ export function FilterPanel({
       labelIds: [],
       owners: [],
       efforts: [],
+      contentTypes: [],
       archived: false,
       dateRange: "all",
       search: "",

@@ -106,6 +106,19 @@ export function ideaFiltersToValues(filters: IdeaFilters): FilterValue[] {
     });
   }
 
+  // Content type filter
+  if (filters.contentTypes && filters.contentTypes.length > 0) {
+    values.push({
+      id: "contentType-filter",
+      type: "contentType",
+      value: filters.contentTypes,
+      displayLabel:
+        filters.contentTypes.length === 1
+          ? filters.contentTypes[0]
+          : `${filters.contentTypes.length} types`,
+    });
+  }
+
   return values;
 }
 
@@ -122,6 +135,7 @@ export function valuesToIdeaFilters(
     labelIds: [],
     owners: [],
     efforts: [],
+    contentTypes: [],
     archived: false,
     dateRange: "all",
     search: currentSearch,
@@ -164,6 +178,10 @@ export function valuesToIdeaFilters(
         const rawValue = filterValues[0] as string;
         const normalized = rawValue?.replace("this-", "") || "all";
         filters.dateRange = normalized as IdeaFilters["dateRange"];
+        break;
+
+      case "contentType":
+        filters.contentTypes = filterValues as IdeaFilters["contentTypes"];
         break;
     }
   }

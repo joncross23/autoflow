@@ -4,7 +4,8 @@ import { memo } from "react";
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { ScoreBadge } from "./ScoreBadge";
-import type { DbIdea, DbLabel, ColumnConfig, EffortEstimate, PlanningHorizon, PLANNING_HORIZON_LABELS } from "@/types/database";
+import type { DbIdea, DbLabel, ColumnConfig, EffortEstimate, PlanningHorizon, ContentType } from "@/types/database";
+import { CONTENT_TYPE_OPTIONS } from "@/types/database";
 import type { IdeaTaskProgress } from "@/lib/api/ideas";
 
 const HORIZON_COLORS: Record<NonNullable<PlanningHorizon>, string> = {
@@ -226,6 +227,22 @@ function IdeasTableRowComponent({
             {idea.rice_effort ?? "-"}
           </td>
         );
+      case "content_type": {
+        const typeInfo = idea.content_type
+          ? CONTENT_TYPE_OPTIONS.find(t => t.value === idea.content_type)
+          : null;
+        return (
+          <td key={columnId} className={cn(cellClass, "text-sm")} style={style}>
+            {typeInfo ? (
+              <span className="whitespace-nowrap">
+                {typeInfo.emoji} {typeInfo.label}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </td>
+        );
+      }
       case "progress":
         // Hide/empty cell when no tasks (per user requirement)
         if (!progress || progress.totalTasks === 0) {

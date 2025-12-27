@@ -41,7 +41,8 @@ import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { updateIdea, updateIdeaStatus, deleteIdea, archiveIdea, duplicateIdea } from "@/lib/api/ideas";
-import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon } from "@/types/database";
+import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon, ContentType } from "@/types/database";
+import { CONTENT_TYPE_OPTIONS } from "@/types/database";
 
 interface IdeaDetailSliderProps {
   idea: DbIdea;
@@ -94,6 +95,7 @@ export function IdeaDetailSlider({
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [showEffortMenu, setShowEffortMenu] = useState(false);
   const [showHorizonMenu, setShowHorizonMenu] = useState(false);
+  const [showContentTypeMenu, setShowContentTypeMenu] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [saving, setSaving] = useState(false);
   const [converting, setConverting] = useState(false);
@@ -210,6 +212,21 @@ export function IdeaDetailSlider({
     } catch (error) {
       console.error("Failed to update horizon:", error);
       toast("Failed to update horizon", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleContentTypeChange = async (contentType: ContentType | null) => {
+    setShowContentTypeMenu(false);
+    setSaving(true);
+    try {
+      const updated = await updateIdea(idea.id, { content_type: contentType });
+      onUpdate(updated);
+      toast("Type updated", "success");
+    } catch (error) {
+      console.error("Failed to update content type:", error);
+      toast("Failed to update type", "error");
     } finally {
       setSaving(false);
     }
@@ -695,6 +712,62 @@ export function IdeaDetailSlider({
                             </span>
                           </button>
                         ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <span className="text-border">·</span>
+
+                {/* Content Type */}
+                <div className="relative flex items-center gap-1">
+                  <button
+                    onClick={() => setShowContentTypeMenu(!showContentTypeMenu)}
+                    className="hover:text-text transition-colors flex items-center gap-1"
+                  >
+                    {idea.content_type ? (
+                      <>
+                        <span>{CONTENT_TYPE_OPTIONS.find((t) => t.value === idea.content_type)?.emoji}</span>
+                        <span>{CONTENT_TYPE_OPTIONS.find((t) => t.value === idea.content_type)?.label}</span>
+                      </>
+                    ) : (
+                      "Type?"
+                    )}
+                  </button>
+                  {showContentTypeMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowContentTypeMenu(false)}
+                      />
+                      <div className="absolute left-0 bottom-full mb-1 w-40 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                        {CONTENT_TYPE_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() => handleContentTypeChange(opt.value)}
+                            className={cn(
+                              "w-full px-3 py-2 text-sm text-left transition-colors flex items-center gap-2",
+                              opt.value === idea.content_type
+                                ? "bg-primary/10 text-primary"
+                                : "hover:bg-bg-hover"
+                            )}
+                          >
+                            <span>{opt.emoji}</span>
+                            <span>{opt.label}</span>
+                          </button>
+                        ))}
+                        <div className="border-t border-border my-1" />
+                        <button
+                          onClick={() => handleContentTypeChange(null)}
+                          className={cn(
+                            "w-full px-3 py-2 text-sm text-left transition-colors",
+                            idea.content_type === null
+                              ? "bg-primary/10 text-primary"
+                              : "hover:bg-bg-hover text-muted-foreground"
+                          )}
+                        >
+                          Unset
+                        </button>
                       </div>
                     </>
                   )}
