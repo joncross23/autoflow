@@ -7,6 +7,7 @@ import {
   closestCorners,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragStartEvent,
@@ -46,10 +47,20 @@ export function TaskKanbanBoard({
 }: TaskKanbanBoardProps) {
   const [activeTask, setActiveTask] = useState<DbTask | null>(null);
 
+  // Configure sensors for optimal touch and mouse behaviour
+  // - PointerSensor: for mouse with small distance threshold
+  // - TouchSensor: for touch with delay (allows taps without triggering drag)
+  // - KeyboardSensor: for accessibility
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 8, // 8px movement before drag starts (mouse)
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200, // 200ms delay before drag starts (touch)
+        tolerance: 5, // 5px movement tolerance during delay
       },
     }),
     useSensor(KeyboardSensor, {

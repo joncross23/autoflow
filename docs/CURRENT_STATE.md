@@ -3,10 +3,58 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2025-12-22
+> **Last Updated:** 2025-12-27
 > **Current Version:** 1.6.1
-> **Current Phase:** V1.6 Theme System + Safari Fixes (COMPLETE)
+> **Current Phase:** iOS UX Improvements (IN PROGRESS)
 > **Next Phase:** Dynamic Delivery Filters
+
+---
+
+## iOS UX Improvements Status: IN PROGRESS
+
+Sprint focusing on optimising AutoFlow for iOS devices, particularly iPhone 15 Pro Max (430×932pt @ 3x).
+
+### Features Implemented
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Viewport Config | **Done** | Added `viewportFit: cover` for iOS safe areas |
+| Safe Area CSS | **Done** | Utility classes: `safe-top`, `safe-bottom`, `safe-x`, etc. |
+| Touch Targets | **Done** | `touch-target` (44px) and `touch-target-sm` (36px) utilities |
+| Mobile Nav | **Done** | Bottom nav now respects iOS home indicator |
+| Touch Sensors | **Done** | Added `TouchSensor` with 200ms delay to prevent accidental drags |
+| Task Card Touch | **Done** | Improved touch targets for drag handle and checkbox |
+| URL Detection | **Done** | Quick capture detects URLs and shows link capture panel |
+| Link Categories | **Done** | Categorise links as: Idea, To Read, To Watch, To Listen |
+| Metadata API | **Done** | `/api/links/metadata` fetches title from URLs |
+
+### New Files
+
+| File | Description |
+|------|-------------|
+| `src/components/ideas/LinkCapturePanel.tsx` | URL capture UI with category selection |
+| `src/app/api/links/metadata/route.ts` | API to fetch URL metadata (title, description) |
+| `docs/sprints/ios-ux-improvements.md` | Full sprint documentation |
+
+### Modified Files
+
+| File | Changes |
+|------|---------|
+| `src/app/layout.tsx` | Added viewport config with `viewportFit: cover` |
+| `src/app/globals.css` | Added iOS safe area and touch utilities |
+| `src/components/layout/Sidebar.tsx` | Mobile nav uses safe area classes |
+| `src/components/projects/TaskKanbanBoard.tsx` | Added `TouchSensor` with delay constraint |
+| `src/components/projects/TaskCard.tsx` | Touch-friendly classes, visible drag handle on mobile |
+| `src/components/ideas/QuickCapture.tsx` | URL detection, link capture integration |
+
+### Remaining Work
+
+| Feature | Description |
+|---------|-------------|
+| System Themes | Create database-backed themes for Read/Watch/Listen |
+| PWA Share Target | Enable "Share to AutoFlow" from iOS apps |
+| Bottom Sheet Modals | Convert modals to iOS-style bottom sheets on mobile |
+| Swipe Gestures | Swipe-to-dismiss modals, swipe-to-complete tasks |
 
 ---
 
@@ -335,6 +383,21 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2025-12-27 — iOS UX Improvements Sprint
+- Created feature branch `feature/ios-ux-improvements`
+- Added viewport config with `viewportFit: cover` for iOS safe areas
+- Created CSS utilities for safe areas: `safe-top`, `safe-bottom`, `safe-x`, `safe-y`, `safe-all`
+- Added touch target utilities: `touch-target` (44px), `touch-target-sm` (36px)
+- Added iOS-specific utilities: `scroll-touch`, `no-select`, `tap-transparent`
+- Updated mobile bottom nav to use safe area padding
+- Added `TouchSensor` to TaskKanbanBoard with 200ms delay for better tap vs drag detection
+- Improved TaskCard with touch-friendly classes and visible drag handle on mobile
+- Created `LinkCapturePanel` component for URL capture with categories (Idea/Read/Watch/Listen)
+- Created `/api/links/metadata` route to fetch URL title/description
+- Updated `QuickCapture` to detect URLs and show link capture panel
+- URL detection triggers category selection UI before saving
+- Wrote comprehensive sprint documentation at `docs/sprints/ios-ux-improvements.md`
 
 ### 2025-12-22 — V1.6.1 Safari File Uploads & Preview
 - Fixed Safari/WebKit file upload bug using XMLHttpRequest instead of fetch
