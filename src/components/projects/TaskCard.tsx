@@ -136,6 +136,7 @@ function TaskCardComponent({
       className={`
         group rounded-[10px] p-3 cursor-pointer select-none
         transition-all duration-150 ease-out shadow-sm
+        tap-transparent no-select touch-target
         ${isGhost
           ? "bg-bg-tertiary opacity-40"
           : "bg-bg-elevated"
@@ -166,23 +167,23 @@ function TaskCardComponent({
 
       {/* Title row with checkbox and drag handle */}
       <div className="flex items-start gap-2">
-        {/* Drag handle */}
+        {/* Drag handle - always visible on touch, hover on desktop */}
         <button
           {...attributes}
           {...listeners}
           onClick={(e) => e.stopPropagation()}
-          className="mt-0.5 p-0.5 text-foreground-muted hover:text-foreground cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+          className="mt-0.5 p-1 -ml-0.5 text-foreground-muted hover:text-foreground cursor-grab active:cursor-grabbing opacity-40 md:opacity-0 group-hover:opacity-100 transition-opacity touch-target-sm"
         >
           <GripVertical className="h-4 w-4" />
         </button>
 
-        {/* Checkbox */}
+        {/* Checkbox - touch-friendly size */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             onToggle?.(task);
           }}
-          className="mt-0.5 text-foreground-muted hover:text-primary transition-colors shrink-0"
+          className="mt-0.5 p-1 -my-1 text-foreground-muted hover:text-primary transition-colors shrink-0 touch-target-sm"
         >
           {task.completed ? (
             <CheckCircle2 className="h-4 w-4 text-success" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Lightbulb, Loader2 } from "lucide-react";
+import { Lightbulb, Loader2, Link2 } from "lucide-react";
 import { createIdea } from "@/lib/api/ideas";
 import { useVoiceCapture } from "@/hooks";
 import {
@@ -9,6 +9,7 @@ import {
   VoiceReviewPanel,
   AudioWaveform,
 } from "@/components/voice";
+import { LinkCapturePanel } from "./LinkCapturePanel";
 
 interface QuickCaptureProps {
   onSuccess?: () => void;
@@ -23,12 +24,33 @@ function formatDuration(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
+/**
+ * Detect if input looks like a URL
+ */
+function isLikelyUrl(text: string): boolean {
+  const trimmed = text.trim();
+  // Must contain a dot, no spaces, and be reasonably URL-like
+  if (!trimmed.includes(".") || trimmed.includes(" ")) {
+    return false;
+  }
+  // Check for common URL patterns
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return true;
+  }
+  // Check for domain-like patterns (e.g., "example.com", "sub.example.co.uk")
+  const domainPattern = /^[\w-]+\.[\w.-]+(?:\/\S*)?$/;
+  return domainPattern.test(trimmed);
+}
+
 export function QuickCapture({ onSuccess }: QuickCaptureProps) {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [savingVoiceIdea, setSavingVoiceIdea] = useState(false);
+  const [showLinkCapture, setShowLinkCapture] = useState(false);
+  const [detectedUrl, setDetectedUrl] = useState("");
+  const [lastCaptureWasLink, setLastCaptureWasLink] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Voice capture hook
@@ -78,8 +100,16 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
 
     if (!title) return;
 
+    // Check if input looks like a URL - show link capture panel
+    if (isLikelyUrl(title)) {
+      setDetectedUrl(title);
+      setShowLinkCapture(true);
+      return;
+    }
+
     setLoading(true);
     setError(null);
+    setLastCaptureWasLink(false);
 
     try {
       await createIdea({ title });
@@ -91,6 +121,23 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle link capture success
+  const handleLinkCaptureSuccess = () => {
+    setShowLinkCapture(false);
+    setDetectedUrl("");
+    setValue("");
+    setLastCaptureWasLink(true);
+    setSuccess(true);
+    onSuccess?.();
+  };
+
+  // Handle link capture cancel
+  const handleLinkCaptureCancel = () => {
+    setShowLinkCapture(false);
+    setDetectedUrl("");
+    // Keep the value so user can edit it
   };
 
   // Handle voice button click
@@ -151,18 +198,36 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
         ? "requesting_permission"
         : "idle";
 
+  // Detect URL in current input for visual indicator
+  const inputIsUrl = isLikelyUrl(value);
+
   return (
     <div className="card" data-testid="quick-capture">
       <div className="flex items-center gap-2 text-muted-foreground mb-2">
-        <Lightbulb className="h-4 w-4" />
-        <span className="text-sm font-medium">Quick Capture</span>
-        {!isVoiceActive && (
+        {inputIsUrl ? (
+          <Link2 className="h-4 w-4 text-primary" />
+        ) : (
+          <Lightbulb className="h-4 w-4" />
+        )}
+        <span className="text-sm font-medium">
+          {inputIsUrl ? "Save Link" : "Quick Capture"}
+        </span>
+        {!isVoiceActive && !showLinkCapture && (
           <span className="badge badge-primary text-[10px]">Cmd/Ctrl+K</span>
         )}
       </div>
 
+      {/* Link capture panel */}
+      {showLinkCapture && (
+        <LinkCapturePanel
+          url={detectedUrl}
+          onSuccess={handleLinkCaptureSuccess}
+          onCancel={handleLinkCaptureCancel}
+        />
+      )}
+
       {/* Review panel for voice-generated idea */}
-      {isReview && voiceState.status === "review" && (
+      {!showLinkCapture && isReview && voiceState.status === "review" && (
         <VoiceReviewPanel
           idea={voiceState.idea}
           onSave={handleSaveVoiceIdea}
@@ -172,7 +237,7 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
       )}
 
       {/* Normal input or recording state */}
-      {!isReview && (
+      {!showLinkCapture && !isReview && (
         <>
           <form onSubmit={handleSubmit}>
             <div className="relative">
@@ -214,7 +279,7 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
                     type="text"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    placeholder="Type an idea or click mic to speak..."
+                    placeholder="Type an idea, paste a link, or click mic..."
                     className="input w-full pr-12"
                     disabled={loading || isVoiceActive}
                     data-testid="quick-capture-input"
@@ -247,7 +312,7 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
           {/* Success message */}
           {success && (
             <p className="mt-2 text-xs text-success" data-testid="quick-capture-success">
-              Idea captured! View it in the Ideas page.
+              {lastCaptureWasLink ? "Link saved!" : "Idea captured!"} View it in the Ideas page.
             </p>
           )}
 
@@ -256,7 +321,9 @@ export function QuickCapture({ onSuccess }: QuickCaptureProps) {
             <p className="mt-2 text-xs text-muted-foreground">
               {voiceErrorMessage
                 ? "Click mic to try again or type your idea."
-                : "Press Enter to save or click mic to speak."}
+                : inputIsUrl
+                  ? "Press Enter to save as a link with category options."
+                  : "Press Enter to save or click mic to speak."}
             </p>
           )}
 

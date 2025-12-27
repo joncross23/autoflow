@@ -49,3 +49,4 @@ yarn-error.log*
 
 # Playwright auth state
 e2e/.auth/
+.obsidian/
