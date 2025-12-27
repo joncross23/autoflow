@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks";
+import packageJson from "../../../package.json";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -136,7 +137,7 @@ export function Sidebar() {
       {!isCollapsed && (
         <div className="border-t border-border p-4">
           <p className="text-xs text-foreground-muted">
-            Version 1.2.0
+            Version {packageJson.version}
           </p>
         </div>
       )}
