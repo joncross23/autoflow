@@ -100,22 +100,8 @@ export async function getIdeas(filters?: IdeaFilters): Promise<DbIdea[]> {
     }
   }
 
-  // Content type filter
-  if (filters?.contentTypes && filters.contentTypes.length > 0) {
-    const hasUnset = filters.contentTypes.includes("unset");
-    const actualTypes = filters.contentTypes.filter(t => t !== "unset");
-
-    if (hasUnset && actualTypes.length > 0) {
-      // Include both null and specific types
-      query = query.or(`content_type.is.null,content_type.in.(${actualTypes.join(",")})`);
-    } else if (hasUnset) {
-      // Only unset
-      query = query.is("content_type", null);
-    } else if (actualTypes.length > 0) {
-      // Only specific types
-      query = query.in("content_type", actualTypes);
-    }
-  }
+  // Content type filter - handled client-side for better compatibility
+  // The client-side filter in ideas page handles this
 
   // Sorting
   const sortBy = filters?.sortBy || "created_at";
