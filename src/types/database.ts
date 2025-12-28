@@ -34,6 +34,17 @@ export const PLANNING_HORIZON_LABELS: Record<NonNullable<PlanningHorizon>, strin
   later: "Later",
 };
 
+// Content type categorisation (extensible - add new types here)
+export type ContentType = "idea" | "read" | "watch" | "listen" | "note";
+
+export const CONTENT_TYPE_OPTIONS: { value: ContentType; label: string; emoji: string }[] = [
+  { value: "idea", label: "Idea", emoji: "💡" },
+  { value: "read", label: "To Read", emoji: "📖" },
+  { value: "watch", label: "To Watch", emoji: "🎬" },
+  { value: "listen", label: "To Listen", emoji: "🎧" },
+  { value: "note", label: "Note", emoji: "📝" },
+];
+
 // RICE Impact levels (standard RICE methodology)
 export type RiceImpact = 0.25 | 0.5 | 1 | 2 | 3;
 
@@ -71,6 +82,7 @@ export interface DbIdea {
   rice_confidence: number | null; // 0-100: Confidence percentage
   rice_effort: number | null;     // 1-10: Person-weeks equivalent
   rice_score: number | null;      // Calculated: (R×I×C%)/E
+  content_type: ContentType | null;  // V1.x: idea/read/watch/listen/note
   created_at: string;
   updated_at: string;
 }
@@ -96,6 +108,7 @@ export interface DbIdeaInsert {
   rice_impact?: RiceImpact | null;
   rice_confidence?: number | null;
   rice_effort?: number | null;
+  content_type?: ContentType | null;
 }
 
 export interface DbIdeaUpdate {
@@ -119,6 +132,7 @@ export interface DbIdeaUpdate {
   rice_impact?: RiceImpact | null;
   rice_confidence?: number | null;
   rice_effort?: number | null;
+  content_type?: ContentType | null;
   updated_at?: string;
 }
 
@@ -558,6 +572,7 @@ export function dbIdeaToIdea(db: DbIdea): {
   riceConfidence: number | null;
   riceEffort: number | null;
   riceScore: number | null;
+  contentType: ContentType | null;
   createdAt: string;
   updatedAt: string;
 } {
@@ -585,6 +600,7 @@ export function dbIdeaToIdea(db: DbIdea): {
     riceConfidence: db.rice_confidence,
     riceEffort: db.rice_effort,
     riceScore: db.rice_score,
+    contentType: db.content_type,
     createdAt: db.created_at,
     updatedAt: db.updated_at,
   };
@@ -619,6 +635,7 @@ export const DEFAULT_IDEA_COLUMNS: ColumnConfig[] = [
   { id: "rice_impact", visible: false, width: 80, order: 13 },
   { id: "rice_confidence", visible: false, width: 100, order: 14 },
   { id: "rice_effort", visible: false, width: 80, order: 15 },
+  { id: "content_type", visible: false, width: 100, order: 16 },
 ];
 
 // ============================================
@@ -637,6 +654,7 @@ export interface IdeaFilters {
     end?: string;
   };
   themes?: string[];
+  contentTypes?: ContentType[];
   search?: string;
 }
 

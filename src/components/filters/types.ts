@@ -30,7 +30,8 @@ export type FilterType =
   | "effort"
   | "archived"
   | "startedAt"
-  | "completedAt";
+  | "completedAt"
+  | "contentType";
 
 /** Context determines which filters are available */
 export type FilterContext = "tasks" | "ideas";
@@ -167,4 +168,13 @@ export const COMPLETED_DATE_OPTIONS: FilterOption[] = [
   { value: "this-week", label: "Completed This Week" },
   { value: "this-month", label: "Completed This Month" },
   { value: "not-completed", label: "Not Completed" },
+];
+
+export const CONTENT_TYPE_OPTIONS: FilterOption[] = [
+  { value: "idea", label: "💡 Idea" },
+  { value: "read", label: "📖 To Read" },
+  { value: "watch", label: "🎬 To Watch" },
+  { value: "listen", label: "🎧 To Listen" },
+  { value: "note", label: "📝 Note" },
+  { value: "unset", label: "— Unset" },
 ];

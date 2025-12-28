@@ -20,9 +20,8 @@ import {
 import { cn } from "@/lib/utils";
 import { createIdea } from "@/lib/api/ideas";
 import { createIdeaLink } from "@/lib/api/links";
-
-// Content categories for reading/watch lists
-type ContentCategory = "idea" | "read" | "watch" | "listen";
+import type { ContentType } from "@/types/database";
+import { CONTENT_TYPE_OPTIONS } from "@/types/database";
 
 interface LinkCapturePanelProps {
   url: string;
@@ -30,12 +29,14 @@ interface LinkCapturePanelProps {
   onCancel: () => void;
 }
 
-const CATEGORIES: { id: ContentCategory; label: string; icon: typeof BookOpen; emoji: string }[] = [
-  { id: "idea", label: "Idea", icon: Lightbulb, emoji: "💡" },
-  { id: "read", label: "To Read", icon: BookOpen, emoji: "📖" },
-  { id: "watch", label: "To Watch", icon: Video, emoji: "🎬" },
-  { id: "listen", label: "To Listen", icon: Headphones, emoji: "🎧" },
-];
+// Map ContentType to icons for the UI
+const CATEGORY_ICONS: Record<ContentType, typeof BookOpen> = {
+  idea: Lightbulb,
+  read: BookOpen,
+  watch: Video,
+  listen: Headphones,
+  note: Lightbulb, // fallback icon for note
+};
 
 /**
  * Extracts the domain from a URL
@@ -60,8 +61,13 @@ function normaliseUrl(input: string): string {
   return url;
 }
 
+// Filter to only show link-relevant content types
+const LINK_CATEGORIES = CONTENT_TYPE_OPTIONS.filter(
+  opt => ["idea", "read", "watch", "listen"].includes(opt.value)
+);
+
 export function LinkCapturePanel({ url, onSuccess, onCancel }: LinkCapturePanelProps) {
-  const [category, setCategory] = useState<ContentCategory>("idea");
+  const [category, setCategory] = useState<ContentType>("idea");
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -99,19 +105,15 @@ export function LinkCapturePanel({ url, onSuccess, onCancel }: LinkCapturePanelP
     setError(null);
 
     try {
-      // Create the idea with appropriate title
+      // Create the idea with title and content_type
       const ideaTitle = title.trim() || `${domain} link`;
-      const categoryInfo = CATEGORIES.find(c => c.id === category);
+      const categoryInfo = CONTENT_TYPE_OPTIONS.find(c => c.value === category);
 
-      // Add category prefix to title if not just "idea"
-      const fullTitle = category === "idea"
-        ? ideaTitle
-        : `${categoryInfo?.emoji} ${ideaTitle}`;
-
-      // Create the idea
+      // Create the idea with content_type field
       const idea = await createIdea({
-        title: fullTitle,
+        title: ideaTitle,
         description: note.trim() || null,
+        content_type: category,
       });
 
       // Attach the URL as a link
@@ -184,13 +186,13 @@ export function LinkCapturePanel({ url, onSuccess, onCancel }: LinkCapturePanelP
           Save as
         </label>
         <div className="grid grid-cols-4 gap-2">
-          {CATEGORIES.map(({ id, label, icon: Icon, emoji }) => (
+          {LINK_CATEGORIES.map(({ value, label, emoji }) => (
             <button
-              key={id}
-              onClick={() => setCategory(id)}
+              key={value}
+              onClick={() => setCategory(value)}
               className={cn(
                 "flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all",
-                category === id
+                category === value
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border bg-bg-tertiary/50 text-foreground-muted hover:border-border-strong hover:text-foreground"
               )}

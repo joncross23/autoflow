@@ -27,6 +27,7 @@ import {
   DATE_CREATED_OPTIONS,
   STARTED_DATE_OPTIONS,
   COMPLETED_DATE_OPTIONS,
+  CONTENT_TYPE_OPTIONS,
 } from "./types";
 import { getFiltersForContext, getFilterDefinition } from "./definitions";
 import { FilterChip } from "./FilterChip";
@@ -254,6 +255,14 @@ export function UnifiedFilterBar({
       case "completedAt": {
         const option = COMPLETED_DATE_OPTIONS.find((d) => d.value === values[0]);
         displayLabel = option?.label || "Completed";
+        break;
+      }
+      case "contentType": {
+        const names = values
+          .map((v) => CONTENT_TYPE_OPTIONS.find((t) => t.value === v)?.label)
+          .filter(Boolean);
+        displayLabel =
+          names.length === 1 ? names[0]! : `${names.length} types`;
         break;
       }
       default:
@@ -504,6 +513,19 @@ export function UnifiedFilterBar({
             title="Owners"
             icon={User}
             iconColor="text-slate-400"
+          />
+        );
+
+      case "contentType":
+        return (
+          <MultiSelectControl
+            isOpen={true}
+            onClose={() => setActiveControl(null)}
+            options={CONTENT_TYPE_OPTIONS}
+            selected={currentValues}
+            onToggle={(v) => handleToggleOption("contentType", v)}
+            onApply={() => handleApplyFilter("contentType")}
+            title="Content Type"
           />
         );
 

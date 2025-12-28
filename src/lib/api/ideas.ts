@@ -6,7 +6,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { escapeIlikePattern } from "@/lib/security/sanitise";
-import type { DbIdea, DbIdeaInsert, DbIdeaUpdate, IdeaStatus, RiceImpact } from "@/types/database";
+import type { DbIdea, DbIdeaInsert, DbIdeaUpdate, IdeaStatus, RiceImpact, ContentType } from "@/types/database";
 
 // ============================================
 // Filter Types
@@ -20,6 +20,8 @@ export interface IdeaFilters {
   minRiceScore?: number;
   maxRiceScore?: number;
   hasRiceScore?: boolean;  // Filter to only show scored/unscored ideas
+  // Content type filter
+  contentTypes?: (ContentType | "unset")[];
   // Sorting
   sortBy?:
     | "created_at"
@@ -95,6 +97,23 @@ export async function getIdeas(filters?: IdeaFilters): Promise<DbIdea[]> {
       query = query.not("rice_score", "is", null);
     } else {
       query = query.is("rice_score", null);
+    }
+  }
+
+  // Content type filter
+  if (filters?.contentTypes && filters.contentTypes.length > 0) {
+    const hasUnset = filters.contentTypes.includes("unset");
+    const actualTypes = filters.contentTypes.filter(t => t !== "unset");
+
+    if (hasUnset && actualTypes.length > 0) {
+      // Include both null and specific types
+      query = query.or(`content_type.is.null,content_type.in.(${actualTypes.join(",")})`);
+    } else if (hasUnset) {
+      // Only unset
+      query = query.is("content_type", null);
+    } else if (actualTypes.length > 0) {
+      // Only specific types
+      query = query.in("content_type", actualTypes);
     }
   }
 
