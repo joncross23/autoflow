@@ -60,7 +60,6 @@ const COLUMN_LABELS: Record<string, string> = {
   rice_impact: "Impact",
   rice_confidence: "Confidence",
   rice_effort: "Effort (RICE)",
-  content_type: "Type",
 };
 
 export function IdeasTable({

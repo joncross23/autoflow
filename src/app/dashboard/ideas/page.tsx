@@ -179,10 +179,6 @@ export default function IdeasPage() {
         filterParams.search = filters.search || searchQuery;
       }
 
-      if (filters.contentTypes && filters.contentTypes.length > 0) {
-        filterParams.contentTypes = filters.contentTypes;
-      }
-
       const [data, counts, labels, progress, allLabels] = await Promise.all([
         getIdeas(filterParams),
         getIdeaCounts(),
@@ -378,19 +374,6 @@ export default function IdeasPage() {
     // Horizon filter (already handled by API, but double-check client-side)
     if (filters.horizons.length > 0) {
       if (!filters.horizons.includes(idea.horizon)) return false;
-    }
-
-    // Content type filter
-    if (filters.contentTypes && filters.contentTypes.length > 0) {
-      const hasUnset = filters.contentTypes.includes("unset");
-      const actualTypes = filters.contentTypes.filter(t => t !== "unset");
-      const ideaType = idea.content_type;
-
-      // Check if idea matches any selected filter
-      const matchesUnset = hasUnset && (ideaType === null || ideaType === undefined);
-      const matchesType = actualTypes.length > 0 && actualTypes.includes(ideaType as any);
-
-      if (!matchesUnset && !matchesType) return false;
     }
 
     // Date filters - use filterValues since they contain the raw filter data

@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { createIdea, updateIdea } from "@/lib/api/ideas";
-import type { DbIdea, IdeaStatus, IdeaFrequency, ContentType } from "@/types/database";
-import { CONTENT_TYPE_OPTIONS } from "@/types/database";
+import type { DbIdea, IdeaStatus, IdeaFrequency } from "@/types/database";
 
 interface IdeaFormProps {
   idea?: DbIdea | null;
@@ -42,7 +41,6 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
   const [owner, setOwner] = useState(idea?.owner || "");
   const [painPoints, setPainPoints] = useState(idea?.pain_points || "");
   const [desiredOutcome, setDesiredOutcome] = useState(idea?.desired_outcome || "");
-  const [contentType, setContentType] = useState<ContentType | "">(idea?.content_type || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,7 +65,6 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
         owner: owner.trim() || null,
         pain_points: painPoints.trim() || null,
         desired_outcome: desiredOutcome.trim() || null,
-        content_type: contentType || null,
       };
 
       if (isEditing && idea) {
@@ -224,26 +221,6 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
               />
             </div>
 
-            {/* Content Type */}
-            <div>
-              <label htmlFor="contentType" className="block text-sm font-medium mb-1.5">
-                Type
-              </label>
-              <select
-                id="contentType"
-                value={contentType}
-                onChange={(e) => setContentType(e.target.value as ContentType | "")}
-                className="input w-full"
-                disabled={loading}
-              >
-                <option value="">Select type...</option>
-                {CONTENT_TYPE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.emoji} {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
 
           {/* Pain Points */}

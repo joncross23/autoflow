@@ -3,40 +3,24 @@
 /**
  * LinkCapturePanel Component
  * Quick capture panel for URLs - appears when a URL is detected
- * Allows categorisation as Read/Watch/Listen or plain idea
+ * Saves links as ideas for AI/automation opportunities
  */
 
 import { useState, useEffect } from "react";
 import {
   Link2,
-  BookOpen,
-  Video,
-  Headphones,
-  Lightbulb,
   Loader2,
   ExternalLink,
   X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { createIdea } from "@/lib/api/ideas";
 import { createIdeaLink } from "@/lib/api/links";
-import type { ContentType } from "@/types/database";
-import { CONTENT_TYPE_OPTIONS } from "@/types/database";
 
 interface LinkCapturePanelProps {
   url: string;
   onSuccess?: () => void;
   onCancel: () => void;
 }
-
-// Map ContentType to icons for the UI
-const CATEGORY_ICONS: Record<ContentType, typeof BookOpen> = {
-  idea: Lightbulb,
-  read: BookOpen,
-  watch: Video,
-  listen: Headphones,
-  note: Lightbulb, // fallback icon for note
-};
 
 /**
  * Extracts the domain from a URL
@@ -61,13 +45,7 @@ function normaliseUrl(input: string): string {
   return url;
 }
 
-// Filter to only show link-relevant content types
-const LINK_CATEGORIES = CONTENT_TYPE_OPTIONS.filter(
-  opt => ["idea", "read", "watch", "listen"].includes(opt.value)
-);
-
 export function LinkCapturePanel({ url, onSuccess, onCancel }: LinkCapturePanelProps) {
-  const [category, setCategory] = useState<ContentType>("idea");
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -105,22 +83,19 @@ export function LinkCapturePanel({ url, onSuccess, onCancel }: LinkCapturePanelP
     setError(null);
 
     try {
-      // Create the idea with title and content_type
+      // Create the idea with title
       const ideaTitle = title.trim() || `${domain} link`;
-      const categoryInfo = CONTENT_TYPE_OPTIONS.find(c => c.value === category);
 
-      // Create the idea with content_type field
       const idea = await createIdea({
         title: ideaTitle,
         description: note.trim() || null,
-        content_type: category,
       });
 
       // Attach the URL as a link
       await createIdeaLink(idea.id, {
         url: normalisedUrl,
         title: title.trim() || null,
-        favicon: categoryInfo?.emoji || "🔗",
+        favicon: "🔗",
       });
 
       onSuccess?.();
@@ -177,30 +152,6 @@ export function LinkCapturePanel({ url, onSuccess, onCancel }: LinkCapturePanelP
               <Loader2 className="w-4 h-4 animate-spin text-foreground-muted" />
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Category Selector */}
-      <div>
-        <label className="block text-xs font-medium text-foreground-muted mb-1.5">
-          Save as
-        </label>
-        <div className="grid grid-cols-4 gap-2">
-          {LINK_CATEGORIES.map(({ value, label, emoji }) => (
-            <button
-              key={value}
-              onClick={() => setCategory(value)}
-              className={cn(
-                "flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all",
-                category === value
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-bg-tertiary/50 text-foreground-muted hover:border-border-strong hover:text-foreground"
-              )}
-            >
-              <span className="text-lg">{emoji}</span>
-              <span className="text-[10px] font-medium">{label}</span>
-            </button>
-          ))}
         </div>
       </div>
 

@@ -21,6 +21,7 @@ import {
   ArrowLeft,
   FileText,
   AlertCircle,
+  Lightbulb,
   // Actions icons
   ArrowRightLeft,
   Copy,
@@ -44,6 +45,7 @@ import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { AIAnalysisSection } from "@/components/shared/AIAnalysisSection";
 import { AIDescriptionHelper } from "@/components/shared/AIDescriptionHelper";
+import { ParentIdeaSection } from "@/components/shared/ParentIdeaSection";
 
 interface TaskDetailModalProps {
   task: DbTask;
@@ -160,6 +162,7 @@ interface EnabledSections {
   aiSuggestions: boolean;
   attachments: boolean;
   links: boolean;
+  linkedIdea: boolean;
 }
 
 export function TaskDetailModal({
@@ -179,6 +182,7 @@ export function TaskDetailModal({
   const [description, setDescription] = useState(task.description || "");
   const [priority, setPriority] = useState<Priority | null>(task.priority);
   const [dueDate, setDueDate] = useState(task.due_date || "");
+  const [ideaId, setIdeaId] = useState<string | null>(task.idea_id);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
@@ -195,6 +199,7 @@ export function TaskDetailModal({
     aiSuggestions: false,
     attachments: false,
     links: false,
+    linkedIdea: false,
   });
   const [sectionsLoaded, setSectionsLoaded] = useState(isNew);
 
@@ -220,6 +225,7 @@ export function TaskDetailModal({
           aiSuggestions: false, // AI is manual-trigger only
           attachments: attachments.length > 0,
           links: links.length > 0,
+          linkedIdea: task.idea_id != null,
         });
       } catch (error) {
         console.error("Failed to load section data:", error);
@@ -229,7 +235,7 @@ export function TaskDetailModal({
     }
 
     loadSectionData();
-  }, [task.id, task.due_date, task.priority, isNew]);
+  }, [task.id, task.due_date, task.priority, task.idea_id, isNew]);
 
   // Enable a section (sidebar buttons only enable, × removes)
   const enableSection = (section: keyof EnabledSections) => {
@@ -253,9 +259,10 @@ export function TaskDetailModal({
       title !== task.title ||
       description !== (task.description || "") ||
       priority !== task.priority ||
-      dueDate !== (task.due_date || "");
+      dueDate !== (task.due_date || "") ||
+      ideaId !== task.idea_id;
     setHasChanges(changed);
-  }, [title, description, priority, dueDate, task.title, task.description, task.priority, task.due_date]);
+  }, [title, description, priority, dueDate, ideaId, task.title, task.description, task.priority, task.due_date, task.idea_id]);
 
   // Save task
   const handleSave = useCallback(async () => {
@@ -268,6 +275,7 @@ export function TaskDetailModal({
         description: description || null,
         priority,
         due_date: dueDate || null,
+        idea_id: ideaId,
       });
       onSave(updated);
     } catch (error) {
@@ -275,7 +283,7 @@ export function TaskDetailModal({
     } finally {
       setSaving(false);
     }
-  }, [hasChanges, task.id, title, description, priority, dueDate, onSave]);
+  }, [hasChanges, task.id, title, description, priority, dueDate, ideaId, onSave]);
 
   // Archive task handler
   const handleArchive = useCallback(async () => {
@@ -438,6 +446,18 @@ export function TaskDetailModal({
                   onRemove={() => disableSection("labels")}
                   onLabelsChange={onLabelsChange}
                 />
+              )}
+
+              {/* Linked Idea - Only if enabled */}
+              {enabledSections.linkedIdea && (
+                <div className="mb-6">
+                  <ParentIdeaSection
+                    ideaId={ideaId}
+                    onIdeaChange={(newIdeaId) => {
+                      setIdeaId(newIdeaId);
+                    }}
+                  />
+                </div>
               )}
 
               {/* Priority - Only if enabled */}
@@ -638,6 +658,12 @@ export function TaskDetailModal({
                       active={enabledSections.links}
                       onClick={() => enableSection("links")}
                     />
+                    <SidebarButton
+                      icon={Lightbulb}
+                      label="Linked Idea"
+                      active={enabledSections.linkedIdea}
+                      onClick={() => enableSection("linkedIdea")}
+                    />
                   </div>
                 </div>
 
@@ -799,6 +825,12 @@ export function TaskDetailModal({
                   className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.links ? "text-primary" : ""}`}
                 >
                   <LinkIcon className="h-4 w-4" /> Link
+                </button>
+                <button
+                  onClick={() => { enableSection("linkedIdea"); setShowMobileActions(false); }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-bg-hover ${enabledSections.linkedIdea ? "text-primary" : ""}`}
+                >
+                  <Lightbulb className="h-4 w-4" /> Linked Idea
                 </button>
                 <div className="my-1 border-t border-border" />
                 <div className="px-3 py-1 text-xs font-semibold text-foreground-muted uppercase">
