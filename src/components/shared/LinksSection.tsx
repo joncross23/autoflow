@@ -17,7 +17,6 @@ import {
   Pencil,
   Check,
   X,
-  Lightbulb,
   ListTodo,
   ChevronDown,
   Search,
@@ -36,14 +35,16 @@ import {
   normaliseUrl,
   LINK_FAVICONS,
 } from "@/lib/api/links";
-import { getIdeas } from "@/lib/api/ideas";
 import { getAllTasks } from "@/lib/api/tasks";
-import type { DbLink, DbIdea, DbTask, LinkRelationshipType } from "@/types/database";
+import type { DbLink, DbTask, LinkRelationshipType } from "@/types/database";
 import { RELATIONSHIP_TYPE_OPTIONS, RELATIONSHIP_TYPE_LABELS } from "@/types/database";
 import { BacklinksSection } from "./BacklinksSection";
 
-// Link type for the enhanced linking system
-type LinkType = "url" | "idea" | "task";
+// Link type for creating new links (idea linking moved to ParentIdeaSection)
+type LinkType = "url" | "task";
+
+// Display type includes "idea" to render existing idea:// links from database
+type DisplayLinkType = "url" | "task" | "idea";
 
 // Internal link prefixes
 const IDEA_PREFIX = "idea://";
@@ -62,8 +63,8 @@ interface LinksSectionProps {
   hideHeader?: boolean;
 }
 
-// Helper to detect link type from URL
-function detectLinkType(url: string): LinkType {
+// Helper to detect link type from URL (for displaying existing links)
+function detectLinkType(url: string): DisplayLinkType {
   if (url.startsWith(IDEA_PREFIX)) return "idea";
   if (url.startsWith(TASK_PREFIX)) return "task";
   return "url";
@@ -94,12 +95,11 @@ export function LinksSection({
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // For idea/task search
+  // For task search
   const [searchQuery, setSearchQuery] = useState("");
-  const [ideas, setIdeas] = useState<DbIdea[]>([]);
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [isLoadingItems, setIsLoadingItems] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DbIdea | DbTask | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DbTask | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [relationshipType, setRelationshipType] = useState<LinkRelationshipType>("related");
   const [showRelationshipDropdown, setShowRelationshipDropdown] = useState(false);
@@ -123,20 +123,6 @@ export function LinksSection({
       setIsLoading(false);
     }
   }, [ideaId, taskId]);
-
-  // Load ideas function wrapped in useCallback
-  const loadIdeas = useCallback(async () => {
-    setIsLoadingItems(true);
-    try {
-      const data = await getIdeas({ archived: false });
-      // Filter out current idea if linking from an idea
-      setIdeas(ideaId ? data.filter((i) => i.id !== ideaId) : data);
-    } catch (error) {
-      console.error("Error loading ideas:", error);
-    } finally {
-      setIsLoadingItems(false);
-    }
-  }, [ideaId]);
 
   // Load tasks function wrapped in useCallback
   const loadTasks = useCallback(async () => {
@@ -162,14 +148,12 @@ export function LinksSection({
     onLinksChange?.(links.length);
   }, [links, onLinksChange]);
 
-  // Load ideas/tasks when link type changes
+  // Load tasks when link type changes
   useEffect(() => {
-    if (linkType === "idea") {
-      loadIdeas();
-    } else if (linkType === "task") {
+    if (linkType === "task") {
       loadTasks();
     }
-  }, [linkType, loadIdeas, loadTasks]);
+  }, [linkType, loadTasks]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -240,26 +224,22 @@ export function LinksSection({
       return;
     }
 
-    // For idea/task type
+    // For task type
     if (!selectedItem) {
-      setError(`Please select ${linkType === "idea" ? "an idea" : "a task"}`);
+      setError("Please select a task");
       return;
     }
 
     setIsAdding(true);
     try {
-      const internalUrl =
-        linkType === "idea"
-          ? `${IDEA_PREFIX}${selectedItem.id}`
-          : `${TASK_PREFIX}${selectedItem.id}`;
+      const internalUrl = `${TASK_PREFIX}${selectedItem.id}`;
 
       let link: DbLink;
       const linkData = {
         url: internalUrl,
         title: selectedItem.title,
-        favicon: linkType === "idea" ? "💡" : "📋",
-        // Only include relationship_type for task-to-task links
-        relationship_type: linkType === "task" ? relationshipType : null,
+        favicon: "📋",
+        relationship_type: relationshipType,
       };
 
       if (ideaId) {
@@ -299,10 +279,7 @@ export function LinksSection({
     }
   }
 
-  // Filter items by search query
-  const filteredIdeas = ideas.filter((i) =>
-    i.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter tasks by search query
   const filteredTasks = tasks.filter((t) =>
     t.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -355,7 +332,7 @@ export function LinksSection({
 
           {/* Link Type Selector */}
           <div className="flex gap-1 p-1 bg-bg-tertiary rounded-lg">
-            {(["url", "idea", "task"] as LinkType[]).map((type) => (
+            {(["url", "task"] as LinkType[]).map((type) => (
               <button
                 key={type}
                 onClick={() => {
@@ -371,7 +348,6 @@ export function LinksSection({
                 )}
               >
                 {type === "url" && <Link2 className="w-3 h-3" />}
-                {type === "idea" && <Lightbulb className="w-3 h-3" />}
                 {type === "task" && <ListTodo className="w-3 h-3" />}
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </button>
@@ -426,8 +402,8 @@ export function LinksSection({
             </>
           )}
 
-          {/* Idea/Task Selector */}
-          {(linkType === "idea" || linkType === "task") && (
+          {/* Task Selector */}
+          {linkType === "task" && (
             <div className="relative" ref={dropdownRef}>
               {/* Search Input */}
               <div
@@ -439,11 +415,7 @@ export function LinksSection({
               >
                 {selectedItem ? (
                   <div className="flex items-center gap-2 flex-1">
-                    {linkType === "idea" ? (
-                      <Lightbulb className="w-4 h-4 text-amber-500" />
-                    ) : (
-                      <ListTodo className="w-4 h-4 text-blue-500" />
-                    )}
+                    <ListTodo className="w-4 h-4 text-blue-500" />
                     <span className="text-sm text-foreground truncate">
                       {selectedItem.title}
                     </span>
@@ -462,7 +434,7 @@ export function LinksSection({
                         e.stopPropagation();
                         setShowDropdown(true);
                       }}
-                      placeholder={`Search ${linkType === "idea" ? "ideas" : "tasks"}...`}
+                      placeholder="Search tasks..."
                       className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground-muted focus:outline-none"
                     />
                   </div>
@@ -486,7 +458,7 @@ export function LinksSection({
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder={`Search ${linkType === "idea" ? "ideas" : "tasks"}...`}
+                        placeholder="Search tasks..."
                         className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground-muted focus:outline-none"
                         autoFocus
                       />
@@ -507,48 +479,25 @@ export function LinksSection({
                       <Loader2 className="w-4 h-4 animate-spin" />
                       Loading...
                     </div>
-                  ) : linkType === "idea" ? (
-                    filteredIdeas.length === 0 ? (
-                      <div className="px-3 py-2 text-xs text-foreground-muted">
-                        {searchQuery ? `No ideas match "${searchQuery}"` : "No ideas available"}
-                      </div>
-                    ) : (
-                      filteredIdeas.map((idea) => (
-                        <button
-                          key={idea.id}
-                          onClick={() => {
-                            setSelectedItem(idea);
-                            setShowDropdown(false);
-                            setSearchQuery("");
-                          }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
-                        >
-                          <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
-                          <span className="truncate">{idea.title}</span>
-                        </button>
-                      ))
-                    )
+                  ) : filteredTasks.length === 0 ? (
+                    <div className="px-3 py-2 text-xs text-foreground-muted">
+                      {searchQuery ? `No tasks match "${searchQuery}"` : "No tasks available"}
+                    </div>
                   ) : (
-                    filteredTasks.length === 0 ? (
-                      <div className="px-3 py-2 text-xs text-foreground-muted">
-                        {searchQuery ? `No tasks match "${searchQuery}"` : "No tasks available"}
-                      </div>
-                    ) : (
-                      filteredTasks.map((task) => (
-                        <button
-                          key={task.id}
-                          onClick={() => {
-                            setSelectedItem(task);
-                            setShowDropdown(false);
-                            setSearchQuery("");
-                          }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
-                        >
-                          <ListTodo className="w-4 h-4 text-blue-500 shrink-0" />
-                          <span className="truncate">{task.title}</span>
-                        </button>
-                      ))
-                    )
+                    filteredTasks.map((task) => (
+                      <button
+                        key={task.id}
+                        onClick={() => {
+                          setSelectedItem(task);
+                          setShowDropdown(false);
+                          setSearchQuery("");
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-bg-hover transition-colors"
+                      >
+                        <ListTodo className="w-4 h-4 text-blue-500 shrink-0" />
+                        <span className="truncate">{task.title}</span>
+                      </button>
+                    ))
                   )}
                   </div>
                 </div>
@@ -625,7 +574,7 @@ export function LinksSection({
               disabled={
                 isAdding ||
                 (linkType === "url" && !newUrl.trim()) ||
-                ((linkType === "idea" || linkType === "task") && !selectedItem)
+                (linkType === "task" && !selectedItem)
               }
               className="px-3 py-1.5 text-xs bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50"
             >
