@@ -3,9 +3,9 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2025-12-27
+> **Last Updated:** 2025-12-29
 > **Current Version:** 1.6.1
-> **Current Phase:** iOS UX Improvements (IN PROGRESS)
+> **Current Phase:** iOS UX Improvements (COMPLETE)
 > **Next Phase:** Dynamic Delivery Filters
 
 ---
@@ -25,8 +25,9 @@ Sprint focusing on optimising AutoFlow for iOS devices, particularly iPhone 15 P
 | Touch Sensors | **Done** | Added `TouchSensor` with 200ms delay to prevent accidental drags |
 | Task Card Touch | **Done** | Improved touch targets for drag handle and checkbox |
 | URL Detection | **Done** | Quick capture detects URLs and shows link capture panel |
-| Link Categories | **Done** | Categorise links as: Idea, To Read, To Watch, To Listen |
+| Link Categories | **Reverted** | Removed to keep AutoFlow focused on AI/automation projects |
 | Metadata API | **Done** | `/api/links/metadata` fetches title from URLs |
+| Task-Idea Linking | **Done** | Tasks can be linked to parent ideas via ParentIdeaSection |
 
 ### New Files
 
@@ -51,7 +52,6 @@ Sprint focusing on optimising AutoFlow for iOS devices, particularly iPhone 15 P
 
 | Feature | Description |
 |---------|-------------|
-| System Themes | Create database-backed themes for Read/Watch/Listen |
 | PWA Share Target | Enable "Share to AutoFlow" from iOS apps |
 | Bottom Sheet Modals | Convert modals to iOS-style bottom sheets on mobile |
 | Swipe Gestures | Swipe-to-dismiss modals, swipe-to-complete tasks |
