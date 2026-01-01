@@ -1,6 +1,22 @@
 import { createClient } from "@/lib/supabase/client";
 import type { DbAiEvaluation } from "@/types/database";
 
+function transformEvaluation(data: Record<string, unknown>): DbAiEvaluation {
+  return {
+    ...data,
+    recommendations: Array.isArray(data.recommendations)
+      ? data.recommendations
+      : typeof data.recommendations === 'string'
+        ? JSON.parse(data.recommendations)
+        : [],
+    risks: Array.isArray(data.risks)
+      ? data.risks
+      : typeof data.risks === 'string'
+        ? JSON.parse(data.risks)
+        : [],
+  } as DbAiEvaluation;
+}
+
 export async function getEvaluationsForIdea(ideaId: string): Promise<DbAiEvaluation[]> {
   const supabase = createClient();
 
@@ -14,7 +30,7 @@ export async function getEvaluationsForIdea(ideaId: string): Promise<DbAiEvaluat
     throw new Error(error.message);
   }
 
-  return data as DbAiEvaluation[];
+  return (data || []).map(transformEvaluation);
 }
 
 export async function getLatestEvaluation(ideaId: string): Promise<DbAiEvaluation | null> {
@@ -32,7 +48,7 @@ export async function getLatestEvaluation(ideaId: string): Promise<DbAiEvaluatio
     throw new Error(error.message);
   }
 
-  return data as DbAiEvaluation | null;
+  return data ? transformEvaluation(data) : null;
 }
 
 export async function deleteEvaluation(id: string): Promise<void> {
