@@ -78,12 +78,17 @@ export function FilterPanel({
 }: FilterPanelProps) {
   const [expanded, setExpanded] = useState(false);
 
+  // Defensive checks for old saved views that might not have all fields
+  const labelIds = filters.labelIds ?? [];
+  const owners = filters.owners ?? [];
+  const efforts = filters.efforts ?? [];
+
   const activeFilterCount =
-    filters.statuses.length +
-    filters.horizons.length +
-    filters.labelIds.length +
-    filters.owners.length +
-    filters.efforts.length +
+    (filters.statuses?.length ?? 0) +
+    (filters.horizons?.length ?? 0) +
+    labelIds.length +
+    owners.length +
+    efforts.length +
     (filters.archived ? 1 : 0) +
     (filters.dateRange !== "all" ? 1 : 0);
 
@@ -102,23 +107,23 @@ export function FilterPanel({
   };
 
   const toggleLabel = (labelId: string) => {
-    const newLabelIds = filters.labelIds.includes(labelId)
-      ? filters.labelIds.filter((id) => id !== labelId)
-      : [...filters.labelIds, labelId];
+    const newLabelIds = labelIds.includes(labelId)
+      ? labelIds.filter((id) => id !== labelId)
+      : [...labelIds, labelId];
     onFiltersChange({ ...filters, labelIds: newLabelIds });
   };
 
   const toggleOwner = (owner: string) => {
-    const newOwners = filters.owners.includes(owner)
-      ? filters.owners.filter((o) => o !== owner)
-      : [...filters.owners, owner];
+    const newOwners = owners.includes(owner)
+      ? owners.filter((o) => o !== owner)
+      : [...owners, owner];
     onFiltersChange({ ...filters, owners: newOwners });
   };
 
   const toggleEffort = (effort: EffortEstimate) => {
-    const newEfforts = filters.efforts.includes(effort)
-      ? filters.efforts.filter((e) => e !== effort)
-      : [...filters.efforts, effort];
+    const newEfforts = efforts.includes(effort)
+      ? efforts.filter((e) => e !== effort)
+      : [...efforts, effort];
     onFiltersChange({ ...filters, efforts: newEfforts });
   };
 
@@ -265,7 +270,7 @@ export function FilterPanel({
                       onClick={() => toggleLabel(label.id)}
                       className={cn(
                         "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
-                        filters.labelIds.includes(label.id)
+                        labelIds.includes(label.id)
                           ? "border-primary bg-primary/10"
                           : "border-border-subtle hover:bg-bg-hover"
                       )}
@@ -299,7 +304,7 @@ export function FilterPanel({
                       onClick={() => toggleOwner(owner)}
                       className={cn(
                         "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
-                        filters.owners.includes(owner)
+                        owners.includes(owner)
                           ? "border-primary bg-primary/10"
                           : "border-border-subtle hover:bg-bg-hover"
                       )}
@@ -324,7 +329,7 @@ export function FilterPanel({
                     onClick={() => toggleEffort(effort.value)}
                     className={cn(
                       "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
-                      filters.efforts.includes(effort.value)
+                      efforts.includes(effort.value)
                         ? "border-primary bg-primary/10"
                         : "border-border-subtle hover:bg-bg-hover"
                     )}

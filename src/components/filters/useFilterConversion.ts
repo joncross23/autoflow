@@ -12,23 +12,30 @@ import type { IdeaFilters } from "@/components/ideas";
 export function ideaFiltersToValues(filters: IdeaFilters): FilterValue[] {
   const values: FilterValue[] = [];
 
+  // Defensive checks for old saved views
+  const statuses = filters.statuses ?? [];
+  const horizons = filters.horizons ?? [];
+  const labelIds = filters.labelIds ?? [];
+  const owners = filters.owners ?? [];
+  const efforts = filters.efforts ?? [];
+
   // Status filter
-  if (filters.statuses.length > 0) {
+  if (statuses.length > 0) {
     values.push({
       id: "status-filter",
       type: "status",
-      value: filters.statuses,
+      value: statuses,
       displayLabel:
-        filters.statuses.length === 1
-          ? filters.statuses[0]
-          : `${filters.statuses.length} statuses`,
+        statuses.length === 1
+          ? statuses[0]
+          : `${statuses.length} statuses`,
     });
   }
 
   // Horizon filter
-  if (filters.horizons.length > 0) {
-    const validHorizons = filters.horizons.filter((h) => h !== null);
-    const hasUnplanned = filters.horizons.includes(null);
+  if (horizons.length > 0) {
+    const validHorizons = horizons.filter((h) => h !== null);
+    const hasUnplanned = horizons.includes(null);
     const horizonValues = [
       ...validHorizons,
       ...(hasUnplanned ? ["unplanned"] : []),
@@ -48,41 +55,41 @@ export function ideaFiltersToValues(filters: IdeaFilters): FilterValue[] {
   }
 
   // Label filter
-  if (filters.labelIds.length > 0) {
+  if (labelIds.length > 0) {
     values.push({
       id: "label-filter",
       type: "label",
-      value: filters.labelIds,
+      value: labelIds,
       displayLabel:
-        filters.labelIds.length === 1
+        labelIds.length === 1
           ? "1 label"
-          : `${filters.labelIds.length} labels`,
+          : `${labelIds.length} labels`,
     });
   }
 
   // Owner filter
-  if (filters.owners.length > 0) {
+  if (owners.length > 0) {
     values.push({
       id: "owner-filter",
       type: "owner",
-      value: filters.owners,
+      value: owners,
       displayLabel:
-        filters.owners.length === 1
-          ? filters.owners[0]
-          : `${filters.owners.length} owners`,
+        owners.length === 1
+          ? owners[0]
+          : `${owners.length} owners`,
     });
   }
 
   // Effort filter
-  if (filters.efforts.length > 0) {
+  if (efforts.length > 0) {
     values.push({
       id: "effort-filter",
       type: "effort",
-      value: filters.efforts,
+      value: efforts,
       displayLabel:
-        filters.efforts.length === 1
-          ? filters.efforts[0]
-          : `${filters.efforts.length} efforts`,
+        efforts.length === 1
+          ? efforts[0]
+          : `${efforts.length} efforts`,
     });
   }
 

@@ -353,27 +353,31 @@ export default function IdeasPage() {
     }
 
     // Label filter (OR logic - idea matches if it has ANY of the selected labels)
-    if (filters.labelIds.length > 0) {
+    const filterLabelIds = filters.labelIds ?? [];
+    if (filterLabelIds.length > 0) {
       const ideaLabelIds = (ideaLabels[idea.id] || []).map((l) => l.id);
-      const hasMatchingLabel = filters.labelIds.some((labelId) =>
+      const hasMatchingLabel = filterLabelIds.some((labelId) =>
         ideaLabelIds.includes(labelId)
       );
       if (!hasMatchingLabel) return false;
     }
 
     // Owner filter
-    if (filters.owners.length > 0) {
-      if (!idea.owner || !filters.owners.includes(idea.owner)) return false;
+    const filterOwners = filters.owners ?? [];
+    if (filterOwners.length > 0) {
+      if (!idea.owner || !filterOwners.includes(idea.owner)) return false;
     }
 
     // Effort filter
-    if (filters.efforts.length > 0) {
-      if (!idea.effort_estimate || !filters.efforts.includes(idea.effort_estimate)) return false;
+    const filterEfforts = filters.efforts ?? [];
+    if (filterEfforts.length > 0) {
+      if (!idea.effort_estimate || !filterEfforts.includes(idea.effort_estimate)) return false;
     }
 
     // Horizon filter (already handled by API, but double-check client-side)
-    if (filters.horizons.length > 0) {
-      if (!filters.horizons.includes(idea.horizon)) return false;
+    const filterHorizons = filters.horizons ?? [];
+    if (filterHorizons.length > 0) {
+      if (!filterHorizons.includes(idea.horizon)) return false;
     }
 
     // Date filters - use filterValues since they contain the raw filter data

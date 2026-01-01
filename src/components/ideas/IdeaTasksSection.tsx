@@ -18,9 +18,11 @@ import type { DbTask } from "@/types/database";
 interface IdeaTasksSectionProps {
   ideaId: string;
   ideaTitle?: string; // Used for auto-linking
+  /** Callback when tasks count changes */
+  onTasksCountChange?: (count: number) => void;
 }
 
-export function IdeaTasksSection({ ideaId, ideaTitle }: IdeaTasksSectionProps) {
+export function IdeaTasksSection({ ideaId, ideaTitle, onTasksCountChange }: IdeaTasksSectionProps) {
   const [tasks, setTasks] = useState<DbTask[]>([]);
   const [defaultColumnId, setDefaultColumnId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,6 +59,11 @@ export function IdeaTasksSection({ ideaId, ideaTitle }: IdeaTasksSectionProps) {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ideaId]);
+
+  // Notify parent of tasks count changes
+  useEffect(() => {
+    onTasksCountChange?.(tasks.length);
+  }, [tasks, onTasksCountChange]);
 
   const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;

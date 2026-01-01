@@ -24,6 +24,8 @@ import {
 
 interface CommentsSectionProps {
   ideaId: string;
+  /** Callback when comments count changes */
+  onCommentsCountChange?: (count: number) => void;
 }
 
 interface CommentItemProps {
@@ -267,7 +269,7 @@ function CommentItem({
   );
 }
 
-export function CommentsSection({ ideaId }: CommentsSectionProps) {
+export function CommentsSection({ ideaId, onCommentsCountChange }: CommentsSectionProps) {
   const [comments, setComments] = useState<CommentWithReplies[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
@@ -290,6 +292,11 @@ export function CommentsSection({ ideaId }: CommentsSectionProps) {
   useEffect(() => {
     loadComments();
   }, [loadComments]);
+
+  // Notify parent of comments count changes
+  useEffect(() => {
+    onCommentsCountChange?.(comments.length);
+  }, [comments, onCommentsCountChange]);
 
   useEffect(() => {
     if (replyingTo && inputRef.current) {
