@@ -363,11 +363,17 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     const body = document.body;
     const bg = resolvedMode === "dark" ? backgroundDark : backgroundLight;
 
-    if (bg.type === "solid") {
-      body.style.background = bg.solid;
-    } else {
-      const { from, to, angle } = bg.gradient;
+    // Defensive check for null/undefined bg or missing properties
+    if (!bg || typeof bg !== 'object') {
+      body.style.background = resolvedMode === "dark" ? "#0d1f2d" : "#f0f9ff";
+    } else if (bg.type === "solid") {
+      body.style.background = bg.solid || (resolvedMode === "dark" ? "#0d1f2d" : "#f0f9ff");
+    } else if (bg.gradient?.from && bg.gradient?.to) {
+      const { from, to, angle = 135 } = bg.gradient;
       body.style.background = `linear-gradient(${angle}deg, ${from} 0%, ${to} 100%)`;
+    } else {
+      // Fallback if gradient is missing or incomplete
+      body.style.background = bg.solid || (resolvedMode === "dark" ? "#0d1f2d" : "#f0f9ff");
     }
     body.style.backgroundAttachment = "fixed";
   }, [backgroundDark, backgroundLight, resolvedMode, mounted]);
