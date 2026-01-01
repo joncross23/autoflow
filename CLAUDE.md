@@ -1,6 +1,8 @@
 # AutoFlow Development Guide
 
-> **Repository**: https://github.com/jon-cross/autoflow  
+> **Repository**: https://github.com/joncross23/autoflow
+> **Production**: https://autoflow23.vercel.app
+> **Staging**: https://autoflow23-staging.vercel.app
 > **For Claude Code**: This file is read automatically. See `/docs/PROJECT_CONTEXT.md` for full specifications.
 
 ## Project Summary
@@ -9,7 +11,7 @@
 
 **Stack:** Next.js 14+ (App Router) | Supabase | Tailwind + shadcn/ui | Claude API | Vercel
 
-**Hosting:** Vercel (linked to GitHub) | **Database:** Supabase (linked to GitHub)
+**Hosting:** Vercel (`joncross23-8264`) | **Database:** Supabase (`icdjurapdmimfdecgngw`)
 
 ## Current Phase
 
