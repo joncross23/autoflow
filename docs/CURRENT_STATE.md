@@ -3,10 +3,13 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2025-12-29
-> **Current Version:** 1.6.1
+> **Last Updated:** 2026-01-01
+> **Current Version:** 1.6.2
 > **Current Phase:** iOS UX Improvements (COMPLETE)
 > **Next Phase:** Dynamic Delivery Filters
+>
+> **Staging:** https://autoflow-staging.vercel.app (develop branch)
+> **Production:** https://autoflow23.vercel.app (main branch)
 
 ---
 
@@ -383,6 +386,15 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2026-01-01 — Auto-Open Accordions & Filter Fixes
+- Added `autoOpen` prop to `CollapsibleSection` component
+- Updated `IdeaDetailSlider` to auto-expand populated sections (Tasks, Checklists, Attachments, Links, AI Evaluation, RICE Score, Activity, Comments)
+- Added count change callbacks to section components (`onTasksCountChange`, `onCommentsCountChange`, `onActivityCountChange`, `onHasEvaluationChange`)
+- Fixed "undefined is not an object" errors for saved views with missing filter properties
+- Added defensive null checks in `FilterPanel.tsx`, `useFilterConversion.ts`, and `ideas/page.tsx`
+- Configured Vercel domains: staging → develop branch, production → main branch
+- Version bumped to 1.6.2
 
 ### 2025-12-27 — iOS UX Improvements Sprint
 - Created feature branch `feature/ios-ux-improvements`
