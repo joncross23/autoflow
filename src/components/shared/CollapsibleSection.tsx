@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,8 @@ interface CollapsibleSectionProps {
   icon?: React.ReactNode;
   /** Whether section is open by default */
   defaultOpen?: boolean;
+  /** Auto-open section when this becomes true (e.g., when data loads) */
+  autoOpen?: boolean;
   /** Badge content (e.g., count) */
   badge?: string | number;
   /** Content to render */
@@ -25,12 +27,20 @@ export function CollapsibleSection({
   title,
   icon,
   defaultOpen = true,
+  autoOpen,
   badge,
   children,
   className,
   showBorder = true,
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  // Auto-open when autoOpen prop becomes true
+  useEffect(() => {
+    if (autoOpen && !isOpen) {
+      setIsOpen(true);
+    }
+  }, [autoOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={cn(showBorder && "pt-4 border-t border-border", className)}>

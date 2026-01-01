@@ -19,6 +19,8 @@ import type { DbAiEvaluation } from "@/types/database";
 interface AiEvaluationPanelProps {
   ideaId: string;
   onEvaluationComplete?: () => void;
+  /** Callback when evaluation existence changes */
+  onHasEvaluationChange?: (hasEvaluation: boolean) => void;
   /** Hide the section header (when wrapped in CollapsibleSection) */
   hideHeader?: boolean;
 }
@@ -26,6 +28,7 @@ interface AiEvaluationPanelProps {
 export function AiEvaluationPanel({
   ideaId,
   onEvaluationComplete,
+  onHasEvaluationChange,
   hideHeader = false,
 }: AiEvaluationPanelProps) {
   const [evaluation, setEvaluation] = useState<DbAiEvaluation | null>(null);
@@ -47,6 +50,11 @@ export function AiEvaluationPanel({
   useEffect(() => {
     loadEvaluation();
   }, [loadEvaluation]);
+
+  // Notify parent when evaluation changes
+  useEffect(() => {
+    onHasEvaluationChange?.(evaluation !== null);
+  }, [evaluation, onHasEvaluationChange]);
 
   const runEvaluation = async () => {
     setEvaluating(true);

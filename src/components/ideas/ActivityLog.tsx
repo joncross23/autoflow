@@ -25,6 +25,8 @@ import {
 interface ActivityLogProps {
   ideaId: string;
   maxItems?: number;
+  /** Callback when activity count changes */
+  onActivityCountChange?: (count: number) => void;
 }
 
 const ACTION_ICONS: Record<ActivityAction, React.ElementType> = {
@@ -74,7 +76,7 @@ function ActivityItem({ entry }: { entry: ActivityLogEntry }) {
   );
 }
 
-export function ActivityLog({ ideaId, maxItems = 10 }: ActivityLogProps) {
+export function ActivityLog({ ideaId, maxItems = 10, onActivityCountChange }: ActivityLogProps) {
   const [activity, setActivity] = useState<ActivityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -96,6 +98,11 @@ export function ActivityLog({ ideaId, maxItems = 10 }: ActivityLogProps) {
 
     loadActivity();
   }, [ideaId]);
+
+  // Notify parent of activity count changes
+  useEffect(() => {
+    onActivityCountChange?.(activity.length);
+  }, [activity, onActivityCountChange]);
 
   const visibleActivity = expanded ? activity : activity.slice(0, maxItems);
   const hasMore = activity.length > maxItems;

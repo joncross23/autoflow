@@ -98,6 +98,15 @@ export function IdeaDetailSlider({
   const [saving, setSaving] = useState(false);
   const [converting, setConverting] = useState(false);
 
+  // Track section data for auto-opening populated accordions
+  const [tasksCount, setTasksCount] = useState(0);
+  const [checklistsCount, setChecklistsCount] = useState(0);
+  const [attachmentsCount, setAttachmentsCount] = useState(0);
+  const [linksCount, setLinksCount] = useState(0);
+  const [hasEvaluation, setHasEvaluation] = useState(false);
+  const [activityCount, setActivityCount] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(0);
+
   const handleClose = useCallback(() => {
     setIsVisible(false);
     setTimeout(onClose, 200); // Wait for animation
@@ -560,56 +569,82 @@ export function IdeaDetailSlider({
               </div>
             )}
 
-            {/* Tasks Section - Collapsible, open by default for active ideas */}
+            {/* Tasks Section - Collapsible, auto-open when populated */}
             <CollapsibleSection
               title="Tasks"
               icon={<ListTodo className="h-4 w-4" />}
               defaultOpen={idea.status === "accepted" || idea.status === "doing"}
+              autoOpen={tasksCount > 0}
               showBorder={true}
             >
-              <IdeaTasksSection ideaId={idea.id} ideaTitle={idea.title} />
+              <IdeaTasksSection
+                ideaId={idea.id}
+                ideaTitle={idea.title}
+                onTasksCountChange={setTasksCount}
+              />
             </CollapsibleSection>
 
-            {/* Checklists - Collapsible, closed by default */}
+            {/* Checklists - Collapsible, auto-open when populated */}
             <CollapsibleSection
               title="Checklists"
               icon={<CheckSquare className="h-4 w-4" />}
               defaultOpen={false}
+              autoOpen={checklistsCount > 0}
             >
-              <ChecklistsSection ideaId={idea.id} hideHeader />
+              <ChecklistsSection
+                ideaId={idea.id}
+                hideHeader
+                onProgressChange={(total) => setChecklistsCount(total)}
+              />
             </CollapsibleSection>
 
-            {/* Attachments - Collapsible, closed by default */}
+            {/* Attachments - Collapsible, auto-open when populated */}
             <CollapsibleSection
               title="Attachments"
               icon={<Paperclip className="h-4 w-4" />}
               defaultOpen={false}
+              autoOpen={attachmentsCount > 0}
             >
-              <AttachmentsSection ideaId={idea.id} hideHeader />
+              <AttachmentsSection
+                ideaId={idea.id}
+                hideHeader
+                onAttachmentsChange={setAttachmentsCount}
+              />
             </CollapsibleSection>
 
-            {/* Links (includes Backlinks) - Collapsible, closed by default */}
+            {/* Links (includes Backlinks) - Collapsible, auto-open when populated */}
             <CollapsibleSection
               title="Links"
               icon={<Link2 className="h-4 w-4" />}
               defaultOpen={false}
+              autoOpen={linksCount > 0}
             >
-              <LinksSection ideaId={idea.id} hideHeader />
+              <LinksSection
+                ideaId={idea.id}
+                hideHeader
+                onLinksChange={setLinksCount}
+              />
             </CollapsibleSection>
 
-            {/* AI Evaluation - Collapsible, closed by default */}
+            {/* AI Evaluation - Collapsible, auto-open when evaluation exists */}
             <CollapsibleSection
               title="AI Evaluation"
               icon={<Brain className="h-4 w-4" />}
               defaultOpen={false}
+              autoOpen={hasEvaluation}
             >
-              <AiEvaluationPanel ideaId={idea.id} hideHeader />
+              <AiEvaluationPanel
+                ideaId={idea.id}
+                hideHeader
+                onHasEvaluationChange={setHasEvaluation}
+              />
             </CollapsibleSection>
 
-            {/* RICE Score - Collapsible, closed by default */}
+            {/* RICE Score - Collapsible, auto-open when RICE data exists */}
             <CollapsibleSection
               title="RICE Score"
               defaultOpen={false}
+              autoOpen={idea.rice_reach !== null || idea.rice_impact !== null}
             >
               <RiceScorePanel idea={idea} onUpdate={onUpdate} />
             </CollapsibleSection>
@@ -739,22 +774,31 @@ export function IdeaDetailSlider({
               </div>
             </div>
 
-            {/* Activity Log - Collapsible, closed by default */}
+            {/* Activity Log - Collapsible, auto-open when populated */}
             <CollapsibleSection
               title="Activity"
               icon={<Activity className="h-4 w-4" />}
               defaultOpen={false}
+              autoOpen={activityCount > 0}
             >
-              <ActivityLog ideaId={idea.id} maxItems={5} />
+              <ActivityLog
+                ideaId={idea.id}
+                maxItems={5}
+                onActivityCountChange={setActivityCount}
+              />
             </CollapsibleSection>
 
-            {/* Comments - Collapsible, closed by default */}
+            {/* Comments - Collapsible, auto-open when populated */}
             <CollapsibleSection
               title="Comments"
               icon={<MessageSquare className="h-4 w-4" />}
               defaultOpen={false}
+              autoOpen={commentsCount > 0}
             >
-              <CommentsSection ideaId={idea.id} />
+              <CommentsSection
+                ideaId={idea.id}
+                onCommentsCountChange={setCommentsCount}
+              />
             </CollapsibleSection>
           </div>
         </div>
