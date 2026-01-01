@@ -195,7 +195,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
               .from("user_theme_preferences")
               .select("*")
               .eq("user_id", user.id)
-              .single();
+              .maybeSingle();
 
             if (data && !error) {
               setActiveThemeIdState(data.active_theme_id);

@@ -38,13 +38,9 @@ export async function getUserThemePreferences(): Promise<UserThemePreferences | 
     .from("user_theme_preferences")
     .select("*")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (error) {
-    // PGRST116 = no rows found
-    if (error.code === "PGRST116") {
-      return null;
-    }
     console.error("Error fetching theme preferences:", error);
     throw new Error(`Failed to fetch theme preferences: ${error.message}`);
   }
