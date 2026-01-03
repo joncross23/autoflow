@@ -56,16 +56,13 @@ test.describe('Tasks Board', () => {
     await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 })
   })
 
-  // KNOWN ISSUE: Task modal doesn't open when clicking on task cards
-  // The click event fires but selectedTask state doesn't update
-  // This affects all modal-related tests. Needs investigation in TaskBoard.tsx
-  test.skip('should open task detail modal when clicking on task', async ({ page }) => {
+  test('should open task detail modal when clicking on task', async ({ page }) => {
     const taskTitle = await createTask(page, 'Modal Test')
     await openTaskModal(page, taskTitle)
     // Modal is already verified visible in openTaskModal
   })
 
-  test.skip('should edit task title in modal', async ({ page }) => {
+  test('should edit task title in modal', async ({ page }) => {
     const originalTitle = await createTask(page, 'Edit Title Test')
     await openTaskModal(page, originalTitle)
 
@@ -88,7 +85,7 @@ test.describe('Tasks Board', () => {
     await expect(page.getByText(newTitle)).toBeVisible({ timeout: 5000 })
   })
 
-  test.skip('should close task modal with X button', async ({ page }) => {
+  test('should close task modal with X button', async ({ page }) => {
     const taskTitle = await createTask(page, 'Close Test')
     await openTaskModal(page, taskTitle)
 
@@ -99,7 +96,7 @@ test.describe('Tasks Board', () => {
     await expect(page.getByTestId('task-detail-modal')).not.toBeVisible({ timeout: 5000 })
   })
 
-  test.skip('should close task modal with Escape key', async ({ page }) => {
+  test('should close task modal with Escape key', async ({ page }) => {
     const taskTitle = await createTask(page, 'Escape Test')
     await openTaskModal(page, taskTitle)
 
@@ -125,7 +122,7 @@ test.describe('Task Modal Sections', () => {
   // Use saved auth state
   test.use({ storageState: 'e2e/.auth/user.json' })
 
-  test.skip('should enable labels section from sidebar', async ({ page }) => {
+  test('should enable labels section from sidebar', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
@@ -133,14 +130,17 @@ test.describe('Task Modal Sections', () => {
     await openTaskModal(page, taskTitle)
 
     // Click Labels button in sidebar
-    const labelsButton = page.getByRole('button', { name: 'Labels' })
-    if (await labelsButton.isVisible()) {
-      await labelsButton.click()
-      await page.waitForTimeout(500)
-    }
+    const labelsButton = page.getByRole('button', { name: 'Labels' }).first()
+    await expect(labelsButton).toBeVisible({ timeout: 5000 })
+    await labelsButton.click()
+    await page.waitForTimeout(500)
+
+    // Verify labels section is visible
+    const labelsHeading = page.getByText(/labels/i).first()
+    await expect(labelsHeading).toBeVisible()
   })
 
-  test.skip('should enable checklist section from sidebar', async ({ page }) => {
+  test('should enable checklist section from sidebar', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
@@ -148,64 +148,108 @@ test.describe('Task Modal Sections', () => {
     await openTaskModal(page, taskTitle)
 
     // Click Checklist button in sidebar
-    const checklistButton = page.getByRole('button', { name: 'Checklist' })
-    if (await checklistButton.isVisible()) {
-      await checklistButton.click()
-      await page.waitForTimeout(500)
-    }
+    const checklistButton = page.getByRole('button', { name: 'Checklist' }).first()
+    await expect(checklistButton).toBeVisible({ timeout: 5000 })
+    await checklistButton.click()
+    await page.waitForTimeout(500)
+
+    // Verify checklist section is visible
+    const checklistHeading = page.getByText(/checklist/i).first()
+    await expect(checklistHeading).toBeVisible()
   })
 })
 
 test.describe('Task Actions', () => {
   test.use({ storageState: 'e2e/.auth/user.json' })
 
-  // TODO: Fix task modal click handling - modal doesn't open when clicking on task
-  test.skip('should archive task from sidebar', async ({ page }) => {
+  test('should archive task from sidebar', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
     const taskTitle = await createTask(page, 'Archive Test')
-
-    // Click on task to open modal
-    await page.getByText(taskTitle, { exact: true }).click({ force: true })
-    await expect(page.getByTestId('task-detail-modal')).toBeVisible({ timeout: 10000 })
+    await openTaskModal(page, taskTitle)
 
     // Find and click Archive button in sidebar
     const archiveButton = page.getByRole('button', { name: /^archive$/i }).first()
-    if (await archiveButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await archiveButton.click()
+    await expect(archiveButton).toBeVisible({ timeout: 5000 })
+    await archiveButton.click()
 
-      // Wait for confirmation dialog
-      await expect(page.getByRole('dialog', { name: /archive task/i })).toBeVisible({ timeout: 5000 })
+    // Wait for confirmation dialog
+    await expect(page.getByRole('dialog', { name: /archive task/i })).toBeVisible({ timeout: 5000 })
 
-      // Click the "Archive" button in the confirmation dialog
-      await page.getByRole('button', { name: 'Archive', exact: true }).click()
+    // Click the "Archive" button in the confirmation dialog
+    await page.getByRole('button', { name: 'Archive', exact: true }).click()
 
-      // Wait for modal to close
-      await page.waitForTimeout(1000)
-      await expect(page.getByTestId('task-detail-modal')).not.toBeVisible({ timeout: 10000 })
-    }
+    // Wait for modal to close
+    await page.waitForTimeout(1000)
+    await expect(page.getByTestId('task-detail-modal')).not.toBeVisible({ timeout: 10000 })
   })
 
-  // TODO: Fix task modal click handling - modal doesn't open when clicking on task
-  test.skip('should copy/duplicate task from sidebar', async ({ page }) => {
+  test('should copy/duplicate task from sidebar', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
     const taskTitle = await createTask(page, 'Copy Test')
-
-    // Click on task to open modal
-    await page.getByText(taskTitle, { exact: true }).click({ force: true })
-    await expect(page.getByTestId('task-detail-modal')).toBeVisible({ timeout: 10000 })
+    await openTaskModal(page, taskTitle)
 
     // Find and click Copy button in sidebar
     const copyButton = page.getByRole('button', { name: /^copy$/i }).first()
-    if (await copyButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await copyButton.click()
+    await expect(copyButton).toBeVisible({ timeout: 5000 })
+    await copyButton.click()
 
-      // Wait for success notification
-      await page.waitForTimeout(1000)
-      await expect(page.getByText(/created/i)).toBeVisible({ timeout: 5000 })
+    // Wait for success notification
+    await page.waitForTimeout(1000)
+    await expect(page.getByText(/created.*copy/i)).toBeVisible({ timeout: 5000 })
+  })
+
+  test('should set task priority', async ({ page }) => {
+    await page.goto('/dashboard/tasks')
+    await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
+
+    const taskTitle = await createTask(page, 'Priority Test')
+    await openTaskModal(page, taskTitle)
+
+    // Look for priority dropdown or buttons
+    const priorityButton = page.getByRole('button', { name: /priority/i }).first()
+    if (await priorityButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await priorityButton.click()
+      await page.waitForTimeout(500)
+
+      // Select "High" priority
+      const highButton = page.getByRole('button', { name: /high/i }).first()
+      if (await highButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await highButton.click()
+        await page.waitForTimeout(500)
+      }
+    }
+  })
+
+  test('should set task due date', async ({ page }) => {
+    await page.goto('/dashboard/tasks')
+    await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
+
+    const taskTitle = await createTask(page, 'Due Date Test')
+    await openTaskModal(page, taskTitle)
+
+    // Look for dates button in sidebar
+    const datesButton = page.getByRole('button', { name: /dates/i }).first()
+    if (await datesButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await datesButton.click()
+      await page.waitForTimeout(500)
+
+      // Find and fill due date input
+      const dateInput = page.locator('input[type="date"]').first()
+      if (await dateInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+        const tomorrow = new Date()
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        const dateString = tomorrow.toISOString().split('T')[0]
+
+        await dateInput.fill(dateString)
+        await page.waitForTimeout(500)
+
+        // Verify date is set
+        await expect(dateInput).toHaveValue(dateString)
+      }
     }
   })
 })
@@ -254,139 +298,101 @@ test.describe('Task Drag and Drop', () => {
 test.describe('Task Modal - Links and Attachments', () => {
   test.use({ storageState: 'e2e/.auth/user.json' })
 
-  // TODO: Fix task modal click handling - modal doesn't open when clicking on task
-  test.skip('should enable and use attachments section', async ({ page }) => {
+  test('should enable and use attachments section', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
     const taskTitle = await createTask(page, 'Attachment Test')
-
-    // Click on task to open modal
-    await page.getByText(taskTitle, { exact: true }).click({ force: true })
-    await expect(page.getByTestId('task-detail-modal')).toBeVisible({ timeout: 10000 })
+    await openTaskModal(page, taskTitle)
 
     // Find and click Attachments button in sidebar
     const attachmentsButton = page.getByRole('button', { name: /attachments/i }).first()
-    if (await attachmentsButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await attachmentsButton.click()
-      await page.waitForTimeout(500)
+    await expect(attachmentsButton).toBeVisible({ timeout: 5000 })
+    await attachmentsButton.click()
+    await page.waitForTimeout(500)
 
-      // Look for file input
-      const fileInput = page.locator('input[type="file"]').first()
-      if (await fileInput.isVisible({ timeout: 3000 }).catch(() => false)) {
-        // Create a test file
-        const buffer = Buffer.from('test task attachment content')
-        await fileInput.setInputFiles({
-          name: 'task-attachment.txt',
-          mimeType: 'text/plain',
-          buffer,
-        })
+    // Look for file input
+    const fileInput = page.locator('input[type="file"]').first()
+    if (await fileInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      // Create a test file
+      const buffer = Buffer.from('test task attachment content')
+      await fileInput.setInputFiles({
+        name: 'task-attachment.txt',
+        mimeType: 'text/plain',
+        buffer,
+      })
 
-        // Wait for upload to complete
-        await page.waitForTimeout(2000)
+      // Wait for upload to complete
+      await page.waitForTimeout(2000)
 
-        // Verify attachment appears
-        await expect(page.getByText('task-attachment.txt')).toBeVisible({ timeout: 5000 })
-      }
+      // Verify attachment appears
+      await expect(page.getByText('task-attachment.txt')).toBeVisible({ timeout: 5000 })
     }
   })
 
-  // TODO: Fix task modal click handling - modal doesn't open when clicking on task
-  test.skip('should enable and use links section', async ({ page }) => {
+  test('should enable and use links section', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
     const taskTitle = await createTask(page, 'Links Test')
-
-    // Click on task to open modal
-    await page.getByText(taskTitle, { exact: true }).click({ force: true })
-    await expect(page.getByTestId('task-detail-modal')).toBeVisible({ timeout: 10000 })
+    await openTaskModal(page, taskTitle)
 
     // Find and click Links button in sidebar
     const linksButton = page.getByRole('button', { name: /^links$/i }).first()
-    if (await linksButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await linksButton.click()
-      await page.waitForTimeout(500)
+    await expect(linksButton).toBeVisible({ timeout: 5000 })
+    await linksButton.click()
+    await page.waitForTimeout(500)
 
-      // Look for "Add link" button
-      const addLinkButton = page.getByRole('button', { name: /add link/i }).first()
-      if (await addLinkButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await addLinkButton.click()
+    // Look for "Add link" button
+    const addLinkButton = page.getByRole('button', { name: /add link/i }).first()
+    if (await addLinkButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await addLinkButton.click()
 
-        // Fill in link details
-        const urlInput = page.getByPlaceholder(/url/i).first()
-        if (await urlInput.isVisible()) {
-          await urlInput.fill('https://task-example.com')
+      // Fill in link details
+      const urlInput = page.getByPlaceholder(/url/i).first()
+      if (await urlInput.isVisible()) {
+        await urlInput.fill('https://task-example.com')
 
-          const titleInput = page.getByPlaceholder(/title|label/i).first()
-          if (await titleInput.isVisible()) {
-            await titleInput.fill('Task Example Link')
-          }
+        const titleInput = page.getByPlaceholder(/title|label/i).first()
+        if (await titleInput.isVisible()) {
+          await titleInput.fill('Task Example Link')
+        }
 
-          // Save the link
-          const saveButton = page.getByRole('button', { name: /save|add/i }).first()
-          if (await saveButton.isVisible()) {
-            await saveButton.click()
-            await page.waitForTimeout(1000)
+        // Save the link
+        const saveButton = page.getByRole('button', { name: /save|add/i }).first()
+        if (await saveButton.isVisible()) {
+          await saveButton.click()
+          await page.waitForTimeout(1000)
 
-            // Verify link appears
-            await expect(page.getByText('Task Example Link')).toBeVisible()
-          }
+          // Verify link appears
+          await expect(page.getByText('Task Example Link')).toBeVisible()
         }
       }
     }
   })
 
-  // TODO: Fix task modal click handling - modal doesn't open when clicking on task
-  test.skip('should enable labels section and add label', async ({ page }) => {
+  test('should add checklist item to task', async ({ page }) => {
     await page.goto('/dashboard/tasks')
     await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
 
-    const taskTitle = await createTask(page, 'Labels Test')
-
-    // Click on task to open modal
-    await page.getByText(taskTitle, { exact: true }).click({ force: true })
-    await expect(page.getByTestId('task-detail-modal')).toBeVisible({ timeout: 10000 })
-
-    // Find and click Labels button in sidebar
-    const labelsButton = page.getByRole('button', { name: /^labels$/i }).first()
-    if (await labelsButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await labelsButton.click()
-      await page.waitForTimeout(500)
-
-      // Verify labels section is now visible
-      const labelsSection = page.getByText(/labels/i).first()
-      await expect(labelsSection).toBeVisible({ timeout: 3000 })
-    }
-  })
-
-  // TODO: Fix task modal click handling - modal doesn't open when clicking on task
-  test.skip('should enable checklist section and add item', async ({ page }) => {
-    await page.goto('/dashboard/tasks')
-    await expect(page.getByRole('button', { name: /add card/i }).first()).toBeVisible({ timeout: 15000 })
-
-    const taskTitle = await createTask(page, 'Checklist Test')
-
-    // Click on task to open modal
-    await page.getByText(taskTitle, { exact: true }).click({ force: true })
-    await expect(page.getByTestId('task-detail-modal')).toBeVisible({ timeout: 10000 })
+    const taskTitle = await createTask(page, 'Checklist Item Test')
+    await openTaskModal(page, taskTitle)
 
     // Find and click Checklist button in sidebar
     const checklistButton = page.getByRole('button', { name: /^checklist$/i }).first()
-    if (await checklistButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await checklistButton.click()
+    await expect(checklistButton).toBeVisible({ timeout: 5000 })
+    await checklistButton.click()
+    await page.waitForTimeout(500)
+
+    // Look for checklist input or add item button
+    const addItemInput = page.getByPlaceholder(/add.*item|new item/i).first()
+    if (await addItemInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await addItemInput.fill('Test checklist item')
+      await addItemInput.press('Enter')
       await page.waitForTimeout(500)
 
-      // Look for checklist input or add item button
-      const addItemInput = page.getByPlaceholder(/add.*item|new item/i).first()
-      if (await addItemInput.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await addItemInput.fill('Test checklist item')
-        await addItemInput.press('Enter')
-        await page.waitForTimeout(500)
-
-        // Verify item appears
-        await expect(page.getByText('Test checklist item')).toBeVisible()
-      }
+      // Verify item appears
+      await expect(page.getByText('Test checklist item')).toBeVisible()
     }
   })
 })
