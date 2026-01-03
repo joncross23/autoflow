@@ -1,13 +1,6 @@
 -- Fix Storage Bucket RLS Policies for Attachments
 -- This fixes the StorageApiError: "new row violates row-level security policy"
 
--- First, check current storage policies
-SELECT
-  name,
-  definition
-FROM storage.policies
-WHERE bucket_id = 'attachments';
-
 -- Enable RLS on storage.objects table
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 
