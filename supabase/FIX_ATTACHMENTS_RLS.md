@@ -22,17 +22,20 @@ The error is a `StorageApiError`, which means the file upload to the storage buc
 2. Navigate to **SQL Editor** in the left sidebar
 3. Click **New Query**
 
-### Step 2: Apply Storage Bucket RLS Policies (CRITICAL - Do this first!)
-1. Open the file [supabase/fix_storage_bucket_rls.sql](cci:1://file:///Users/jonx/autoflow/supabase/fix_storage_bucket_rls.sql:0:0-0:0)
-2. Copy the entire contents
-3. Paste into the SQL Editor
-4. Click **Run** (or press Cmd/Ctrl + Enter)
-5. Wait for the query to complete successfully
+### Step 2: Apply Storage Bucket RLS Policies (CRITICAL - Use Dashboard UI!)
 
-This creates 3 storage policies:
-- **Users can upload attachments** (INSERT) ← This fixes the upload error
-- **Users can view attachments** (SELECT)
-- **Users can delete attachments** (DELETE)
+**Important**: Storage policies cannot be created via SQL in hosted Supabase. You must use the Dashboard UI.
+
+**See the complete guide**: [supabase/STORAGE_POLICIES_GUIDE.md](cci:1://file:///Users/jonx/autoflow/supabase/STORAGE_POLICIES_GUIDE.md:0:0-0:0)
+
+**Quick steps**:
+1. Go to [Storage → Policies](https://supabase.com/dashboard/project/icdjurapdmimfdecgngw/storage/policies) in your Supabase Dashboard
+2. Create 3 policies for the `attachments` bucket:
+   - **INSERT**: `Users can upload attachments` with expression: `(bucket_id = 'attachments'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text)`
+   - **SELECT**: `Users can view attachments` with expression: `(bucket_id = 'attachments'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text)`
+   - **DELETE**: `Users can delete attachments` with expression: `(bucket_id = 'attachments'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text)`
+
+See [STORAGE_POLICIES_GUIDE.md](cci:1://file:///Users/jonx/autoflow/supabase/STORAGE_POLICIES_GUIDE.md:0:0-0:0) for detailed screenshots and instructions.
 
 ### Step 3: Verify Database Table RLS (Already Applied)
 The database table RLS policies are already in place (as shown in your screenshot). You should see:
