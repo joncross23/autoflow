@@ -85,8 +85,7 @@ test.describe('Ideas Page', () => {
     }
   })
 
-  // TODO: Fix - strict mode violation on getByText (multiple matches)
-  test.skip('should delete an idea', async ({ page }) => {
+  test('should delete an idea', async ({ page }) => {
     // First create an idea to delete
     const ideaTitle = `Delete Test ${Date.now()}`
 
@@ -96,8 +95,11 @@ test.describe('Ideas Page', () => {
     await page.getByTestId('idea-form-submit').click()
     await page.waitForTimeout(1000)
 
-    // Click on the idea to open detail
-    await page.getByText(ideaTitle).click()
+    // Click on the idea row in the table (use first() to avoid strict mode)
+    await page.getByText(ideaTitle).first().click()
+
+    // Wait for detail slider/modal to open
+    await page.waitForTimeout(500)
 
     // Handle confirmation dialog
     page.on('dialog', async (dialog) => {
@@ -105,11 +107,14 @@ test.describe('Ideas Page', () => {
       await dialog.accept()
     })
 
-    // Find and click delete button
-    const deleteButton = page.getByRole('button', { name: /delete/i })
-    if (await deleteButton.isVisible()) {
+    // Find and click delete button (use first() to avoid multiple matches)
+    const deleteButton = page.getByRole('button', { name: /delete/i }).first()
+    if (await deleteButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await deleteButton.click()
       await page.waitForTimeout(1000)
+
+      // Verify idea is removed from table
+      await expect(page.getByText(ideaTitle).first()).not.toBeVisible({ timeout: 5000 })
     }
   })
 })
