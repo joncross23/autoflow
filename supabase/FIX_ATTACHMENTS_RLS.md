@@ -4,10 +4,16 @@
 Attachment uploads are failing with the error:
 ```
 Failed to upload file: new row violates row-level security policy
+StorageApiError: new row violates row-level security policy
 ```
 
 ## Root Cause
-The Row Level Security (RLS) policies for the `attachments` table haven't been applied to the remote Supabase database yet. The migration file exists ([supabase/migrations/20241222_fix_attachments_rls.sql](cci:1://file:///Users/jonx/autoflow/supabase/migrations/20241222_fix_attachments_rls.sql:0:0-0:0)) but needs to be applied manually via the Supabase SQL Editor.
+There are **TWO** RLS policies that need to be applied:
+
+1. ✅ **Database table RLS** - Policies for the `attachments` table (already applied)
+2. ❌ **Storage bucket RLS** - Policies for the `attachments` storage bucket (MISSING - this is causing the error)
+
+The error is a `StorageApiError`, which means the file upload to the storage bucket is being blocked by missing RLS policies on `storage.objects`, not the database table.
 
 ## Solution
 
@@ -16,18 +22,23 @@ The Row Level Security (RLS) policies for the `attachments` table haven't been a
 2. Navigate to **SQL Editor** in the left sidebar
 3. Click **New Query**
 
-### Step 2: Apply the RLS Migration
-1. Open the file [supabase/apply_attachments_rls.sql](cci:1://file:///Users/jonx/autoflow/supabase/apply_attachments_rls.sql:0:0-0:0)
+### Step 2: Apply Storage Bucket RLS Policies (CRITICAL - Do this first!)
+1. Open the file [supabase/fix_storage_bucket_rls.sql](cci:1://file:///Users/jonx/autoflow/supabase/fix_storage_bucket_rls.sql:0:0-0:0)
 2. Copy the entire contents
 3. Paste into the SQL Editor
 4. Click **Run** (or press Cmd/Ctrl + Enter)
 5. Wait for the query to complete successfully
 
-### Step 3: Verify the Fix
-The SQL script includes verification queries that will show the current RLS policies. You should see output showing three policies:
+This creates 3 storage policies:
+- **Users can upload attachments** (INSERT) ← This fixes the upload error
+- **Users can view attachments** (SELECT)
+- **Users can delete attachments** (DELETE)
+
+### Step 3: Verify Database Table RLS (Already Applied)
+The database table RLS policies are already in place (as shown in your screenshot). You should see:
 
 1. **Users can view attachments on their items** (SELECT)
-2. **Users can create attachments on their items** (INSERT) ← This is the critical one for the upload fix
+2. **Users can create attachments on their items** (INSERT)
 3. **Users can delete attachments on their items** (DELETE)
 
 ### Step 4: Test Attachment Upload
@@ -37,16 +48,24 @@ The SQL script includes verification queries that will show the current RLS poli
 
 ## Technical Details
 
-### What the RLS Policy Does
-The INSERT policy allows users to create attachments when:
+### Understanding the Two RLS Systems
+
+#### 1. Database Table RLS (attachments table)
+Controls who can insert/select/delete records in the `attachments` table:
 ```sql
 uploaded_by = auth.uid()
 ```
+- ✅ Already applied correctly
+- Our code sets `uploaded_by: user.id` in [src/app/api/attachments/upload/route.ts:145](cci:1://file:///Users/jonx/autoflow/src/app/api/attachments/upload/route.ts:145:6-145:30)
 
-This means:
-- The `uploaded_by` field must match the authenticated user's ID
-- Our code already sets this correctly in [src/app/api/attachments/upload/route.ts:145](cci:1://file:///Users/jonx/autoflow/src/app/api/attachments/upload/route.ts:145:6-145:30)
-- The policy just needs to be enabled in the database
+#### 2. Storage Bucket RLS (storage.objects table)
+Controls who can upload/download/delete **files** in the `attachments` bucket:
+```sql
+bucket_id = 'attachments' AND (storage.foldername(name))[1] = auth.uid()::text
+```
+- ❌ This was missing - causing the `StorageApiError`
+- Allows users to upload files to their own folder: `{user_id}/{idea_id|tasks/task_id}/filename`
+- The error occurs at line 121-127 in [src/app/api/attachments/upload/route.ts](cci:1://file:///Users/jonx/autoflow/src/app/api/attachments/upload/route.ts:121:6-127:8) during the storage upload step
 
 ### Code References
 - **API Route**: [src/app/api/attachments/upload/route.ts](cci:1://file:///Users/jonx/autoflow/src/app/api/attachments/upload/route.ts:0:0-0:0) (sets `uploaded_by: user.id` on line 145)
