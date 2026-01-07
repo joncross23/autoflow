@@ -92,13 +92,96 @@ git commit -m "fix: improve contrast on accent-coloured backgrounds"
 git commit -m "docs: update CURRENT_STATE with session progress"
 ```
 
-### Workflow
-1. Create feature branch from `develop`
-2. Make changes with atomic, conventional commits
-3. Push and create PR to `develop`
-4. Merge to `main` for releases
+### Development Workflow
 
-For mockups during Phase 0.5, committing directly to `develop` is acceptable.
+**Standard Gitflow Pattern** (develop → staging → main → production):
+
+#### 1. Start New Feature
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/my-feature-name
+```
+**Always branch FROM `develop`** (not main)
+
+#### 2. Develop Locally
+```bash
+npm run dev              # Test locally
+npm run build            # Verify build
+npm run lint             # Check code quality
+npm run test:e2e        # Run E2E tests
+
+git add .
+git commit -m "feat: describe your changes"
+```
+Make atomic commits following Conventional Commits
+
+#### 3. Merge to Develop (Staging)
+```bash
+git checkout develop
+git pull origin develop
+git merge feature/my-feature-name
+git push origin develop
+```
+🚀 **Vercel auto-deploys** `develop` → **staging.vercel.app**
+
+Or create a PR:
+```bash
+gh pr create --base develop --head feature/my-feature-name
+```
+
+#### 4. Verify on Staging
+- Visit https://autoflow23-staging.vercel.app
+- Test the feature thoroughly
+- Run E2E tests against staging
+- If issues found → fix in feature branch, merge to develop again
+
+#### 5. Release to Production
+```bash
+git checkout main
+git pull origin main
+git merge develop
+git push origin main
+```
+🚀 **Vercel auto-deploys** `main` → **autoflow23.vercel.app**
+
+Or create a release PR:
+```bash
+gh pr create --base main --head develop --title "Release: v1.x.x"
+```
+
+#### 6. Cleanup
+```bash
+git branch -d feature/my-feature-name                # Local
+git push origin --delete feature/my-feature-name     # Remote
+```
+
+### Hotfix Workflow
+
+For critical production bugs:
+```bash
+git checkout main
+git checkout -b hotfix/critical-bug
+# Fix the bug
+git commit -m "fix: resolve critical production bug"
+
+# Deploy to production
+git checkout main
+git merge hotfix/critical-bug
+git push origin main
+
+# Sync back to develop
+git checkout develop
+git merge main
+git push origin develop
+```
+
+### Branch Summary
+- **`main`** → Production (protected, always deployable)
+- **`develop`** → Staging (integration branch, feature merges here first)
+- **`feature/*`** → Short-lived (1-3 days), single purpose, delete after merge
+- **`fix/*`** → Bug fixes
+- **`hotfix/*`** → Emergency production fixes
 
 ## Session Protocol
 
