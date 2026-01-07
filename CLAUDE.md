@@ -2,7 +2,7 @@
 
 > **Repository**: https://github.com/joncross23/autoflow
 > **Production**: https://autoflow23.vercel.app
-> **Staging**: https://autoflow23-staging.vercel.app
+> **Staging**: https://autoflow-staging.vercel.app
 > **For Claude Code**: This file is read automatically. See `/docs/PROJECT_CONTEXT.md` for full specifications.
 
 ## Project Summary
@@ -131,7 +131,7 @@ gh pr create --base develop --head feature/my-feature-name
 ```
 
 #### 4. Verify on Staging
-- Visit https://autoflow23-staging.vercel.app
+- Visit https://autoflow-staging.vercel.app
 - Test the feature thoroughly
 - Run E2E tests against staging
 - If issues found → fix in feature branch, merge to develop again
