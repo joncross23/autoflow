@@ -1,36 +1,47 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-// Initialize Redis client from environment variables
-// Requires UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
-const redis = Redis.fromEnv();
+// Check if Redis credentials are available
+const hasRedisCredentials = !!(
+  process.env.UPSTASH_REDIS_REST_URL &&
+  process.env.UPSTASH_REDIS_REST_TOKEN
+);
+
+// Initialize Redis client from environment variables (if available)
+const redis = hasRedisCredentials ? Redis.fromEnv() : null;
 
 // Rate limiter for viewing public forms
 // Limit: 60 requests per minute per IP
-export const formViewRatelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(60, "1 m"),
-  analytics: true,
-  prefix: "ratelimit:form:view",
-});
+export const formViewRatelimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(60, "1 m"),
+      analytics: true,
+      prefix: "ratelimit:form:view",
+    })
+  : null;
 
 // Rate limiter for submitting form responses
 // Limit: 5 submissions per hour per IP
-export const formSubmitRatelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(5, "1 h"),
-  analytics: true,
-  prefix: "ratelimit:form:submit",
-});
+export const formSubmitRatelimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(5, "1 h"),
+      analytics: true,
+      prefix: "ratelimit:form:submit",
+    })
+  : null;
 
 // Rate limiter for AI assistance requests (future feature)
 // Limit: 20 requests per hour per IP
-export const formAiAssistRatelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(20, "1 h"),
-  analytics: true,
-  prefix: "ratelimit:form:ai-assist",
-});
+export const formAiAssistRatelimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(20, "1 h"),
+      analytics: true,
+      prefix: "ratelimit:form:ai-assist",
+    })
+  : null;
 
 /**
  * Extract client IP address from Next.js request
@@ -60,11 +71,19 @@ export function getClientIp(request: Request): string {
  *     { status: 429 }
  *   );
  * }
+ *
+ * If rate limiter is null (Redis not configured), returns success: true
+ * This allows graceful degradation in development/test environments
  */
 export async function checkRateLimit(
-  ratelimiter: Ratelimit,
+  ratelimiter: Ratelimit | null,
   request: Request
 ): Promise<{ success: boolean; limit?: number; remaining?: number; reset?: number }> {
+  // If no rate limiter configured, always allow (dev/test mode)
+  if (!ratelimiter) {
+    return { success: true };
+  }
+
   const ip = getClientIp(request);
   const { success, limit, remaining, reset } = await ratelimiter.limit(ip);
 
