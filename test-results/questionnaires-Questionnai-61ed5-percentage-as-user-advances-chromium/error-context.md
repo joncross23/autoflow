@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - alert [ref=e2]
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]: A
+          - generic [ref=e8]: AutoFlow
+        - heading "AI & Automation Audit" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Help us understand your automation opportunities. This takes about 5-10 minutes and your responses will be analysed by AI to identify high-impact improvements.
+      - generic [ref=e13]:
+        - generic [ref=e14]: Question 2 of 7
+        - generic [ref=e15]: 29% complete
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic "Question 1" [ref=e20]
+          - generic "Question 2" [ref=e21]
+          - generic "Question 3" [ref=e22]
+          - generic "Question 4" [ref=e23]
+          - generic "Question 5" [ref=e24]
+          - generic "Question 6" [ref=e25]
+          - generic "Your details" [ref=e26]
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: "2"
+            - generic [ref=e30]:
+              - heading "Describe one process in your business that's a bit of a mess right now." [level=3] [ref=e31]
+              - paragraph [ref=e32]: Don't worry about sounding negative — we're looking for improvement opportunities.
+          - textbox "e.g., Our invoice approval process involves 5 different people and takes 2 weeks..." [ref=e33]
+          - generic [ref=e34]:
+            - generic [ref=e35]: Required
+            - generic [ref=e36]: "Tip: More detail helps our AI"
+        - generic [ref=e37]:
+          - button "Previous" [ref=e38] [cursor=pointer]:
+            - img
+            - text: Previous
+          - button "Next Question" [active] [ref=e39] [cursor=pointer]:
+            - text: Next Question
+            - img
+```

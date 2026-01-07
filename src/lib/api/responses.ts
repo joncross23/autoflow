@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAnonClient } from "@/lib/supabase/server";
 import type { DbQuestionnaireResponse, DbResponseIdea } from "@/types/questionnaire";
 import type { DbIdea } from "@/types/database";
 import { QuestionnaireSubmissionSchema } from "@/types/questionnaire";
@@ -67,7 +67,8 @@ export async function createResponse(
     respondent_name?: string;
   }
 ): Promise<DbQuestionnaireResponse> {
-  const supabase = await createClient();
+  // Use anonymous client for public form submissions (no auth required)
+  const supabase = createAnonClient();
 
   // Validate input
   const validated = QuestionnaireSubmissionSchema.parse({
