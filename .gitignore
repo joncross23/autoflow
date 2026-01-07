@@ -27,6 +27,7 @@ coverage/
 .idea/
 .vscode/
 .claude/
+.auto-claude/
 *.swp
 *.swo
 *~

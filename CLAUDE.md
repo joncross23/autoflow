@@ -21,6 +21,24 @@
 
 **Always read `/docs/CURRENT_STATE.md` first** to understand current progress and focus.
 
+## Working With Claude
+
+### Before Making Changes
+1. **Read first, act second** — Never speculate about code. Always read relevant files before answering questions or making changes.
+2. **Check in before major changes** — For non-trivial work, present a brief plan and wait for approval before implementing.
+
+### During Work
+3. **Explain changes at a high level** — After each change, provide a brief summary of what was done.
+4. **Keep it simple** — Every change should impact as little code as possible. Avoid complex refactors. Small, focused changes only.
+
+### Documentation
+5. **Maintain `/docs/ARCHITECTURE.md`** — Keep this file updated to describe how the app works inside and out.
+
+### Code of Conduct
+- Never guess file contents — open and read them
+- No hallucinations — only make claims about code you've verified
+- Ask questions when uncertain
+
 ### Sprint Mockups Status
 - [x] `docs/mockups/theme-system.jsx` — Theme toggle, accent colours
 - [x] `docs/mockups/kanban-board.jsx` — Drag-drop board
@@ -35,6 +53,7 @@
 |------|---------|
 | `/docs/PROJECT_CONTEXT.md` | Full project specification |
 | `/docs/CURRENT_STATE.md` | Current progress, blockers, next steps |
+| `/docs/ARCHITECTURE.md` | How the app works — structure, data flow, key patterns |
 | `/docs/backlog/project.json` | All tasks in structured format |
 | `/docs/backlog/ideas.json` | Ideas not yet converted to tasks |
 | `/docs/mockups/` | Interactive JSX mockups for stakeholder review |
