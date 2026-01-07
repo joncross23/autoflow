@@ -159,10 +159,10 @@ export async function getExtractedIdeas(responseId: string): Promise<Array<DbIde
   }
 
   // Flatten the nested structure
-  return data.map((item: { extraction_confidence: number; ideas: DbIdea }) => ({
+  return data.map((item: any) => ({
     ...item.ideas,
     extraction_confidence: item.extraction_confidence,
-  }));
+  })) as Array<DbIdea & { extraction_confidence: number }>;
 }
 
 /**

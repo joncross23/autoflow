@@ -18,7 +18,7 @@ export default function ThankYouPage() {
         <h1 className="text-3xl font-bold mb-3">Thank you!</h1>
 
         <p className="text-muted-foreground mb-8 leading-relaxed">
-          Your responses have been submitted successfully. Our AI will analyse your submission and we'll be in touch soon with a personalised report.
+          Your responses have been submitted successfully. Our AI will analyse your submission and we&apos;ll be in touch soon with a personalised report.
         </p>
 
         <Card className="p-6 text-left mb-6">

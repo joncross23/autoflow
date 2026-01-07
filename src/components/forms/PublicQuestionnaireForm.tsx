@@ -151,7 +151,7 @@ export default function PublicQuestionnaireForm({
           <div className="max-w-2xl mx-auto flex items-center justify-center gap-2 text-sm">
             <Eye className="w-4 h-4 text-primary" />
             <span className="font-medium text-primary">
-              Preview Mode - Submissions won't be saved
+              Preview Mode - Submissions won&apos;t be saved
             </span>
           </div>
         </div>

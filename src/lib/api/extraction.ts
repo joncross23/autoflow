@@ -69,6 +69,7 @@ function extractedIdeaToDbInsert(
     horizon: null,
     started_at: null,
     completed_at: null,
+    content_type: null,
 
     // RICE scoring fields (null for extracted ideas)
     rice_reach: null,

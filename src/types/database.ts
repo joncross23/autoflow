@@ -83,6 +83,10 @@ export interface DbIdea {
   rice_effort: number | null;     // 1-10: Person-weeks equivalent
   rice_score: number | null;      // Calculated: (R×I×C%)/E
   content_type: ContentType | null;  // V1.x: idea/read/watch/listen/note
+  // Questionnaire source tracking (V1.7)
+  source_type: "manual" | "questionnaire" | "import" | "voice";
+  source_id: string | null;        // Reference to source (e.g., response ID)
+  intended_owner_id: string | null; // For extracted ideas: who should see this
   created_at: string;
   updated_at: string;
 }
@@ -109,6 +113,10 @@ export interface DbIdeaInsert {
   rice_confidence?: number | null;
   rice_effort?: number | null;
   content_type?: ContentType | null;
+  // Questionnaire source tracking (V1.7)
+  source_type?: "manual" | "questionnaire" | "import" | "voice";
+  source_id?: string | null;
+  intended_owner_id?: string | null;
 }
 
 export interface DbIdeaUpdate {

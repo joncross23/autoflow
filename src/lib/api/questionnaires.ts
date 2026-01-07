@@ -78,7 +78,14 @@ export async function getQuestionnaireBySlug(slug: string): Promise<DbQuestionna
  * Requires authentication (user_id set automatically by RLS)
  */
 export async function createQuestionnaire(
-  data: Omit<DbQuestionnaire, "id" | "user_id" | "response_count" | "last_response_at" | "created_at" | "updated_at" | "questions_snapshot">
+  data: {
+    title: string;
+    description?: string | null;
+    slug: string;
+    questions: DbQuestionnaire["questions"];
+    is_active: boolean;
+    auto_extract: boolean;
+  }
 ): Promise<DbQuestionnaire> {
   const supabase = await createClient();
 
