@@ -19,6 +19,7 @@ import {
   Paperclip,
   Link2,
   Brain,
+  Lightbulb,
   MessageSquare,
   Activity,
   ListTodo,
@@ -639,6 +640,49 @@ export function IdeaDetailSlider({
                 onHasEvaluationChange={setHasEvaluation}
               />
             </CollapsibleSection>
+
+            {/* Guided Capture Q&A - Show if metadata exists */}
+            {idea.metadata?.guided_capture && (() => {
+              const capture = idea.metadata.guided_capture as {
+                version: string;
+                captured_at: string;
+                questions: Array<{
+                  id: string;
+                  question: string;
+                  answer: string;
+                }>;
+              };
+
+              return (
+                <CollapsibleSection
+                  title="Capture Details"
+                  defaultOpen={true}
+                  icon={<Lightbulb className="h-4 w-4" />}
+                >
+                  <div className="space-y-4">
+                    <p className="text-xs text-muted-foreground -mt-2 mb-4">
+                      Captured {formatRelativeTime(new Date(capture.captured_at))}
+                    </p>
+                    {capture.questions.map((qa) => (
+                      <div key={qa.id} className="border-l-2 border-primary/20 pl-4">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">
+                          {qa.question}
+                        </p>
+                        <p className="text-sm leading-relaxed">{qa.answer}</p>
+                      </div>
+                    ))}
+
+                    {/* Optional: Edit Answers button (stub for future enhancement) */}
+                    <button
+                      className="btn btn-outline btn-sm mt-4"
+                      onClick={() => toast("Edit feature coming soon", "info")}
+                    >
+                      Edit Answers
+                    </button>
+                  </div>
+                </CollapsibleSection>
+              );
+            })()}
 
             {/* RICE Score - Collapsible, auto-open when RICE data exists */}
             <CollapsibleSection
