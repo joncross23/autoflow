@@ -138,6 +138,7 @@ export interface DbIdeaInsert {
   rice_impact?: RiceImpact | null;
   rice_confidence?: number | null;
   rice_effort?: number | null;
+  rice_score?: number | null;
   content_type?: ContentType | null;
   // Source tracking (V1.8: guided capture)
   source_type?: "manual" | "guided" | "import" | "voice";
@@ -167,6 +168,7 @@ export interface DbIdeaUpdate {
   rice_impact?: RiceImpact | null;
   rice_confidence?: number | null;
   rice_effort?: number | null;
+  rice_score?: number | null;
   content_type?: ContentType | null;
   metadata?: IdeaMetadata | null;
   updated_at?: string;

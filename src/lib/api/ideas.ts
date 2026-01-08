@@ -568,14 +568,18 @@ export function calculateRiceScore(input: RiceScoreInput): number {
 
 /**
  * Update RICE scores for an idea
- * The database trigger will automatically calculate rice_score
+ * Calculates the final score and saves all components
  */
 export async function updateRiceScore(id: string, input: RiceScoreInput): Promise<DbIdea> {
+  // Calculate the score
+  const calculatedScore = calculateRiceScore(input);
+
   return updateIdea(id, {
     rice_reach: input.reach,
     rice_impact: input.impact,
     rice_confidence: input.confidence,
     rice_effort: input.effort,
+    rice_score: calculatedScore,
   });
 }
 
@@ -588,6 +592,7 @@ export async function clearRiceScore(id: string): Promise<DbIdea> {
     rice_impact: null,
     rice_confidence: null,
     rice_effort: null,
+    rice_score: null,
   });
 }
 
