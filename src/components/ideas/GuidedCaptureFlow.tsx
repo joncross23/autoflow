@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Lightbulb, ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { Lightbulb, ArrowLeft, ArrowRight, Check, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/useToast";
 import { createIdea } from "@/lib/api/ideas";
+import { cn } from "@/lib/utils";
 import type { IdeaMetadata } from "@/types/database";
 
 // ============================================
@@ -88,19 +89,38 @@ function extractTitle(text: string): string {
 // CHARACTER COUNT COMPONENT
 // ============================================
 
-function CharacterCount({ text, minLength = 20 }: { text: string; minLength?: number }) {
+function CharacterCount({
+  id,
+  text,
+  minLength = 20
+}: {
+  id?: string;
+  text: string;
+  minLength?: number;
+}) {
   const count = text.length;
   const hasGoodDetail = count >= minLength;
+  const remaining = minLength - count;
 
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
-      <span>{count} characters</span>
-      {hasGoodDetail && (
-        <span className="text-green-600 font-medium">• Good detail</span>
-      )}
-      {!hasGoodDetail && count > 0 && (
-        <span className="text-orange-600">• At least {minLength} needed</span>
-      )}
+    <div
+      id={id}
+      className="flex items-center justify-between text-sm mb-2"
+    >
+      <div className="flex items-center gap-2">
+        <span className="font-medium text-foreground">{count} characters</span>
+        {hasGoodDetail && (
+          <span className="text-green-600 font-semibold flex items-center gap-1">
+            <Check className="h-3.5 w-3.5" />
+            Good detail
+          </span>
+        )}
+        {!hasGoodDetail && count > 0 && (
+          <span className="text-orange-600 font-medium">
+            {remaining} more needed
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -117,29 +137,37 @@ function ProgressDots({
   current: number;
 }) {
   return (
-    <div className="flex justify-center gap-2 mb-6">
-      {Array.from({ length: total + 1 }).map((_, i) => {
-        const isActive = i === current;
-        const isComplete = i < current;
-        const isReview = i === total;
-        const label = isReview ? "Review" : `Question ${i + 1}`;
+    <div className="mb-6">
+      <div className="flex justify-center gap-2 mb-2">
+        {Array.from({ length: total + 1 }).map((_, i) => {
+          const isActive = i === current;
+          const isComplete = i < current;
+          const isReview = i === total;
+          const label = isReview ? "Review" : `Question ${i + 1}`;
+          const status = isActive ? " - Current" : isComplete ? " - Complete" : "";
 
-        return (
-          <div
-            key={i}
-            className={`h-2 rounded-full transition-all duration-200 ${
-              isActive
-                ? "w-6 bg-primary"
-                : isComplete
-                ? "w-2 bg-green-500"
-                : "w-2 bg-border"
-            }`}
-            title={label}
-            aria-label={label}
-            role="progressbar"
-          />
-        );
-      })}
+          return (
+            <div
+              key={i}
+              className={cn(
+                "h-2 rounded-full transition-all duration-200",
+                isActive && "w-6 bg-primary",
+                isComplete && "w-2 bg-green-600 dark:bg-green-500",
+                !isActive && !isComplete && "w-2 bg-border"
+              )}
+              title={label + status}
+              aria-label={label + status}
+              role="progressbar"
+              aria-valuenow={isActive || isComplete ? 100 : 0}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            />
+          );
+        })}
+      </div>
+      <p className="text-center text-xs text-muted-foreground">
+        {current < total ? `Step ${current + 1} of ${total}` : "Review"}
+      </p>
     </div>
   );
 }
@@ -159,6 +187,7 @@ export function GuidedCaptureFlow() {
   const [editableTitle, setEditableTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [startTime] = useState(Date.now());
+  const [autoSaved, setAutoSaved] = useState(false);
 
   const totalQuestions = GUIDED_CAPTURE_QUESTIONS.length;
   const currentQuestion = GUIDED_CAPTURE_QUESTIONS[currentStep];
@@ -168,12 +197,25 @@ export function GuidedCaptureFlow() {
   // AUTO-SAVE & RESTORE
   // ============================================
 
-  // Auto-save to localStorage
+  // Auto-save to localStorage with error handling
   useEffect(() => {
     if (Object.keys(answers).length > 0) {
-      localStorage.setItem('guided-capture-draft', JSON.stringify(answers));
+      try {
+        localStorage.setItem('guided-capture-draft', JSON.stringify(answers));
+        setAutoSaved(true);
+        // Reset after 2 seconds
+        const timer = setTimeout(() => setAutoSaved(false), 2000);
+        return () => clearTimeout(timer);
+      } catch (e) {
+        console.error('Failed to auto-save:', e);
+        // Show warning once per session
+        if (!sessionStorage.getItem('autosave-warning-shown')) {
+          toast("Auto-save isn't working. Your answers may not be saved if you close the page.", "error");
+          sessionStorage.setItem('autosave-warning-shown', 'true');
+        }
+      }
     }
-  }, [answers]);
+  }, [answers, toast]);
 
   // Restore draft on mount
   useEffect(() => {
@@ -288,7 +330,10 @@ ${answers.ideal_outcome}
       router.push(`/dashboard/ideas?selected=${newIdea.id}`);
     } catch (error) {
       console.error('Failed to create idea:', error);
-      toast("Failed to create idea. Please try again.", "error");
+      const errorMessage = error instanceof Error
+        ? error.message
+        : "We couldn't save your idea. Please check your connection and try again.";
+      toast(errorMessage, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -307,12 +352,18 @@ ${answers.ideal_outcome}
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
               <Lightbulb className="h-6 w-6 text-primary" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-2xl font-bold">Review Your Idea</h1>
               <p className="text-sm text-muted-foreground">
                 Review and edit before creating
               </p>
             </div>
+            {autoSaved && (
+              <div className="inline-flex items-center gap-1.5 text-xs text-green-600 px-2 py-1 bg-green-600/10 rounded-full">
+                <Check className="h-3 w-3" />
+                Auto-saved
+              </div>
+            )}
           </div>
 
           {/* Progress dots */}
@@ -328,31 +379,51 @@ ${answers.ideal_outcome}
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Editable title */}
-              <div>
-                <Label htmlFor="title">Idea Title</Label>
+              <div className="bg-primary/5 rounded-lg p-4 border-2 border-primary/20">
+                <Label htmlFor="title" className="text-base font-semibold mb-3 block">
+                  Give your idea a name
+                </Label>
                 <Input
                   id="title"
                   value={editableTitle}
                   onChange={(e) => setEditableTitle(e.target.value)}
+                  onFocus={(e) => {
+                    // Auto-scroll into view on mobile
+                    if (typeof window !== 'undefined' && window.innerWidth < 640) {
+                      setTimeout(() => {
+                        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }, 100);
+                    }
+                  }}
                   placeholder="Enter a title for your idea"
-                  className="mt-2"
+                  className="text-lg font-semibold"
                   maxLength={100}
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  {editableTitle.length}/100 characters
-                </p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-muted-foreground">
+                    This will be the name of your automation idea
+                  </p>
+                  <p className="text-xs text-muted-foreground font-medium">
+                    {editableTitle.length}/100
+                  </p>
+                </div>
               </div>
 
               {/* Summary of answers */}
               <div>
-                <Label>Your Answers</Label>
-                <div className="mt-2 space-y-3 border rounded-lg p-4 bg-muted/20">
-                  {GUIDED_CAPTURE_QUESTIONS.map((q) => (
-                    <div key={q.id}>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">
-                        {q.label}
-                      </p>
-                      <p className="text-sm leading-relaxed">
+                <Label className="text-base font-semibold">Your Answers</Label>
+                <div className="mt-3 space-y-4 max-h-[400px] overflow-y-auto">
+                  {GUIDED_CAPTURE_QUESTIONS.map((q, idx) => (
+                    <div key={q.id} className="border-l-4 border-primary/30 pl-4 py-2 bg-muted/20 rounded-r-lg">
+                      <div className="flex items-start gap-2 mb-2">
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
+                          {idx + 1}
+                        </span>
+                        <p className="text-sm font-semibold text-foreground leading-tight">
+                          {q.label}
+                        </p>
+                      </div>
+                      <p className="text-sm leading-relaxed text-foreground/80 ml-8">
                         {answers[q.id] || "(No answer provided)"}
                       </p>
                     </div>
@@ -366,7 +437,8 @@ ${answers.ideal_outcome}
                   variant="outline"
                   onClick={handlePrevious}
                   disabled={isSubmitting}
-                  className="gap-2"
+                  className="gap-2 min-h-[44px]"
+                  aria-label="Go back to edit answers"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back to Edit
@@ -374,7 +446,9 @@ ${answers.ideal_outcome}
                 <Button
                   onClick={handleCreateIdea}
                   disabled={isSubmitting || !editableTitle.trim()}
-                  className="flex-1 gap-2"
+                  className="flex-1 gap-2 min-h-[44px]"
+                  aria-label={isSubmitting ? "Creating idea..." : "Create idea and go to dashboard"}
+                  aria-disabled={isSubmitting || !editableTitle.trim()}
                 >
                   {isSubmitting ? (
                     "Creating..."
@@ -405,12 +479,18 @@ ${answers.ideal_outcome}
           <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
             <Lightbulb className="h-6 w-6 text-primary" />
           </div>
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold">Guided Capture</h1>
             <p className="text-sm text-muted-foreground">
               Question {currentStep + 1} of {totalQuestions}
             </p>
           </div>
+          {autoSaved && (
+            <div className="inline-flex items-center gap-1.5 text-xs text-green-600 px-2 py-1 bg-green-600/10 rounded-full">
+              <Check className="h-3 w-3" />
+              Auto-saved
+            </div>
+          )}
         </div>
 
         {/* Progress dots */}
@@ -440,35 +520,53 @@ ${answers.ideal_outcome}
           <CardContent className="space-y-4">
             {/* Answer textarea */}
             <div>
+              <CharacterCount
+                id="character-count"
+                text={answers[currentQuestion.id] || ""}
+                minLength={currentQuestion.minLength}
+              />
               <Textarea
                 value={answers[currentQuestion.id] || ""}
                 onChange={(e) => handleAnswerChange(e.target.value)}
                 placeholder={currentQuestion.placeholder}
-                className="min-h-[150px] resize-none"
+                className={cn(
+                  "min-h-[150px] md:min-h-[180px] resize-y",
+                  (answers[currentQuestion.id] || "").length > 0 &&
+                  (answers[currentQuestion.id] || "").length < currentQuestion.minLength &&
+                  "border-orange-500 focus-visible:ring-orange-500"
+                )}
                 autoFocus
-              />
-              <CharacterCount
-                text={answers[currentQuestion.id] || ""}
-                minLength={currentQuestion.minLength}
+                aria-describedby="character-count"
+                aria-invalid={(answers[currentQuestion.id] || "").length > 0 && (answers[currentQuestion.id] || "").length < currentQuestion.minLength}
+                aria-label={currentQuestion.label}
               />
             </div>
 
             {/* Navigation buttons */}
             <div className="flex gap-3 pt-4">
-              {currentStep > 0 && (
+              {currentStep > 0 ? (
                 <Button
                   variant="outline"
                   onClick={handlePrevious}
-                  className="gap-2"
+                  className="gap-2 min-h-[44px] min-w-[120px]"
+                  aria-label="Go to previous question"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Previous
                 </Button>
+              ) : (
+                <div className="w-[120px]" aria-hidden="true" />
               )}
               <Button
                 onClick={handleNext}
                 disabled={(answers[currentQuestion.id] || "").length < currentQuestion.minLength}
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 min-h-[44px]"
+                aria-label={
+                  (answers[currentQuestion.id] || "").length < currentQuestion.minLength
+                    ? `Provide at least ${currentQuestion.minLength} characters to continue`
+                    : isLastQuestion ? "Continue to review your answers" : "Go to next question"
+                }
+                aria-disabled={(answers[currentQuestion.id] || "").length < currentQuestion.minLength}
               >
                 {isLastQuestion ? (
                   <>

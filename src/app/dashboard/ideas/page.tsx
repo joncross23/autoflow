@@ -419,14 +419,23 @@ export default function IdeasPage() {
             <Plus className="h-4 w-4 mr-2" />
             New Idea
           </button>
-          <button
-            className="btn btn-outline flex-1 sm:flex-initial"
-            onClick={() => router.push('/dashboard/ideas/capture')}
-            title="2 minutes • 4 questions about one automation problem"
-          >
-            <Lightbulb className="h-4 w-4 mr-2" />
-            Guided Capture
-          </button>
+          <div className="relative group flex-1 sm:flex-initial">
+            <button
+              className="btn btn-outline w-full"
+              onClick={() => router.push('/dashboard/ideas/capture')}
+              aria-label="Guided Capture - 2 minutes, 4 questions"
+            >
+              <Lightbulb className="h-4 w-4 mr-2" />
+              Guided Capture
+              <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                ?
+              </span>
+            </button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-popover border border-border rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg">
+              <div className="font-medium mb-1">Guided Capture</div>
+              <div className="text-muted-foreground">2 minutes • 4 questions</div>
+            </div>
+          </div>
         </div>
       </header>
 

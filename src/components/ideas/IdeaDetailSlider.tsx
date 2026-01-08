@@ -646,6 +646,8 @@ export function IdeaDetailSlider({
               const capture = idea.metadata.guided_capture as {
                 version: string;
                 captured_at: string;
+                started_at?: string;
+                time_to_complete_seconds?: number;
                 questions: Array<{
                   id: string;
                   question: string;
@@ -659,23 +661,38 @@ export function IdeaDetailSlider({
                   defaultOpen={true}
                   icon={<Lightbulb className="h-4 w-4" />}
                 >
-                  <div className="space-y-4">
-                    <p className="text-xs text-muted-foreground -mt-2 mb-4">
-                      Captured {formatRelativeTime(new Date(capture.captured_at))}
-                    </p>
-                    {capture.questions.map((qa) => (
-                      <div key={qa.id} className="border-l-2 border-primary/20 pl-4">
-                        <p className="text-sm font-medium text-muted-foreground mb-1">
-                          {qa.question}
+                  <div className="space-y-5">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground pb-3 border-b border-border/50">
+                      <Clock className="h-3.5 w-3.5" />
+                      <span>Captured {formatRelativeTime(new Date(capture.captured_at))}</span>
+                      {capture.time_to_complete_seconds && (
+                        <>
+                          <span>•</span>
+                          <span>{Math.round(capture.time_to_complete_seconds / 60)} min to complete</span>
+                        </>
+                      )}
+                    </div>
+                    {capture.questions.map((qa, idx) => (
+                      <div key={qa.id} className="group">
+                        <div className="flex items-start gap-3 mb-2">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 text-primary text-xs font-bold shrink-0 mt-0.5">
+                            {idx + 1}
+                          </span>
+                          <p className="text-sm font-semibold text-foreground leading-relaxed">
+                            {qa.question}
+                          </p>
+                        </div>
+                        <p className="text-sm leading-relaxed text-foreground/80 ml-9 pl-3 border-l-2 border-border/50 group-hover:border-primary/30 transition-colors">
+                          {qa.answer}
                         </p>
-                        <p className="text-sm leading-relaxed">{qa.answer}</p>
                       </div>
                     ))}
 
                     {/* Optional: Edit Answers button (stub for future enhancement) */}
                     <button
-                      className="btn btn-outline btn-sm mt-4"
+                      className="btn btn-outline btn-sm mt-4 min-h-[36px]"
                       onClick={() => toast("Edit feature coming soon", "info")}
+                      aria-label="Edit guided capture answers (coming soon)"
                     >
                       Edit Answers
                     </button>
