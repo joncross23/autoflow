@@ -129,7 +129,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       {/* Matrix Container */}
       <div className="relative aspect-square max-w-2xl mx-auto border border-border/30 rounded-lg bg-bg-secondary overflow-visible">
         {/* Axis Labels */}
-        <div className="absolute -left-20 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-semibold text-foreground whitespace-nowrap">
+        <div className="absolute -left-28 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-semibold text-foreground whitespace-nowrap">
           Impact (Low → High)
         </div>
         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-sm font-semibold text-foreground">
