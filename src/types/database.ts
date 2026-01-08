@@ -57,6 +57,31 @@ export const RICE_IMPACT_LABELS: Record<RiceImpact, string> = {
   3: "Massive",
 };
 
+// ============================================
+// METADATA TYPES (V1.8: Guided Capture)
+// ============================================
+
+// Guided Capture metadata structure
+export interface GuidedCaptureMetadata {
+  version: "1.0";
+  captured_at: string;
+  started_at?: string;
+  time_to_complete_seconds?: number;
+  questions: Array<{
+    id: string;
+    question: string;
+    answer: string;
+  }>;
+}
+
+// Idea metadata can contain various structured data
+export interface IdeaMetadata {
+  guided_capture?: GuidedCaptureMetadata;
+  // Future: Add other metadata types here
+  // import?: { source: string; imported_at: string };
+  // voice?: { transcript: string; confidence: number };
+}
+
 export interface DbIdea {
   id: string;
   user_id: string;
@@ -83,6 +108,11 @@ export interface DbIdea {
   rice_effort: number | null;     // 1-10: Person-weeks equivalent
   rice_score: number | null;      // Calculated: (R×I×C%)/E
   content_type: ContentType | null;  // V1.x: idea/read/watch/listen/note
+  // Source tracking (V1.8: guided capture)
+  source_type: "manual" | "guided" | "import" | "voice";
+  source_id: string | null;        // Reference to source (e.g., response ID)
+  intended_owner_id: string | null; // For extracted ideas: who should see this
+  metadata: IdeaMetadata | null;   // V1.8: Structured metadata (guided capture Q&A, etc.)
   created_at: string;
   updated_at: string;
 }
@@ -108,7 +138,13 @@ export interface DbIdeaInsert {
   rice_impact?: RiceImpact | null;
   rice_confidence?: number | null;
   rice_effort?: number | null;
+  rice_score?: number | null;
   content_type?: ContentType | null;
+  // Source tracking (V1.8: guided capture)
+  source_type?: "manual" | "guided" | "import" | "voice";
+  source_id?: string | null;
+  intended_owner_id?: string | null;
+  metadata?: IdeaMetadata | null;
 }
 
 export interface DbIdeaUpdate {
@@ -132,7 +168,9 @@ export interface DbIdeaUpdate {
   rice_impact?: RiceImpact | null;
   rice_confidence?: number | null;
   rice_effort?: number | null;
+  rice_score?: number | null;
   content_type?: ContentType | null;
+  metadata?: IdeaMetadata | null;
   updated_at?: string;
 }
 

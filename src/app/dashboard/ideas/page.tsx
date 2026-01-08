@@ -414,10 +414,29 @@ export default function IdeasPage() {
             Capture and evaluate automation ideas
           </p>
         </div>
-        <button className="btn btn-primary w-full sm:w-auto" onClick={handleCreateNew}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Idea
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button className="btn btn-primary flex-1 sm:flex-initial" onClick={handleCreateNew}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Idea
+          </button>
+          <div className="relative group flex-1 sm:flex-initial">
+            <button
+              className="btn btn-outline w-full"
+              onClick={() => router.push('/dashboard/ideas/capture')}
+              aria-label="Guided Capture - 2 minutes, 4 questions"
+            >
+              <Lightbulb className="h-4 w-4 mr-2" />
+              Guided Capture
+              <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                ?
+              </span>
+            </button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-popover border border-border rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg">
+              <div className="font-medium mb-1">Guided Capture</div>
+              <div className="text-muted-foreground">2 minutes • 4 questions</div>
+            </div>
+          </div>
+        </div>
       </header>
 
       {/* Search bar and Saved Views */}

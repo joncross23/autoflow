@@ -2,6 +2,7 @@
 
 import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Lightbulb,
   TrendingUp,
@@ -27,6 +28,7 @@ import { useToast } from "@/hooks/useToast";
 import type { IdeaStatus, DbIdea } from "@/types/database";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [ideaCounts, setIdeaCounts] = useState<Record<IdeaStatus, number> | null>(null);
   const [activeIdeas, setActiveIdeas] = useState<DbIdea[]>([]);
   const [completedIdeas, setCompletedIdeas] = useState<DbIdea[]>([]);
@@ -111,7 +113,28 @@ export default function DashboardPage() {
 
       {/* Quick Capture */}
       <div className="mb-6">
-        <QuickCapture onSuccess={loadStats} />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex-1">
+            <QuickCapture onSuccess={loadStats} />
+          </div>
+          <div className="relative group">
+            <button
+              onClick={() => router.push('/dashboard/ideas/capture')}
+              className="btn btn-outline h-12 gap-2 whitespace-nowrap w-full sm:w-auto"
+              aria-label="Guided Capture - 2 minutes, 4 questions"
+            >
+              <Lightbulb className="h-4 w-4" />
+              Guided Capture
+              <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                ?
+              </span>
+            </button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-popover border border-border rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg">
+              <div className="font-medium mb-1">Guided Capture</div>
+              <div className="text-muted-foreground">2 minutes • 4 questions</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Stats Row */}
