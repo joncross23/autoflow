@@ -127,12 +127,12 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       </div>
 
       {/* Matrix Container */}
-      <div className="relative aspect-square max-w-2xl mx-auto border border-white/[0.06] rounded-lg bg-bg-secondary overflow-hidden">
+      <div className="relative aspect-square max-w-2xl mx-auto border border-border/30 rounded-lg bg-bg-secondary overflow-visible">
         {/* Axis Labels */}
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-medium text-muted-foreground whitespace-nowrap origin-center">
+        <div className="absolute -left-16 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-semibold text-foreground whitespace-nowrap">
           Impact (Low → High)
         </div>
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm font-medium text-muted-foreground">
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-semibold text-foreground">
           Effort (Low → High)
         </div>
 
@@ -149,10 +149,10 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
           <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-red-500/50" /> {/* Time Sinks */}
 
           {/* Quadrant Labels */}
-          <div className="absolute top-2 left-2 text-xs font-medium text-green-500/70">Quick Wins</div>
-          <div className="absolute top-2 right-2 text-xs font-medium text-blue-500/70 text-right">Major Projects</div>
-          <div className="absolute bottom-2 left-2 text-xs font-medium text-yellow-500/70">Fill-ins</div>
-          <div className="absolute bottom-2 right-2 text-xs font-medium text-red-500/70 text-right">Time Sinks</div>
+          <div className="absolute top-3 left-3 text-sm font-bold text-green-600 dark:text-green-400 drop-shadow-lg">Quick Wins</div>
+          <div className="absolute top-3 right-3 text-sm font-bold text-blue-600 dark:text-blue-400 text-right drop-shadow-lg">Major Projects</div>
+          <div className="absolute bottom-3 left-3 text-sm font-bold text-yellow-700 dark:text-yellow-400 drop-shadow-lg">Fill-ins</div>
+          <div className="absolute bottom-3 right-3 text-sm font-bold text-red-600 dark:text-red-400 text-right drop-shadow-lg">Time Sinks</div>
 
           {/* Data Points */}
           {visiblePoints.map((point) => (
