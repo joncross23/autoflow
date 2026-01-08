@@ -414,10 +414,20 @@ export default function IdeasPage() {
             Capture and evaluate automation ideas
           </p>
         </div>
-        <button className="btn btn-primary w-full sm:w-auto" onClick={handleCreateNew}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Idea
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button className="btn btn-primary flex-1 sm:flex-initial" onClick={handleCreateNew}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Idea
+          </button>
+          <button
+            className="btn btn-outline flex-1 sm:flex-initial"
+            onClick={() => router.push('/dashboard/ideas/capture')}
+            title="2 minutes • 4 questions about one automation problem"
+          >
+            <Lightbulb className="h-4 w-4 mr-2" />
+            Guided Capture
+          </button>
+        </div>
       </header>
 
       {/* Search bar and Saved Views */}
