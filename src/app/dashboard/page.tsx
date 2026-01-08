@@ -2,6 +2,7 @@
 
 import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Lightbulb,
   TrendingUp,
@@ -27,6 +28,7 @@ import { useToast } from "@/hooks/useToast";
 import type { IdeaStatus, DbIdea } from "@/types/database";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [ideaCounts, setIdeaCounts] = useState<Record<IdeaStatus, number> | null>(null);
   const [activeIdeas, setActiveIdeas] = useState<DbIdea[]>([]);
   const [completedIdeas, setCompletedIdeas] = useState<DbIdea[]>([]);
@@ -111,7 +113,19 @@ export default function DashboardPage() {
 
       {/* Quick Capture */}
       <div className="mb-6">
-        <QuickCapture onSuccess={loadStats} />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex-1">
+            <QuickCapture onSuccess={loadStats} />
+          </div>
+          <button
+            onClick={() => router.push('/dashboard/ideas/capture')}
+            className="btn btn-outline h-12 gap-2 whitespace-nowrap"
+            title="2 minutes • 4 questions about one automation problem"
+          >
+            <Lightbulb className="h-4 w-4" />
+            Guided Capture
+          </button>
+        </div>
       </div>
 
       {/* Stats Row */}
