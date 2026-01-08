@@ -1,0 +1,1671 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "AutoFlow" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+      - navigation [ref=e10]:
+        - list [ref=e11]:
+          - listitem [ref=e12]:
+            - link "Dashboard" [ref=e13] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e14]
+              - generic [ref=e17]: Dashboard
+          - listitem [ref=e18]:
+            - link "Ideas" [ref=e19] [cursor=pointer]:
+              - /url: /dashboard/ideas
+              - img [ref=e20]
+              - generic [ref=e22]: Ideas
+          - listitem [ref=e23]:
+            - link "Tasks" [ref=e24] [cursor=pointer]:
+              - /url: /dashboard/tasks
+              - img [ref=e25]
+              - generic [ref=e26]: Tasks
+          - listitem [ref=e27]:
+            - link "Matrix" [ref=e28] [cursor=pointer]:
+              - /url: /dashboard/matrix
+              - img [ref=e29]
+              - generic [ref=e31]: Matrix
+          - listitem [ref=e32]:
+            - link "Time Audit" [ref=e33] [cursor=pointer]:
+              - /url: /dashboard/time-audit
+              - img [ref=e34]
+              - generic [ref=e37]: Time Audit
+          - listitem [ref=e38]:
+            - link "Settings" [ref=e39] [cursor=pointer]:
+              - /url: /dashboard/settings
+              - img [ref=e40]
+              - generic [ref=e43]: Settings
+      - paragraph [ref=e45]: Version 1.6.1
+    - main [ref=e46]:
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - img
+            - textbox "Search..." [ref=e51]
+          - button "Add Filter" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - text: Add Filter
+          - generic [ref=e57]: 189 tasks
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e63]: Backlog
+                - generic [ref=e64]: "189"
+                - button [ref=e65] [cursor=pointer]:
+                  - img [ref=e66]
+              - generic [ref=e70]:
+                - generic [ref=e73] [cursor=pointer]:
+                  - button [ref=e74]:
+                    - img [ref=e75]
+                  - button [ref=e82]:
+                    - img [ref=e83]
+                  - paragraph [ref=e85]: Test Task 1767437514133
+                  - button [ref=e87]:
+                    - img [ref=e88]
+                - generic [ref=e94] [cursor=pointer]:
+                  - button [ref=e95]:
+                    - img [ref=e96]
+                  - button [ref=e103]:
+                    - img [ref=e104]
+                  - paragraph [ref=e106]: Test Task 1767441269662
+                  - button [ref=e108]:
+                    - img [ref=e109]
+                - generic [ref=e115] [cursor=pointer]:
+                  - button [ref=e116]:
+                    - img [ref=e117]
+                  - button [ref=e124]:
+                    - img [ref=e125]
+                  - paragraph [ref=e127]: Test Task 1767441481035
+                  - button [ref=e129]:
+                    - img [ref=e130]
+                - generic [ref=e136] [cursor=pointer]:
+                  - button [ref=e137]:
+                    - img [ref=e138]
+                  - button [ref=e145]:
+                    - img [ref=e146]
+                  - paragraph [ref=e148]: Test Task 1767441673444
+                  - button [ref=e150]:
+                    - img [ref=e151]
+                - generic [ref=e157] [cursor=pointer]:
+                  - button [ref=e158]:
+                    - img [ref=e159]
+                  - button [ref=e166]:
+                    - img [ref=e167]
+                  - paragraph [ref=e169]: Archive Test 1767441680436
+                  - button [ref=e171]:
+                    - img [ref=e172]
+                - generic [ref=e178] [cursor=pointer]:
+                  - button [ref=e179]:
+                    - img [ref=e180]
+                  - button [ref=e187]:
+                    - img [ref=e188]
+                  - paragraph [ref=e190]: Copy Test 1767441685085
+                  - button [ref=e192]:
+                    - img [ref=e193]
+                - generic [ref=e199] [cursor=pointer]:
+                  - button [ref=e200]:
+                    - img [ref=e201]
+                  - button [ref=e208]:
+                    - img [ref=e209]
+                  - paragraph [ref=e211]: Copy Test 1767441685085 (Copy)
+                  - button [ref=e213]:
+                    - img [ref=e214]
+                - generic [ref=e220] [cursor=pointer]:
+                  - button [ref=e221]:
+                    - img [ref=e222]
+                  - button [ref=e229]:
+                    - img [ref=e230]
+                  - paragraph [ref=e232]: Attachment Test 1767441689578
+                  - button [ref=e234]:
+                    - img [ref=e235]
+                - generic [ref=e241] [cursor=pointer]:
+                  - button [ref=e242]:
+                    - img [ref=e243]
+                  - button [ref=e250]:
+                    - img [ref=e251]
+                  - paragraph [ref=e253]: Links Test 1767441704123
+                  - button [ref=e255]:
+                    - img [ref=e256]
+                - generic [ref=e262] [cursor=pointer]:
+                  - button [ref=e263]:
+                    - img [ref=e264]
+                  - button [ref=e271]:
+                    - img [ref=e272]
+                  - paragraph [ref=e274]: Labels Test 1767441719211
+                  - button [ref=e276]:
+                    - img [ref=e277]
+                - generic [ref=e283] [cursor=pointer]:
+                  - button [ref=e284]:
+                    - img [ref=e285]
+                  - button [ref=e292]:
+                    - img [ref=e293]
+                  - paragraph [ref=e295]: Checklist Test 1767441734322
+                  - button [ref=e297]:
+                    - img [ref=e298]
+                - generic [ref=e304] [cursor=pointer]:
+                  - button [ref=e305]:
+                    - img [ref=e306]
+                  - button [ref=e313]:
+                    - img [ref=e314]
+                  - paragraph [ref=e316]: Test Task 1767441832933
+                  - button [ref=e318]:
+                    - img [ref=e319]
+                - generic [ref=e325] [cursor=pointer]:
+                  - button [ref=e326]:
+                    - img [ref=e327]
+                  - button [ref=e334]:
+                    - img [ref=e335]
+                  - paragraph [ref=e337]: Archive Test 1767441839927
+                  - button [ref=e339]:
+                    - img [ref=e340]
+                - generic [ref=e346] [cursor=pointer]:
+                  - button [ref=e347]:
+                    - img [ref=e348]
+                  - button [ref=e355]:
+                    - img [ref=e356]
+                  - paragraph [ref=e358]: Copy Test 1767441855454
+                  - button [ref=e360]:
+                    - img [ref=e361]
+                - generic [ref=e367] [cursor=pointer]:
+                  - button [ref=e368]:
+                    - img [ref=e369]
+                  - button [ref=e376]:
+                    - img [ref=e377]
+                  - paragraph [ref=e379]: Attachment Test 1767441869667
+                  - button [ref=e381]:
+                    - img [ref=e382]
+                - generic [ref=e388] [cursor=pointer]:
+                  - button [ref=e389]:
+                    - img [ref=e390]
+                  - button [ref=e397]:
+                    - img [ref=e398]
+                  - paragraph [ref=e400]: Links Test 1767441884746
+                  - button [ref=e402]:
+                    - img [ref=e403]
+                - generic [ref=e409] [cursor=pointer]:
+                  - button [ref=e410]:
+                    - img [ref=e411]
+                  - button [ref=e418]:
+                    - img [ref=e419]
+                  - paragraph [ref=e421]: Labels Test 1767441899302
+                  - button [ref=e423]:
+                    - img [ref=e424]
+                - generic [ref=e430] [cursor=pointer]:
+                  - button [ref=e431]:
+                    - img [ref=e432]
+                  - button [ref=e439]:
+                    - img [ref=e440]
+                  - paragraph [ref=e442]: Checklist Test 1767441914299
+                  - button [ref=e444]:
+                    - img [ref=e445]
+                - generic [ref=e451] [cursor=pointer]:
+                  - button [ref=e452]:
+                    - img [ref=e453]
+                  - button [ref=e460]:
+                    - img [ref=e461]
+                  - paragraph [ref=e463]: Test Task 1767442051898
+                  - button [ref=e465]:
+                    - img [ref=e466]
+                - generic [ref=e472] [cursor=pointer]:
+                  - button [ref=e473]:
+                    - img [ref=e474]
+                  - button [ref=e481]:
+                    - img [ref=e482]
+                  - paragraph [ref=e484]: Archive Test 1767442059059
+                  - button [ref=e486]:
+                    - img [ref=e487]
+                - generic [ref=e493] [cursor=pointer]:
+                  - button [ref=e494]:
+                    - img [ref=e495]
+                  - button [ref=e502]:
+                    - img [ref=e503]
+                  - paragraph [ref=e505]: Copy Test 1767442074488
+                  - button [ref=e507]:
+                    - img [ref=e508]
+                - generic [ref=e514] [cursor=pointer]:
+                  - button [ref=e515]:
+                    - img [ref=e516]
+                  - button [ref=e523]:
+                    - img [ref=e524]
+                  - paragraph [ref=e526]: Attachment Test 1767442106097
+                  - button [ref=e528]:
+                    - img [ref=e529]
+                - generic [ref=e535] [cursor=pointer]:
+                  - button [ref=e536]:
+                    - img [ref=e537]
+                  - button [ref=e544]:
+                    - img [ref=e545]
+                  - paragraph [ref=e547]: Links Test 1767442120998
+                  - button [ref=e549]:
+                    - img [ref=e550]
+                - generic [ref=e556] [cursor=pointer]:
+                  - button [ref=e557]:
+                    - img [ref=e558]
+                  - button [ref=e565]:
+                    - img [ref=e566]
+                  - paragraph [ref=e568]: Labels Test 1767442135322
+                  - button [ref=e570]:
+                    - img [ref=e571]
+                - generic [ref=e577] [cursor=pointer]:
+                  - button [ref=e578]:
+                    - img [ref=e579]
+                  - button [ref=e586]:
+                    - img [ref=e587]
+                  - paragraph [ref=e589]: Checklist Test 1767442149551
+                  - button [ref=e591]:
+                    - img [ref=e592]
+                - generic [ref=e598] [cursor=pointer]:
+                  - button [ref=e599]:
+                    - img [ref=e600]
+                  - button [ref=e607]:
+                    - img [ref=e608]
+                  - paragraph [ref=e610]: Test Task 1767442256360
+                  - button [ref=e612]:
+                    - img [ref=e613]
+                - generic [ref=e619] [cursor=pointer]:
+                  - button [ref=e620]:
+                    - img [ref=e621]
+                  - button [ref=e628]:
+                    - img [ref=e629]
+                  - paragraph [ref=e631]: Archive Test 1767442262842
+                  - button [ref=e633]:
+                    - img [ref=e634]
+                - generic [ref=e640] [cursor=pointer]:
+                  - button [ref=e641]:
+                    - img [ref=e642]
+                  - button [ref=e649]:
+                    - img [ref=e650]
+                  - paragraph [ref=e652]: Copy Test 1767442277470
+                  - button [ref=e654]:
+                    - img [ref=e655]
+                - generic [ref=e661] [cursor=pointer]:
+                  - button [ref=e662]:
+                    - img [ref=e663]
+                  - button [ref=e670]:
+                    - img [ref=e671]
+                  - paragraph [ref=e673]: Attachment Test 1767442291747
+                  - button [ref=e675]:
+                    - img [ref=e676]
+                - generic [ref=e682] [cursor=pointer]:
+                  - button [ref=e683]:
+                    - img [ref=e684]
+                  - button [ref=e691]:
+                    - img [ref=e692]
+                  - paragraph [ref=e694]: Links Test 1767442307043
+                  - button [ref=e696]:
+                    - img [ref=e697]
+                - generic [ref=e703] [cursor=pointer]:
+                  - button [ref=e704]:
+                    - img [ref=e705]
+                  - button [ref=e712]:
+                    - img [ref=e713]
+                  - paragraph [ref=e715]: Labels Test 1767442323680
+                  - button [ref=e717]:
+                    - img [ref=e718]
+                - generic [ref=e724] [cursor=pointer]:
+                  - button [ref=e725]:
+                    - img [ref=e726]
+                  - button [ref=e733]:
+                    - img [ref=e734]
+                  - paragraph [ref=e736]: Checklist Test 1767442337918
+                  - button [ref=e738]:
+                    - img [ref=e739]
+                - generic [ref=e745] [cursor=pointer]:
+                  - button [ref=e746]:
+                    - img [ref=e747]
+                  - button [ref=e754]:
+                    - img [ref=e755]
+                  - paragraph [ref=e757]: Test Task 1767442552168
+                  - button [ref=e759]:
+                    - img [ref=e760]
+                - generic [ref=e766] [cursor=pointer]:
+                  - button [ref=e767]:
+                    - img [ref=e768]
+                  - button [ref=e775]:
+                    - img [ref=e776]
+                  - paragraph [ref=e778]: Test Task 1767442735596
+                  - button [ref=e780]:
+                    - img [ref=e781]
+                - generic [ref=e787] [cursor=pointer]:
+                  - button [ref=e788]:
+                    - img [ref=e789]
+                  - button [ref=e796]:
+                    - img [ref=e797]
+                  - paragraph [ref=e799]: Drag Test 1767442743869
+                  - button [ref=e801]:
+                    - img [ref=e802]
+                - generic [ref=e808] [cursor=pointer]:
+                  - button [ref=e809]:
+                    - img [ref=e810]
+                  - button [ref=e817]:
+                    - img [ref=e818]
+                  - paragraph [ref=e820]: Test Task 1767442908551
+                  - button [ref=e822]:
+                    - img [ref=e823]
+                - generic [ref=e829] [cursor=pointer]:
+                  - button [ref=e830]:
+                    - img [ref=e831]
+                  - button [ref=e838]:
+                    - img [ref=e839]
+                  - paragraph [ref=e841]: Drag Test 1767442915607
+                  - button [ref=e843]:
+                    - img [ref=e844]
+                - generic [ref=e850] [cursor=pointer]:
+                  - button [ref=e851]:
+                    - img [ref=e852]
+                  - button [ref=e859]:
+                    - img [ref=e860]
+                  - paragraph [ref=e862]: Drag Test 1767442950497
+                  - button [ref=e864]:
+                    - img [ref=e865]
+                - generic [ref=e871] [cursor=pointer]:
+                  - button [ref=e872]:
+                    - img [ref=e873]
+                  - button [ref=e880]:
+                    - img [ref=e881]
+                  - paragraph [ref=e883]: Test Task 1767443088241
+                  - button [ref=e885]:
+                    - img [ref=e886]
+                - generic [ref=e892] [cursor=pointer]:
+                  - button [ref=e893]:
+                    - img [ref=e894]
+                  - button [ref=e901]:
+                    - img [ref=e902]
+                  - paragraph [ref=e904]: Drag Test 1767443095321
+                  - button [ref=e906]:
+                    - img [ref=e907]
+                - generic [ref=e913] [cursor=pointer]:
+                  - button [ref=e914]:
+                    - img [ref=e915]
+                  - button [ref=e922]:
+                    - img [ref=e923]
+                  - paragraph [ref=e925]: Test Task 1767443303865
+                  - button [ref=e927]:
+                    - img [ref=e928]
+                - generic [ref=e934] [cursor=pointer]:
+                  - button [ref=e935]:
+                    - img [ref=e936]
+                  - button [ref=e943]:
+                    - img [ref=e944]
+                  - paragraph [ref=e946]: Drag Test 1767443310275
+                  - button [ref=e948]:
+                    - img [ref=e949]
+                - generic [ref=e955] [cursor=pointer]:
+                  - button [ref=e956]:
+                    - img [ref=e957]
+                  - button [ref=e964]:
+                    - img [ref=e965]
+                  - paragraph [ref=e967]: Test Task 1767443598683
+                  - button [ref=e969]:
+                    - img [ref=e970]
+                - generic [ref=e976] [cursor=pointer]:
+                  - button [ref=e977]:
+                    - img [ref=e978]
+                  - button [ref=e985]:
+                    - img [ref=e986]
+                  - paragraph [ref=e988]: Drag Test 1767443605258
+                  - button [ref=e990]:
+                    - img [ref=e991]
+                - generic [ref=e997] [cursor=pointer]:
+                  - button [ref=e998]:
+                    - img [ref=e999]
+                  - button [ref=e1006]:
+                    - img [ref=e1007]
+                  - paragraph [ref=e1009]: Modal Test 1767443943728
+                  - button [ref=e1011]:
+                    - img [ref=e1012]
+                - generic [ref=e1018] [cursor=pointer]:
+                  - button [ref=e1019]:
+                    - img [ref=e1020]
+                  - button [ref=e1027]:
+                    - img [ref=e1028]
+                  - paragraph [ref=e1030]: Modal Test 1767444073989
+                  - button [ref=e1032]:
+                    - img [ref=e1033]
+                - generic [ref=e1039] [cursor=pointer]:
+                  - button [ref=e1040]:
+                    - img [ref=e1041]
+                  - button [ref=e1048]:
+                    - img [ref=e1049]
+                  - paragraph [ref=e1051]: Test Task 1767444328022
+                  - button [ref=e1053]:
+                    - img [ref=e1054]
+                - generic [ref=e1060] [cursor=pointer]:
+                  - button [ref=e1061]:
+                    - img [ref=e1062]
+                  - button [ref=e1069]:
+                    - img [ref=e1070]
+                  - paragraph [ref=e1072]: Drag Test 1767444335249
+                  - button [ref=e1074]:
+                    - img [ref=e1075]
+                - generic [ref=e1081] [cursor=pointer]:
+                  - button [ref=e1082]:
+                    - img [ref=e1083]
+                  - button [ref=e1090]:
+                    - img [ref=e1091]
+                  - paragraph [ref=e1093]: Test Task 1767444598225
+                  - button [ref=e1095]:
+                    - img [ref=e1096]
+                - generic [ref=e1102] [cursor=pointer]:
+                  - button [ref=e1103]:
+                    - img [ref=e1104]
+                  - button [ref=e1111]:
+                    - img [ref=e1112]
+                  - paragraph [ref=e1114]: Modal Test 1767444602117
+                  - button [ref=e1116]:
+                    - img [ref=e1117]
+                - generic [ref=e1123] [cursor=pointer]:
+                  - button [ref=e1124]:
+                    - img [ref=e1125]
+                  - button [ref=e1132]:
+                    - img [ref=e1133]
+                  - paragraph [ref=e1135]: Edit Title Test 1767444619193
+                  - button [ref=e1137]:
+                    - img [ref=e1138]
+                - generic [ref=e1144] [cursor=pointer]:
+                  - button [ref=e1145]:
+                    - img [ref=e1146]
+                  - button [ref=e1153]:
+                    - img [ref=e1154]
+                  - paragraph [ref=e1156]: Close Test 1767444636438
+                  - button [ref=e1158]:
+                    - img [ref=e1159]
+                - generic [ref=e1165] [cursor=pointer]:
+                  - button [ref=e1166]:
+                    - img [ref=e1167]
+                  - button [ref=e1174]:
+                    - img [ref=e1175]
+                  - paragraph [ref=e1177]: Escape Test 1767444656387
+                  - button [ref=e1179]:
+                    - img [ref=e1180]
+                - generic [ref=e1186] [cursor=pointer]:
+                  - button [ref=e1187]:
+                    - img [ref=e1188]
+                  - button [ref=e1195]:
+                    - img [ref=e1196]
+                  - paragraph [ref=e1198]: Labels Test 1767444675074
+                  - button [ref=e1200]:
+                    - img [ref=e1201]
+                - generic [ref=e1207] [cursor=pointer]:
+                  - button [ref=e1208]:
+                    - img [ref=e1209]
+                  - button [ref=e1216]:
+                    - img [ref=e1217]
+                  - paragraph [ref=e1219]: Checklist Test 1767444690901
+                  - button [ref=e1221]:
+                    - img [ref=e1222]
+                - generic [ref=e1228] [cursor=pointer]:
+                  - button [ref=e1229]:
+                    - img [ref=e1230]
+                  - button [ref=e1237]:
+                    - img [ref=e1238]
+                  - paragraph [ref=e1240]: Archive Test 1767444705826
+                  - button [ref=e1242]:
+                    - img [ref=e1243]
+                - generic [ref=e1249] [cursor=pointer]:
+                  - button [ref=e1250]:
+                    - img [ref=e1251]
+                  - button [ref=e1258]:
+                    - img [ref=e1259]
+                  - paragraph [ref=e1261]: Copy Test 1767444720689
+                  - button [ref=e1263]:
+                    - img [ref=e1264]
+                - generic [ref=e1270] [cursor=pointer]:
+                  - button [ref=e1271]:
+                    - img [ref=e1272]
+                  - button [ref=e1279]:
+                    - img [ref=e1280]
+                  - paragraph [ref=e1282]: Priority Test 1767444737231
+                  - button [ref=e1284]:
+                    - img [ref=e1285]
+                - generic [ref=e1291] [cursor=pointer]:
+                  - button [ref=e1292]:
+                    - img [ref=e1293]
+                  - button [ref=e1300]:
+                    - img [ref=e1301]
+                  - paragraph [ref=e1303]: Due Date Test 1767444753236
+                  - button [ref=e1305]:
+                    - img [ref=e1306]
+                - generic [ref=e1312] [cursor=pointer]:
+                  - button [ref=e1313]:
+                    - img [ref=e1314]
+                  - button [ref=e1321]:
+                    - img [ref=e1322]
+                  - paragraph [ref=e1324]: Drag Test 1767444769061
+                  - button [ref=e1326]:
+                    - img [ref=e1327]
+                - generic [ref=e1333] [cursor=pointer]:
+                  - button [ref=e1334]:
+                    - img [ref=e1335]
+                  - button [ref=e1342]:
+                    - img [ref=e1343]
+                  - paragraph [ref=e1345]: Attachment Test 1767444773079
+                  - button [ref=e1347]:
+                    - img [ref=e1348]
+                - generic [ref=e1354] [cursor=pointer]:
+                  - button [ref=e1355]:
+                    - img [ref=e1356]
+                  - button [ref=e1363]:
+                    - img [ref=e1364]
+                  - paragraph [ref=e1366]: Links Test 1767444788941
+                  - button [ref=e1368]:
+                    - img [ref=e1369]
+                - generic [ref=e1375] [cursor=pointer]:
+                  - button [ref=e1376]:
+                    - img [ref=e1377]
+                  - button [ref=e1384]:
+                    - img [ref=e1385]
+                  - paragraph [ref=e1387]: Checklist Item Test 1767444806958
+                  - button [ref=e1389]:
+                    - img [ref=e1390]
+                - generic [ref=e1396] [cursor=pointer]:
+                  - button [ref=e1397]:
+                    - img [ref=e1398]
+                  - button [ref=e1405]:
+                    - img [ref=e1406]
+                  - paragraph [ref=e1408]: Test Task 1767444926824
+                  - button [ref=e1410]:
+                    - img [ref=e1411]
+                - generic [ref=e1417] [cursor=pointer]:
+                  - button [ref=e1418]:
+                    - img [ref=e1419]
+                  - button [ref=e1426]:
+                    - img [ref=e1427]
+                  - paragraph [ref=e1429]: Modal Test 1767444930793
+                  - button [ref=e1431]:
+                    - img [ref=e1432]
+                - generic [ref=e1438] [cursor=pointer]:
+                  - button [ref=e1439]:
+                    - img [ref=e1440]
+                  - button [ref=e1447]:
+                    - img [ref=e1448]
+                  - paragraph [ref=e1450]: Edit Title Test 1767444946153
+                  - button [ref=e1452]:
+                    - img [ref=e1453]
+                - generic [ref=e1459] [cursor=pointer]:
+                  - button [ref=e1460]:
+                    - img [ref=e1461]
+                  - button [ref=e1468]:
+                    - img [ref=e1469]
+                  - paragraph [ref=e1471]: Close Test 1767444961846
+                  - button [ref=e1473]:
+                    - img [ref=e1474]
+                - generic [ref=e1480] [cursor=pointer]:
+                  - button [ref=e1481]:
+                    - img [ref=e1482]
+                  - button [ref=e1489]:
+                    - img [ref=e1490]
+                  - paragraph [ref=e1492]: Escape Test 1767444977432
+                  - button [ref=e1494]:
+                    - img [ref=e1495]
+                - generic [ref=e1501] [cursor=pointer]:
+                  - button [ref=e1502]:
+                    - img [ref=e1503]
+                  - button [ref=e1510]:
+                    - img [ref=e1511]
+                  - paragraph [ref=e1513]: Labels Test 1767444997132
+                  - button [ref=e1515]:
+                    - img [ref=e1516]
+                - generic [ref=e1522] [cursor=pointer]:
+                  - button [ref=e1523]:
+                    - img [ref=e1524]
+                  - button [ref=e1531]:
+                    - img [ref=e1532]
+                  - paragraph [ref=e1534]: Checklist Test 1767445017356
+                  - button [ref=e1536]:
+                    - img [ref=e1537]
+                - generic [ref=e1543] [cursor=pointer]:
+                  - button [ref=e1544]:
+                    - img [ref=e1545]
+                  - button [ref=e1552]:
+                    - img [ref=e1553]
+                  - paragraph [ref=e1555]: Archive Test 1767445033062
+                  - button [ref=e1557]:
+                    - img [ref=e1558]
+                - generic [ref=e1564] [cursor=pointer]:
+                  - button [ref=e1565]:
+                    - img [ref=e1566]
+                  - button [ref=e1573]:
+                    - img [ref=e1574]
+                  - paragraph [ref=e1576]: Copy Test 1767445048167
+                  - button [ref=e1578]:
+                    - img [ref=e1579]
+                - generic [ref=e1585] [cursor=pointer]:
+                  - button [ref=e1586]:
+                    - img [ref=e1587]
+                  - button [ref=e1594]:
+                    - img [ref=e1595]
+                  - paragraph [ref=e1597]: Priority Test 1767445064055
+                  - button [ref=e1599]:
+                    - img [ref=e1600]
+                - generic [ref=e1606] [cursor=pointer]:
+                  - button [ref=e1607]:
+                    - img [ref=e1608]
+                  - button [ref=e1615]:
+                    - img [ref=e1616]
+                  - paragraph [ref=e1618]: Due Date Test 1767445079770
+                  - button [ref=e1620]:
+                    - img [ref=e1621]
+                - generic [ref=e1627] [cursor=pointer]:
+                  - button [ref=e1628]:
+                    - img [ref=e1629]
+                  - button [ref=e1636]:
+                    - img [ref=e1637]
+                  - paragraph [ref=e1639]: Drag Test 1767445094977
+                  - button [ref=e1641]:
+                    - img [ref=e1642]
+                - generic [ref=e1648] [cursor=pointer]:
+                  - button [ref=e1649]:
+                    - img [ref=e1650]
+                  - button [ref=e1657]:
+                    - img [ref=e1658]
+                  - paragraph [ref=e1660]: Attachment Test 1767445099169
+                  - button [ref=e1662]:
+                    - img [ref=e1663]
+                - generic [ref=e1669] [cursor=pointer]:
+                  - button [ref=e1670]:
+                    - img [ref=e1671]
+                  - button [ref=e1678]:
+                    - img [ref=e1679]
+                  - paragraph [ref=e1681]: Links Test 1767445114875
+                  - button [ref=e1683]:
+                    - img [ref=e1684]
+                - generic [ref=e1690] [cursor=pointer]:
+                  - button [ref=e1691]:
+                    - img [ref=e1692]
+                  - button [ref=e1699]:
+                    - img [ref=e1700]
+                  - paragraph [ref=e1702]: Checklist Item Test 1767445131687
+                  - button [ref=e1704]:
+                    - img [ref=e1705]
+                - generic [ref=e1711] [cursor=pointer]:
+                  - button [ref=e1712]:
+                    - img [ref=e1713]
+                  - button [ref=e1720]:
+                    - img [ref=e1721]
+                  - paragraph [ref=e1723]: Test Task 1767445237346
+                  - button [ref=e1725]:
+                    - img [ref=e1726]
+                - generic [ref=e1732] [cursor=pointer]:
+                  - button [ref=e1733]:
+                    - img [ref=e1734]
+                  - button [ref=e1741]:
+                    - img [ref=e1742]
+                  - paragraph [ref=e1744]: Modal Test 1767445241374
+                  - button [ref=e1746]:
+                    - img [ref=e1747]
+                - generic [ref=e1753] [cursor=pointer]:
+                  - button [ref=e1754]:
+                    - img [ref=e1755]
+                  - button [ref=e1762]:
+                    - img [ref=e1763]
+                  - paragraph [ref=e1765]: Edit Title Test 1767445257201
+                  - button [ref=e1767]:
+                    - img [ref=e1768]
+                - generic [ref=e1774] [cursor=pointer]:
+                  - button [ref=e1775]:
+                    - img [ref=e1776]
+                  - button [ref=e1783]:
+                    - img [ref=e1784]
+                  - paragraph [ref=e1786]: Test Task 1767521394433
+                  - button [ref=e1788]:
+                    - img [ref=e1789]
+                - generic [ref=e1795] [cursor=pointer]:
+                  - button [ref=e1796]:
+                    - img [ref=e1797]
+                  - button [ref=e1804]:
+                    - img [ref=e1805]
+                  - paragraph [ref=e1807]: Modal Test 1767521398577
+                  - button [ref=e1809]:
+                    - img [ref=e1810]
+                - generic [ref=e1816] [cursor=pointer]:
+                  - button [ref=e1817]:
+                    - img [ref=e1818]
+                  - button [ref=e1825]:
+                    - img [ref=e1826]
+                  - paragraph [ref=e1828]: Edit Title Test 1767521414862
+                  - button [ref=e1830]:
+                    - img [ref=e1831]
+                - generic [ref=e1837] [cursor=pointer]:
+                  - button [ref=e1838]:
+                    - img [ref=e1839]
+                  - button [ref=e1846]:
+                    - img [ref=e1847]
+                  - paragraph [ref=e1849]: Close Test 1767521430627
+                  - button [ref=e1851]:
+                    - img [ref=e1852]
+                - generic [ref=e1858] [cursor=pointer]:
+                  - button [ref=e1859]:
+                    - img [ref=e1860]
+                  - button [ref=e1867]:
+                    - img [ref=e1868]
+                  - paragraph [ref=e1870]: Escape Test 1767521447060
+                  - button [ref=e1872]:
+                    - img [ref=e1873]
+                - generic [ref=e1879] [cursor=pointer]:
+                  - button [ref=e1880]:
+                    - img [ref=e1881]
+                  - button [ref=e1888]:
+                    - img [ref=e1889]
+                  - paragraph [ref=e1891]: Labels Test 1767521469103
+                  - button [ref=e1893]:
+                    - img [ref=e1894]
+                - generic [ref=e1900] [cursor=pointer]:
+                  - button [ref=e1901]:
+                    - img [ref=e1902]
+                  - button [ref=e1909]:
+                    - img [ref=e1910]
+                  - paragraph [ref=e1912]: Checklist Test 1767521485358
+                  - button [ref=e1914]:
+                    - img [ref=e1915]
+                - generic [ref=e1921] [cursor=pointer]:
+                  - button [ref=e1922]:
+                    - img [ref=e1923]
+                  - button [ref=e1930]:
+                    - img [ref=e1931]
+                  - paragraph [ref=e1933]: Archive Test 1767521495916
+                  - button [ref=e1935]:
+                    - img [ref=e1936]
+                - generic [ref=e1942] [cursor=pointer]:
+                  - button [ref=e1943]:
+                    - img [ref=e1944]
+                  - button [ref=e1951]:
+                    - img [ref=e1952]
+                  - paragraph [ref=e1954]: Copy Test 1767521515575
+                  - button [ref=e1956]:
+                    - img [ref=e1957]
+                - generic [ref=e1963] [cursor=pointer]:
+                  - button [ref=e1964]:
+                    - img [ref=e1965]
+                  - button [ref=e1972]:
+                    - img [ref=e1973]
+                  - paragraph [ref=e1975]: Priority Test 1767521531809
+                  - button [ref=e1977]:
+                    - img [ref=e1978]
+                - generic [ref=e1984] [cursor=pointer]:
+                  - button [ref=e1985]:
+                    - img [ref=e1986]
+                  - button [ref=e1993]:
+                    - img [ref=e1994]
+                  - paragraph [ref=e1996]: Due Date Test 1767521548248
+                  - button [ref=e1998]:
+                    - img [ref=e1999]
+                - generic [ref=e2005] [cursor=pointer]:
+                  - button [ref=e2006]:
+                    - img [ref=e2007]
+                  - button [ref=e2014]:
+                    - img [ref=e2015]
+                  - paragraph [ref=e2017]: Drag Test 1767521564501
+                  - button [ref=e2019]:
+                    - img [ref=e2020]
+                - generic [ref=e2026] [cursor=pointer]:
+                  - button [ref=e2027]:
+                    - img [ref=e2028]
+                  - button [ref=e2035]:
+                    - img [ref=e2036]
+                  - paragraph [ref=e2038]: Attachment Test 1767521570776
+                  - button [ref=e2040]:
+                    - img [ref=e2041]
+                - generic [ref=e2047] [cursor=pointer]:
+                  - button [ref=e2048]:
+                    - img [ref=e2049]
+                  - button [ref=e2056]:
+                    - img [ref=e2057]
+                  - paragraph [ref=e2059]: Links Test 1767521587191
+                  - button [ref=e2061]:
+                    - img [ref=e2062]
+                - generic [ref=e2068] [cursor=pointer]:
+                  - button [ref=e2069]:
+                    - img [ref=e2070]
+                  - button [ref=e2077]:
+                    - img [ref=e2078]
+                  - paragraph [ref=e2080]: Checklist Item Test 1767521607229
+                  - button [ref=e2082]:
+                    - img [ref=e2083]
+                - generic [ref=e2089] [cursor=pointer]:
+                  - button [ref=e2090]:
+                    - img [ref=e2091]
+                  - button [ref=e2098]:
+                    - img [ref=e2099]
+                  - paragraph [ref=e2101]: Test Task 1767521774283
+                  - button [ref=e2103]:
+                    - img [ref=e2104]
+                - generic [ref=e2110] [cursor=pointer]:
+                  - button [ref=e2111]:
+                    - img [ref=e2112]
+                  - button [ref=e2119]:
+                    - img [ref=e2120]
+                  - paragraph [ref=e2122]: Modal Test 1767521778696
+                  - button [ref=e2124]:
+                    - img [ref=e2125]
+                - generic [ref=e2131] [cursor=pointer]:
+                  - button [ref=e2132]:
+                    - img [ref=e2133]
+                  - button [ref=e2140]:
+                    - img [ref=e2141]
+                  - paragraph [ref=e2143]: Edit Title Test 1767521795358
+                  - button [ref=e2145]:
+                    - img [ref=e2146]
+                - generic [ref=e2152] [cursor=pointer]:
+                  - button [ref=e2153]:
+                    - img [ref=e2154]
+                  - button [ref=e2161]:
+                    - img [ref=e2162]
+                  - paragraph [ref=e2164]: Close Test 1767521811637
+                  - button [ref=e2166]:
+                    - img [ref=e2167]
+                - generic [ref=e2173] [cursor=pointer]:
+                  - button [ref=e2174]:
+                    - img [ref=e2175]
+                  - button [ref=e2182]:
+                    - img [ref=e2183]
+                  - paragraph [ref=e2185]: Escape Test 1767521827825
+                  - button [ref=e2187]:
+                    - img [ref=e2188]
+                - generic [ref=e2194] [cursor=pointer]:
+                  - button [ref=e2195]:
+                    - img [ref=e2196]
+                  - button [ref=e2203]:
+                    - img [ref=e2204]
+                  - paragraph [ref=e2206]: Labels Test 1767521847122
+                  - button [ref=e2208]:
+                    - img [ref=e2209]
+                - generic [ref=e2215] [cursor=pointer]:
+                  - button [ref=e2216]:
+                    - img [ref=e2217]
+                  - button [ref=e2224]:
+                    - img [ref=e2225]
+                  - paragraph [ref=e2227]: Checklist Test 1767521862394
+                  - button [ref=e2229]:
+                    - img [ref=e2230]
+                - generic [ref=e2236] [cursor=pointer]:
+                  - button [ref=e2237]:
+                    - img [ref=e2238]
+                  - button [ref=e2245]:
+                    - img [ref=e2246]
+                  - paragraph [ref=e2248]: Archive Test 1767521877609
+                  - button [ref=e2250]:
+                    - img [ref=e2251]
+                - generic [ref=e2257] [cursor=pointer]:
+                  - button [ref=e2258]:
+                    - img [ref=e2259]
+                  - button [ref=e2266]:
+                    - img [ref=e2267]
+                  - paragraph [ref=e2269]: Copy Test 1767521894606
+                  - button [ref=e2271]:
+                    - img [ref=e2272]
+                - generic [ref=e2278] [cursor=pointer]:
+                  - button [ref=e2279]:
+                    - img [ref=e2280]
+                  - button [ref=e2287]:
+                    - img [ref=e2288]
+                  - paragraph [ref=e2290]: Priority Test 1767521910098
+                  - button [ref=e2292]:
+                    - img [ref=e2293]
+                - generic [ref=e2299] [cursor=pointer]:
+                  - button [ref=e2300]:
+                    - img [ref=e2301]
+                  - button [ref=e2308]:
+                    - img [ref=e2309]
+                  - paragraph [ref=e2311]: Due Date Test 1767521930052
+                  - button [ref=e2313]:
+                    - img [ref=e2314]
+                - generic [ref=e2320] [cursor=pointer]:
+                  - button [ref=e2321]:
+                    - img [ref=e2322]
+                  - button [ref=e2329]:
+                    - img [ref=e2330]
+                  - paragraph [ref=e2332]: Drag Test 1767521949061
+                  - button [ref=e2334]:
+                    - img [ref=e2335]
+                - generic [ref=e2341] [cursor=pointer]:
+                  - button [ref=e2342]:
+                    - img [ref=e2343]
+                  - button [ref=e2350]:
+                    - img [ref=e2351]
+                  - paragraph [ref=e2353]: Attachment Test 1767521953353
+                  - button [ref=e2355]:
+                    - img [ref=e2356]
+                - generic [ref=e2362] [cursor=pointer]:
+                  - button [ref=e2363]:
+                    - img [ref=e2364]
+                  - button [ref=e2371]:
+                    - img [ref=e2372]
+                  - paragraph [ref=e2374]: Links Test 1767521970255
+                  - button [ref=e2376]:
+                    - img [ref=e2377]
+                - generic [ref=e2383] [cursor=pointer]:
+                  - button [ref=e2384]:
+                    - img [ref=e2385]
+                  - button [ref=e2392]:
+                    - img [ref=e2393]
+                  - paragraph [ref=e2395]: Checklist Item Test 1767521985430
+                  - button [ref=e2397]:
+                    - img [ref=e2398]
+                - generic [ref=e2404] [cursor=pointer]:
+                  - button [ref=e2405]:
+                    - img [ref=e2406]
+                  - button [ref=e2413]:
+                    - img [ref=e2414]
+                  - paragraph [ref=e2416]: Test Task 1767532421574
+                  - button [ref=e2418]:
+                    - img [ref=e2419]
+                - generic [ref=e2425] [cursor=pointer]:
+                  - button [ref=e2426]:
+                    - img [ref=e2427]
+                  - button [ref=e2434]:
+                    - img [ref=e2435]
+                  - paragraph [ref=e2437]: Modal Test 1767532425843
+                  - button [ref=e2439]:
+                    - img [ref=e2440]
+                - generic [ref=e2446] [cursor=pointer]:
+                  - button [ref=e2447]:
+                    - img [ref=e2448]
+                  - button [ref=e2455]:
+                    - img [ref=e2456]
+                  - paragraph [ref=e2458]: Edit Title Test 1767532441562
+                  - button [ref=e2460]:
+                    - img [ref=e2461]
+                - generic [ref=e2467] [cursor=pointer]:
+                  - button [ref=e2468]:
+                    - img [ref=e2469]
+                  - button [ref=e2476]:
+                    - img [ref=e2477]
+                  - paragraph [ref=e2479]: Close Test 1767532458163
+                  - button [ref=e2481]:
+                    - img [ref=e2482]
+                - generic [ref=e2488] [cursor=pointer]:
+                  - button [ref=e2489]:
+                    - img [ref=e2490]
+                  - button [ref=e2497]:
+                    - img [ref=e2498]
+                  - paragraph [ref=e2500]: Escape Test 1767532474860
+                  - button [ref=e2502]:
+                    - img [ref=e2503]
+                - generic [ref=e2509] [cursor=pointer]:
+                  - button [ref=e2510]:
+                    - img [ref=e2511]
+                  - button [ref=e2518]:
+                    - img [ref=e2519]
+                  - paragraph [ref=e2521]: Labels Test 1767532493127
+                  - button [ref=e2523]:
+                    - img [ref=e2524]
+                - generic [ref=e2530] [cursor=pointer]:
+                  - button [ref=e2531]:
+                    - img [ref=e2532]
+                  - button [ref=e2539]:
+                    - img [ref=e2540]
+                  - paragraph [ref=e2542]: Checklist Test 1767532508361
+                  - button [ref=e2544]:
+                    - img [ref=e2545]
+                - generic [ref=e2551] [cursor=pointer]:
+                  - button [ref=e2552]:
+                    - img [ref=e2553]
+                  - button [ref=e2560]:
+                    - img [ref=e2561]
+                  - paragraph [ref=e2563]: Archive Test 1767532524091
+                  - button [ref=e2565]:
+                    - img [ref=e2566]
+                - generic [ref=e2572] [cursor=pointer]:
+                  - button [ref=e2573]:
+                    - img [ref=e2574]
+                  - button [ref=e2581]:
+                    - img [ref=e2582]
+                  - paragraph [ref=e2584]: Copy Test 1767532540338
+                  - button [ref=e2586]:
+                    - img [ref=e2587]
+                - generic [ref=e2593] [cursor=pointer]:
+                  - button [ref=e2594]:
+                    - img [ref=e2595]
+                  - button [ref=e2602]:
+                    - img [ref=e2603]
+                  - paragraph [ref=e2605]: Priority Test 1767532556552
+                  - button [ref=e2607]:
+                    - img [ref=e2608]
+                - generic [ref=e2614] [cursor=pointer]:
+                  - button [ref=e2615]:
+                    - img [ref=e2616]
+                  - button [ref=e2623]:
+                    - img [ref=e2624]
+                  - paragraph [ref=e2626]: Due Date Test 1767532571737
+                  - button [ref=e2628]:
+                    - img [ref=e2629]
+                - generic [ref=e2635] [cursor=pointer]:
+                  - button [ref=e2636]:
+                    - img [ref=e2637]
+                  - button [ref=e2644]:
+                    - img [ref=e2645]
+                  - paragraph [ref=e2647]: Drag Test 1767532587003
+                  - button [ref=e2649]:
+                    - img [ref=e2650]
+                - generic [ref=e2656] [cursor=pointer]:
+                  - button [ref=e2657]:
+                    - img [ref=e2658]
+                  - button [ref=e2665]:
+                    - img [ref=e2666]
+                  - paragraph [ref=e2668]: Attachment Test 1767532591098
+                  - button [ref=e2670]:
+                    - img [ref=e2671]
+                - generic [ref=e2677] [cursor=pointer]:
+                  - button [ref=e2678]:
+                    - img [ref=e2679]
+                  - button [ref=e2686]:
+                    - img [ref=e2687]
+                  - paragraph [ref=e2689]: Links Test 1767532607229
+                  - button [ref=e2691]:
+                    - img [ref=e2692]
+                - generic [ref=e2698] [cursor=pointer]:
+                  - button [ref=e2699]:
+                    - img [ref=e2700]
+                  - button [ref=e2707]:
+                    - img [ref=e2708]
+                  - paragraph [ref=e2710]: Checklist Item Test 1767532622414
+                  - button [ref=e2712]:
+                    - img [ref=e2713]
+                - generic [ref=e2719] [cursor=pointer]:
+                  - button [ref=e2720]:
+                    - img [ref=e2721]
+                  - button [ref=e2728]:
+                    - img [ref=e2729]
+                  - paragraph [ref=e2731]: Test Task 1767539823365
+                  - button [ref=e2733]:
+                    - img [ref=e2734]
+                - generic [ref=e2740] [cursor=pointer]:
+                  - button [ref=e2741]:
+                    - img [ref=e2742]
+                  - button [ref=e2749]:
+                    - img [ref=e2750]
+                  - paragraph [ref=e2752]: Modal Test 1767539828907
+                  - button [ref=e2754]:
+                    - img [ref=e2755]
+                - generic [ref=e2761] [cursor=pointer]:
+                  - button [ref=e2762]:
+                    - img [ref=e2763]
+                  - button [ref=e2770]:
+                    - img [ref=e2771]
+                  - paragraph [ref=e2773]: Edit Title Test 1767539849549
+                  - button [ref=e2775]:
+                    - img [ref=e2776]
+                - generic [ref=e2782] [cursor=pointer]:
+                  - button [ref=e2783]:
+                    - img [ref=e2784]
+                  - button [ref=e2791]:
+                    - img [ref=e2792]
+                  - paragraph [ref=e2794]: Close Test 1767539869714
+                  - button [ref=e2796]:
+                    - img [ref=e2797]
+                - generic [ref=e2803] [cursor=pointer]:
+                  - button [ref=e2804]:
+                    - img [ref=e2805]
+                  - button [ref=e2812]:
+                    - img [ref=e2813]
+                  - paragraph [ref=e2815]: Escape Test 1767540101541
+                  - button [ref=e2817]:
+                    - img [ref=e2818]
+                - generic [ref=e2824] [cursor=pointer]:
+                  - button [ref=e2825]:
+                    - img [ref=e2826]
+                  - button [ref=e2833]:
+                    - img [ref=e2834]
+                  - paragraph [ref=e2836]: Labels Test 1767540133053
+                  - button [ref=e2838]:
+                    - img [ref=e2839]
+                - generic [ref=e2845] [cursor=pointer]:
+                  - button [ref=e2846]:
+                    - img [ref=e2847]
+                  - button [ref=e2854]:
+                    - img [ref=e2855]
+                  - paragraph [ref=e2857]: Checklist Test 1767540879269
+                  - button [ref=e2859]:
+                    - img [ref=e2860]
+                - generic [ref=e2866] [cursor=pointer]:
+                  - button [ref=e2867]:
+                    - img [ref=e2868]
+                  - button [ref=e2875]:
+                    - img [ref=e2876]
+                  - paragraph [ref=e2878]: Archive Test 1767540902041
+                  - button [ref=e2880]:
+                    - img [ref=e2881]
+                - generic [ref=e2887] [cursor=pointer]:
+                  - button [ref=e2888]:
+                    - img [ref=e2889]
+                  - button [ref=e2896]:
+                    - img [ref=e2897]
+                  - paragraph [ref=e2899]: Attachment Test 1767542261690
+                  - button [ref=e2901]:
+                    - img [ref=e2902]
+                - generic [ref=e2908] [cursor=pointer]:
+                  - button [ref=e2909]:
+                    - img [ref=e2910]
+                  - button [ref=e2917]:
+                    - img [ref=e2918]
+                  - paragraph [ref=e2920]: Links Test 1767542291909
+                  - button [ref=e2922]:
+                    - img [ref=e2923]
+                - generic [ref=e2929] [cursor=pointer]:
+                  - button [ref=e2930]:
+                    - img [ref=e2931]
+                  - button [ref=e2938]:
+                    - img [ref=e2939]
+                  - paragraph [ref=e2941]: Checklist Item Test 1767542316098
+                  - button [ref=e2943]:
+                    - img [ref=e2944]
+                - generic [ref=e2950] [cursor=pointer]:
+                  - button [ref=e2951]:
+                    - img [ref=e2952]
+                  - button [ref=e2959]:
+                    - img [ref=e2960]
+                  - paragraph [ref=e2962]: Test Task 1767542970423
+                  - button [ref=e2964]:
+                    - img [ref=e2965]
+                - generic [ref=e2971] [cursor=pointer]:
+                  - button [ref=e2972]:
+                    - img [ref=e2973]
+                  - button [ref=e2980]:
+                    - img [ref=e2981]
+                  - paragraph [ref=e2983]: Modal Test 1767542975684
+                  - button [ref=e2985]:
+                    - img [ref=e2986]
+                - generic [ref=e2992] [cursor=pointer]:
+                  - button [ref=e2993]:
+                    - img [ref=e2994]
+                  - button [ref=e3001]:
+                    - img [ref=e3002]
+                  - paragraph [ref=e3004]: Edit Title Test 1767542991526
+                  - button [ref=e3006]:
+                    - img [ref=e3007]
+                - generic [ref=e3013] [cursor=pointer]:
+                  - button [ref=e3014]:
+                    - img [ref=e3015]
+                  - button [ref=e3022]:
+                    - img [ref=e3023]
+                  - paragraph [ref=e3025]: Close Test 1767543008161
+                  - button [ref=e3027]:
+                    - img [ref=e3028]
+                - generic [ref=e3034] [cursor=pointer]:
+                  - button [ref=e3035]:
+                    - img [ref=e3036]
+                  - button [ref=e3043]:
+                    - img [ref=e3044]
+                  - paragraph [ref=e3046]: Escape Test 1767543025115
+                  - button [ref=e3048]:
+                    - img [ref=e3049]
+                - generic [ref=e3055] [cursor=pointer]:
+                  - button [ref=e3056]:
+                    - img [ref=e3057]
+                  - button [ref=e3064]:
+                    - img [ref=e3065]
+                  - paragraph [ref=e3067]: Labels Test 1767543045901
+                  - button [ref=e3069]:
+                    - img [ref=e3070]
+                - generic [ref=e3076] [cursor=pointer]:
+                  - button [ref=e3077]:
+                    - img [ref=e3078]
+                  - button [ref=e3085]:
+                    - img [ref=e3086]
+                  - paragraph [ref=e3088]: Checklist Test 1767543064060
+                  - button [ref=e3090]:
+                    - img [ref=e3091]
+                - generic [ref=e3097] [cursor=pointer]:
+                  - button [ref=e3098]:
+                    - img [ref=e3099]
+                  - button [ref=e3106]:
+                    - img [ref=e3107]
+                  - paragraph [ref=e3109]: Archive Test 1767543080918
+                  - button [ref=e3111]:
+                    - img [ref=e3112]
+                - generic [ref=e3118] [cursor=pointer]:
+                  - button [ref=e3119]:
+                    - img [ref=e3120]
+                  - button [ref=e3127]:
+                    - img [ref=e3128]
+                  - paragraph [ref=e3130]: Copy Test 1767543098191
+                  - button [ref=e3132]:
+                    - img [ref=e3133]
+                - generic [ref=e3139] [cursor=pointer]:
+                  - button [ref=e3140]:
+                    - img [ref=e3141]
+                  - button [ref=e3148]:
+                    - img [ref=e3149]
+                  - paragraph [ref=e3151]: Priority Test 1767543114497
+                  - button [ref=e3153]:
+                    - img [ref=e3154]
+                - generic [ref=e3160] [cursor=pointer]:
+                  - button [ref=e3161]:
+                    - img [ref=e3162]
+                  - button [ref=e3169]:
+                    - img [ref=e3170]
+                  - paragraph [ref=e3172]: Due Date Test 1767543131416
+                  - button [ref=e3174]:
+                    - img [ref=e3175]
+                - generic [ref=e3181] [cursor=pointer]:
+                  - button [ref=e3182]:
+                    - img [ref=e3183]
+                  - button [ref=e3190]:
+                    - img [ref=e3191]
+                  - paragraph [ref=e3193]: Drag Test 1767543149243
+                  - button [ref=e3195]:
+                    - img [ref=e3196]
+                - generic [ref=e3202] [cursor=pointer]:
+                  - button [ref=e3203]:
+                    - img [ref=e3204]
+                  - button [ref=e3211]:
+                    - img [ref=e3212]
+                  - paragraph [ref=e3214]: Attachment Test 1767543156208
+                  - button [ref=e3216]:
+                    - img [ref=e3217]
+                - generic [ref=e3223] [cursor=pointer]:
+                  - button [ref=e3224]:
+                    - img [ref=e3225]
+                  - button [ref=e3232]:
+                    - img [ref=e3233]
+                  - paragraph [ref=e3235]: Links Test 1767543174319
+                  - button [ref=e3237]:
+                    - img [ref=e3238]
+                - generic [ref=e3244] [cursor=pointer]:
+                  - button [ref=e3245]:
+                    - img [ref=e3246]
+                  - button [ref=e3253]:
+                    - img [ref=e3254]
+                  - paragraph [ref=e3256]: Checklist Item Test 1767543192721
+                  - button [ref=e3258]:
+                    - img [ref=e3259]
+                - generic [ref=e3265] [cursor=pointer]:
+                  - button [ref=e3266]:
+                    - img [ref=e3267]
+                  - button [ref=e3274]:
+                    - img [ref=e3275]
+                  - paragraph [ref=e3277]: Test Task 1767543234088
+                  - button [ref=e3279]:
+                    - img [ref=e3280]
+                - generic [ref=e3286] [cursor=pointer]:
+                  - button [ref=e3287]:
+                    - img [ref=e3288]
+                  - button [ref=e3295]:
+                    - img [ref=e3296]
+                  - paragraph [ref=e3298]: Modal Test 1767543240030
+                  - button [ref=e3300]:
+                    - img [ref=e3301]
+                - generic [ref=e3307] [cursor=pointer]:
+                  - button [ref=e3308]:
+                    - img [ref=e3309]
+                  - button [ref=e3316]:
+                    - img [ref=e3317]
+                  - paragraph [ref=e3319]: Edit Title Test 1767543257045
+                  - button [ref=e3321]:
+                    - img [ref=e3322]
+                - generic [ref=e3328] [cursor=pointer]:
+                  - button [ref=e3329]:
+                    - img [ref=e3330]
+                  - button [ref=e3337]:
+                    - img [ref=e3338]
+                  - paragraph [ref=e3340]: Close Test 1767543276065
+                  - button [ref=e3342]:
+                    - img [ref=e3343]
+                - generic [ref=e3349] [cursor=pointer]:
+                  - button [ref=e3350]:
+                    - img [ref=e3351]
+                  - button [ref=e3358]:
+                    - img [ref=e3359]
+                  - paragraph [ref=e3361]: Escape Test 1767543296117
+                  - button [ref=e3363]:
+                    - img [ref=e3364]
+                - generic [ref=e3370] [cursor=pointer]:
+                  - button [ref=e3371]:
+                    - img [ref=e3372]
+                  - button [ref=e3379]:
+                    - img [ref=e3380]
+                  - paragraph [ref=e3382]: Labels Test 1767543318877
+                  - button [ref=e3384]:
+                    - img [ref=e3385]
+                - generic [ref=e3391] [cursor=pointer]:
+                  - button [ref=e3392]:
+                    - img [ref=e3393]
+                  - button [ref=e3400]:
+                    - img [ref=e3401]
+                  - paragraph [ref=e3403]: Checklist Test 1767543336119
+                  - button [ref=e3405]:
+                    - img [ref=e3406]
+                - generic [ref=e3412] [cursor=pointer]:
+                  - button [ref=e3413]:
+                    - img [ref=e3414]
+                  - button [ref=e3421]:
+                    - img [ref=e3422]
+                  - paragraph [ref=e3424]: Archive Test 1767543351558
+                  - button [ref=e3426]:
+                    - img [ref=e3427]
+                - generic [ref=e3433] [cursor=pointer]:
+                  - button [ref=e3434]:
+                    - img [ref=e3435]
+                  - button [ref=e3442]:
+                    - img [ref=e3443]
+                  - paragraph [ref=e3445]: Copy Test 1767543368051
+                  - button [ref=e3447]:
+                    - img [ref=e3448]
+                - generic [ref=e3454] [cursor=pointer]:
+                  - button [ref=e3455]:
+                    - img [ref=e3456]
+                  - button [ref=e3463]:
+                    - img [ref=e3464]
+                  - paragraph [ref=e3466]: Priority Test 1767543385649
+                  - button [ref=e3468]:
+                    - img [ref=e3469]
+                - generic [ref=e3475] [cursor=pointer]:
+                  - button [ref=e3476]:
+                    - img [ref=e3477]
+                  - button [ref=e3484]:
+                    - img [ref=e3485]
+                  - paragraph [ref=e3487]: Due Date Test 1767543402646
+                  - button [ref=e3489]:
+                    - img [ref=e3490]
+                - generic [ref=e3496] [cursor=pointer]:
+                  - button [ref=e3497]:
+                    - img [ref=e3498]
+                  - button [ref=e3505]:
+                    - img [ref=e3506]
+                  - paragraph [ref=e3508]: Drag Test 1767543419089
+                  - button [ref=e3510]:
+                    - img [ref=e3511]
+                - generic [ref=e3517] [cursor=pointer]:
+                  - button [ref=e3518]:
+                    - img [ref=e3519]
+                  - button [ref=e3526]:
+                    - img [ref=e3527]
+                  - paragraph [ref=e3529]: Attachment Test 1767543424622
+                  - button [ref=e3531]:
+                    - img [ref=e3532]
+                - generic [ref=e3538] [cursor=pointer]:
+                  - button [ref=e3539]:
+                    - img [ref=e3540]
+                  - button [ref=e3547]:
+                    - img [ref=e3548]
+                  - paragraph [ref=e3550]: Links Test 1767543441087
+                  - button [ref=e3552]:
+                    - img [ref=e3553]
+                - generic [ref=e3559] [cursor=pointer]:
+                  - button [ref=e3560]:
+                    - img [ref=e3561]
+                  - button [ref=e3568]:
+                    - img [ref=e3569]
+                  - paragraph [ref=e3571]: Checklist Item Test 1767543457974
+                  - button [ref=e3573]:
+                    - img [ref=e3574]
+                - generic [ref=e3580] [cursor=pointer]:
+                  - button [ref=e3581]:
+                    - img [ref=e3582]
+                  - button [ref=e3589]:
+                    - img [ref=e3590]
+                  - paragraph [ref=e3592]: Test Task 1767543774417
+                  - button [ref=e3594]:
+                    - img [ref=e3595]
+                - generic [ref=e3601] [cursor=pointer]:
+                  - button [ref=e3602]:
+                    - img [ref=e3603]
+                  - button [ref=e3610]:
+                    - img [ref=e3611]
+                  - paragraph [ref=e3613]: Modal Test 1767543780944
+                  - button [ref=e3615]:
+                    - img [ref=e3616]
+                - generic [ref=e3622] [cursor=pointer]:
+                  - button [ref=e3623]:
+                    - img [ref=e3624]
+                  - button [ref=e3631]:
+                    - img [ref=e3632]
+                  - paragraph [ref=e3634]: Edit Title Test 1767543799926
+                  - button [ref=e3636]:
+                    - img [ref=e3637]
+                - generic [ref=e3643] [cursor=pointer]:
+                  - button [ref=e3644]:
+                    - img [ref=e3645]
+                  - button [ref=e3652]:
+                    - img [ref=e3653]
+                  - paragraph [ref=e3655]: Close Test 1767543818784
+                  - button [ref=e3657]:
+                    - img [ref=e3658]
+                - generic [ref=e3664] [cursor=pointer]:
+                  - button [ref=e3665]:
+                    - img [ref=e3666]
+                  - button [ref=e3673]:
+                    - img [ref=e3674]
+                  - paragraph [ref=e3676]: Escape Test 1767543836821
+                  - button [ref=e3678]:
+                    - img [ref=e3679]
+                - generic [ref=e3685] [cursor=pointer]:
+                  - button [ref=e3686]:
+                    - img [ref=e3687]
+                  - button [ref=e3694]:
+                    - img [ref=e3695]
+                  - paragraph [ref=e3697]: Labels Test 1767543860817
+                  - button [ref=e3699]:
+                    - img [ref=e3700]
+                - generic [ref=e3706] [cursor=pointer]:
+                  - button [ref=e3707]:
+                    - img [ref=e3708]
+                  - button [ref=e3715]:
+                    - img [ref=e3716]
+                  - paragraph [ref=e3718]: Checklist Test 1767543878676
+                  - button [ref=e3720]:
+                    - img [ref=e3721]
+                - generic [ref=e3727] [cursor=pointer]:
+                  - button [ref=e3728]:
+                    - img [ref=e3729]
+                  - button [ref=e3736]:
+                    - img [ref=e3737]
+                  - paragraph [ref=e3739]: Archive Test 1767543896302
+                  - button [ref=e3741]:
+                    - img [ref=e3742]
+                - generic [ref=e3748] [cursor=pointer]:
+                  - button [ref=e3749]:
+                    - img [ref=e3750]
+                  - button [ref=e3757]:
+                    - img [ref=e3758]
+                  - paragraph [ref=e3760]: Copy Test 1767543912804
+                  - button [ref=e3762]:
+                    - img [ref=e3763]
+                - generic [ref=e3769] [cursor=pointer]:
+                  - button [ref=e3770]:
+                    - img [ref=e3771]
+                  - button [ref=e3778]:
+                    - img [ref=e3779]
+                  - paragraph [ref=e3781]: Priority Test 1767543928962
+                  - button [ref=e3783]:
+                    - img [ref=e3784]
+                - generic [ref=e3790] [cursor=pointer]:
+                  - button [ref=e3791]:
+                    - img [ref=e3792]
+                  - button [ref=e3799]:
+                    - img [ref=e3800]
+                  - paragraph [ref=e3802]: Due Date Test 1767543945151
+                  - button [ref=e3804]:
+                    - img [ref=e3805]
+                - generic [ref=e3811] [cursor=pointer]:
+                  - button [ref=e3812]:
+                    - img [ref=e3813]
+                  - button [ref=e3820]:
+                    - img [ref=e3821]
+                  - paragraph [ref=e3823]: Drag Test 1767543961452
+                  - button [ref=e3825]:
+                    - img [ref=e3826]
+                - generic [ref=e3832] [cursor=pointer]:
+                  - button [ref=e3833]:
+                    - img [ref=e3834]
+                  - button [ref=e3841]:
+                    - img [ref=e3842]
+                  - paragraph [ref=e3844]: Attachment Test 1767543966163
+                  - button [ref=e3846]:
+                    - img [ref=e3847]
+                - generic [ref=e3853] [cursor=pointer]:
+                  - button [ref=e3854]:
+                    - img [ref=e3855]
+                  - button [ref=e3862]:
+                    - img [ref=e3863]
+                  - paragraph [ref=e3865]: Links Test 1767543985592
+                  - button [ref=e3867]:
+                    - img [ref=e3868]
+                - generic [ref=e3874] [cursor=pointer]:
+                  - button [ref=e3875]:
+                    - img [ref=e3876]
+                  - button [ref=e3883]:
+                    - img [ref=e3884]
+                  - paragraph [ref=e3886]: Checklist Item Test 1767544003386
+                  - button [ref=e3888]:
+                    - img [ref=e3889]
+                - generic [ref=e3895] [cursor=pointer]:
+                  - button [ref=e3896]:
+                    - img [ref=e3897]
+                  - button [ref=e3904]:
+                    - img [ref=e3905]
+                  - paragraph [ref=e3907]: Test Task 1767832087929
+                  - button [ref=e3909]:
+                    - img [ref=e3910]
+                - generic [ref=e3916] [cursor=pointer]:
+                  - button [ref=e3917]:
+                    - img [ref=e3918]
+                  - button [ref=e3925]:
+                    - img [ref=e3926]
+                  - paragraph [ref=e3928]: Modal Test 1767832093661
+                  - button [ref=e3930]:
+                    - img [ref=e3931]
+                - generic [ref=e3937] [cursor=pointer]:
+                  - button [ref=e3938]:
+                    - img [ref=e3939]
+                  - button [ref=e3946]:
+                    - img [ref=e3947]
+                  - paragraph [ref=e3949]: Edit Title Test 1767832110060
+                  - button [ref=e3951]:
+                    - img [ref=e3952]
+                - generic [ref=e3958] [cursor=pointer]:
+                  - button [ref=e3959]:
+                    - img [ref=e3960]
+                  - button [ref=e3967]:
+                    - img [ref=e3968]
+                  - paragraph [ref=e3970]: Close Test 1767832127987
+                  - button [ref=e3972]:
+                    - img [ref=e3973]
+                - generic [ref=e3979] [cursor=pointer]:
+                  - button [ref=e3980]:
+                    - img [ref=e3981]
+                  - button [ref=e3988]:
+                    - img [ref=e3989]
+                  - paragraph [ref=e3991]: Escape Test 1767832145697
+                  - button [ref=e3993]:
+                    - img [ref=e3994]
+                - generic [ref=e4000] [cursor=pointer]:
+                  - button [ref=e4001]:
+                    - img [ref=e4002]
+                  - button [ref=e4009]:
+                    - img [ref=e4010]
+                  - paragraph [ref=e4012]: Labels Test 1767832165751
+                  - button [ref=e4014]:
+                    - img [ref=e4015]
+                - generic [ref=e4021] [cursor=pointer]:
+                  - button [ref=e4022]:
+                    - img [ref=e4023]
+                  - button [ref=e4030]:
+                    - img [ref=e4031]
+                  - paragraph [ref=e4033]: Checklist Test 1767832182922
+                  - button [ref=e4035]:
+                    - img [ref=e4036]
+              - button "Add card" [ref=e4041] [cursor=pointer]:
+                - img [ref=e4042]
+                - text: Add card
+            - generic [ref=e4043]:
+              - generic [ref=e4044]:
+                - generic [ref=e4046]: Backlog
+                - generic [ref=e4047]: "0"
+                - button:
+                  - img
+              - generic [ref=e4049]: Drop tasks here
+              - button "Add card" [ref=e4051] [cursor=pointer]:
+                - img [ref=e4052]
+                - text: Add card
+            - generic [ref=e4053]:
+              - generic [ref=e4054]:
+                - generic [ref=e4056]: To Do
+                - generic [ref=e4057]: "0"
+                - button:
+                  - img
+              - generic [ref=e4059]: Drop tasks here
+              - button "Add card" [ref=e4061] [cursor=pointer]:
+                - img [ref=e4062]
+                - text: Add card
+            - generic [ref=e4063]:
+              - generic [ref=e4064]:
+                - generic [ref=e4066]: To Do
+                - generic [ref=e4067]: "0"
+                - button:
+                  - img
+              - generic [ref=e4069]: Drop tasks here
+              - button "Add card" [ref=e4071] [cursor=pointer]:
+                - img [ref=e4072]
+                - text: Add card
+            - generic [ref=e4073]:
+              - generic [ref=e4074]:
+                - generic [ref=e4076]: In Progress
+                - generic [ref=e4077]: "0"
+                - button:
+                  - img
+              - generic [ref=e4079]: Drop tasks here
+              - button "Add card" [ref=e4081] [cursor=pointer]:
+                - img [ref=e4082]
+                - text: Add card
+            - generic [ref=e4083]:
+              - generic [ref=e4084]:
+                - generic [ref=e4086]: In Progress
+                - generic [ref=e4087]: "0"
+                - button:
+                  - img
+              - generic [ref=e4089]: Drop tasks here
+              - button "Add card" [ref=e4091] [cursor=pointer]:
+                - img [ref=e4092]
+                - text: Add card
+            - generic [ref=e4093]:
+              - generic [ref=e4094]:
+                - generic [ref=e4096]: Review
+                - generic [ref=e4097]: "0"
+                - button:
+                  - img
+              - generic [ref=e4099]: Drop tasks here
+              - button "Add card" [ref=e4101] [cursor=pointer]:
+                - img [ref=e4102]
+                - text: Add card
+            - generic [ref=e4103]:
+              - generic [ref=e4104]:
+                - generic [ref=e4106]: Review
+                - generic [ref=e4107]: "0"
+                - button:
+                  - img
+              - generic [ref=e4109]: Drop tasks here
+              - button "Add card" [ref=e4111] [cursor=pointer]:
+                - img [ref=e4112]
+                - text: Add card
+            - generic [ref=e4113]:
+              - generic [ref=e4114]:
+                - generic [ref=e4116]: Done
+                - generic [ref=e4117]: "0"
+                - button:
+                  - img
+              - generic [ref=e4119]: Drop tasks here
+              - button "Add card" [ref=e4121] [cursor=pointer]:
+                - img [ref=e4122]
+                - text: Add card
+            - generic [ref=e4123]:
+              - generic [ref=e4124]:
+                - generic [ref=e4126]: Done
+                - generic [ref=e4127]: "0"
+                - button:
+                  - img
+              - generic [ref=e4129]: Drop tasks here
+              - button "Add card" [ref=e4131] [cursor=pointer]:
+                - img [ref=e4132]
+                - text: Add card
+          - status [ref=e4133]
+```

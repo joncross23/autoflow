@@ -1,0 +1,154 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "AutoFlow" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+      - navigation [ref=e10]:
+        - list [ref=e11]:
+          - listitem [ref=e12]:
+            - link "Dashboard" [ref=e13] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e14]
+              - generic [ref=e17]: Dashboard
+          - listitem [ref=e18]:
+            - link "Ideas" [ref=e19] [cursor=pointer]:
+              - /url: /dashboard/ideas
+              - img [ref=e20]
+              - generic [ref=e22]: Ideas
+          - listitem [ref=e23]:
+            - link "Tasks" [ref=e24] [cursor=pointer]:
+              - /url: /dashboard/tasks
+              - img [ref=e25]
+              - generic [ref=e26]: Tasks
+          - listitem [ref=e27]:
+            - link "Matrix" [ref=e28] [cursor=pointer]:
+              - /url: /dashboard/matrix
+              - img [ref=e29]
+              - generic [ref=e31]: Matrix
+          - listitem [ref=e32]:
+            - link "Time Audit" [ref=e33] [cursor=pointer]:
+              - /url: /dashboard/time-audit
+              - img [ref=e34]
+              - generic [ref=e37]: Time Audit
+          - listitem [ref=e38]:
+            - link "Settings" [ref=e39] [cursor=pointer]:
+              - /url: /dashboard/settings
+              - img [ref=e40]
+              - generic [ref=e43]: Settings
+      - paragraph [ref=e45]: Version 1.6.1
+    - main [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - heading "Dashboard" [level=1] [ref=e49]
+          - paragraph [ref=e50]: Welcome back. Here's your automation overview.
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - img [ref=e54]
+            - generic [ref=e56]: Quick Capture
+            - generic [ref=e57]: Cmd/Ctrl+K
+          - generic [ref=e59]:
+            - textbox "Type an idea, paste a link, or click mic..." [ref=e60]
+            - button "Start voice capture" [ref=e62] [cursor=pointer]:
+              - img [ref=e63]
+          - paragraph [ref=e66]: Press Enter to save or click mic to speak.
+        - generic [ref=e67]:
+          - link "Ideas Logged 405" [ref=e68] [cursor=pointer]:
+            - /url: /dashboard/ideas
+            - generic [ref=e69]:
+              - generic [ref=e70]: Ideas Logged
+              - img [ref=e72]
+            - generic [ref=e75]: "405"
+          - link "In Pipeline 405" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/ideas?status=new,evaluating,accepted
+            - generic [ref=e77]:
+              - generic [ref=e78]: In Pipeline
+              - img [ref=e80]
+            - generic [ref=e84]: "405"
+          - link "In Progress 0" [ref=e85] [cursor=pointer]:
+            - /url: /dashboard/tasks
+            - generic [ref=e86]:
+              - generic [ref=e87]: In Progress
+              - img [ref=e89]
+            - generic [ref=e93]: "0"
+          - link "Done 0" [ref=e94] [cursor=pointer]:
+            - /url: /dashboard/ideas?status=complete
+            - generic [ref=e95]:
+              - generic [ref=e96]: Done
+              - img [ref=e98]
+            - generic [ref=e102]: "0"
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - generic [ref=e107]:
+                  - link "Ideas Pipeline" [ref=e108] [cursor=pointer]:
+                    - /url: /dashboard/ideas
+                  - generic [ref=e109]: 405 active
+                - generic [ref=e110]:
+                  - link [ref=e111] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=new
+                  - link [ref=e112] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=evaluating
+                  - link:
+                    - /url: /dashboard/ideas?status=accepted
+                  - link:
+                    - /url: /dashboard/tasks
+                - generic [ref=e113]:
+                  - link "New 382" [ref=e114] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=new
+                    - generic [ref=e116]: New
+                    - generic [ref=e117]: "382"
+                  - link "Evaluating 23" [ref=e118] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=evaluating
+                    - generic [ref=e120]: Evaluating
+                    - generic [ref=e121]: "23"
+                  - link "Accepted 0" [ref=e122] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=accepted
+                    - generic [ref=e124]: Accepted
+                    - generic [ref=e125]: "0"
+                  - link "In Progress 0" [ref=e126] [cursor=pointer]:
+                    - /url: /dashboard/tasks
+                    - generic [ref=e128]: In Progress
+                    - generic [ref=e129]: "0"
+              - generic [ref=e130]:
+                - link "Completed Ideas" [ref=e131] [cursor=pointer]:
+                  - /url: /dashboard/ideas?status=complete
+                - generic [ref=e132]:
+                  - link "0 This Week" [ref=e133] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=complete&period=week
+                    - generic [ref=e134]: "0"
+                    - generic [ref=e135]: This Week
+                  - link "0 This Month" [ref=e136] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=complete&period=month
+                    - generic [ref=e137]: "0"
+                    - generic [ref=e138]: This Month
+                  - link "0 All Time" [ref=e139] [cursor=pointer]:
+                    - /url: /dashboard/ideas?status=complete
+                    - generic [ref=e140]: "0"
+                    - generic [ref=e141]: All Time
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - heading "Ideas in Progress" [level=3] [ref=e144]
+                - link "Task Board" [ref=e145] [cursor=pointer]:
+                  - /url: /dashboard/tasks
+                  - text: Task Board
+                  - img [ref=e146]
+              - generic [ref=e148]:
+                - paragraph [ref=e149]: No ideas in progress yet.
+                - link "View all ideas" [ref=e150] [cursor=pointer]:
+                  - /url: /dashboard/ideas
+          - generic [ref=e152]:
+            - heading "Recent Activity" [level=3] [ref=e153]
+            - generic [ref=e154]:
+              - img [ref=e155]
+              - paragraph [ref=e157]: No recent activity
+              - paragraph [ref=e158]: Activity will appear here as you work on ideas
+            - button "View all activity →" [ref=e159] [cursor=pointer]
+```
