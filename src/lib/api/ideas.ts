@@ -535,6 +535,8 @@ export async function duplicateIdea(id: string): Promise<DbIdea> {
       rice_confidence: original.rice_confidence,
       rice_effort: original.rice_effort,
       rice_score: original.rice_score, // Copy the calculated score
+      source_type: original.source_type, // Preserve source type (manual, guided, import, voice)
+      metadata: original.metadata, // Copy metadata (e.g., guided capture Q&A)
     })
     .select()
     .single();
