@@ -252,8 +252,8 @@ test.describe('Guided Capture Flow', () => {
     await expect(page.getByRole('button', { name: 'Capture Details' })).toBeVisible({ timeout: 10000 })
 
     // Check that questions and answers are displayed
-    await expect(page.getByText(/what task or process drains/i)).toBeVisible({ timeout: 5000 })
-    await expect(page.getByText(answers[0])).toBeVisible({ timeout: 5000 })
+    await expect(page.getByText(/what task or process drains/i).first()).toBeVisible({ timeout: 5000 })
+    await expect(page.getByText(answers[0]).first()).toBeVisible({ timeout: 5000 })
 
     // Edit Answers button should be visible
     await expect(page.getByRole('button', { name: /edit answers/i })).toBeVisible({ timeout: 5000 })
