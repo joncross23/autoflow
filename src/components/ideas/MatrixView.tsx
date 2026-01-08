@@ -138,21 +138,29 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
 
         {/* Grid Lines */}
         <div className="absolute inset-8">
-          {/* Center lines - very subtle */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/[0.06]" />
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-white/[0.06]" />
+          {/* Quadrant backgrounds - subtle */}
+          <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-green-500/40" /> {/* Quick Wins */}
+          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/40" /> {/* Major Projects */}
+          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-yellow-500/40" /> {/* Fill-ins */}
+          <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-red-500/40" /> {/* Time Sinks */}
 
-          {/* Quadrant backgrounds */}
-          <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-green-500/50" /> {/* Quick Wins */}
-          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/50" /> {/* Major Projects */}
-          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-yellow-500/50" /> {/* Fill-ins */}
-          <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-red-500/50" /> {/* Time Sinks */}
+          {/* Center lines - slightly more visible */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10" />
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-white/10" />
 
           {/* Quadrant Labels */}
-          <div className="absolute top-3 left-3 text-sm font-bold text-green-600 dark:text-green-400 drop-shadow-lg">Quick Wins</div>
-          <div className="absolute top-3 right-3 text-sm font-bold text-blue-600 dark:text-blue-400 text-right drop-shadow-lg">Major Projects</div>
-          <div className="absolute bottom-3 left-3 text-sm font-bold text-yellow-700 dark:text-yellow-400 drop-shadow-lg">Fill-ins</div>
-          <div className="absolute bottom-3 right-3 text-sm font-bold text-red-600 dark:text-red-400 text-right drop-shadow-lg">Time Sinks</div>
+          <div className="absolute top-3 left-3 text-sm font-bold text-white bg-black/60 px-2 py-1 rounded border border-white/20">
+            Quick Wins
+          </div>
+          <div className="absolute top-3 right-3 text-sm font-bold text-white bg-black/60 px-2 py-1 rounded border border-white/20">
+            Major Projects
+          </div>
+          <div className="absolute bottom-3 left-3 text-sm font-bold text-white bg-black/60 px-2 py-1 rounded border border-white/20">
+            Fill-ins
+          </div>
+          <div className="absolute bottom-3 right-3 text-sm font-bold text-white bg-black/60 px-2 py-1 rounded border border-white/20">
+            Time Sinks
+          </div>
 
           {/* Data Points */}
           {visiblePoints.map((point) => (
