@@ -129,10 +129,10 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       {/* Matrix Container */}
       <div className="relative aspect-square max-w-2xl mx-auto border border-white/[0.06] rounded-lg bg-bg-secondary overflow-hidden">
         {/* Axis Labels */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-normal text-muted-foreground/70 whitespace-nowrap origin-center -translate-x-8">
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-medium text-muted-foreground whitespace-nowrap origin-center">
           Impact (Low → High)
         </div>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-normal text-muted-foreground/70">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm font-medium text-muted-foreground">
           Effort (Low → High)
         </div>
 
@@ -143,10 +143,10 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
           <div className="absolute top-1/2 left-0 right-0 h-px bg-white/[0.06]" />
 
           {/* Quadrant backgrounds */}
-          <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-green-500/5" /> {/* Quick Wins */}
-          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5" /> {/* Major Projects */}
-          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-yellow-500/5" /> {/* Fill-ins */}
-          <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-red-500/5" /> {/* Time Sinks */}
+          <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-green-500/50" /> {/* Quick Wins */}
+          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/50" /> {/* Major Projects */}
+          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-yellow-500/50" /> {/* Fill-ins */}
+          <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-red-500/50" /> {/* Time Sinks */}
 
           {/* Quadrant Labels */}
           <div className="absolute top-2 left-2 text-xs font-medium text-green-500/70">Quick Wins</div>
