@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Lightbulb, ArrowLeft, ArrowRight, Check, Clock } from "lucide-react";
+import { Lightbulb, ArrowLeft, ArrowRight, Check, Clock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -269,6 +269,12 @@ export function GuidedCaptureFlow() {
     }));
   };
 
+  const handleCancel = () => {
+    // Navigate back to ideas dashboard
+    // Auto-save will preserve the draft if user wants to return
+    router.push('/dashboard/ideas');
+  };
+
   // ============================================
   // SUBMISSION HANDLER
   // ============================================
@@ -364,6 +370,16 @@ ${answers.ideal_outcome}
                 Auto-saved
               </div>
             )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCancel}
+              className="h-10 w-10"
+              aria-label="Cancel and return to ideas dashboard"
+              title="Cancel"
+            >
+              <X className="h-5 w-5" />
+            </Button>
           </div>
 
           {/* Progress dots */}
@@ -491,6 +507,16 @@ ${answers.ideal_outcome}
               Auto-saved
             </div>
           )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleCancel}
+            className="h-10 w-10"
+            aria-label="Cancel and return to ideas dashboard"
+            title="Cancel"
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
 
         {/* Progress dots */}
