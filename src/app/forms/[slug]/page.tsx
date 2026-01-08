@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import PublicQuestionnaireForm from "@/components/forms/PublicQuestionnaireForm";
+import { getQuestionnaireBySlug } from "@/lib/api/questionnaires";
 
 /**
  * Public questionnaire form page
@@ -14,19 +15,12 @@ export default async function PublicFormPage({
 }) {
   const { slug } = await params;
 
-  // Fetch questionnaire data server-side
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/forms/${slug}`,
-    {
-      cache: "no-store", // Always fetch fresh data
-    }
-  );
+  // Fetch questionnaire data directly from database
+  const questionnaire = await getQuestionnaireBySlug(slug);
 
-  if (!response.ok) {
+  if (!questionnaire) {
     notFound();
   }
-
-  const questionnaire = await response.json();
 
   return (
     <main className="min-h-screen bg-background font-sans">
@@ -46,20 +40,13 @@ export async function generateMetadata({
   const { slug } = await params;
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/forms/${slug}`,
-      {
-        cache: "no-store",
-      }
-    );
+    const questionnaire = await getQuestionnaireBySlug(slug);
 
-    if (!response.ok) {
+    if (!questionnaire) {
       return {
         title: "Form Not Found",
       };
     }
-
-    const questionnaire = await response.json();
 
     return {
       title: `${questionnaire.title} | AutoFlow`,
