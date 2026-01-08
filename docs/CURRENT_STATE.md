@@ -3,8 +3,8 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2026-01-01
-> **Current Version:** 1.6.2
+> **Last Updated:** 2026-01-08
+> **Current Version:** 1.6.3
 > **Current Phase:** iOS UX Improvements (COMPLETE)
 > **Next Phase:** Dynamic Delivery Filters
 >
@@ -386,6 +386,24 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2026-01-08 — Matrix View Improvements & Guided Capture Cancel Button
+- **Matrix View Visual Improvements:**
+  - Increased quadrant background opacity from 5% to 40% for better visibility
+  - Improved quadrant labels: white text on semi-transparent black backgrounds (`bg-black/60`) with borders
+  - Enhanced center grid lines visibility (`bg-white/10`)
+  - Repositioned axis labels inside border with proper rotation and centering
+  - Fixed vertical label positioning using `origin-left` transform with manual positioning (`translateY(85px)`)
+  - Reduced border thickness from `border-white/[0.06]` to `border-border/30`
+- **Guided Capture UX:**
+  - Added cancel button (X icon) to Guided Capture flow header
+  - Button appears on both question screens and review screen
+  - Navigates back to `/dashboard/ideas` when clicked
+  - Preserves draft via existing auto-save for users who want to return
+  - Accessible with proper ARIA labels and title attributes
+- **Deployment:**
+  - Pushed 11 commits to production (Matrix improvements + cancel button)
+  - Version bumped to 1.6.3
 
 ### 2026-01-01 — Auto-Open Accordions & Filter Fixes
 - Added `autoOpen` prop to `CollapsibleSection` component
