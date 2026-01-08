@@ -284,8 +284,8 @@ ${answers.ideal_outcome}
       // Show success toast
       toast("Idea created from Guided Capture", "success");
 
-      // Redirect to idea detail slider
-      router.push(`/dashboard/ideas?idea=${newIdea.id}`);
+      // Redirect to idea detail slider (use 'selected' query param)
+      router.push(`/dashboard/ideas?selected=${newIdea.id}`);
     } catch (error) {
       console.error('Failed to create idea:', error);
       toast("Failed to create idea. Please try again.", "error");

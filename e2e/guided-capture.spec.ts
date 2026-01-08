@@ -208,8 +208,8 @@ test.describe('Guided Capture Flow', () => {
     // Click Create Idea button
     await page.getByRole('button', { name: /create idea/i }).click()
 
-    // Should redirect to ideas page with idea query param
-    await expect(page).toHaveURL(/\/dashboard\/ideas\?idea=/, { timeout: 10000 })
+    // Should redirect to ideas page with selected query param
+    await expect(page).toHaveURL(/\/dashboard\/ideas\?selected=/, { timeout: 10000 })
 
     // Idea should be visible in the page
     await expect(page.getByText(ideaTitle)).toBeVisible({ timeout: 5000 })
@@ -243,7 +243,7 @@ test.describe('Guided Capture Flow', () => {
     await page.getByRole('button', { name: /create idea/i }).click()
 
     // Wait for redirect and slider to open
-    await page.waitForURL(/\/dashboard\/ideas\?idea=/, { timeout: 10000 })
+    await page.waitForURL(/\/dashboard\/ideas\?selected=/, { timeout: 10000 })
 
     // Wait for slider to be visible (it has a role of dialog or complementary)
     await page.waitForTimeout(2000)
@@ -312,7 +312,7 @@ test.describe('Guided Capture Flow', () => {
     await page.getByRole('button', { name: /create idea/i }).click()
 
     // Wait for redirect
-    await page.waitForURL(/\/dashboard\/ideas\?idea=/, { timeout: 10000 })
+    await page.waitForURL(/\/dashboard\/ideas\?selected=/, { timeout: 10000 })
 
     // Check localStorage - draft should be cleared
     const draftExists = await page.evaluate(() => {
@@ -369,7 +369,7 @@ test.describe('Guided Capture Flow', () => {
     await createButton.click().catch(() => {}) // Might be disabled, ignore error
 
     // Should only create one idea and redirect once
-    await page.waitForURL(/\/dashboard\/ideas\?idea=/, { timeout: 15000 })
+    await page.waitForURL(/\/dashboard\/ideas\?selected=/, { timeout: 15000 })
 
     // Button should show "Creating..." briefly or be disabled
     // This is hard to test deterministically but the code has the guard
@@ -393,7 +393,7 @@ test.describe('Guided Capture Flow', () => {
     await page.getByLabel(/idea title/i).fill(`Edit Button Test ${Date.now()}`)
     await page.getByRole('button', { name: /create idea/i }).click()
 
-    await page.waitForURL(/\/dashboard\/ideas\?idea=/, { timeout: 10000 })
+    await page.waitForURL(/\/dashboard\/ideas\?selected=/, { timeout: 10000 })
 
     // Wait for slider to load
     await page.waitForTimeout(2000)
