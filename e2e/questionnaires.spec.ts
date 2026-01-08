@@ -33,13 +33,16 @@ test.describe('Questionnaires - Public Form', () => {
     await expect(page.getByText(/\d+% complete/)).toBeVisible()
 
     // Question dots should be visible (7 dots: 6 questions + 1 contact page)
-    const dots = page.locator('[title]').filter({ hasText: /Question \d+|Your details/ })
+    const dots = page.locator('[role="progressbar"][aria-label]')
     await expect(dots.first()).toBeVisible()
+
+    // Verify we have 7 dots (6 questions + contact page)
+    await expect(dots).toHaveCount(7)
   })
 
   test('should display first question with all elements', async ({ page }) => {
-    // Question number badge
-    await expect(page.getByText('1')).toBeVisible()
+    // Question number badge (use role selector to avoid strict mode violations)
+    await expect(page.getByRole('status', { name: 'Question 1' })).toBeVisible()
 
     // Question text
     await expect(page.getByText(/What's one task you personally do every single week/i)).toBeVisible()
