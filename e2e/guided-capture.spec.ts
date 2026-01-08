@@ -211,8 +211,8 @@ test.describe('Guided Capture Flow', () => {
     // Should redirect to ideas page with selected query param
     await expect(page).toHaveURL(/\/dashboard\/ideas\?selected=/, { timeout: 10000 })
 
-    // Idea should be visible in the page
-    await expect(page.getByText(ideaTitle)).toBeVisible({ timeout: 5000 })
+    // Idea should be visible in the slider title
+    await expect(page.getByTestId('idea-slider-title')).toHaveText(ideaTitle, { timeout: 5000 })
   })
 
   test('should display Q&A in idea detail slider', async ({ page }) => {
@@ -248,8 +248,8 @@ test.describe('Guided Capture Flow', () => {
     // Wait for slider to be visible (it has a role of dialog or complementary)
     await page.waitForTimeout(2000)
 
-    // Check for Capture Details section with longer timeout
-    await expect(page.getByText('Capture Details')).toBeVisible({ timeout: 10000 })
+    // Check for Capture Details section button/heading with longer timeout
+    await expect(page.getByRole('button', { name: 'Capture Details' })).toBeVisible({ timeout: 10000 })
 
     // Check that questions and answers are displayed
     await expect(page.getByText(/what task or process drains/i)).toBeVisible({ timeout: 5000 })
