@@ -16,16 +16,16 @@
         - generic [ref=e15]: 14% complete
       - generic [ref=e18]:
         - generic [ref=e19]:
-          - generic "Question 1" [ref=e20]
-          - generic "Question 2" [ref=e21]
-          - generic "Question 3" [ref=e22]
-          - generic "Question 4" [ref=e23]
-          - generic "Question 5" [ref=e24]
-          - generic "Question 6" [ref=e25]
-          - generic "Your details" [ref=e26]
+          - progressbar "Question 1" [ref=e20]
+          - progressbar "Question 2" [ref=e21]
+          - progressbar "Question 3" [ref=e22]
+          - progressbar "Question 4" [ref=e23]
+          - progressbar "Question 5" [ref=e24]
+          - progressbar "Question 6" [ref=e25]
+          - progressbar "Your details" [ref=e26]
         - generic [ref=e27]:
           - generic [ref=e28]:
-            - generic [ref=e29]: "1"
+            - status "Question 1" [ref=e29]: "1"
             - generic [ref=e30]:
               - heading "What's one task you personally do every single week that you absolutely shouldn't, but it has to get done?" [level=3] [ref=e31]
               - paragraph [ref=e32]: Think about tasks that feel repetitive or below your pay grade.
