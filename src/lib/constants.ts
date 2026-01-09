@@ -46,12 +46,12 @@ export const DEFAULT_COLUMNS = [
  * WCAG AA compliant (4.5:1 contrast with white text)
  */
 export const LABEL_COLORS = [
-  { name: "red", hex: "#EF4444" },
-  { name: "orange", hex: "#F97316" },
-  { name: "yellow", hex: "#EAB308" },
+  { name: "cyan", hex: "#06B6D4" },
   { name: "green", hex: "#22C55E" },
   { name: "blue", hex: "#3B82F6" },
-  { name: "cyan", hex: "#06B6D4" },
+  { name: "yellow", hex: "#EAB308" },
+  { name: "red", hex: "#EF4444" },
+  { name: "orange", hex: "#F97316" },
 ] as const;
 
 /**

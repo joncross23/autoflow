@@ -10,12 +10,12 @@ interface ColorPickerProps {
 }
 
 const DEFAULT_PALETTE = [
-  { name: "Red", hex: "#EF4444" },
-  { name: "Orange", hex: "#F97316" },
-  { name: "Yellow", hex: "#EAB308" },
+  { name: "Cyan", hex: "#06B6D4" },
   { name: "Green", hex: "#22C55E" },
   { name: "Blue", hex: "#3B82F6" },
-  { name: "Cyan", hex: "#06B6D4" },
+  { name: "Yellow", hex: "#EAB308" },
+  { name: "Red", hex: "#EF4444" },
+  { name: "Orange", hex: "#F97316" },
 ];
 
 // Convert HSB to RGB

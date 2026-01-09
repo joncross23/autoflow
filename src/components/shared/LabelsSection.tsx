@@ -60,7 +60,7 @@ export function LabelsSection({
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newLabelName, setNewLabelName] = useState("");
-  const [newLabelColor, setNewLabelColor] = useState<string>(PRESET_COLORS[4].hex); // Blue default
+  const [newLabelColor, setNewLabelColor] = useState<string>(PRESET_COLORS[2].hex); // Blue default
   const [isCreating, setIsCreating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingLabel, setEditingLabel] = useState<DbLabel | null>(null);
