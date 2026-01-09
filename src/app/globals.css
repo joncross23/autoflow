@@ -744,8 +744,13 @@
 
   /* Selection */
   ::selection {
-    background: var(--primary-muted);
-    color: var(--text);
+    background: var(--primary-color);
+    color: #FFFFFF;
+  }
+
+  ::-moz-selection {
+    background: var(--primary-color);
+    color: #FFFFFF;
   }
 
   /* Headings */
