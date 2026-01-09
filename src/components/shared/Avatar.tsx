@@ -45,7 +45,7 @@ function getAvatarColor(name?: string): string {
     "#3B82F6", // blue
     "#10B981", // emerald
     "#F59E0B", // orange
-    "#8B5CF6", // purple
+    "#14B8A6", // teal
     "#EC4899", // pink
     "#06B6D4", // cyan
     "#EF4444", // red

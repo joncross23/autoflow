@@ -91,6 +91,18 @@ export const autoflowTheme: ThemeDefinition = {
       primaryMuted: "#164E63",
       primaryGradient: "linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)",
     },
+    sky: {
+      primary: "#38BDF8",
+      primaryHover: "#0EA5E9",
+      primaryMuted: "#0C4A6E",
+      primaryGradient: "linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%)",
+    },
+    teal: {
+      primary: "#14B8A6",
+      primaryHover: "#0D9488",
+      primaryMuted: "#134E4A",
+      primaryGradient: "linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)",
+    },
     blue: {
       primary: "#3B82F6",
       primaryHover: "#2563EB",
@@ -103,17 +115,11 @@ export const autoflowTheme: ThemeDefinition = {
       primaryMuted: "#064E3B",
       primaryGradient: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
     },
-    amber: {
-      primary: "#F59E0B",
-      primaryHover: "#D97706",
-      primaryMuted: "#78350F",
-      primaryGradient: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-    },
-    indigo: {
-      primary: "#6366F1",
-      primaryHover: "#4F46E5",
-      primaryMuted: "#312E81",
-      primaryGradient: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+    coral: {
+      primary: "#FB923C",
+      primaryHover: "#F97316",
+      primaryMuted: "#7C2D12",
+      primaryGradient: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)",
     },
     rose: {
       primary: "#F43F5E",

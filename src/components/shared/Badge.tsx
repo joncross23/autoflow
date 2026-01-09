@@ -67,17 +67,14 @@ export function Badge({
 }
 
 /** Preset label colours for Kanban cards */
+/** Preset label colours for badges (6 default options) */
 export const LABEL_COLORS = {
-  green: "#22C55E",
-  yellow: "#EAB308",
-  orange: "#F97316",
   red: "#EF4444",
-  purple: "#A855F7",
+  orange: "#F97316",
+  yellow: "#EAB308",
+  green: "#22C55E",
   blue: "#3B82F6",
   cyan: "#06B6D4",
-  pink: "#EC4899",
-  lime: "#84CC16",
-  grey: "#64748B",
 } as const;
 
 export type LabelColor = keyof typeof LABEL_COLORS;

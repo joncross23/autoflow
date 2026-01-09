@@ -92,6 +92,18 @@ export const macosTheme: ThemeDefinition = {
       primaryMuted: "#0A3D4D",
       primaryGradient: "linear-gradient(135deg, #5AC8FA 0%, #32ADE6 100%)",
     },
+    sky: {
+      primary: "#52C0F5",
+      primaryHover: "#3EAEE3",
+      primaryMuted: "#0A3A4D",
+      primaryGradient: "linear-gradient(135deg, #52C0F5 0%, #3EAEE3 100%)",
+    },
+    teal: {
+      primary: "#64D2C0",
+      primaryHover: "#52BFB0",
+      primaryMuted: "#0A3D35",
+      primaryGradient: "linear-gradient(135deg, #64D2C0 0%, #52BFB0 100%)",
+    },
     blue: {
       primary: "#007AFF",
       primaryHover: "#0056CC",
@@ -104,17 +116,11 @@ export const macosTheme: ThemeDefinition = {
       primaryMuted: "#0A3D1C",
       primaryGradient: "linear-gradient(135deg, #30D158 0%, #28CD41 100%)",
     },
-    amber: {
-      primary: "#FF9500",
-      primaryHover: "#E68600",
-      primaryMuted: "#4D3000",
-      primaryGradient: "linear-gradient(135deg, #FF9500 0%, #FF8000 100%)",
-    },
-    indigo: {
-      primary: "#5856D6",
-      primaryHover: "#4B49B8",
-      primaryMuted: "#1E1D4D",
-      primaryGradient: "linear-gradient(135deg, #5856D6 0%, #4B49B8 100%)",
+    coral: {
+      primary: "#FF9F5A",
+      primaryHover: "#FF8C3D",
+      primaryMuted: "#4D2D0F",
+      primaryGradient: "linear-gradient(135deg, #FF9F5A 0%, #FF8C3D 100%)",
     },
     rose: {
       primary: "#FF2D55",

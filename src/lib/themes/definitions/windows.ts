@@ -92,6 +92,18 @@ export const windowsTheme: ThemeDefinition = {
       primaryMuted: "#0A3D4D",
       primaryGradient: "linear-gradient(135deg, #00B7C3 0%, #009DA6 100%)",
     },
+    sky: {
+      primary: "#4CC2FF",
+      primaryHover: "#3AACF0",
+      primaryMuted: "#0A3A4D",
+      primaryGradient: "linear-gradient(135deg, #4CC2FF 0%, #3AACF0 100%)",
+    },
+    teal: {
+      primary: "#00B294",
+      primaryHover: "#009D80",
+      primaryMuted: "#0A3D35",
+      primaryGradient: "linear-gradient(135deg, #00B294 0%, #009D80 100%)",
+    },
     blue: {
       primary: "#0078D4",
       primaryHover: "#005A9E",
@@ -104,17 +116,11 @@ export const windowsTheme: ThemeDefinition = {
       primaryMuted: "#0A3D0A",
       primaryGradient: "linear-gradient(135deg, #107C10 0%, #0E6B0E 100%)",
     },
-    amber: {
-      primary: "#FF8C00",
-      primaryHover: "#E67E00",
-      primaryMuted: "#4D2A00",
-      primaryGradient: "linear-gradient(135deg, #FF8C00 0%, #E67E00 100%)",
-    },
-    indigo: {
-      primary: "#6264A7",
-      primaryHover: "#545594",
-      primaryMuted: "#1F1F3D",
-      primaryGradient: "linear-gradient(135deg, #6264A7 0%, #545594 100%)",
+    coral: {
+      primary: "#FF8C42",
+      primaryHover: "#F77C35",
+      primaryMuted: "#4D2A0F",
+      primaryGradient: "linear-gradient(135deg, #FF8C42 0%, #F77C35 100%)",
     },
     rose: {
       primary: "#E3008C",

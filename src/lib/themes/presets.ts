@@ -74,7 +74,7 @@ export const DEFAULT_THEME_PRESETS: ThemePreset[] = [
   {
     id: "ember",
     name: "Ember",
-    accent: "amber",
+    accent: "coral",
     backgroundDark: {
       type: "gradient",
       solid: "#1f0f0f",
@@ -143,7 +143,7 @@ export const DEFAULT_THEME_PRESETS: ThemePreset[] = [
   {
     id: "carbon",
     name: "Carbon",
-    accent: "indigo",
+    accent: "teal",
     backgroundDark: {
       type: "solid",
       solid: "#1a1a1a",

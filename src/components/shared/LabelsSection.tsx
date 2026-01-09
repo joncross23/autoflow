@@ -7,12 +7,15 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Tag, Plus, X, Check, Pencil, Square, CheckSquare } from "lucide-react";
+import { Tag, Plus, X, Pencil, Square, CheckSquare, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ColorPicker } from "@/components/ui/ColorPicker";
+import { EyedropperButton } from "@/components/theme/EyedropperButton";
 import {
   getLabels,
   createLabel,
   updateLabel,
+  deleteLabel,
   addIdeaLabel,
   removeIdeaLabel,
   addTaskLabel,
@@ -22,11 +25,13 @@ import {
 } from "@/lib/api/labels";
 import type { DbLabel } from "@/types/database";
 import { LABEL_COLORS, LABEL_COLOR_CLASSES } from "@/types/database";
+import { LABEL_COLORS as PRESET_COLORS } from "@/lib/constants";
 
 // Helper to get Tailwind class from hex (normalizes case for DB compatibility)
-function getLabelColorClass(hex: string): string {
+// Returns null for custom colors so they can use inline styles
+function getLabelColorClass(hex: string): string | null {
   const normalized = hex.toLowerCase();
-  return LABEL_COLOR_CLASSES[normalized] || "bg-blue-500";
+  return LABEL_COLOR_CLASSES[normalized] || null;
 }
 
 interface LabelsSectionProps {
@@ -55,7 +60,7 @@ export function LabelsSection({
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newLabelName, setNewLabelName] = useState("");
-  const [newLabelColor, setNewLabelColor] = useState<string>(LABEL_COLORS[4]); // Blue default
+  const [newLabelColor, setNewLabelColor] = useState<string>(PRESET_COLORS[4].hex); // Blue default
   const [isCreating, setIsCreating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingLabel, setEditingLabel] = useState<DbLabel | null>(null);
@@ -185,7 +190,7 @@ export function LabelsSection({
       });
       setAllLabels([...allLabels, newLabel]);
       setNewLabelName("");
-      setNewLabelColor(LABEL_COLORS[4]); // Reset to blue
+      setNewLabelColor(PRESET_COLORS[4].hex); // Reset to blue
       setShowCreateForm(false);
 
       // Automatically add the new label to the item
@@ -228,6 +233,31 @@ export function LabelsSection({
     }
   }
 
+  async function handleDeleteLabel() {
+    if (!editingLabel) return;
+
+    // Confirm deletion
+    if (!confirm(`Delete label "${editingLabel.name || "Unnamed"}"? This will remove it from all items.`)) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await deleteLabel(editingLabel.id);
+      // Remove from all labels list
+      setAllLabels(allLabels.filter((l) => l.id !== editingLabel.id));
+      // Remove from assigned labels if present
+      setAssignedLabels(assignedLabels.filter((l) => l.id !== editingLabel.id));
+      setEditingLabel(null);
+      // Notify parent of change
+      onLabelsChange?.(assignedLabels.filter((l) => l.id !== editingLabel.id));
+    } catch (error) {
+      console.error("Error deleting label:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   // Filter labels by search query
   const filteredLabels = allLabels.filter((label) =>
     label.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -249,6 +279,7 @@ export function LabelsSection({
         <div className="flex items-center gap-2">
           <div className="relative" ref={dropdownRef}>
             <button
+              data-testid="labels-add-button"
               onClick={() => setShowDropdown(!showDropdown)}
               className="px-2.5 py-1 text-xs font-medium bg-primary text-white rounded hover:bg-primary/90 flex items-center gap-1 transition-colors"
             >
@@ -283,44 +314,52 @@ export function LabelsSection({
                       if (e.key === "Escape") setEditingLabel(null);
                     }}
                   />
-                  {/* Colour picker with full bars */}
-                  <div className="space-y-1.5">
-                    {LABEL_COLORS.map((color) => {
-                      const bgClass = getLabelColorClass(color);
-                      return (
-                        <button
-                          key={color}
-                          onClick={() => setEditLabelColor(color)}
-                          className={cn(
-                            "w-full h-8 rounded flex items-center justify-center transition-all",
-                            bgClass,
-                            editLabelColor === color
-                              ? "ring-2 ring-white ring-offset-2 ring-offset-bg-elevated"
-                              : "hover:opacity-90"
-                          )}
-                        >
-                          {editLabelColor === color && (
-                            <Check className="w-4 h-4 text-white" />
-                          )}
-                        </button>
-                      );
-                    })}
+                  {/* Colour picker */}
+                  <div className="space-y-2">
+                    <div className="text-xs font-medium text-foreground-muted">Colour</div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="h-8 flex-1 rounded border border-border"
+                        style={{ backgroundColor: editLabelColor }}
+                      />
+                      <EyedropperButton
+                        onColorPicked={(hex) => setEditLabelColor(hex)}
+                        className="shrink-0"
+                      />
+                    </div>
+                    <div className="mt-2">
+                      <ColorPicker
+                        value={editLabelColor}
+                        onChange={setEditLabelColor}
+                      />
+                    </div>
                   </div>
                   {/* Actions */}
-                  <div className="flex justify-end gap-2 pt-2">
+                  <div className="flex justify-between items-center gap-2 pt-2">
                     <button
-                      onClick={() => setEditingLabel(null)}
-                      className="px-3 py-1.5 text-sm text-foreground-muted hover:text-foreground"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSaveLabel}
+                      onClick={handleDeleteLabel}
                       disabled={isSaving}
-                      className="px-4 py-1.5 text-sm bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50"
+                      className="px-3 py-1.5 text-sm text-error hover:text-error/90 flex items-center gap-1.5 disabled:opacity-50 transition-colors"
+                      title="Delete this label"
                     >
-                      {isSaving ? "Saving..." : "Save"}
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Delete
                     </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setEditingLabel(null)}
+                        className="px-3 py-1.5 text-sm text-foreground-muted hover:text-foreground"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleSaveLabel}
+                        disabled={isSaving}
+                        className="px-4 py-1.5 text-sm bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50"
+                      >
+                        {isSaving ? "Saving..." : "Save"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : !showCreateForm ? (
@@ -379,23 +418,20 @@ export function LabelsSection({
                                   <Square className="w-5 h-5" />
                                 )}
                               </button>
-                              {/* Full-width coloured bar */}
+                              {/* Full-width coloured bar - click to edit */}
                               <button
-                                onClick={() => handleToggleLabel(label)}
+                                onClick={() => startEditLabel(label)}
                                 className={cn(
-                                  "flex-1 px-3 py-2 rounded text-sm font-medium text-white text-left truncate",
+                                  "flex-1 px-3 py-2 rounded text-sm font-medium text-white text-left truncate group relative",
                                   bgClass,
                                   "hover:opacity-90 transition-opacity"
                                 )}
+                                style={bgClass ? undefined : { backgroundColor: label.color }}
+                                title="Click to edit this label"
                               >
                                 {label.name || "\u00A0"}
-                              </button>
-                              {/* Edit button */}
-                              <button
-                                onClick={() => startEditLabel(label)}
-                                className="p-1 text-foreground-muted hover:text-foreground transition-colors"
-                              >
-                                <Pencil className="w-3.5 h-3.5" />
+                                {/* Show pencil icon on hover */}
+                                <Pencil className="w-3 h-3 absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-70 transition-opacity" />
                               </button>
                             </div>
                           );
@@ -438,28 +474,25 @@ export function LabelsSection({
                       if (e.key === "Escape") setShowCreateForm(false);
                     }}
                   />
-                  {/* Colour picker with full bars */}
-                  <div className="space-y-1.5">
-                    {LABEL_COLORS.map((color) => {
-                      const bgClass = getLabelColorClass(color);
-                      return (
-                        <button
-                          key={color}
-                          onClick={() => setNewLabelColor(color)}
-                          className={cn(
-                            "w-full h-8 rounded flex items-center justify-center transition-all",
-                            bgClass,
-                            newLabelColor === color
-                              ? "ring-2 ring-white ring-offset-2 ring-offset-bg-elevated"
-                              : "hover:opacity-90"
-                          )}
-                        >
-                          {newLabelColor === color && (
-                            <Check className="w-4 h-4 text-white" />
-                          )}
-                        </button>
-                      );
-                    })}
+                  {/* Colour picker */}
+                  <div className="space-y-2">
+                    <div className="text-xs font-medium text-foreground-muted">Colour</div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="h-8 flex-1 rounded border border-border"
+                        style={{ backgroundColor: newLabelColor }}
+                      />
+                      <EyedropperButton
+                        onColorPicked={(hex) => setNewLabelColor(hex)}
+                        className="shrink-0"
+                      />
+                    </div>
+                    <div className="mt-2">
+                      <ColorPicker
+                        value={newLabelColor}
+                        onChange={setNewLabelColor}
+                      />
+                    </div>
                   </div>
                   {/* Actions */}
                   <div className="flex justify-end gap-2 pt-2">
@@ -504,6 +537,7 @@ export function LabelsSection({
             <LabelChip
               key={label.id}
               label={label}
+              onClick={() => setShowDropdown(true)}
               onRemove={() => handleRemoveLabel(label)}
             />
           ))
@@ -535,6 +569,7 @@ export function LabelChip({ label, onRemove, onClick, className }: LabelChipProp
         onClick && "cursor-pointer hover:opacity-90",
         className
       )}
+      style={bgClass ? undefined : { backgroundColor: label.color }}
       onClick={onClick}
     >
       {label.name || "\u00A0"}

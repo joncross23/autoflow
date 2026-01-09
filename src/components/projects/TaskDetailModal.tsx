@@ -362,16 +362,16 @@ export function TaskDetailModal({
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
       <div className="relative w-full md:w-1/2 md:min-w-[600px] md:max-w-[900px] md:my-8 md:mx-4 min-h-screen md:min-h-0" data-testid="task-detail-modal">
-        <div className="bg-bg-secondary md:rounded-xl overflow-hidden shadow-2xl md:border md:border-border min-h-screen md:min-h-0">
+        <div className="bg-bg-elevated md:rounded-xl overflow-hidden shadow-2xl md:border md:border-border min-h-screen md:min-h-0">
           {/* Mobile Header */}
           {isMobile && (
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-secondary sticky top-0 z-10">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-elevated sticky top-0 z-10">
               <button
                 onClick={onClose}
                 className="p-2 -ml-2 rounded-lg hover:bg-bg-hover transition-colors"
@@ -589,7 +589,7 @@ export function TaskDetailModal({
             </div>
 
             {/* Sidebar - hidden on mobile */}
-            <div className="hidden md:block w-48 p-4 bg-bg-tertiary shrink-0">
+            <div className="hidden md:block w-48 p-4 pt-12 bg-bg-tertiary shrink-0">
               {/* Save button */}
               {hasChanges && (
                 <button
