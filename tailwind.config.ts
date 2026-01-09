@@ -47,16 +47,12 @@ const config: Config = {
   				muted: '#7F1D1D'
   			},
   			label: {
-  				green: '#22C55E',
-  				yellow: '#EAB308',
-  				orange: '#F97316',
   				red: '#EF4444',
-  				purple: '#A855F7',
+  				orange: '#F97316',
+  				yellow: '#EAB308',
+  				green: '#22C55E',
   				blue: '#3B82F6',
-  				cyan: '#06B6D4',
-  				pink: '#EC4899',
-  				lime: '#84CC16',
-  				grey: '#64748B'
+  				cyan: '#06B6D4'
   			},
   			card: {
   				DEFAULT: 'hsl(var(--card))',

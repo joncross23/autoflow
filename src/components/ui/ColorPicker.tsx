@@ -10,12 +10,12 @@ interface ColorPickerProps {
 }
 
 const DEFAULT_PALETTE = [
-  { name: "Midnight Blue", hex: "#3B82F6" },
-  { name: "Emerald Green", hex: "#10B981" },
-  { name: "Sunset Orange", hex: "#F59E0B" },
-  { name: "Royal Purple", hex: "#8B5CF6" },
-  { name: "Rose Pink", hex: "#EC4899" },
-  { name: "Slate Grey", hex: "#64748B" },
+  { name: "Red", hex: "#EF4444" },
+  { name: "Orange", hex: "#F97316" },
+  { name: "Yellow", hex: "#EAB308" },
+  { name: "Green", hex: "#22C55E" },
+  { name: "Blue", hex: "#3B82F6" },
+  { name: "Cyan", hex: "#06B6D4" },
 ];
 
 // Convert HSB to RGB

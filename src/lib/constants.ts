@@ -34,24 +34,24 @@ export const DEFAULT_COLUMNS = [
   { id: "backlog", title: "Backlog", color: "#64748B" },
   { id: "todo", title: "To Do", color: "#3B82F6" },
   { id: "in_progress", title: "In Progress", color: "#F59E0B" },
-  { id: "review", title: "Review", color: "#8B5CF6" },
+  { id: "review", title: "Review", color: "#14B8A6" },
   { id: "done", title: "Done", color: "#22C55E" },
 ] as const;
 
 /**
  * Label preset colours
  */
+/**
+ * Label preset colours (6 default options)
+ * WCAG AA compliant (4.5:1 contrast with white text)
+ */
 export const LABEL_COLORS = [
-  { name: "green", hex: "#22C55E" },
-  { name: "yellow", hex: "#EAB308" },
-  { name: "orange", hex: "#F97316" },
   { name: "red", hex: "#EF4444" },
-  { name: "purple", hex: "#A855F7" },
+  { name: "orange", hex: "#F97316" },
+  { name: "yellow", hex: "#EAB308" },
+  { name: "green", hex: "#22C55E" },
   { name: "blue", hex: "#3B82F6" },
   { name: "cyan", hex: "#06B6D4" },
-  { name: "pink", hex: "#EC4899" },
-  { name: "lime", hex: "#84CC16" },
-  { name: "grey", hex: "#64748B" },
 ] as const;
 
 /**

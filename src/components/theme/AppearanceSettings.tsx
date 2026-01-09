@@ -22,10 +22,11 @@ const modeOptions: { value: Mode; label: string; icon: typeof Sun }[] = [
 
 const accentOptions: { value: Accent; label: string; color: string }[] = [
   { value: "cyan", label: "Cyan", color: "#06B6D4" },
+  { value: "sky", label: "Sky", color: "#38BDF8" },
+  { value: "teal", label: "Teal", color: "#14B8A6" },
   { value: "blue", label: "Blue", color: "#3B82F6" },
   { value: "emerald", label: "Emerald", color: "#10B981" },
-  { value: "amber", label: "Amber", color: "#F59E0B" },
-  { value: "indigo", label: "Indigo", color: "#6366F1" },
+  { value: "coral", label: "Coral", color: "#FB923C" },
   { value: "rose", label: "Rose", color: "#F43F5E" },
 ];
 

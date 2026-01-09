@@ -17,6 +17,18 @@ const accents = [
     gradient: "linear-gradient(135deg, #164E63 0%, #06B6D4 100%)",
   },
   {
+    value: "sky",
+    label: "Sky Blue",
+    color: "#38BDF8",
+    gradient: "linear-gradient(135deg, #0C4A6E 0%, #38BDF8 100%)",
+  },
+  {
+    value: "teal",
+    label: "Modern Teal",
+    color: "#14B8A6",
+    gradient: "linear-gradient(135deg, #134E4A 0%, #14B8A6 100%)",
+  },
+  {
     value: "blue",
     label: "Midnight Blue",
     color: "#3B82F6",
@@ -29,16 +41,10 @@ const accents = [
     gradient: "linear-gradient(135deg, #064E3B 0%, #10B981 100%)",
   },
   {
-    value: "amber",
-    label: "Golden Amber",
-    color: "#F59E0B",
-    gradient: "linear-gradient(135deg, #78350F 0%, #F59E0B 100%)",
-  },
-  {
-    value: "indigo",
-    label: "Royal Indigo",
-    color: "#6366F1",
-    gradient: "linear-gradient(135deg, #312E81 0%, #6366F1 100%)",
+    value: "coral",
+    label: "Warm Coral",
+    color: "#FB923C",
+    gradient: "linear-gradient(135deg, #7C2D12 0%, #FB923C 100%)",
   },
   {
     value: "rose",

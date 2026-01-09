@@ -20,9 +20,9 @@
     --bg-active: #3C3C48;
 
     /* Borders - using rgba for softer appearance */
-    --border-color: rgba(255, 255, 255, 0.06);
-    --border-subtle: rgba(255, 255, 255, 0.03);
-    --border-strong: rgba(255, 255, 255, 0.12);
+    --border-color: rgba(255, 255, 255, 0.10);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.15);
 
     /* Text - higher contrast for better readability */
     --text: #FFFFFF;
@@ -199,14 +199,14 @@
     --ring: 43 96% 50%;
   }
 
-  /* Violet - replaces Purple */
-  .accent-violet {
-    --primary-color: #8B5CF6;
-    --primary-hover: #7C3AED;
-    --primary-muted: #4C1D95;
-    --primary-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-    --primary: 258 90% 66%;
-    --ring: 258 90% 66%;
+  /* Teal - modern, sophisticated */
+  .accent-teal {
+    --primary-color: #14B8A6;
+    --primary-hover: #0D9488;
+    --primary-muted: #134E4A;
+    --primary-gradient: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+    --primary: 172 66% 50%;
+    --ring: 172 66% 50%;
   }
 
   /* Rose - replaces Pink */
@@ -229,12 +229,13 @@
     --ring: 43 96% 50%;
   }
   .accent-purple {
-    --primary-color: #8B5CF6;
-    --primary-hover: #7C3AED;
-    --primary-muted: #4C1D95;
-    --primary-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-    --primary: 258 90% 66%;
-    --ring: 258 90% 66%;
+    /* Legacy alias - redirects to teal */
+    --primary-color: #14B8A6;
+    --primary-hover: #0D9488;
+    --primary-muted: #134E4A;
+    --primary-gradient: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+    --primary: 172 66% 50%;
+    --ring: 172 66% 50%;
   }
   .accent-pink {
     --primary-color: #F43F5E;
@@ -270,8 +271,8 @@
     --primary-muted: #FEF3C7;
   }
 
-  .light.accent-violet {
-    --primary-muted: #EDE9FE;
+  .light.accent-teal {
+    --primary-muted: #CCFBF1;
   }
 
   .light.accent-rose {
@@ -280,7 +281,8 @@
 
   /* Legacy light mode fallbacks */
   .light.accent-orange { --primary-muted: #FEF3C7; }
-  .light.accent-purple { --primary-muted: #EDE9FE; }
+  .light.accent-purple { --primary-muted: #CCFBF1; } /* Redirects to teal */
+  .light.accent-violet { --primary-muted: #CCFBF1; } /* Redirects to teal */
   .light.accent-pink { --primary-muted: #FFE4E6; }
   .light.accent-slate { --primary-muted: #CFFAFE; }
 
@@ -500,13 +502,23 @@
     --ring: 35 100% 50%;
   }
 
+  [data-theme="macos"].accent-teal {
+    --primary-color: #64D2C0;
+    --primary-hover: #52BFB0;
+    --primary-muted: #0A3D35;
+    --primary-gradient: linear-gradient(135deg, #64D2C0 0%, #52BFB0 100%);
+    --primary: 172 59% 61%;
+    --ring: 172 59% 61%;
+  }
+
   [data-theme="macos"].accent-violet {
-    --primary-color: #AF52DE;
-    --primary-hover: #9B47C4;
-    --primary-muted: #3D1A54;
-    --primary-gradient: linear-gradient(135deg, #AF52DE 0%, #5856D6 100%);
-    --primary: 283 66% 60%;
-    --ring: 283 66% 60%;
+    /* Legacy alias - redirects to teal */
+    --primary-color: #64D2C0;
+    --primary-hover: #52BFB0;
+    --primary-muted: #0A3D35;
+    --primary-gradient: linear-gradient(135deg, #64D2C0 0%, #52BFB0 100%);
+    --primary: 172 59% 61%;
+    --ring: 172 59% 61%;
   }
 
   [data-theme="macos"].accent-rose {
@@ -528,12 +540,13 @@
     --ring: 35 100% 50%;
   }
   [data-theme="macos"].accent-purple {
-    --primary-color: #AF52DE;
-    --primary-hover: #9B47C4;
-    --primary-muted: #3D1A54;
-    --primary-gradient: linear-gradient(135deg, #AF52DE 0%, #5856D6 100%);
-    --primary: 283 66% 60%;
-    --ring: 283 66% 60%;
+    /* Legacy alias - redirects to teal */
+    --primary-color: #64D2C0;
+    --primary-hover: #52BFB0;
+    --primary-muted: #0A3D35;
+    --primary-gradient: linear-gradient(135deg, #64D2C0 0%, #52BFB0 100%);
+    --primary: 172 59% 61%;
+    --ring: 172 59% 61%;
   }
   [data-theme="macos"].accent-pink {
     --primary-color: #FF2D55;
@@ -557,11 +570,12 @@
   [data-theme="macos"].light.accent-blue { --primary-muted: #E0F0FF; }
   [data-theme="macos"].light.accent-emerald { --primary-muted: #D4F5DB; }
   [data-theme="macos"].light.accent-amber { --primary-muted: #FFF4E0; }
-  [data-theme="macos"].light.accent-violet { --primary-muted: #F3E8FF; }
+  [data-theme="macos"].light.accent-teal { --primary-muted: #CCFBF1; }
   [data-theme="macos"].light.accent-rose { --primary-muted: #FFE5EA; }
   /* Legacy light mode */
   [data-theme="macos"].light.accent-orange { --primary-muted: #FFF4E0; }
-  [data-theme="macos"].light.accent-purple { --primary-muted: #F3E8FF; }
+  [data-theme="macos"].light.accent-purple { --primary-muted: #CCFBF1; } /* Redirects to teal */
+  [data-theme="macos"].light.accent-violet { --primary-muted: #CCFBF1; } /* Redirects to teal */
   [data-theme="macos"].light.accent-pink { --primary-muted: #FFE5EA; }
   [data-theme="macos"].light.accent-slate { --primary-muted: #D6F4FF; }
 
@@ -602,13 +616,23 @@
     --ring: 33 100% 50%;
   }
 
+  [data-theme="windows"].accent-teal {
+    --primary-color: #00B294;
+    --primary-hover: #009D80;
+    --primary-muted: #0A3D35;
+    --primary-gradient: linear-gradient(135deg, #00B294 0%, #009D80 100%);
+    --primary: 169 100% 35%;
+    --ring: 169 100% 35%;
+  }
+
   [data-theme="windows"].accent-violet {
-    --primary-color: #881798;
-    --primary-hover: #6B126B;
-    --primary-muted: #3D0A3D;
-    --primary-gradient: linear-gradient(135deg, #881798 0%, #6B126B 100%);
-    --primary: 294 76% 34%;
-    --ring: 294 76% 34%;
+    /* Legacy alias - redirects to teal */
+    --primary-color: #00B294;
+    --primary-hover: #009D80;
+    --primary-muted: #0A3D35;
+    --primary-gradient: linear-gradient(135deg, #00B294 0%, #009D80 100%);
+    --primary: 169 100% 35%;
+    --ring: 169 100% 35%;
   }
 
   [data-theme="windows"].accent-rose {
@@ -630,12 +654,13 @@
     --ring: 33 100% 50%;
   }
   [data-theme="windows"].accent-purple {
-    --primary-color: #881798;
-    --primary-hover: #6B126B;
-    --primary-muted: #3D0A3D;
-    --primary-gradient: linear-gradient(135deg, #881798 0%, #6B126B 100%);
-    --primary: 294 76% 34%;
-    --ring: 294 76% 34%;
+    /* Legacy alias - redirects to teal */
+    --primary-color: #00B294;
+    --primary-hover: #009D80;
+    --primary-muted: #0A3D35;
+    --primary-gradient: linear-gradient(135deg, #00B294 0%, #009D80 100%);
+    --primary: 169 100% 35%;
+    --ring: 169 100% 35%;
   }
   [data-theme="windows"].accent-pink {
     --primary-color: #E3008C;
@@ -659,11 +684,12 @@
   [data-theme="windows"].light.accent-blue { --primary-muted: #D0E8F7; }
   [data-theme="windows"].light.accent-emerald { --primary-muted: #DFF6DD; }
   [data-theme="windows"].light.accent-amber { --primary-muted: #FFF4CE; }
-  [data-theme="windows"].light.accent-violet { --primary-muted: #F3E8FF; }
+  [data-theme="windows"].light.accent-teal { --primary-muted: #CCFBF1; }
   [data-theme="windows"].light.accent-rose { --primary-muted: #FFDEE9; }
   /* Legacy light mode */
   [data-theme="windows"].light.accent-orange { --primary-muted: #FFF4CE; }
-  [data-theme="windows"].light.accent-purple { --primary-muted: #F3E8FF; }
+  [data-theme="windows"].light.accent-purple { --primary-muted: #CCFBF1; } /* Redirects to teal */
+  [data-theme="windows"].light.accent-violet { --primary-muted: #CCFBF1; } /* Redirects to teal */
   [data-theme="windows"].light.accent-pink { --primary-muted: #FFDEE9; }
   [data-theme="windows"].light.accent-slate { --primary-muted: #D6F4FF; }
 }
@@ -761,7 +787,7 @@
 
   /* macOS: Vibrancy effect on cards */
   [data-theme="macos"] .card {
-    background-color: rgba(60, 60, 60, 0.6);
+    background-color: rgba(60, 60, 60, 0.75);
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
     border-color: rgba(255, 255, 255, 0.1);
@@ -774,7 +800,7 @@
 
   /* Windows: Mica effect on cards */
   [data-theme="windows"] .card {
-    background-color: rgba(58, 58, 58, 0.85);
+    background-color: rgba(58, 58, 58, 0.95);
     backdrop-filter: blur(var(--blur)) saturate(1.2);
     -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2);
     border-color: rgba(255, 255, 255, 0.08);
@@ -787,7 +813,7 @@
 
   /* AutoFlow: Subtle glassmorphism for a fresh look */
   [data-theme="autoflow"].dark .card {
-    background-color: rgba(31, 31, 38, 0.7);
+    background-color: rgba(31, 31, 38, 0.85);
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
     border-color: rgba(255, 255, 255, 0.08);

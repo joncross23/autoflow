@@ -11,7 +11,7 @@ const avatarColors = [
   "#3B82F6", // blue
   "#10B981", // green
   "#F59E0B", // orange
-  "#8B5CF6", // purple
+  "#14B8A6", // teal
   "#EC4899", // pink
 ];
 

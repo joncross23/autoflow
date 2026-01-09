@@ -157,7 +157,7 @@ export default function DashboardPage() {
           label="In Progress"
           value={loading ? "-" : inProgressCount.toString()}
           icon={<ListTodo className="h-5 w-5" />}
-          color="#8B5CF6"
+          color="#14B8A6"
           href="/dashboard/tasks"
         />
         <DashboardStatCard
@@ -297,7 +297,7 @@ const PipelineWidget = memo(function PipelineWidget({
   const stages = [
     { key: "new", label: "New", color: "#3B82F6", href: "/dashboard/ideas?status=new" },
     { key: "evaluating", label: "Evaluating", color: "#F59E0B", href: "/dashboard/ideas?status=evaluating" },
-    { key: "accepted", label: "Accepted", color: "#8B5CF6", href: "/dashboard/ideas?status=accepted" },
+    { key: "accepted", label: "Accepted", color: "#14B8A6", href: "/dashboard/ideas?status=accepted" },
     { key: "doing", label: "In Progress", color: "#10B981", href: "/dashboard/tasks" },
   ] as const;
 
