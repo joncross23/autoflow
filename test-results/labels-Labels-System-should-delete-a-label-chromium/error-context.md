@@ -1,0 +1,5916 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "AutoFlow" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+      - navigation [ref=e10]:
+        - list [ref=e11]:
+          - listitem [ref=e12]:
+            - link "Dashboard" [ref=e13] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e14]
+              - generic [ref=e17]: Dashboard
+          - listitem [ref=e18]:
+            - link "Ideas" [ref=e19] [cursor=pointer]:
+              - /url: /dashboard/ideas
+              - img [ref=e20]
+              - generic [ref=e22]: Ideas
+          - listitem [ref=e23]:
+            - link "Tasks" [ref=e24] [cursor=pointer]:
+              - /url: /dashboard/tasks
+              - img [ref=e25]
+              - generic [ref=e26]: Tasks
+          - listitem [ref=e27]:
+            - link "Matrix" [ref=e28] [cursor=pointer]:
+              - /url: /dashboard/matrix
+              - img [ref=e29]
+              - generic [ref=e31]: Matrix
+          - listitem [ref=e32]:
+            - link "Time Audit" [ref=e33] [cursor=pointer]:
+              - /url: /dashboard/time-audit
+              - img [ref=e34]
+              - generic [ref=e37]: Time Audit
+          - listitem [ref=e38]:
+            - link "Settings" [ref=e39] [cursor=pointer]:
+              - /url: /dashboard/settings
+              - img [ref=e40]
+              - generic [ref=e43]: Settings
+      - paragraph [ref=e45]: Version 1.6.3
+    - main [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - heading "Ideas" [level=1] [ref=e50]
+            - paragraph [ref=e51]: Capture and evaluate automation ideas
+          - generic [ref=e52]:
+            - button "New Idea" [ref=e53] [cursor=pointer]:
+              - img [ref=e54]
+              - text: New Idea
+            - generic [ref=e55]:
+              - button "Guided Capture - 2 minutes, 4 questions" [ref=e56] [cursor=pointer]:
+                - img [ref=e57]
+                - text: Guided Capture
+                - generic [ref=e59]: "?"
+              - generic:
+                - generic: Guided Capture
+                - generic: 2 minutes • 4 questions
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - img [ref=e62]
+            - textbox "Search ideas..." [ref=e65]
+          - button "Saved Views" [ref=e67] [cursor=pointer]:
+            - img [ref=e68]
+            - generic [ref=e70]: Saved Views
+            - img [ref=e71]
+        - button "Add Filter" [ref=e76] [cursor=pointer]:
+          - img [ref=e77]
+          - text: Add Filter
+        - generic [ref=e78]:
+          - button "Columns" [ref=e80] [cursor=pointer]:
+            - img [ref=e81]
+            - text: Columns
+          - table [ref=e85]:
+            - rowgroup [ref=e86]:
+              - row "Title Status Labels Horizon RICE Updated" [ref=e87]:
+                - columnheader [ref=e88]:
+                  - checkbox [ref=e89]
+                - columnheader "Title" [ref=e90]:
+                  - generic [ref=e91] [cursor=pointer]:
+                    - img [ref=e92]
+                    - text: Title
+                    - img [ref=e99]
+                - columnheader "Status" [ref=e102]:
+                  - generic [ref=e103] [cursor=pointer]:
+                    - img [ref=e104]
+                    - text: Status
+                    - img [ref=e111]
+                - columnheader "Labels" [ref=e114]:
+                  - generic [ref=e115]:
+                    - img [ref=e116]
+                    - text: Labels
+                - columnheader "Horizon" [ref=e124]:
+                  - generic [ref=e125] [cursor=pointer]:
+                    - img [ref=e126]
+                    - text: Horizon
+                    - img [ref=e133]
+                - columnheader "RICE" [ref=e136]:
+                  - generic [ref=e137] [cursor=pointer]:
+                    - img [ref=e138]
+                    - text: RICE
+                    - img [ref=e145]
+                - columnheader "Updated" [ref=e148]:
+                  - generic [ref=e149] [cursor=pointer]:
+                    - img [ref=e150]
+                    - text: Updated
+                    - img [ref=e157]
+            - rowgroup [ref=e160]:
+              - row "Label Test 1767945326425 New - - -- just now" [ref=e161] [cursor=pointer]:
+                - cell [ref=e162]:
+                  - checkbox [ref=e163]
+                - cell "Label Test 1767945326425" [ref=e164]
+                - cell "New" [ref=e165]:
+                  - generic [ref=e166]: New
+                - cell "-" [ref=e167]
+                - cell "-" [ref=e168]
+                - cell "--" [ref=e169]:
+                  - generic [ref=e170]: "--"
+                - cell "just now" [ref=e171]
+              - row "Label Test 1767945319271 New Edit Test 1767945323796 - -- just now" [ref=e172] [cursor=pointer]:
+                - cell [ref=e173]:
+                  - checkbox [ref=e174]
+                - cell "Label Test 1767945319271" [ref=e175]
+                - cell "New" [ref=e176]:
+                  - generic [ref=e177]: New
+                - cell "Edit Test 1767945323796" [ref=e178]:
+                  - generic [ref=e180]: Edit Test 1767945323796
+                - cell "-" [ref=e181]
+                - cell "--" [ref=e182]:
+                  - generic [ref=e183]: "--"
+                - cell "just now" [ref=e184]
+              - row "Label Test 1767945288266 New - - -- just now" [ref=e185] [cursor=pointer]:
+                - cell [ref=e186]:
+                  - checkbox [ref=e187]
+                - cell "Label Test 1767945288266" [ref=e188]
+                - cell "New" [ref=e189]:
+                  - generic [ref=e190]: New
+                - cell "-" [ref=e191]
+                - cell "-" [ref=e192]
+                - cell "--" [ref=e193]:
+                  - generic [ref=e194]: "--"
+                - cell "just now" [ref=e195]
+              - row "Label Test 1767945257186 New - - -- 1m ago" [ref=e196] [cursor=pointer]:
+                - cell [ref=e197]:
+                  - checkbox [ref=e198]
+                - cell "Label Test 1767945257186" [ref=e199]
+                - cell "New" [ref=e200]:
+                  - generic [ref=e201]: New
+                - cell "-" [ref=e202]
+                - cell "-" [ref=e203]
+                - cell "--" [ref=e204]:
+                  - generic [ref=e205]: "--"
+                - cell "1m ago" [ref=e206]
+              - row "Label Test 1767945249890 New - - -- 1m ago" [ref=e207] [cursor=pointer]:
+                - cell [ref=e208]:
+                  - checkbox [ref=e209]
+                - cell "Label Test 1767945249890" [ref=e210]
+                - cell "New" [ref=e211]:
+                  - generic [ref=e212]: New
+                - cell "-" [ref=e213]
+                - cell "-" [ref=e214]
+                - cell "--" [ref=e215]:
+                  - generic [ref=e216]: "--"
+                - cell "1m ago" [ref=e217]
+              - row "Label Test 1767945242684 New - - -- 1m ago" [ref=e218] [cursor=pointer]:
+                - cell [ref=e219]:
+                  - checkbox [ref=e220]
+                - cell "Label Test 1767945242684" [ref=e221]
+                - cell "New" [ref=e222]:
+                  - generic [ref=e223]: New
+                - cell "-" [ref=e224]
+                - cell "-" [ref=e225]
+                - cell "--" [ref=e226]:
+                  - generic [ref=e227]: "--"
+                - cell "1m ago" [ref=e228]
+              - row "Label Test 1767945205408 New - - -- 2m ago" [ref=e229] [cursor=pointer]:
+                - cell [ref=e230]:
+                  - checkbox [ref=e231]
+                - cell "Label Test 1767945205408" [ref=e232]
+                - cell "New" [ref=e233]:
+                  - generic [ref=e234]: New
+                - cell "-" [ref=e235]
+                - cell "-" [ref=e236]
+                - cell "--" [ref=e237]:
+                  - generic [ref=e238]: "--"
+                - cell "2m ago" [ref=e239]
+              - row "Label Test 1767945174440 New - - -- 2m ago" [ref=e240] [cursor=pointer]:
+                - cell [ref=e241]:
+                  - checkbox [ref=e242]
+                - cell "Label Test 1767945174440" [ref=e243]
+                - cell "New" [ref=e244]:
+                  - generic [ref=e245]: New
+                - cell "-" [ref=e246]
+                - cell "-" [ref=e247]
+                - cell "--" [ref=e248]:
+                  - generic [ref=e249]: "--"
+                - cell "2m ago" [ref=e250]
+              - row "Label Test 1767945143470 New - - -- 3m ago" [ref=e251] [cursor=pointer]:
+                - cell [ref=e252]:
+                  - checkbox [ref=e253]
+                - cell "Label Test 1767945143470" [ref=e254]
+                - cell "New" [ref=e255]:
+                  - generic [ref=e256]: New
+                - cell "-" [ref=e257]
+                - cell "-" [ref=e258]
+                - cell "--" [ref=e259]:
+                  - generic [ref=e260]: "--"
+                - cell "3m ago" [ref=e261]
+              - row "Label Test 1767945112493 New - - -- 3m ago" [ref=e262] [cursor=pointer]:
+                - cell [ref=e263]:
+                  - checkbox [ref=e264]
+                - cell "Label Test 1767945112493" [ref=e265]
+                - cell "New" [ref=e266]:
+                  - generic [ref=e267]: New
+                - cell "-" [ref=e268]
+                - cell "-" [ref=e269]
+                - cell "--" [ref=e270]:
+                  - generic [ref=e271]: "--"
+                - cell "3m ago" [ref=e272]
+              - row "Label Test 1767945081529 New - - -- 4m ago" [ref=e273] [cursor=pointer]:
+                - cell [ref=e274]:
+                  - checkbox [ref=e275]
+                - cell "Label Test 1767945081529" [ref=e276]
+                - cell "New" [ref=e277]:
+                  - generic [ref=e278]: New
+                - cell "-" [ref=e279]
+                - cell "-" [ref=e280]
+                - cell "--" [ref=e281]:
+                  - generic [ref=e282]: "--"
+                - cell "4m ago" [ref=e283]
+              - row "Label Test 1767945050520 New - - -- 4m ago" [ref=e284] [cursor=pointer]:
+                - cell [ref=e285]:
+                  - checkbox [ref=e286]
+                - cell "Label Test 1767945050520" [ref=e287]
+                - cell "New" [ref=e288]:
+                  - generic [ref=e289]: New
+                - cell "-" [ref=e290]
+                - cell "-" [ref=e291]
+                - cell "--" [ref=e292]:
+                  - generic [ref=e293]: "--"
+                - cell "4m ago" [ref=e294]
+              - row "Label Test 1767945019538 New - - -- 5m ago" [ref=e295] [cursor=pointer]:
+                - cell [ref=e296]:
+                  - checkbox [ref=e297]
+                - cell "Label Test 1767945019538" [ref=e298]
+                - cell "New" [ref=e299]:
+                  - generic [ref=e300]: New
+                - cell "-" [ref=e301]
+                - cell "-" [ref=e302]
+                - cell "--" [ref=e303]:
+                  - generic [ref=e304]: "--"
+                - cell "5m ago" [ref=e305]
+              - row "Label Test 1767944988329 New - - -- 5m ago" [ref=e306] [cursor=pointer]:
+                - cell [ref=e307]:
+                  - checkbox [ref=e308]
+                - cell "Label Test 1767944988329" [ref=e309]
+                - cell "New" [ref=e310]:
+                  - generic [ref=e311]: New
+                - cell "-" [ref=e312]
+                - cell "-" [ref=e313]
+                - cell "--" [ref=e314]:
+                  - generic [ref=e315]: "--"
+                - cell "5m ago" [ref=e316]
+              - row "Label Test 1767944956141 New - - -- 6m ago" [ref=e317] [cursor=pointer]:
+                - cell [ref=e318]:
+                  - checkbox [ref=e319]
+                - cell "Label Test 1767944956141" [ref=e320]
+                - cell "New" [ref=e321]:
+                  - generic [ref=e322]: New
+                - cell "-" [ref=e323]
+                - cell "-" [ref=e324]
+                - cell "--" [ref=e325]:
+                  - generic [ref=e326]: "--"
+                - cell "6m ago" [ref=e327]
+              - row "Label Test 1767944924092 New - - -- 6m ago" [ref=e328] [cursor=pointer]:
+                - cell [ref=e329]:
+                  - checkbox [ref=e330]
+                - cell "Label Test 1767944924092" [ref=e331]
+                - cell "New" [ref=e332]:
+                  - generic [ref=e333]: New
+                - cell "-" [ref=e334]
+                - cell "-" [ref=e335]
+                - cell "--" [ref=e336]:
+                  - generic [ref=e337]: "--"
+                - cell "6m ago" [ref=e338]
+              - row "Label Test 1767944919892 New - - -- 6m ago" [ref=e339] [cursor=pointer]:
+                - cell [ref=e340]:
+                  - checkbox [ref=e341]
+                - cell "Label Test 1767944919892" [ref=e342]
+                - cell "New" [ref=e343]:
+                  - generic [ref=e344]: New
+                - cell "-" [ref=e345]
+                - cell "-" [ref=e346]
+                - cell "--" [ref=e347]:
+                  - generic [ref=e348]: "--"
+                - cell "6m ago" [ref=e349]
+              - row "Label Test 1767944915759 New - - -- 6m ago" [ref=e350] [cursor=pointer]:
+                - cell [ref=e351]:
+                  - checkbox [ref=e352]
+                - cell "Label Test 1767944915759" [ref=e353]
+                - cell "New" [ref=e354]:
+                  - generic [ref=e355]: New
+                - cell "-" [ref=e356]
+                - cell "-" [ref=e357]
+                - cell "--" [ref=e358]:
+                  - generic [ref=e359]: "--"
+                - cell "6m ago" [ref=e360]
+              - row "Label Test 1767944911581 New - - -- 6m ago" [ref=e361] [cursor=pointer]:
+                - cell [ref=e362]:
+                  - checkbox [ref=e363]
+                - cell "Label Test 1767944911581" [ref=e364]
+                - cell "New" [ref=e365]:
+                  - generic [ref=e366]: New
+                - cell "-" [ref=e367]
+                - cell "-" [ref=e368]
+                - cell "--" [ref=e369]:
+                  - generic [ref=e370]: "--"
+                - cell "6m ago" [ref=e371]
+              - row "Label Test 1767944907498 New - - -- 7m ago" [ref=e372] [cursor=pointer]:
+                - cell [ref=e373]:
+                  - checkbox [ref=e374]
+                - cell "Label Test 1767944907498" [ref=e375]
+                - cell "New" [ref=e376]:
+                  - generic [ref=e377]: New
+                - cell "-" [ref=e378]
+                - cell "-" [ref=e379]
+                - cell "--" [ref=e380]:
+                  - generic [ref=e381]: "--"
+                - cell "7m ago" [ref=e382]
+              - row "Label Test 1767944903427 New - - -- 7m ago" [ref=e383] [cursor=pointer]:
+                - cell [ref=e384]:
+                  - checkbox [ref=e385]
+                - cell "Label Test 1767944903427" [ref=e386]
+                - cell "New" [ref=e387]:
+                  - generic [ref=e388]: New
+                - cell "-" [ref=e389]
+                - cell "-" [ref=e390]
+                - cell "--" [ref=e391]:
+                  - generic [ref=e392]: "--"
+                - cell "7m ago" [ref=e393]
+              - row "Label Test 1767944899325 New - - -- 7m ago" [ref=e394] [cursor=pointer]:
+                - cell [ref=e395]:
+                  - checkbox [ref=e396]
+                - cell "Label Test 1767944899325" [ref=e397]
+                - cell "New" [ref=e398]:
+                  - generic [ref=e399]: New
+                - cell "-" [ref=e400]
+                - cell "-" [ref=e401]
+                - cell "--" [ref=e402]:
+                  - generic [ref=e403]: "--"
+                - cell "7m ago" [ref=e404]
+              - row "Label Test 1767944895330 New - - -- 7m ago" [ref=e405] [cursor=pointer]:
+                - cell [ref=e406]:
+                  - checkbox [ref=e407]
+                - cell "Label Test 1767944895330" [ref=e408]
+                - cell "New" [ref=e409]:
+                  - generic [ref=e410]: New
+                - cell "-" [ref=e411]
+                - cell "-" [ref=e412]
+                - cell "--" [ref=e413]:
+                  - generic [ref=e414]: "--"
+                - cell "7m ago" [ref=e415]
+              - row "Label Test 1767944890798 New - - -- 7m ago" [ref=e416] [cursor=pointer]:
+                - cell [ref=e417]:
+                  - checkbox [ref=e418]
+                - cell "Label Test 1767944890798" [ref=e419]
+                - cell "New" [ref=e420]:
+                  - generic [ref=e421]: New
+                - cell "-" [ref=e422]
+                - cell "-" [ref=e423]
+                - cell "--" [ref=e424]:
+                  - generic [ref=e425]: "--"
+                - cell "7m ago" [ref=e426]
+              - row "Edit Button Test 1767877987839 New - - -- 18h ago" [ref=e427] [cursor=pointer]:
+                - cell [ref=e428]:
+                  - checkbox [ref=e429]
+                - cell "Edit Button Test 1767877987839" [ref=e430]
+                - cell "New" [ref=e431]:
+                  - generic [ref=e432]: New
+                - cell "-" [ref=e433]
+                - cell "-" [ref=e434]
+                - cell "--" [ref=e435]:
+                  - generic [ref=e436]: "--"
+                - cell "18h ago" [ref=e437]
+              - row "Double Submit Test 1767877985090 New - - -- 18h ago" [ref=e438] [cursor=pointer]:
+                - cell [ref=e439]:
+                  - checkbox [ref=e440]
+                - cell "Double Submit Test 1767877985090" [ref=e441]
+                - cell "New" [ref=e442]:
+                  - generic [ref=e443]: New
+                - cell "-" [ref=e444]
+                - cell "-" [ref=e445]
+                - cell "--" [ref=e446]:
+                  - generic [ref=e447]: "--"
+                - cell "18h ago" [ref=e448]
+              - row "Double Submit Test 1767877985090 New - - -- 18h ago" [ref=e449] [cursor=pointer]:
+                - cell [ref=e450]:
+                  - checkbox [ref=e451]
+                - cell "Double Submit Test 1767877985090" [ref=e452]
+                - cell "New" [ref=e453]:
+                  - generic [ref=e454]: New
+                - cell "-" [ref=e455]
+                - cell "-" [ref=e456]
+                - cell "--" [ref=e457]:
+                  - generic [ref=e458]: "--"
+                - cell "18h ago" [ref=e459]
+              - row "Draft Clear Test 1767877980804 New - - -- 18h ago" [ref=e460] [cursor=pointer]:
+                - cell [ref=e461]:
+                  - checkbox [ref=e462]
+                - cell "Draft Clear Test 1767877980804" [ref=e463]
+                - cell "New" [ref=e464]:
+                  - generic [ref=e465]: New
+                - cell "-" [ref=e466]
+                - cell "-" [ref=e467]
+                - cell "--" [ref=e468]:
+                  - generic [ref=e469]: "--"
+                - cell "18h ago" [ref=e470]
+              - row "Q&A Test 1767877973199 New - - -- 18h ago" [ref=e471] [cursor=pointer]:
+                - cell [ref=e472]:
+                  - checkbox [ref=e473]
+                - cell "Q&A Test 1767877973199" [ref=e474]
+                - cell "New" [ref=e475]:
+                  - generic [ref=e476]: New
+                - cell "-" [ref=e477]
+                - cell "-" [ref=e478]
+                - cell "--" [ref=e479]:
+                  - generic [ref=e480]: "--"
+                - cell "18h ago" [ref=e481]
+              - row "Captured Idea 1767877970105 New - - -- 18h ago" [ref=e482] [cursor=pointer]:
+                - cell [ref=e483]:
+                  - checkbox [ref=e484]
+                - cell "Captured Idea 1767877970105" [ref=e485]
+                - cell "New" [ref=e486]:
+                  - generic [ref=e487]: New
+                - cell "-" [ref=e488]
+                - cell "-" [ref=e489]
+                - cell "--" [ref=e490]:
+                  - generic [ref=e491]: "--"
+                - cell "18h ago" [ref=e492]
+              - row "RICE Test Idea 1767876899996 New - - 1.0 19h ago" [ref=e493] [cursor=pointer]:
+                - cell [ref=e494]:
+                  - checkbox [ref=e495]
+                - cell "RICE Test Idea 1767876899996" [ref=e496]
+                - cell "New" [ref=e497]:
+                  - generic [ref=e498]: New
+                - cell "-" [ref=e499]
+                - cell "-" [ref=e500]
+                - cell "1.0" [ref=e501]:
+                  - generic [ref=e503]: "1.0"
+                - cell "19h ago" [ref=e504]
+              - row "RICE Test Idea 1767875367050 New - - -- 19h ago" [ref=e505] [cursor=pointer]:
+                - cell [ref=e506]:
+                  - checkbox [ref=e507]
+                - cell "RICE Test Idea 1767875367050" [ref=e508]
+                - cell "New" [ref=e509]:
+                  - generic [ref=e510]: New
+                - cell "-" [ref=e511]
+                - cell "-" [ref=e512]
+                - cell "--" [ref=e513]:
+                  - generic [ref=e514]: "--"
+                - cell "19h ago" [ref=e515]
+              - row "RICE Test Idea 1767874985577 New - - -- 19h ago" [ref=e516] [cursor=pointer]:
+                - cell [ref=e517]:
+                  - checkbox [ref=e518]
+                - cell "RICE Test Idea 1767874985577" [ref=e519]
+                - cell "New" [ref=e520]:
+                  - generic [ref=e521]: New
+                - cell "-" [ref=e522]
+                - cell "-" [ref=e523]
+                - cell "--" [ref=e524]:
+                  - generic [ref=e525]: "--"
+                - cell "19h ago" [ref=e526]
+              - row "RICE Test Idea 1767874933941 New - - -- 19h ago" [ref=e527] [cursor=pointer]:
+                - cell [ref=e528]:
+                  - checkbox [ref=e529]
+                - cell "RICE Test Idea 1767874933941" [ref=e530]
+                - cell "New" [ref=e531]:
+                  - generic [ref=e532]: New
+                - cell "-" [ref=e533]
+                - cell "-" [ref=e534]
+                - cell "--" [ref=e535]:
+                  - generic [ref=e536]: "--"
+                - cell "19h ago" [ref=e537]
+              - row "RICE Test Idea 1767874815683 New - - -- 19h ago" [ref=e538] [cursor=pointer]:
+                - cell [ref=e539]:
+                  - checkbox [ref=e540]
+                - cell "RICE Test Idea 1767874815683" [ref=e541]
+                - cell "New" [ref=e542]:
+                  - generic [ref=e543]: New
+                - cell "-" [ref=e544]
+                - cell "-" [ref=e545]
+                - cell "--" [ref=e546]:
+                  - generic [ref=e547]: "--"
+                - cell "19h ago" [ref=e548]
+              - row "RICE Test Idea 1767874771050 New - - -- 19h ago" [ref=e549] [cursor=pointer]:
+                - cell [ref=e550]:
+                  - checkbox [ref=e551]
+                - cell "RICE Test Idea 1767874771050" [ref=e552]
+                - cell "New" [ref=e553]:
+                  - generic [ref=e554]: New
+                - cell "-" [ref=e555]
+                - cell "-" [ref=e556]
+                - cell "--" [ref=e557]:
+                  - generic [ref=e558]: "--"
+                - cell "19h ago" [ref=e559]
+              - row "RICE Test Idea 1767874748668 New - - -- 19h ago" [ref=e560] [cursor=pointer]:
+                - cell [ref=e561]:
+                  - checkbox [ref=e562]
+                - cell "RICE Test Idea 1767874748668" [ref=e563]
+                - cell "New" [ref=e564]:
+                  - generic [ref=e565]: New
+                - cell "-" [ref=e566]
+                - cell "-" [ref=e567]
+                - cell "--" [ref=e568]:
+                  - generic [ref=e569]: "--"
+                - cell "19h ago" [ref=e570]
+              - row "RICE Test Idea 1767874718686 New - - -- 19h ago" [ref=e571] [cursor=pointer]:
+                - cell [ref=e572]:
+                  - checkbox [ref=e573]
+                - cell "RICE Test Idea 1767874718686" [ref=e574]
+                - cell "New" [ref=e575]:
+                  - generic [ref=e576]: New
+                - cell "-" [ref=e577]
+                - cell "-" [ref=e578]
+                - cell "--" [ref=e579]:
+                  - generic [ref=e580]: "--"
+                - cell "19h ago" [ref=e581]
+              - row "Delete Test 1767874437506 New - - -- 19h ago" [ref=e582] [cursor=pointer]:
+                - cell [ref=e583]:
+                  - checkbox [ref=e584]
+                - cell "Delete Test 1767874437506" [ref=e585]
+                - cell "New" [ref=e586]:
+                  - generic [ref=e587]: New
+                - cell "-" [ref=e588]
+                - cell "-" [ref=e589]
+                - cell "--" [ref=e590]:
+                  - generic [ref=e591]: "--"
+                - cell "19h ago" [ref=e592]
+              - row "Test Idea 1767874432586 New - - -- 19h ago" [ref=e593] [cursor=pointer]:
+                - cell [ref=e594]:
+                  - checkbox [ref=e595]
+                - cell "Test Idea 1767874432586" [ref=e596]
+                - cell "New" [ref=e597]:
+                  - generic [ref=e598]: New
+                - cell "-" [ref=e599]
+                - cell "-" [ref=e600]
+                - cell "--" [ref=e601]:
+                  - generic [ref=e602]: "--"
+                - cell "19h ago" [ref=e603]
+              - row "Edit Button Test 1767870958373 New - - -- 20h ago" [ref=e604] [cursor=pointer]:
+                - cell [ref=e605]:
+                  - checkbox [ref=e606]
+                - cell "Edit Button Test 1767870958373" [ref=e607]
+                - cell "New" [ref=e608]:
+                  - generic [ref=e609]: New
+                - cell "-" [ref=e610]
+                - cell "-" [ref=e611]
+                - cell "--" [ref=e612]:
+                  - generic [ref=e613]: "--"
+                - cell "20h ago" [ref=e614]
+              - row "Double Submit Test 1767870954940 New - - -- 20h ago" [ref=e615] [cursor=pointer]:
+                - cell [ref=e616]:
+                  - checkbox [ref=e617]
+                - cell "Double Submit Test 1767870954940" [ref=e618]
+                - cell "New" [ref=e619]:
+                  - generic [ref=e620]: New
+                - cell "-" [ref=e621]
+                - cell "-" [ref=e622]
+                - cell "--" [ref=e623]:
+                  - generic [ref=e624]: "--"
+                - cell "20h ago" [ref=e625]
+              - row "Double Submit Test 1767870954940 New - - -- 20h ago" [ref=e626] [cursor=pointer]:
+                - cell [ref=e627]:
+                  - checkbox [ref=e628]
+                - cell "Double Submit Test 1767870954940" [ref=e629]
+                - cell "New" [ref=e630]:
+                  - generic [ref=e631]: New
+                - cell "-" [ref=e632]
+                - cell "-" [ref=e633]
+                - cell "--" [ref=e634]:
+                  - generic [ref=e635]: "--"
+                - cell "20h ago" [ref=e636]
+              - row "Draft Clear Test 1767870949381 New - - -- 20h ago" [ref=e637] [cursor=pointer]:
+                - cell [ref=e638]:
+                  - checkbox [ref=e639]
+                - cell "Draft Clear Test 1767870949381" [ref=e640]
+                - cell "New" [ref=e641]:
+                  - generic [ref=e642]: New
+                - cell "-" [ref=e643]
+                - cell "-" [ref=e644]
+                - cell "--" [ref=e645]:
+                  - generic [ref=e646]: "--"
+                - cell "20h ago" [ref=e647]
+              - row "Q&A Test 1767870940504 New - - -- 20h ago" [ref=e648] [cursor=pointer]:
+                - cell [ref=e649]:
+                  - checkbox [ref=e650]
+                - cell "Q&A Test 1767870940504" [ref=e651]
+                - cell "New" [ref=e652]:
+                  - generic [ref=e653]: New
+                - cell "-" [ref=e654]
+                - cell "-" [ref=e655]
+                - cell "--" [ref=e656]:
+                  - generic [ref=e657]: "--"
+                - cell "20h ago" [ref=e658]
+              - row "Captured Idea 1767870936972 New - - -- 20h ago" [ref=e659] [cursor=pointer]:
+                - cell [ref=e660]:
+                  - checkbox [ref=e661]
+                - cell "Captured Idea 1767870936972" [ref=e662]
+                - cell "New" [ref=e663]:
+                  - generic [ref=e664]: New
+                - cell "-" [ref=e665]
+                - cell "-" [ref=e666]
+                - cell "--" [ref=e667]:
+                  - generic [ref=e668]: "--"
+                - cell "20h ago" [ref=e669]
+              - row "Edit Button Test 1767870879270 New - - -- 20h ago" [ref=e670] [cursor=pointer]:
+                - cell [ref=e671]:
+                  - checkbox [ref=e672]
+                - cell "Edit Button Test 1767870879270" [ref=e673]
+                - cell "New" [ref=e674]:
+                  - generic [ref=e675]: New
+                - cell "-" [ref=e676]
+                - cell "-" [ref=e677]
+                - cell "--" [ref=e678]:
+                  - generic [ref=e679]: "--"
+                - cell "20h ago" [ref=e680]
+              - row "Double Submit Test 1767870876269 New - - -- 20h ago" [ref=e681] [cursor=pointer]:
+                - cell [ref=e682]:
+                  - checkbox [ref=e683]
+                - cell "Double Submit Test 1767870876269" [ref=e684]
+                - cell "New" [ref=e685]:
+                  - generic [ref=e686]: New
+                - cell "-" [ref=e687]
+                - cell "-" [ref=e688]
+                - cell "--" [ref=e689]:
+                  - generic [ref=e690]: "--"
+                - cell "20h ago" [ref=e691]
+              - row "Double Submit Test 1767870876269 New - - -- 20h ago" [ref=e692] [cursor=pointer]:
+                - cell [ref=e693]:
+                  - checkbox [ref=e694]
+                - cell "Double Submit Test 1767870876269" [ref=e695]
+                - cell "New" [ref=e696]:
+                  - generic [ref=e697]: New
+                - cell "-" [ref=e698]
+                - cell "-" [ref=e699]
+                - cell "--" [ref=e700]:
+                  - generic [ref=e701]: "--"
+                - cell "20h ago" [ref=e702]
+              - row "Draft Clear Test 1767870870988 New - - -- 20h ago" [ref=e703] [cursor=pointer]:
+                - cell [ref=e704]:
+                  - checkbox [ref=e705]
+                - cell "Draft Clear Test 1767870870988" [ref=e706]
+                - cell "New" [ref=e707]:
+                  - generic [ref=e708]: New
+                - cell "-" [ref=e709]
+                - cell "-" [ref=e710]
+                - cell "--" [ref=e711]:
+                  - generic [ref=e712]: "--"
+                - cell "20h ago" [ref=e713]
+              - row "Q&A Test 1767870862758 New - - -- 20h ago" [ref=e714] [cursor=pointer]:
+                - cell [ref=e715]:
+                  - checkbox [ref=e716]
+                - cell "Q&A Test 1767870862758" [ref=e717]
+                - cell "New" [ref=e718]:
+                  - generic [ref=e719]: New
+                - cell "-" [ref=e720]
+                - cell "-" [ref=e721]
+                - cell "--" [ref=e722]:
+                  - generic [ref=e723]: "--"
+                - cell "20h ago" [ref=e724]
+              - row "Captured Idea 1767870858819 New - - -- 20h ago" [ref=e725] [cursor=pointer]:
+                - cell [ref=e726]:
+                  - checkbox [ref=e727]
+                - cell "Captured Idea 1767870858819" [ref=e728]
+                - cell "New" [ref=e729]:
+                  - generic [ref=e730]: New
+                - cell "-" [ref=e731]
+                - cell "-" [ref=e732]
+                - cell "--" [ref=e733]:
+                  - generic [ref=e734]: "--"
+                - cell "20h ago" [ref=e735]
+              - row "Edit Button Test 1767870736670 New - - -- 20h ago" [ref=e736] [cursor=pointer]:
+                - cell [ref=e737]:
+                  - checkbox [ref=e738]
+                - cell "Edit Button Test 1767870736670" [ref=e739]
+                - cell "New" [ref=e740]:
+                  - generic [ref=e741]: New
+                - cell "-" [ref=e742]
+                - cell "-" [ref=e743]
+                - cell "--" [ref=e744]:
+                  - generic [ref=e745]: "--"
+                - cell "20h ago" [ref=e746]
+              - row "Double Submit Test 1767870733734 New - - -- 20h ago" [ref=e747] [cursor=pointer]:
+                - cell [ref=e748]:
+                  - checkbox [ref=e749]
+                - cell "Double Submit Test 1767870733734" [ref=e750]
+                - cell "New" [ref=e751]:
+                  - generic [ref=e752]: New
+                - cell "-" [ref=e753]
+                - cell "-" [ref=e754]
+                - cell "--" [ref=e755]:
+                  - generic [ref=e756]: "--"
+                - cell "20h ago" [ref=e757]
+              - row "Double Submit Test 1767870733734 New - - -- 20h ago" [ref=e758] [cursor=pointer]:
+                - cell [ref=e759]:
+                  - checkbox [ref=e760]
+                - cell "Double Submit Test 1767870733734" [ref=e761]
+                - cell "New" [ref=e762]:
+                  - generic [ref=e763]: New
+                - cell "-" [ref=e764]
+                - cell "-" [ref=e765]
+                - cell "--" [ref=e766]:
+                  - generic [ref=e767]: "--"
+                - cell "20h ago" [ref=e768]
+              - row "Draft Clear Test 1767870728721 New - - -- 20h ago" [ref=e769] [cursor=pointer]:
+                - cell [ref=e770]:
+                  - checkbox [ref=e771]
+                - cell "Draft Clear Test 1767870728721" [ref=e772]
+                - cell "New" [ref=e773]:
+                  - generic [ref=e774]: New
+                - cell "-" [ref=e775]
+                - cell "-" [ref=e776]
+                - cell "--" [ref=e777]:
+                  - generic [ref=e778]: "--"
+                - cell "20h ago" [ref=e779]
+              - row "Q&A Test 1767870713886 New - - -- 20h ago" [ref=e780] [cursor=pointer]:
+                - cell [ref=e781]:
+                  - checkbox [ref=e782]
+                - cell "Q&A Test 1767870713886" [ref=e783]
+                - cell "New" [ref=e784]:
+                  - generic [ref=e785]: New
+                - cell "-" [ref=e786]
+                - cell "-" [ref=e787]
+                - cell "--" [ref=e788]:
+                  - generic [ref=e789]: "--"
+                - cell "20h ago" [ref=e790]
+              - row "Captured Idea 1767870710037 New - - -- 20h ago" [ref=e791] [cursor=pointer]:
+                - cell [ref=e792]:
+                  - checkbox [ref=e793]
+                - cell "Captured Idea 1767870710037" [ref=e794]
+                - cell "New" [ref=e795]:
+                  - generic [ref=e796]: New
+                - cell "-" [ref=e797]
+                - cell "-" [ref=e798]
+                - cell "--" [ref=e799]:
+                  - generic [ref=e800]: "--"
+                - cell "20h ago" [ref=e801]
+              - row "Edit Button Test 1767868197002 New - - -- 21h ago" [ref=e802] [cursor=pointer]:
+                - cell [ref=e803]:
+                  - checkbox [ref=e804]
+                - cell "Edit Button Test 1767868197002" [ref=e805]
+                - cell "New" [ref=e806]:
+                  - generic [ref=e807]: New
+                - cell "-" [ref=e808]
+                - cell "-" [ref=e809]
+                - cell "--" [ref=e810]:
+                  - generic [ref=e811]: "--"
+                - cell "21h ago" [ref=e812]
+              - row "Double Submit Test 1767868193716 New - - -- 21h ago" [ref=e813] [cursor=pointer]:
+                - cell [ref=e814]:
+                  - checkbox [ref=e815]
+                - cell "Double Submit Test 1767868193716" [ref=e816]
+                - cell "New" [ref=e817]:
+                  - generic [ref=e818]: New
+                - cell "-" [ref=e819]
+                - cell "-" [ref=e820]
+                - cell "--" [ref=e821]:
+                  - generic [ref=e822]: "--"
+                - cell "21h ago" [ref=e823]
+              - row "Double Submit Test 1767868193716 New - - -- 21h ago" [ref=e824] [cursor=pointer]:
+                - cell [ref=e825]:
+                  - checkbox [ref=e826]
+                - cell "Double Submit Test 1767868193716" [ref=e827]
+                - cell "New" [ref=e828]:
+                  - generic [ref=e829]: New
+                - cell "-" [ref=e830]
+                - cell "-" [ref=e831]
+                - cell "--" [ref=e832]:
+                  - generic [ref=e833]: "--"
+                - cell "21h ago" [ref=e834]
+              - row "Draft Clear Test 1767868188601 New - - -- 21h ago" [ref=e835] [cursor=pointer]:
+                - cell [ref=e836]:
+                  - checkbox [ref=e837]
+                - cell "Draft Clear Test 1767868188601" [ref=e838]
+                - cell "New" [ref=e839]:
+                  - generic [ref=e840]: New
+                - cell "-" [ref=e841]
+                - cell "-" [ref=e842]
+                - cell "--" [ref=e843]:
+                  - generic [ref=e844]: "--"
+                - cell "21h ago" [ref=e845]
+              - row "Q&A Test 1767868178755 New - - -- 21h ago" [ref=e846] [cursor=pointer]:
+                - cell [ref=e847]:
+                  - checkbox [ref=e848]
+                - cell "Q&A Test 1767868178755" [ref=e849]
+                - cell "New" [ref=e850]:
+                  - generic [ref=e851]: New
+                - cell "-" [ref=e852]
+                - cell "-" [ref=e853]
+                - cell "--" [ref=e854]:
+                  - generic [ref=e855]: "--"
+                - cell "21h ago" [ref=e856]
+              - row "Captured Idea 1767868173604 New - - -- 21h ago" [ref=e857] [cursor=pointer]:
+                - cell [ref=e858]:
+                  - checkbox [ref=e859]
+                - cell "Captured Idea 1767868173604" [ref=e860]
+                - cell "New" [ref=e861]:
+                  - generic [ref=e862]: New
+                - cell "-" [ref=e863]
+                - cell "-" [ref=e864]
+                - cell "--" [ref=e865]:
+                  - generic [ref=e866]: "--"
+                - cell "21h ago" [ref=e867]
+              - row "Edit Button Test 1767868124353 New - - -- 21h ago" [ref=e868] [cursor=pointer]:
+                - cell [ref=e869]:
+                  - checkbox [ref=e870]
+                - cell "Edit Button Test 1767868124353" [ref=e871]
+                - cell "New" [ref=e872]:
+                  - generic [ref=e873]: New
+                - cell "-" [ref=e874]
+                - cell "-" [ref=e875]
+                - cell "--" [ref=e876]:
+                  - generic [ref=e877]: "--"
+                - cell "21h ago" [ref=e878]
+              - row "Double Submit Test 1767868121049 New - - -- 21h ago" [ref=e879] [cursor=pointer]:
+                - cell [ref=e880]:
+                  - checkbox [ref=e881]
+                - cell "Double Submit Test 1767868121049" [ref=e882]
+                - cell "New" [ref=e883]:
+                  - generic [ref=e884]: New
+                - cell "-" [ref=e885]
+                - cell "-" [ref=e886]
+                - cell "--" [ref=e887]:
+                  - generic [ref=e888]: "--"
+                - cell "21h ago" [ref=e889]
+              - row "Double Submit Test 1767868121049 New - - -- 21h ago" [ref=e890] [cursor=pointer]:
+                - cell [ref=e891]:
+                  - checkbox [ref=e892]
+                - cell "Double Submit Test 1767868121049" [ref=e893]
+                - cell "New" [ref=e894]:
+                  - generic [ref=e895]: New
+                - cell "-" [ref=e896]
+                - cell "-" [ref=e897]
+                - cell "--" [ref=e898]:
+                  - generic [ref=e899]: "--"
+                - cell "21h ago" [ref=e900]
+              - row "Draft Clear Test 1767868116287 New - - -- 21h ago" [ref=e901] [cursor=pointer]:
+                - cell [ref=e902]:
+                  - checkbox [ref=e903]
+                - cell "Draft Clear Test 1767868116287" [ref=e904]
+                - cell "New" [ref=e905]:
+                  - generic [ref=e906]: New
+                - cell "-" [ref=e907]
+                - cell "-" [ref=e908]
+                - cell "--" [ref=e909]:
+                  - generic [ref=e910]: "--"
+                - cell "21h ago" [ref=e911]
+              - row "Q&A Test 1767868106534 New - - -- 21h ago" [ref=e912] [cursor=pointer]:
+                - cell [ref=e913]:
+                  - checkbox [ref=e914]
+                - cell "Q&A Test 1767868106534" [ref=e915]
+                - cell "New" [ref=e916]:
+                  - generic [ref=e917]: New
+                - cell "-" [ref=e918]
+                - cell "-" [ref=e919]
+                - cell "--" [ref=e920]:
+                  - generic [ref=e921]: "--"
+                - cell "21h ago" [ref=e922]
+              - row "Captured Idea 1767868103069 New - - -- 21h ago" [ref=e923] [cursor=pointer]:
+                - cell [ref=e924]:
+                  - checkbox [ref=e925]
+                - cell "Captured Idea 1767868103069" [ref=e926]
+                - cell "New" [ref=e927]:
+                  - generic [ref=e928]: New
+                - cell "-" [ref=e929]
+                - cell "-" [ref=e930]
+                - cell "--" [ref=e931]:
+                  - generic [ref=e932]: "--"
+                - cell "21h ago" [ref=e933]
+              - row "Edit Button Test 1767868044420 New - - -- 21h ago" [ref=e934] [cursor=pointer]:
+                - cell [ref=e935]:
+                  - checkbox [ref=e936]
+                - cell "Edit Button Test 1767868044420" [ref=e937]
+                - cell "New" [ref=e938]:
+                  - generic [ref=e939]: New
+                - cell "-" [ref=e940]
+                - cell "-" [ref=e941]
+                - cell "--" [ref=e942]:
+                  - generic [ref=e943]: "--"
+                - cell "21h ago" [ref=e944]
+              - row "Double Submit Test 1767868041335 New - - -- 21h ago" [ref=e945] [cursor=pointer]:
+                - cell [ref=e946]:
+                  - checkbox [ref=e947]
+                - cell "Double Submit Test 1767868041335" [ref=e948]
+                - cell "New" [ref=e949]:
+                  - generic [ref=e950]: New
+                - cell "-" [ref=e951]
+                - cell "-" [ref=e952]
+                - cell "--" [ref=e953]:
+                  - generic [ref=e954]: "--"
+                - cell "21h ago" [ref=e955]
+              - row "Draft Clear Test 1767868036504 New - - -- 21h ago" [ref=e956] [cursor=pointer]:
+                - cell [ref=e957]:
+                  - checkbox [ref=e958]
+                - cell "Draft Clear Test 1767868036504" [ref=e959]
+                - cell "New" [ref=e960]:
+                  - generic [ref=e961]: New
+                - cell "-" [ref=e962]
+                - cell "-" [ref=e963]
+                - cell "--" [ref=e964]:
+                  - generic [ref=e965]: "--"
+                - cell "21h ago" [ref=e966]
+              - row "Q&A Test 1767868027503 New - - -- 21h ago" [ref=e967] [cursor=pointer]:
+                - cell [ref=e968]:
+                  - checkbox [ref=e969]
+                - cell "Q&A Test 1767868027503" [ref=e970]
+                - cell "New" [ref=e971]:
+                  - generic [ref=e972]: New
+                - cell "-" [ref=e973]
+                - cell "-" [ref=e974]
+                - cell "--" [ref=e975]:
+                  - generic [ref=e976]: "--"
+                - cell "21h ago" [ref=e977]
+              - row "Captured Idea 1767868022470 New - - -- 21h ago" [ref=e978] [cursor=pointer]:
+                - cell [ref=e979]:
+                  - checkbox [ref=e980]
+                - cell "Captured Idea 1767868022470" [ref=e981]
+                - cell "New" [ref=e982]:
+                  - generic [ref=e983]: New
+                - cell "-" [ref=e984]
+                - cell "-" [ref=e985]
+                - cell "--" [ref=e986]:
+                  - generic [ref=e987]: "--"
+                - cell "21h ago" [ref=e988]
+              - row "Edit Button Test 1767867883127 New - - -- 21h ago" [ref=e989] [cursor=pointer]:
+                - cell [ref=e990]:
+                  - checkbox [ref=e991]
+                - cell "Edit Button Test 1767867883127" [ref=e992]
+                - cell "New" [ref=e993]:
+                  - generic [ref=e994]: New
+                - cell "-" [ref=e995]
+                - cell "-" [ref=e996]
+                - cell "--" [ref=e997]:
+                  - generic [ref=e998]: "--"
+                - cell "21h ago" [ref=e999]
+              - row "Double Submit Test 1767867880270 New - - -- 21h ago" [ref=e1000] [cursor=pointer]:
+                - cell [ref=e1001]:
+                  - checkbox [ref=e1002]
+                - cell "Double Submit Test 1767867880270" [ref=e1003]
+                - cell "New" [ref=e1004]:
+                  - generic [ref=e1005]: New
+                - cell "-" [ref=e1006]
+                - cell "-" [ref=e1007]
+                - cell "--" [ref=e1008]:
+                  - generic [ref=e1009]: "--"
+                - cell "21h ago" [ref=e1010]
+              - row "Double Submit Test 1767867880270 New - - -- 21h ago" [ref=e1011] [cursor=pointer]:
+                - cell [ref=e1012]:
+                  - checkbox [ref=e1013]
+                - cell "Double Submit Test 1767867880270" [ref=e1014]
+                - cell "New" [ref=e1015]:
+                  - generic [ref=e1016]: New
+                - cell "-" [ref=e1017]
+                - cell "-" [ref=e1018]
+                - cell "--" [ref=e1019]:
+                  - generic [ref=e1020]: "--"
+                - cell "21h ago" [ref=e1021]
+              - row "Draft Clear Test 1767867874843 New - - -- 21h ago" [ref=e1022] [cursor=pointer]:
+                - cell [ref=e1023]:
+                  - checkbox [ref=e1024]
+                - cell "Draft Clear Test 1767867874843" [ref=e1025]
+                - cell "New" [ref=e1026]:
+                  - generic [ref=e1027]: New
+                - cell "-" [ref=e1028]
+                - cell "-" [ref=e1029]
+                - cell "--" [ref=e1030]:
+                  - generic [ref=e1031]: "--"
+                - cell "21h ago" [ref=e1032]
+              - row "Q&A Test 1767867852789 New - - -- 21h ago" [ref=e1033] [cursor=pointer]:
+                - cell [ref=e1034]:
+                  - checkbox [ref=e1035]
+                - cell "Q&A Test 1767867852789" [ref=e1036]
+                - cell "New" [ref=e1037]:
+                  - generic [ref=e1038]: New
+                - cell "-" [ref=e1039]
+                - cell "-" [ref=e1040]
+                - cell "--" [ref=e1041]:
+                  - generic [ref=e1042]: "--"
+                - cell "21h ago" [ref=e1043]
+              - row "Captured Idea 1767867849570 New - - -- 21h ago" [ref=e1044] [cursor=pointer]:
+                - cell [ref=e1045]:
+                  - checkbox [ref=e1046]
+                - cell "Captured Idea 1767867849570" [ref=e1047]
+                - cell "New" [ref=e1048]:
+                  - generic [ref=e1049]: New
+                - cell "-" [ref=e1050]
+                - cell "-" [ref=e1051]
+                - cell "--" [ref=e1052]:
+                  - generic [ref=e1053]: "--"
+                - cell "21h ago" [ref=e1054]
+              - row "Debug Test Idea New - - -- 21h ago" [ref=e1055] [cursor=pointer]:
+                - cell [ref=e1056]:
+                  - checkbox [ref=e1057]
+                - cell "Debug Test Idea" [ref=e1058]
+                - cell "New" [ref=e1059]:
+                  - generic [ref=e1060]: New
+                - cell "-" [ref=e1061]
+                - cell "-" [ref=e1062]
+                - cell "--" [ref=e1063]:
+                  - generic [ref=e1064]: "--"
+                - cell "21h ago" [ref=e1065]
+              - row "Edit Button Test 1767867610789 New - - -- 21h ago" [ref=e1066] [cursor=pointer]:
+                - cell [ref=e1067]:
+                  - checkbox [ref=e1068]
+                - cell "Edit Button Test 1767867610789" [ref=e1069]
+                - cell "New" [ref=e1070]:
+                  - generic [ref=e1071]: New
+                - cell "-" [ref=e1072]
+                - cell "-" [ref=e1073]
+                - cell "--" [ref=e1074]:
+                  - generic [ref=e1075]: "--"
+                - cell "21h ago" [ref=e1076]
+              - row "Double Submit Test 1767867579873 New - - -- 21h ago" [ref=e1077] [cursor=pointer]:
+                - cell [ref=e1078]:
+                  - checkbox [ref=e1079]
+                - cell "Double Submit Test 1767867579873" [ref=e1080]
+                - cell "New" [ref=e1081]:
+                  - generic [ref=e1082]: New
+                - cell "-" [ref=e1083]
+                - cell "-" [ref=e1084]
+                - cell "--" [ref=e1085]:
+                  - generic [ref=e1086]: "--"
+                - cell "21h ago" [ref=e1087]
+              - row "Draft Clear Test 1767867575383 New - - -- 21h ago" [ref=e1088] [cursor=pointer]:
+                - cell [ref=e1089]:
+                  - checkbox [ref=e1090]
+                - cell "Draft Clear Test 1767867575383" [ref=e1091]
+                - cell "New" [ref=e1092]:
+                  - generic [ref=e1093]: New
+                - cell "-" [ref=e1094]
+                - cell "-" [ref=e1095]
+                - cell "--" [ref=e1096]:
+                  - generic [ref=e1097]: "--"
+                - cell "21h ago" [ref=e1098]
+              - row "Q&A Test 1767867561806 New - - -- 21h ago" [ref=e1099] [cursor=pointer]:
+                - cell [ref=e1100]:
+                  - checkbox [ref=e1101]
+                - cell "Q&A Test 1767867561806" [ref=e1102]
+                - cell "New" [ref=e1103]:
+                  - generic [ref=e1104]: New
+                - cell "-" [ref=e1105]
+                - cell "-" [ref=e1106]
+                - cell "--" [ref=e1107]:
+                  - generic [ref=e1108]: "--"
+                - cell "21h ago" [ref=e1109]
+              - row "Captured Idea 1767867558407 New - - -- 21h ago" [ref=e1110] [cursor=pointer]:
+                - cell [ref=e1111]:
+                  - checkbox [ref=e1112]
+                - cell "Captured Idea 1767867558407" [ref=e1113]
+                - cell "New" [ref=e1114]:
+                  - generic [ref=e1115]: New
+                - cell "-" [ref=e1116]
+                - cell "-" [ref=e1117]
+                - cell "--" [ref=e1118]:
+                  - generic [ref=e1119]: "--"
+                - cell "21h ago" [ref=e1120]
+              - row "Delete Test 1767831728658 New - - -- 1d ago" [ref=e1121] [cursor=pointer]:
+                - cell [ref=e1122]:
+                  - checkbox [ref=e1123]
+                - cell "Delete Test 1767831728658" [ref=e1124]
+                - cell "New" [ref=e1125]:
+                  - generic [ref=e1126]: New
+                - cell "-" [ref=e1127]
+                - cell "-" [ref=e1128]
+                - cell "--" [ref=e1129]:
+                  - generic [ref=e1130]: "--"
+                - cell "1d ago" [ref=e1131]
+              - row "Test Idea 1767831722419 New - - -- 1d ago" [ref=e1132] [cursor=pointer]:
+                - cell [ref=e1133]:
+                  - checkbox [ref=e1134]
+                - cell "Test Idea 1767831722419" [ref=e1135]
+                - cell "New" [ref=e1136]:
+                  - generic [ref=e1137]: New
+                - cell "-" [ref=e1138]
+                - cell "-" [ref=e1139]
+                - cell "--" [ref=e1140]:
+                  - generic [ref=e1141]: "--"
+                - cell "1d ago" [ref=e1142]
+              - row "Links Test 1767831715023 New - - -- 1d ago" [ref=e1143] [cursor=pointer]:
+                - cell [ref=e1144]:
+                  - checkbox [ref=e1145]
+                - cell "Links Test 1767831715023" [ref=e1146]
+                - cell "New" [ref=e1147]:
+                  - generic [ref=e1148]: New
+                - cell "-" [ref=e1149]
+                - cell "-" [ref=e1150]
+                - cell "--" [ref=e1151]:
+                  - generic [ref=e1152]: "--"
+                - cell "1d ago" [ref=e1153]
+              - row "Links Test 1767831710301 New - - -- 1d ago" [ref=e1154] [cursor=pointer]:
+                - cell [ref=e1155]:
+                  - checkbox [ref=e1156]
+                - cell "Links Test 1767831710301" [ref=e1157]
+                - cell "New" [ref=e1158]:
+                  - generic [ref=e1159]: New
+                - cell "-" [ref=e1160]
+                - cell "-" [ref=e1161]
+                - cell "--" [ref=e1162]:
+                  - generic [ref=e1163]: "--"
+                - cell "1d ago" [ref=e1164]
+              - row "Slider Test 1767831703469 New - Now -- 1d ago" [ref=e1165] [cursor=pointer]:
+                - cell [ref=e1166]:
+                  - checkbox [ref=e1167]
+                - cell "Slider Test 1767831703469" [ref=e1168]
+                - cell "New" [ref=e1169]:
+                  - generic [ref=e1170]: New
+                - cell "-" [ref=e1171]
+                - cell "Now" [ref=e1172]
+                - cell "--" [ref=e1173]:
+                  - generic [ref=e1174]: "--"
+                - cell "1d ago" [ref=e1175]
+              - row "Slider Test 1767831697899 New - - -- 1d ago" [ref=e1176] [cursor=pointer]:
+                - cell [ref=e1177]:
+                  - checkbox [ref=e1178]
+                - cell "Slider Test 1767831697899" [ref=e1179]
+                - cell "New" [ref=e1180]:
+                  - generic [ref=e1181]: New
+                - cell "-" [ref=e1182]
+                - cell "-" [ref=e1183]
+                - cell "--" [ref=e1184]:
+                  - generic [ref=e1185]: "--"
+                - cell "1d ago" [ref=e1186]
+              - row "Slider Test 1767831693756 New - - -- 1d ago" [ref=e1187] [cursor=pointer]:
+                - cell [ref=e1188]:
+                  - checkbox [ref=e1189]
+                - cell "Slider Test 1767831693756" [ref=e1190]
+                - cell "New" [ref=e1191]:
+                  - generic [ref=e1192]: New
+                - cell "-" [ref=e1193]
+                - cell "-" [ref=e1194]
+                - cell "--" [ref=e1195]:
+                  - generic [ref=e1196]: "--"
+                - cell "1d ago" [ref=e1197]
+              - row "Slider Test 1767831688598 (Copy) New - - -- 1d ago" [ref=e1198] [cursor=pointer]:
+                - cell [ref=e1199]:
+                  - checkbox [ref=e1200]
+                - cell "Slider Test 1767831688598 (Copy)" [ref=e1201]
+                - cell "New" [ref=e1202]:
+                  - generic [ref=e1203]: New
+                - cell "-" [ref=e1204]
+                - cell "-" [ref=e1205]
+                - cell "--" [ref=e1206]:
+                  - generic [ref=e1207]: "--"
+                - cell "1d ago" [ref=e1208]
+              - row "Slider Test 1767831688598 New - - -- 1d ago" [ref=e1209] [cursor=pointer]:
+                - cell [ref=e1210]:
+                  - checkbox [ref=e1211]
+                - cell "Slider Test 1767831688598" [ref=e1212]
+                - cell "New" [ref=e1213]:
+                  - generic [ref=e1214]: New
+                - cell "-" [ref=e1215]
+                - cell "-" [ref=e1216]
+                - cell "--" [ref=e1217]:
+                  - generic [ref=e1218]: "--"
+                - cell "1d ago" [ref=e1219]
+              - row "Slider Test 1767831673257 New - - -- 1d ago" [ref=e1220] [cursor=pointer]:
+                - cell [ref=e1221]:
+                  - checkbox [ref=e1222]
+                - cell "Slider Test 1767831673257" [ref=e1223]
+                - cell "New" [ref=e1224]:
+                  - generic [ref=e1225]: New
+                - cell "-" [ref=e1226]
+                - cell "-" [ref=e1227]
+                - cell "--" [ref=e1228]:
+                  - generic [ref=e1229]: "--"
+                - cell "1d ago" [ref=e1230]
+              - row "Slider Test 1767831668912 New - - -- 1d ago" [ref=e1231] [cursor=pointer]:
+                - cell [ref=e1232]:
+                  - checkbox [ref=e1233]
+                - cell "Slider Test 1767831668912" [ref=e1234]
+                - cell "New" [ref=e1235]:
+                  - generic [ref=e1236]: New
+                - cell "-" [ref=e1237]
+                - cell "-" [ref=e1238]
+                - cell "--" [ref=e1239]:
+                  - generic [ref=e1240]: "--"
+                - cell "1d ago" [ref=e1241]
+              - row "Slider Test 1767831663115 Evaluating - - -- 1d ago" [ref=e1242] [cursor=pointer]:
+                - cell [ref=e1243]:
+                  - checkbox [ref=e1244]
+                - cell "Slider Test 1767831663115" [ref=e1245]
+                - cell "Evaluating" [ref=e1246]:
+                  - generic [ref=e1247]: Evaluating
+                - cell "-" [ref=e1248]
+                - cell "-" [ref=e1249]
+                - cell "--" [ref=e1250]:
+                  - generic [ref=e1251]: "--"
+                - cell "1d ago" [ref=e1252]
+              - row "Updated Slider Test 1767831657764 New - - -- 1d ago" [ref=e1253] [cursor=pointer]:
+                - cell [ref=e1254]:
+                  - checkbox [ref=e1255]
+                - cell "Updated Slider Test 1767831657764" [ref=e1256]
+                - cell "New" [ref=e1257]:
+                  - generic [ref=e1258]: New
+                - cell "-" [ref=e1259]
+                - cell "-" [ref=e1260]
+                - cell "--" [ref=e1261]:
+                  - generic [ref=e1262]: "--"
+                - cell "1d ago" [ref=e1263]
+              - row "Slider Test 1767831653699 New - - -- 1d ago" [ref=e1264] [cursor=pointer]:
+                - cell [ref=e1265]:
+                  - checkbox [ref=e1266]
+                - cell "Slider Test 1767831653699" [ref=e1267]
+                - cell "New" [ref=e1268]:
+                  - generic [ref=e1269]: New
+                - cell "-" [ref=e1270]
+                - cell "-" [ref=e1271]
+                - cell "--" [ref=e1272]:
+                  - generic [ref=e1273]: "--"
+                - cell "1d ago" [ref=e1274]
+              - row "Slider Test 1767831648895 New - - -- 1d ago" [ref=e1275] [cursor=pointer]:
+                - cell [ref=e1276]:
+                  - checkbox [ref=e1277]
+                - cell "Slider Test 1767831648895" [ref=e1278]
+                - cell "New" [ref=e1279]:
+                  - generic [ref=e1280]: New
+                - cell "-" [ref=e1281]
+                - cell "-" [ref=e1282]
+                - cell "--" [ref=e1283]:
+                  - generic [ref=e1284]: "--"
+                - cell "1d ago" [ref=e1285]
+              - row "Slider Test 1767831644650 New - - -- 1d ago" [ref=e1286] [cursor=pointer]:
+                - cell [ref=e1287]:
+                  - checkbox [ref=e1288]
+                - cell "Slider Test 1767831644650" [ref=e1289]
+                - cell "New" [ref=e1290]:
+                  - generic [ref=e1291]: New
+                - cell "-" [ref=e1292]
+                - cell "-" [ref=e1293]
+                - cell "--" [ref=e1294]:
+                  - generic [ref=e1295]: "--"
+                - cell "1d ago" [ref=e1296]
+              - row "Quick Capture Test 1767831636055 New - - -- 1d ago" [ref=e1297] [cursor=pointer]:
+                - cell [ref=e1298]:
+                  - checkbox [ref=e1299]
+                - cell "Quick Capture Test 1767831636055" [ref=e1300]
+                - cell "New" [ref=e1301]:
+                  - generic [ref=e1302]: New
+                - cell "-" [ref=e1303]
+                - cell "-" [ref=e1304]
+                - cell "--" [ref=e1305]:
+                  - generic [ref=e1306]: "--"
+                - cell "1d ago" [ref=e1307]
+              - row "Click Select Test 1767831562427 New - - -- 1d ago" [ref=e1308] [cursor=pointer]:
+                - cell [ref=e1309]:
+                  - checkbox [ref=e1310]
+                - cell "Click Select Test 1767831562427" [ref=e1311]
+                - cell "New" [ref=e1312]:
+                  - generic [ref=e1313]: New
+                - cell "-" [ref=e1314]
+                - cell "-" [ref=e1315]
+                - cell "--" [ref=e1316]:
+                  - generic [ref=e1317]: "--"
+                - cell "1d ago" [ref=e1318]
+              - row "Enter Select Test 1767831552252 New - - -- 1d ago" [ref=e1319] [cursor=pointer]:
+                - cell [ref=e1320]:
+                  - checkbox [ref=e1321]
+                - cell "Enter Select Test 1767831552252" [ref=e1322]
+                - cell "New" [ref=e1323]:
+                  - generic [ref=e1324]: New
+                - cell "-" [ref=e1325]
+                - cell "-" [ref=e1326]
+                - cell "--" [ref=e1327]:
+                  - generic [ref=e1328]: "--"
+                - cell "1d ago" [ref=e1329]
+              - row "Nav Test Idea 2 1767831540295 New - - -- 1d ago" [ref=e1330] [cursor=pointer]:
+                - cell [ref=e1331]:
+                  - checkbox [ref=e1332]
+                - cell "Nav Test Idea 2 1767831540295" [ref=e1333]
+                - cell "New" [ref=e1334]:
+                  - generic [ref=e1335]: New
+                - cell "-" [ref=e1336]
+                - cell "-" [ref=e1337]
+                - cell "--" [ref=e1338]:
+                  - generic [ref=e1339]: "--"
+                - cell "1d ago" [ref=e1340]
+              - row "Nav Test Idea 1 1767831540295 New - - -- 1d ago" [ref=e1341] [cursor=pointer]:
+                - cell [ref=e1342]:
+                  - checkbox [ref=e1343]
+                - cell "Nav Test Idea 1 1767831540295" [ref=e1344]
+                - cell "New" [ref=e1345]:
+                  - generic [ref=e1346]: New
+                - cell "-" [ref=e1347]
+                - cell "-" [ref=e1348]
+                - cell "--" [ref=e1349]:
+                  - generic [ref=e1350]: "--"
+                - cell "1d ago" [ref=e1351]
+              - row "Search Test Idea 1767831522253 New - - -- 1d ago" [ref=e1352] [cursor=pointer]:
+                - cell [ref=e1353]:
+                  - checkbox [ref=e1354]
+                - cell "Search Test Idea 1767831522253" [ref=e1355]
+                - cell "New" [ref=e1356]:
+                  - generic [ref=e1357]: New
+                - cell "-" [ref=e1358]
+                - cell "-" [ref=e1359]
+                - cell "--" [ref=e1360]:
+                  - generic [ref=e1361]: "--"
+                - cell "1d ago" [ref=e1362]
+              - row "Delete Test 1767543659088 New - - -- 4d ago" [ref=e1363] [cursor=pointer]:
+                - cell [ref=e1364]:
+                  - checkbox [ref=e1365]
+                - cell "Delete Test 1767543659088" [ref=e1366]
+                - cell "New" [ref=e1367]:
+                  - generic [ref=e1368]: New
+                - cell "-" [ref=e1369]
+                - cell "-" [ref=e1370]
+                - cell "--" [ref=e1371]:
+                  - generic [ref=e1372]: "--"
+                - cell "4d ago" [ref=e1373]
+              - row "Test Idea 1767543653057 New - - -- 4d ago" [ref=e1374] [cursor=pointer]:
+                - cell [ref=e1375]:
+                  - checkbox [ref=e1376]
+                - cell "Test Idea 1767543653057" [ref=e1377]
+                - cell "New" [ref=e1378]:
+                  - generic [ref=e1379]: New
+                - cell "-" [ref=e1380]
+                - cell "-" [ref=e1381]
+                - cell "--" [ref=e1382]:
+                  - generic [ref=e1383]: "--"
+                - cell "4d ago" [ref=e1384]
+              - row "Links Test 1767543645489 New - - -- 4d ago" [ref=e1385] [cursor=pointer]:
+                - cell [ref=e1386]:
+                  - checkbox [ref=e1387]
+                - cell "Links Test 1767543645489" [ref=e1388]
+                - cell "New" [ref=e1389]:
+                  - generic [ref=e1390]: New
+                - cell "-" [ref=e1391]
+                - cell "-" [ref=e1392]
+                - cell "--" [ref=e1393]:
+                  - generic [ref=e1394]: "--"
+                - cell "4d ago" [ref=e1395]
+              - row "Links Test 1767543640098 New - - -- 4d ago" [ref=e1396] [cursor=pointer]:
+                - cell [ref=e1397]:
+                  - checkbox [ref=e1398]
+                - cell "Links Test 1767543640098" [ref=e1399]
+                - cell "New" [ref=e1400]:
+                  - generic [ref=e1401]: New
+                - cell "-" [ref=e1402]
+                - cell "-" [ref=e1403]
+                - cell "--" [ref=e1404]:
+                  - generic [ref=e1405]: "--"
+                - cell "4d ago" [ref=e1406]
+              - row "Slider Test 1767543632403 New - Now -- 4d ago" [ref=e1407] [cursor=pointer]:
+                - cell [ref=e1408]:
+                  - checkbox [ref=e1409]
+                - cell "Slider Test 1767543632403" [ref=e1410]
+                - cell "New" [ref=e1411]:
+                  - generic [ref=e1412]: New
+                - cell "-" [ref=e1413]
+                - cell "Now" [ref=e1414]
+                - cell "--" [ref=e1415]:
+                  - generic [ref=e1416]: "--"
+                - cell "4d ago" [ref=e1417]
+              - row "Slider Test 1767543626443 New - - -- 4d ago" [ref=e1418] [cursor=pointer]:
+                - cell [ref=e1419]:
+                  - checkbox [ref=e1420]
+                - cell "Slider Test 1767543626443" [ref=e1421]
+                - cell "New" [ref=e1422]:
+                  - generic [ref=e1423]: New
+                - cell "-" [ref=e1424]
+                - cell "-" [ref=e1425]
+                - cell "--" [ref=e1426]:
+                  - generic [ref=e1427]: "--"
+                - cell "4d ago" [ref=e1428]
+              - row "Slider Test 1767543621807 New - - -- 4d ago" [ref=e1429] [cursor=pointer]:
+                - cell [ref=e1430]:
+                  - checkbox [ref=e1431]
+                - cell "Slider Test 1767543621807" [ref=e1432]
+                - cell "New" [ref=e1433]:
+                  - generic [ref=e1434]: New
+                - cell "-" [ref=e1435]
+                - cell "-" [ref=e1436]
+                - cell "--" [ref=e1437]:
+                  - generic [ref=e1438]: "--"
+                - cell "4d ago" [ref=e1439]
+              - row "Slider Test 1767543616702 (Copy) New - - -- 4d ago" [ref=e1440] [cursor=pointer]:
+                - cell [ref=e1441]:
+                  - checkbox [ref=e1442]
+                - cell "Slider Test 1767543616702 (Copy)" [ref=e1443]
+                - cell "New" [ref=e1444]:
+                  - generic [ref=e1445]: New
+                - cell "-" [ref=e1446]
+                - cell "-" [ref=e1447]
+                - cell "--" [ref=e1448]:
+                  - generic [ref=e1449]: "--"
+                - cell "4d ago" [ref=e1450]
+              - row "Slider Test 1767543616702 New - - -- 4d ago" [ref=e1451] [cursor=pointer]:
+                - cell [ref=e1452]:
+                  - checkbox [ref=e1453]
+                - cell "Slider Test 1767543616702" [ref=e1454]
+                - cell "New" [ref=e1455]:
+                  - generic [ref=e1456]: New
+                - cell "-" [ref=e1457]
+                - cell "-" [ref=e1458]
+                - cell "--" [ref=e1459]:
+                  - generic [ref=e1460]: "--"
+                - cell "4d ago" [ref=e1461]
+              - row "Slider Test 1767543601622 New - - -- 4d ago" [ref=e1462] [cursor=pointer]:
+                - cell [ref=e1463]:
+                  - checkbox [ref=e1464]
+                - cell "Slider Test 1767543601622" [ref=e1465]
+                - cell "New" [ref=e1466]:
+                  - generic [ref=e1467]: New
+                - cell "-" [ref=e1468]
+                - cell "-" [ref=e1469]
+                - cell "--" [ref=e1470]:
+                  - generic [ref=e1471]: "--"
+                - cell "4d ago" [ref=e1472]
+              - row "Slider Test 1767543596873 New - - -- 4d ago" [ref=e1473] [cursor=pointer]:
+                - cell [ref=e1474]:
+                  - checkbox [ref=e1475]
+                - cell "Slider Test 1767543596873" [ref=e1476]
+                - cell "New" [ref=e1477]:
+                  - generic [ref=e1478]: New
+                - cell "-" [ref=e1479]
+                - cell "-" [ref=e1480]
+                - cell "--" [ref=e1481]:
+                  - generic [ref=e1482]: "--"
+                - cell "4d ago" [ref=e1483]
+              - row "Slider Test 1767543590888 Evaluating - - -- 4d ago" [ref=e1484] [cursor=pointer]:
+                - cell [ref=e1485]:
+                  - checkbox [ref=e1486]
+                - cell "Slider Test 1767543590888" [ref=e1487]
+                - cell "Evaluating" [ref=e1488]:
+                  - generic [ref=e1489]: Evaluating
+                - cell "-" [ref=e1490]
+                - cell "-" [ref=e1491]
+                - cell "--" [ref=e1492]:
+                  - generic [ref=e1493]: "--"
+                - cell "4d ago" [ref=e1494]
+              - row "Updated Slider Test 1767543585800 New - - -- 4d ago" [ref=e1495] [cursor=pointer]:
+                - cell [ref=e1496]:
+                  - checkbox [ref=e1497]
+                - cell "Updated Slider Test 1767543585800" [ref=e1498]
+                - cell "New" [ref=e1499]:
+                  - generic [ref=e1500]: New
+                - cell "-" [ref=e1501]
+                - cell "-" [ref=e1502]
+                - cell "--" [ref=e1503]:
+                  - generic [ref=e1504]: "--"
+                - cell "4d ago" [ref=e1505]
+              - row "Slider Test 1767543580961 New - - -- 4d ago" [ref=e1506] [cursor=pointer]:
+                - cell [ref=e1507]:
+                  - checkbox [ref=e1508]
+                - cell "Slider Test 1767543580961" [ref=e1509]
+                - cell "New" [ref=e1510]:
+                  - generic [ref=e1511]: New
+                - cell "-" [ref=e1512]
+                - cell "-" [ref=e1513]
+                - cell "--" [ref=e1514]:
+                  - generic [ref=e1515]: "--"
+                - cell "4d ago" [ref=e1516]
+              - row "Slider Test 1767543576721 New - - -- 4d ago" [ref=e1517] [cursor=pointer]:
+                - cell [ref=e1518]:
+                  - checkbox [ref=e1519]
+                - cell "Slider Test 1767543576721" [ref=e1520]
+                - cell "New" [ref=e1521]:
+                  - generic [ref=e1522]: New
+                - cell "-" [ref=e1523]
+                - cell "-" [ref=e1524]
+                - cell "--" [ref=e1525]:
+                  - generic [ref=e1526]: "--"
+                - cell "4d ago" [ref=e1527]
+              - row "Slider Test 1767543572007 New - - -- 4d ago" [ref=e1528] [cursor=pointer]:
+                - cell [ref=e1529]:
+                  - checkbox [ref=e1530]
+                - cell "Slider Test 1767543572007" [ref=e1531]
+                - cell "New" [ref=e1532]:
+                  - generic [ref=e1533]: New
+                - cell "-" [ref=e1534]
+                - cell "-" [ref=e1535]
+                - cell "--" [ref=e1536]:
+                  - generic [ref=e1537]: "--"
+                - cell "4d ago" [ref=e1538]
+              - row "Quick Capture Test 1767543567323 New - - -- 4d ago" [ref=e1539] [cursor=pointer]:
+                - cell [ref=e1540]:
+                  - checkbox [ref=e1541]
+                - cell "Quick Capture Test 1767543567323" [ref=e1542]
+                - cell "New" [ref=e1543]:
+                  - generic [ref=e1544]: New
+                - cell "-" [ref=e1545]
+                - cell "-" [ref=e1546]
+                - cell "--" [ref=e1547]:
+                  - generic [ref=e1548]: "--"
+                - cell "4d ago" [ref=e1549]
+              - row "Click Select Test 1767543548833 New - - -- 4d ago" [ref=e1550] [cursor=pointer]:
+                - cell [ref=e1551]:
+                  - checkbox [ref=e1552]
+                - cell "Click Select Test 1767543548833" [ref=e1553]
+                - cell "New" [ref=e1554]:
+                  - generic [ref=e1555]: New
+                - cell "-" [ref=e1556]
+                - cell "-" [ref=e1557]
+                - cell "--" [ref=e1558]:
+                  - generic [ref=e1559]: "--"
+                - cell "4d ago" [ref=e1560]
+              - row "Enter Select Test 1767543545048 New - - -- 4d ago" [ref=e1561] [cursor=pointer]:
+                - cell [ref=e1562]:
+                  - checkbox [ref=e1563]
+                - cell "Enter Select Test 1767543545048" [ref=e1564]
+                - cell "New" [ref=e1565]:
+                  - generic [ref=e1566]: New
+                - cell "-" [ref=e1567]
+                - cell "-" [ref=e1568]
+                - cell "--" [ref=e1569]:
+                  - generic [ref=e1570]: "--"
+                - cell "4d ago" [ref=e1571]
+              - row "Nav Test Idea 2 1767543540393 New - - -- 4d ago" [ref=e1572] [cursor=pointer]:
+                - cell [ref=e1573]:
+                  - checkbox [ref=e1574]
+                - cell "Nav Test Idea 2 1767543540393" [ref=e1575]
+                - cell "New" [ref=e1576]:
+                  - generic [ref=e1577]: New
+                - cell "-" [ref=e1578]
+                - cell "-" [ref=e1579]
+                - cell "--" [ref=e1580]:
+                  - generic [ref=e1581]: "--"
+                - cell "4d ago" [ref=e1582]
+              - row "Nav Test Idea 1 1767543540393 New - - -- 4d ago" [ref=e1583] [cursor=pointer]:
+                - cell [ref=e1584]:
+                  - checkbox [ref=e1585]
+                - cell "Nav Test Idea 1 1767543540393" [ref=e1586]
+                - cell "New" [ref=e1587]:
+                  - generic [ref=e1588]: New
+                - cell "-" [ref=e1589]
+                - cell "-" [ref=e1590]
+                - cell "--" [ref=e1591]:
+                  - generic [ref=e1592]: "--"
+                - cell "4d ago" [ref=e1593]
+              - row "Search Test Idea 1767543528345 New - - -- 4d ago" [ref=e1594] [cursor=pointer]:
+                - cell [ref=e1595]:
+                  - checkbox [ref=e1596]
+                - cell "Search Test Idea 1767543528345" [ref=e1597]
+                - cell "New" [ref=e1598]:
+                  - generic [ref=e1599]: New
+                - cell "-" [ref=e1600]
+                - cell "-" [ref=e1601]
+                - cell "--" [ref=e1602]:
+                  - generic [ref=e1603]: "--"
+                - cell "4d ago" [ref=e1604]
+              - row "Delete Test 1767543212016 New - - -- 4d ago" [ref=e1605] [cursor=pointer]:
+                - cell [ref=e1606]:
+                  - checkbox [ref=e1607]
+                - cell "Delete Test 1767543212016" [ref=e1608]
+                - cell "New" [ref=e1609]:
+                  - generic [ref=e1610]: New
+                - cell "-" [ref=e1611]
+                - cell "-" [ref=e1612]
+                - cell "--" [ref=e1613]:
+                  - generic [ref=e1614]: "--"
+                - cell "4d ago" [ref=e1615]
+              - row "Test Idea 1767543206054 New - - -- 4d ago" [ref=e1616] [cursor=pointer]:
+                - cell [ref=e1617]:
+                  - checkbox [ref=e1618]
+                - cell "Test Idea 1767543206054" [ref=e1619]
+                - cell "New" [ref=e1620]:
+                  - generic [ref=e1621]: New
+                - cell "-" [ref=e1622]
+                - cell "-" [ref=e1623]
+                - cell "--" [ref=e1624]:
+                  - generic [ref=e1625]: "--"
+                - cell "4d ago" [ref=e1626]
+              - row "Quick Capture Test 1767543199914 New - - -- 4d ago" [ref=e1627] [cursor=pointer]:
+                - cell [ref=e1628]:
+                  - checkbox [ref=e1629]
+                - cell "Quick Capture Test 1767543199914" [ref=e1630]
+                - cell "New" [ref=e1631]:
+                  - generic [ref=e1632]: New
+                - cell "-" [ref=e1633]
+                - cell "-" [ref=e1634]
+                - cell "--" [ref=e1635]:
+                  - generic [ref=e1636]: "--"
+                - cell "4d ago" [ref=e1637]
+              - row "Click Select Test 1767543142623 New - - -- 4d ago" [ref=e1638] [cursor=pointer]:
+                - cell [ref=e1639]:
+                  - checkbox [ref=e1640]
+                - cell "Click Select Test 1767543142623" [ref=e1641]
+                - cell "New" [ref=e1642]:
+                  - generic [ref=e1643]: New
+                - cell "-" [ref=e1644]
+                - cell "-" [ref=e1645]
+                - cell "--" [ref=e1646]:
+                  - generic [ref=e1647]: "--"
+                - cell "4d ago" [ref=e1648]
+              - row "Enter Select Test 1767543135686 New - - -- 4d ago" [ref=e1649] [cursor=pointer]:
+                - cell [ref=e1650]:
+                  - checkbox [ref=e1651]
+                - cell "Enter Select Test 1767543135686" [ref=e1652]
+                - cell "New" [ref=e1653]:
+                  - generic [ref=e1654]: New
+                - cell "-" [ref=e1655]
+                - cell "-" [ref=e1656]
+                - cell "--" [ref=e1657]:
+                  - generic [ref=e1658]: "--"
+                - cell "4d ago" [ref=e1659]
+              - row "Nav Test Idea 2 1767543125169 New - - -- 4d ago" [ref=e1660] [cursor=pointer]:
+                - cell [ref=e1661]:
+                  - checkbox [ref=e1662]
+                - cell "Nav Test Idea 2 1767543125169" [ref=e1663]
+                - cell "New" [ref=e1664]:
+                  - generic [ref=e1665]: New
+                - cell "-" [ref=e1666]
+                - cell "-" [ref=e1667]
+                - cell "--" [ref=e1668]:
+                  - generic [ref=e1669]: "--"
+                - cell "4d ago" [ref=e1670]
+              - row "Nav Test Idea 1 1767543125169 New - - -- 4d ago" [ref=e1671] [cursor=pointer]:
+                - cell [ref=e1672]:
+                  - checkbox [ref=e1673]
+                - cell "Nav Test Idea 1 1767543125169" [ref=e1674]
+                - cell "New" [ref=e1675]:
+                  - generic [ref=e1676]: New
+                - cell "-" [ref=e1677]
+                - cell "-" [ref=e1678]
+                - cell "--" [ref=e1679]:
+                  - generic [ref=e1680]: "--"
+                - cell "4d ago" [ref=e1681]
+              - row "Search Test Idea 1767543119303 New - - -- 4d ago" [ref=e1682] [cursor=pointer]:
+                - cell [ref=e1683]:
+                  - checkbox [ref=e1684]
+                - cell "Search Test Idea 1767543119303" [ref=e1685]
+                - cell "New" [ref=e1686]:
+                  - generic [ref=e1687]: New
+                - cell "-" [ref=e1688]
+                - cell "-" [ref=e1689]
+                - cell "--" [ref=e1690]:
+                  - generic [ref=e1691]: "--"
+                - cell "4d ago" [ref=e1692]
+              - row "Delete Test 1767542601675 New - - -- 4d ago" [ref=e1693] [cursor=pointer]:
+                - cell [ref=e1694]:
+                  - checkbox [ref=e1695]
+                - cell "Delete Test 1767542601675" [ref=e1696]
+                - cell "New" [ref=e1697]:
+                  - generic [ref=e1698]: New
+                - cell "-" [ref=e1699]
+                - cell "-" [ref=e1700]
+                - cell "--" [ref=e1701]:
+                  - generic [ref=e1702]: "--"
+                - cell "4d ago" [ref=e1703]
+              - row "Test Idea 1767542592959 New - - -- 4d ago" [ref=e1704] [cursor=pointer]:
+                - cell [ref=e1705]:
+                  - checkbox [ref=e1706]
+                - cell "Test Idea 1767542592959" [ref=e1707]
+                - cell "New" [ref=e1708]:
+                  - generic [ref=e1709]: New
+                - cell "-" [ref=e1710]
+                - cell "-" [ref=e1711]
+                - cell "--" [ref=e1712]:
+                  - generic [ref=e1713]: "--"
+                - cell "4d ago" [ref=e1714]
+              - row "Links Test 1767542578179 New - - -- 4d ago" [ref=e1715] [cursor=pointer]:
+                - cell [ref=e1716]:
+                  - checkbox [ref=e1717]
+                - cell "Links Test 1767542578179" [ref=e1718]
+                - cell "New" [ref=e1719]:
+                  - generic [ref=e1720]: New
+                - cell "-" [ref=e1721]
+                - cell "-" [ref=e1722]
+                - cell "--" [ref=e1723]:
+                  - generic [ref=e1724]: "--"
+                - cell "4d ago" [ref=e1725]
+              - row "Links Test 1767542568823 New - - -- 4d ago" [ref=e1726] [cursor=pointer]:
+                - cell [ref=e1727]:
+                  - checkbox [ref=e1728]
+                - cell "Links Test 1767542568823" [ref=e1729]
+                - cell "New" [ref=e1730]:
+                  - generic [ref=e1731]: New
+                - cell "-" [ref=e1732]
+                - cell "-" [ref=e1733]
+                - cell "--" [ref=e1734]:
+                  - generic [ref=e1735]: "--"
+                - cell "4d ago" [ref=e1736]
+              - row "Slider Test 1767542556029 New - Now -- 4d ago" [ref=e1737] [cursor=pointer]:
+                - cell [ref=e1738]:
+                  - checkbox [ref=e1739]
+                - cell "Slider Test 1767542556029" [ref=e1740]
+                - cell "New" [ref=e1741]:
+                  - generic [ref=e1742]: New
+                - cell "-" [ref=e1743]
+                - cell "Now" [ref=e1744]
+                - cell "--" [ref=e1745]:
+                  - generic [ref=e1746]: "--"
+                - cell "4d ago" [ref=e1747]
+              - row "Slider Test 1767542547497 New - - -- 4d ago" [ref=e1748] [cursor=pointer]:
+                - cell [ref=e1749]:
+                  - checkbox [ref=e1750]
+                - cell "Slider Test 1767542547497" [ref=e1751]
+                - cell "New" [ref=e1752]:
+                  - generic [ref=e1753]: New
+                - cell "-" [ref=e1754]
+                - cell "-" [ref=e1755]
+                - cell "--" [ref=e1756]:
+                  - generic [ref=e1757]: "--"
+                - cell "4d ago" [ref=e1758]
+              - row "Slider Test 1767542538488 New - - -- 4d ago" [ref=e1759] [cursor=pointer]:
+                - cell [ref=e1760]:
+                  - checkbox [ref=e1761]
+                - cell "Slider Test 1767542538488" [ref=e1762]
+                - cell "New" [ref=e1763]:
+                  - generic [ref=e1764]: New
+                - cell "-" [ref=e1765]
+                - cell "-" [ref=e1766]
+                - cell "--" [ref=e1767]:
+                  - generic [ref=e1768]: "--"
+                - cell "4d ago" [ref=e1769]
+              - row "Slider Test 1767542524362 (Copy) New - - -- 4d ago" [ref=e1770] [cursor=pointer]:
+                - cell [ref=e1771]:
+                  - checkbox [ref=e1772]
+                - cell "Slider Test 1767542524362 (Copy)" [ref=e1773]
+                - cell "New" [ref=e1774]:
+                  - generic [ref=e1775]: New
+                - cell "-" [ref=e1776]
+                - cell "-" [ref=e1777]
+                - cell "--" [ref=e1778]:
+                  - generic [ref=e1779]: "--"
+                - cell "4d ago" [ref=e1780]
+              - row "Slider Test 1767542524362 New - - -- 4d ago" [ref=e1781] [cursor=pointer]:
+                - cell [ref=e1782]:
+                  - checkbox [ref=e1783]
+                - cell "Slider Test 1767542524362" [ref=e1784]
+                - cell "New" [ref=e1785]:
+                  - generic [ref=e1786]: New
+                - cell "-" [ref=e1787]
+                - cell "-" [ref=e1788]
+                - cell "--" [ref=e1789]:
+                  - generic [ref=e1790]: "--"
+                - cell "4d ago" [ref=e1791]
+              - row "Slider Test 1767542491491 New - - -- 4d ago" [ref=e1792] [cursor=pointer]:
+                - cell [ref=e1793]:
+                  - checkbox [ref=e1794]
+                - cell "Slider Test 1767542491491" [ref=e1795]
+                - cell "New" [ref=e1796]:
+                  - generic [ref=e1797]: New
+                - cell "-" [ref=e1798]
+                - cell "-" [ref=e1799]
+                - cell "--" [ref=e1800]:
+                  - generic [ref=e1801]: "--"
+                - cell "4d ago" [ref=e1802]
+              - row "Slider Test 1767542482220 New - - -- 4d ago" [ref=e1803] [cursor=pointer]:
+                - cell [ref=e1804]:
+                  - checkbox [ref=e1805]
+                - cell "Slider Test 1767542482220" [ref=e1806]
+                - cell "New" [ref=e1807]:
+                  - generic [ref=e1808]: New
+                - cell "-" [ref=e1809]
+                - cell "-" [ref=e1810]
+                - cell "--" [ref=e1811]:
+                  - generic [ref=e1812]: "--"
+                - cell "4d ago" [ref=e1813]
+              - row "Slider Test 1767542461358 Evaluating - - -- 4d ago" [ref=e1814] [cursor=pointer]:
+                - cell [ref=e1815]:
+                  - checkbox [ref=e1816]
+                - cell "Slider Test 1767542461358" [ref=e1817]
+                - cell "Evaluating" [ref=e1818]:
+                  - generic [ref=e1819]: Evaluating
+                - cell "-" [ref=e1820]
+                - cell "-" [ref=e1821]
+                - cell "--" [ref=e1822]:
+                  - generic [ref=e1823]: "--"
+                - cell "4d ago" [ref=e1824]
+              - row "Updated Slider Test 1767542429803 New - - -- 4d ago" [ref=e1825] [cursor=pointer]:
+                - cell [ref=e1826]:
+                  - checkbox [ref=e1827]
+                - cell "Updated Slider Test 1767542429803" [ref=e1828]
+                - cell "New" [ref=e1829]:
+                  - generic [ref=e1830]: New
+                - cell "-" [ref=e1831]
+                - cell "-" [ref=e1832]
+                - cell "--" [ref=e1833]:
+                  - generic [ref=e1834]: "--"
+                - cell "4d ago" [ref=e1835]
+              - row "Slider Test 1767542365056 New - - -- 4d ago" [ref=e1836] [cursor=pointer]:
+                - cell [ref=e1837]:
+                  - checkbox [ref=e1838]
+                - cell "Slider Test 1767542365056" [ref=e1839]
+                - cell "New" [ref=e1840]:
+                  - generic [ref=e1841]: New
+                - cell "-" [ref=e1842]
+                - cell "-" [ref=e1843]
+                - cell "--" [ref=e1844]:
+                  - generic [ref=e1845]: "--"
+                - cell "4d ago" [ref=e1846]
+              - row "Slider Test 1767542356356 New - - -- 4d ago" [ref=e1847] [cursor=pointer]:
+                - cell [ref=e1848]:
+                  - checkbox [ref=e1849]
+                - cell "Slider Test 1767542356356" [ref=e1850]
+                - cell "New" [ref=e1851]:
+                  - generic [ref=e1852]: New
+                - cell "-" [ref=e1853]
+                - cell "-" [ref=e1854]
+                - cell "--" [ref=e1855]:
+                  - generic [ref=e1856]: "--"
+                - cell "4d ago" [ref=e1857]
+              - row "Quick Capture Test 1767542343873 New - - -- 4d ago" [ref=e1858] [cursor=pointer]:
+                - cell [ref=e1859]:
+                  - checkbox [ref=e1860]
+                - cell "Quick Capture Test 1767542343873" [ref=e1861]
+                - cell "New" [ref=e1862]:
+                  - generic [ref=e1863]: New
+                - cell "-" [ref=e1864]
+                - cell "-" [ref=e1865]
+                - cell "--" [ref=e1866]:
+                  - generic [ref=e1867]: "--"
+                - cell "4d ago" [ref=e1868]
+              - row "Search Test Idea 1767540888268 New - - -- 4d ago" [ref=e1869] [cursor=pointer]:
+                - cell [ref=e1870]:
+                  - checkbox [ref=e1871]
+                - cell "Search Test Idea 1767540888268" [ref=e1872]
+                - cell "New" [ref=e1873]:
+                  - generic [ref=e1874]: New
+                - cell "-" [ref=e1875]
+                - cell "-" [ref=e1876]
+                - cell "--" [ref=e1877]:
+                  - generic [ref=e1878]: "--"
+                - cell "4d ago" [ref=e1879]
+              - row "Search Test Idea 1767537566133 New - - -- 4d ago" [ref=e1880] [cursor=pointer]:
+                - cell [ref=e1881]:
+                  - checkbox [ref=e1882]
+                - cell "Search Test Idea 1767537566133" [ref=e1883]
+                - cell "New" [ref=e1884]:
+                  - generic [ref=e1885]: New
+                - cell "-" [ref=e1886]
+                - cell "-" [ref=e1887]
+                - cell "--" [ref=e1888]:
+                  - generic [ref=e1889]: "--"
+                - cell "4d ago" [ref=e1890]
+              - row "Delete Test 1767536016229 New - - -- 4d ago" [ref=e1891] [cursor=pointer]:
+                - cell [ref=e1892]:
+                  - checkbox [ref=e1893]
+                - cell "Delete Test 1767536016229" [ref=e1894]
+                - cell "New" [ref=e1895]:
+                  - generic [ref=e1896]: New
+                - cell "-" [ref=e1897]
+                - cell "-" [ref=e1898]
+                - cell "--" [ref=e1899]:
+                  - generic [ref=e1900]: "--"
+                - cell "4d ago" [ref=e1901]
+              - row "Test Idea 1767535991395 New - - -- 4d ago" [ref=e1902] [cursor=pointer]:
+                - cell [ref=e1903]:
+                  - checkbox [ref=e1904]
+                - cell "Test Idea 1767535991395" [ref=e1905]
+                - cell "New" [ref=e1906]:
+                  - generic [ref=e1907]: New
+                - cell "-" [ref=e1908]
+                - cell "-" [ref=e1909]
+                - cell "--" [ref=e1910]:
+                  - generic [ref=e1911]: "--"
+                - cell "4d ago" [ref=e1912]
+              - row "Links Test 1767535079475 New - - -- 4d ago" [ref=e1913] [cursor=pointer]:
+                - cell [ref=e1914]:
+                  - checkbox [ref=e1915]
+                - cell "Links Test 1767535079475" [ref=e1916]
+                - cell "New" [ref=e1917]:
+                  - generic [ref=e1918]: New
+                - cell "-" [ref=e1919]
+                - cell "-" [ref=e1920]
+                - cell "--" [ref=e1921]:
+                  - generic [ref=e1922]: "--"
+                - cell "4d ago" [ref=e1923]
+              - row "Links Test 1767535065680 New - - -- 4d ago" [ref=e1924] [cursor=pointer]:
+                - cell [ref=e1925]:
+                  - checkbox [ref=e1926]
+                - cell "Links Test 1767535065680" [ref=e1927]
+                - cell "New" [ref=e1928]:
+                  - generic [ref=e1929]: New
+                - cell "-" [ref=e1930]
+                - cell "-" [ref=e1931]
+                - cell "--" [ref=e1932]:
+                  - generic [ref=e1933]: "--"
+                - cell "4d ago" [ref=e1934]
+              - row "Slider Test 1767535056393 New - Now -- 4d ago" [ref=e1935] [cursor=pointer]:
+                - cell [ref=e1936]:
+                  - checkbox [ref=e1937]
+                - cell "Slider Test 1767535056393" [ref=e1938]
+                - cell "New" [ref=e1939]:
+                  - generic [ref=e1940]: New
+                - cell "-" [ref=e1941]
+                - cell "Now" [ref=e1942]
+                - cell "--" [ref=e1943]:
+                  - generic [ref=e1944]: "--"
+                - cell "4d ago" [ref=e1945]
+              - row "Slider Test 1767535047397 New - - -- 4d ago" [ref=e1946] [cursor=pointer]:
+                - cell [ref=e1947]:
+                  - checkbox [ref=e1948]
+                - cell "Slider Test 1767535047397" [ref=e1949]
+                - cell "New" [ref=e1950]:
+                  - generic [ref=e1951]: New
+                - cell "-" [ref=e1952]
+                - cell "-" [ref=e1953]
+                - cell "--" [ref=e1954]:
+                  - generic [ref=e1955]: "--"
+                - cell "4d ago" [ref=e1956]
+              - row "Slider Test 1767535042984 New - - -- 4d ago" [ref=e1957] [cursor=pointer]:
+                - cell [ref=e1958]:
+                  - checkbox [ref=e1959]
+                - cell "Slider Test 1767535042984" [ref=e1960]
+                - cell "New" [ref=e1961]:
+                  - generic [ref=e1962]: New
+                - cell "-" [ref=e1963]
+                - cell "-" [ref=e1964]
+                - cell "--" [ref=e1965]:
+                  - generic [ref=e1966]: "--"
+                - cell "4d ago" [ref=e1967]
+              - row "Slider Test 1767535037835 (Copy) New - - -- 4d ago" [ref=e1968] [cursor=pointer]:
+                - cell [ref=e1969]:
+                  - checkbox [ref=e1970]
+                - cell "Slider Test 1767535037835 (Copy)" [ref=e1971]
+                - cell "New" [ref=e1972]:
+                  - generic [ref=e1973]: New
+                - cell "-" [ref=e1974]
+                - cell "-" [ref=e1975]
+                - cell "--" [ref=e1976]:
+                  - generic [ref=e1977]: "--"
+                - cell "4d ago" [ref=e1978]
+              - row "Slider Test 1767535037835 New - - -- 4d ago" [ref=e1979] [cursor=pointer]:
+                - cell [ref=e1980]:
+                  - checkbox [ref=e1981]
+                - cell "Slider Test 1767535037835" [ref=e1982]
+                - cell "New" [ref=e1983]:
+                  - generic [ref=e1984]: New
+                - cell "-" [ref=e1985]
+                - cell "-" [ref=e1986]
+                - cell "--" [ref=e1987]:
+                  - generic [ref=e1988]: "--"
+                - cell "4d ago" [ref=e1989]
+              - row "Slider Test 1767534797779 New - - -- 4d ago" [ref=e1990] [cursor=pointer]:
+                - cell [ref=e1991]:
+                  - checkbox [ref=e1992]
+                - cell "Slider Test 1767534797779" [ref=e1993]
+                - cell "New" [ref=e1994]:
+                  - generic [ref=e1995]: New
+                - cell "-" [ref=e1996]
+                - cell "-" [ref=e1997]
+                - cell "--" [ref=e1998]:
+                  - generic [ref=e1999]: "--"
+                - cell "4d ago" [ref=e2000]
+              - row "Slider Test 1767533886069 New - - -- 4d ago" [ref=e2001] [cursor=pointer]:
+                - cell [ref=e2002]:
+                  - checkbox [ref=e2003]
+                - cell "Slider Test 1767533886069" [ref=e2004]
+                - cell "New" [ref=e2005]:
+                  - generic [ref=e2006]: New
+                - cell "-" [ref=e2007]
+                - cell "-" [ref=e2008]
+                - cell "--" [ref=e2009]:
+                  - generic [ref=e2010]: "--"
+                - cell "4d ago" [ref=e2011]
+              - row "Slider Test 1767532940946 New - - -- 4d ago" [ref=e2012] [cursor=pointer]:
+                - cell [ref=e2013]:
+                  - checkbox [ref=e2014]
+                - cell "Slider Test 1767532940946" [ref=e2015]
+                - cell "New" [ref=e2016]:
+                  - generic [ref=e2017]: New
+                - cell "-" [ref=e2018]
+                - cell "-" [ref=e2019]
+                - cell "--" [ref=e2020]:
+                  - generic [ref=e2021]: "--"
+                - cell "4d ago" [ref=e2022]
+              - row "Slider Test 1767532933951 New - - -- 4d ago" [ref=e2023] [cursor=pointer]:
+                - cell [ref=e2024]:
+                  - checkbox [ref=e2025]
+                - cell "Slider Test 1767532933951" [ref=e2026]
+                - cell "New" [ref=e2027]:
+                  - generic [ref=e2028]: New
+                - cell "-" [ref=e2029]
+                - cell "-" [ref=e2030]
+                - cell "--" [ref=e2031]:
+                  - generic [ref=e2032]: "--"
+                - cell "4d ago" [ref=e2033]
+              - row "Slider Test 1767532925216 Evaluating - - -- 4d ago" [ref=e2034] [cursor=pointer]:
+                - cell [ref=e2035]:
+                  - checkbox [ref=e2036]
+                - cell "Slider Test 1767532925216" [ref=e2037]
+                - cell "Evaluating" [ref=e2038]:
+                  - generic [ref=e2039]: Evaluating
+                - cell "-" [ref=e2040]
+                - cell "-" [ref=e2041]
+                - cell "--" [ref=e2042]:
+                  - generic [ref=e2043]: "--"
+                - cell "4d ago" [ref=e2044]
+              - row "Updated Slider Test 1767532915801 New - - -- 4d ago" [ref=e2045] [cursor=pointer]:
+                - cell [ref=e2046]:
+                  - checkbox [ref=e2047]
+                - cell "Updated Slider Test 1767532915801" [ref=e2048]
+                - cell "New" [ref=e2049]:
+                  - generic [ref=e2050]: New
+                - cell "-" [ref=e2051]
+                - cell "-" [ref=e2052]
+                - cell "--" [ref=e2053]:
+                  - generic [ref=e2054]: "--"
+                - cell "4d ago" [ref=e2055]
+              - row "Slider Test 1767532906370 New - - -- 4d ago" [ref=e2056] [cursor=pointer]:
+                - cell [ref=e2057]:
+                  - checkbox [ref=e2058]
+                - cell "Slider Test 1767532906370" [ref=e2059]
+                - cell "New" [ref=e2060]:
+                  - generic [ref=e2061]: New
+                - cell "-" [ref=e2062]
+                - cell "-" [ref=e2063]
+                - cell "--" [ref=e2064]:
+                  - generic [ref=e2065]: "--"
+                - cell "4d ago" [ref=e2066]
+              - row "Slider Test 1767532897935 New - - -- 4d ago" [ref=e2067] [cursor=pointer]:
+                - cell [ref=e2068]:
+                  - checkbox [ref=e2069]
+                - cell "Slider Test 1767532897935" [ref=e2070]
+                - cell "New" [ref=e2071]:
+                  - generic [ref=e2072]: New
+                - cell "-" [ref=e2073]
+                - cell "-" [ref=e2074]
+                - cell "--" [ref=e2075]:
+                  - generic [ref=e2076]: "--"
+                - cell "4d ago" [ref=e2077]
+              - row "Slider Test 1767532889431 New - - -- 4d ago" [ref=e2078] [cursor=pointer]:
+                - cell [ref=e2079]:
+                  - checkbox [ref=e2080]
+                - cell "Slider Test 1767532889431" [ref=e2081]
+                - cell "New" [ref=e2082]:
+                  - generic [ref=e2083]: New
+                - cell "-" [ref=e2084]
+                - cell "-" [ref=e2085]
+                - cell "--" [ref=e2086]:
+                  - generic [ref=e2087]: "--"
+                - cell "4d ago" [ref=e2088]
+              - row "Quick Capture Test 1767532872520 New - - -- 4d ago" [ref=e2089] [cursor=pointer]:
+                - cell [ref=e2090]:
+                  - checkbox [ref=e2091]
+                - cell "Quick Capture Test 1767532872520" [ref=e2092]
+                - cell "New" [ref=e2093]:
+                  - generic [ref=e2094]: New
+                - cell "-" [ref=e2095]
+                - cell "-" [ref=e2096]
+                - cell "--" [ref=e2097]:
+                  - generic [ref=e2098]: "--"
+                - cell "4d ago" [ref=e2099]
+              - row "Click Select Test 1767532777058 New - - -- 4d ago" [ref=e2100] [cursor=pointer]:
+                - cell [ref=e2101]:
+                  - checkbox [ref=e2102]
+                - cell "Click Select Test 1767532777058" [ref=e2103]
+                - cell "New" [ref=e2104]:
+                  - generic [ref=e2105]: New
+                - cell "-" [ref=e2106]
+                - cell "-" [ref=e2107]
+                - cell "--" [ref=e2108]:
+                  - generic [ref=e2109]: "--"
+                - cell "4d ago" [ref=e2110]
+              - row "Enter Select Test 1767532768093 New - - -- 4d ago" [ref=e2111] [cursor=pointer]:
+                - cell [ref=e2112]:
+                  - checkbox [ref=e2113]
+                - cell "Enter Select Test 1767532768093" [ref=e2114]
+                - cell "New" [ref=e2115]:
+                  - generic [ref=e2116]: New
+                - cell "-" [ref=e2117]
+                - cell "-" [ref=e2118]
+                - cell "--" [ref=e2119]:
+                  - generic [ref=e2120]: "--"
+                - cell "4d ago" [ref=e2121]
+              - row "Nav Test Idea 2 1767532758444 New - - -- 4d ago" [ref=e2122] [cursor=pointer]:
+                - cell [ref=e2123]:
+                  - checkbox [ref=e2124]
+                - cell "Nav Test Idea 2 1767532758444" [ref=e2125]
+                - cell "New" [ref=e2126]:
+                  - generic [ref=e2127]: New
+                - cell "-" [ref=e2128]
+                - cell "-" [ref=e2129]
+                - cell "--" [ref=e2130]:
+                  - generic [ref=e2131]: "--"
+                - cell "4d ago" [ref=e2132]
+              - row "Nav Test Idea 1 1767532758444 New - - -- 4d ago" [ref=e2133] [cursor=pointer]:
+                - cell [ref=e2134]:
+                  - checkbox [ref=e2135]
+                - cell "Nav Test Idea 1 1767532758444" [ref=e2136]
+                - cell "New" [ref=e2137]:
+                  - generic [ref=e2138]: New
+                - cell "-" [ref=e2139]
+                - cell "-" [ref=e2140]
+                - cell "--" [ref=e2141]:
+                  - generic [ref=e2142]: "--"
+                - cell "4d ago" [ref=e2143]
+              - row "Search Test Idea 1767532741746 New - - -- 4d ago" [ref=e2144] [cursor=pointer]:
+                - cell [ref=e2145]:
+                  - checkbox [ref=e2146]
+                - cell "Search Test Idea 1767532741746" [ref=e2147]
+                - cell "New" [ref=e2148]:
+                  - generic [ref=e2149]: New
+                - cell "-" [ref=e2150]
+                - cell "-" [ref=e2151]
+                - cell "--" [ref=e2152]:
+                  - generic [ref=e2153]: "--"
+                - cell "4d ago" [ref=e2154]
+              - row "Delete Test 1767532097561 New - - -- 4d ago" [ref=e2155] [cursor=pointer]:
+                - cell [ref=e2156]:
+                  - checkbox [ref=e2157]
+                - cell "Delete Test 1767532097561" [ref=e2158]
+                - cell "New" [ref=e2159]:
+                  - generic [ref=e2160]: New
+                - cell "-" [ref=e2161]
+                - cell "-" [ref=e2162]
+                - cell "--" [ref=e2163]:
+                  - generic [ref=e2164]: "--"
+                - cell "4d ago" [ref=e2165]
+              - row "Test Idea 1767532091240 New - - -- 4d ago" [ref=e2166] [cursor=pointer]:
+                - cell [ref=e2167]:
+                  - checkbox [ref=e2168]
+                - cell "Test Idea 1767532091240" [ref=e2169]
+                - cell "New" [ref=e2170]:
+                  - generic [ref=e2171]: New
+                - cell "-" [ref=e2172]
+                - cell "-" [ref=e2173]
+                - cell "--" [ref=e2174]:
+                  - generic [ref=e2175]: "--"
+                - cell "4d ago" [ref=e2176]
+              - row "Links Test 1767532081582 New - - -- 4d ago" [ref=e2177] [cursor=pointer]:
+                - cell [ref=e2178]:
+                  - checkbox [ref=e2179]
+                - cell "Links Test 1767532081582" [ref=e2180]
+                - cell "New" [ref=e2181]:
+                  - generic [ref=e2182]: New
+                - cell "-" [ref=e2183]
+                - cell "-" [ref=e2184]
+                - cell "--" [ref=e2185]:
+                  - generic [ref=e2186]: "--"
+                - cell "4d ago" [ref=e2187]
+              - row "Links Test 1767532076826 New - - -- 4d ago" [ref=e2188] [cursor=pointer]:
+                - cell [ref=e2189]:
+                  - checkbox [ref=e2190]
+                - cell "Links Test 1767532076826" [ref=e2191]
+                - cell "New" [ref=e2192]:
+                  - generic [ref=e2193]: New
+                - cell "-" [ref=e2194]
+                - cell "-" [ref=e2195]
+                - cell "--" [ref=e2196]:
+                  - generic [ref=e2197]: "--"
+                - cell "4d ago" [ref=e2198]
+              - row "Slider Test 1767532070908 New - Now -- 4d ago" [ref=e2199] [cursor=pointer]:
+                - cell [ref=e2200]:
+                  - checkbox [ref=e2201]
+                - cell "Slider Test 1767532070908" [ref=e2202]
+                - cell "New" [ref=e2203]:
+                  - generic [ref=e2204]: New
+                - cell "-" [ref=e2205]
+                - cell "Now" [ref=e2206]
+                - cell "--" [ref=e2207]:
+                  - generic [ref=e2208]: "--"
+                - cell "4d ago" [ref=e2209]
+              - row "Slider Test 1767532064165 New - - -- 4d ago" [ref=e2210] [cursor=pointer]:
+                - cell [ref=e2211]:
+                  - checkbox [ref=e2212]
+                - cell "Slider Test 1767532064165" [ref=e2213]
+                - cell "New" [ref=e2214]:
+                  - generic [ref=e2215]: New
+                - cell "-" [ref=e2216]
+                - cell "-" [ref=e2217]
+                - cell "--" [ref=e2218]:
+                  - generic [ref=e2219]: "--"
+                - cell "4d ago" [ref=e2220]
+              - row "Slider Test 1767532022780 New - - -- 4d ago" [ref=e2221] [cursor=pointer]:
+                - cell [ref=e2222]:
+                  - checkbox [ref=e2223]
+                - cell "Slider Test 1767532022780" [ref=e2224]
+                - cell "New" [ref=e2225]:
+                  - generic [ref=e2226]: New
+                - cell "-" [ref=e2227]
+                - cell "-" [ref=e2228]
+                - cell "--" [ref=e2229]:
+                  - generic [ref=e2230]: "--"
+                - cell "4d ago" [ref=e2231]
+              - row "Slider Test 1767532017295 (Copy) New - - -- 4d ago" [ref=e2232] [cursor=pointer]:
+                - cell [ref=e2233]:
+                  - checkbox [ref=e2234]
+                - cell "Slider Test 1767532017295 (Copy)" [ref=e2235]
+                - cell "New" [ref=e2236]:
+                  - generic [ref=e2237]: New
+                - cell "-" [ref=e2238]
+                - cell "-" [ref=e2239]
+                - cell "--" [ref=e2240]:
+                  - generic [ref=e2241]: "--"
+                - cell "4d ago" [ref=e2242]
+              - row "Slider Test 1767532017295 New - - -- 4d ago" [ref=e2243] [cursor=pointer]:
+                - cell [ref=e2244]:
+                  - checkbox [ref=e2245]
+                - cell "Slider Test 1767532017295" [ref=e2246]
+                - cell "New" [ref=e2247]:
+                  - generic [ref=e2248]: New
+                - cell "-" [ref=e2249]
+                - cell "-" [ref=e2250]
+                - cell "--" [ref=e2251]:
+                  - generic [ref=e2252]: "--"
+                - cell "4d ago" [ref=e2253]
+              - row "Slider Test 1767532001244 New - - -- 4d ago" [ref=e2254] [cursor=pointer]:
+                - cell [ref=e2255]:
+                  - checkbox [ref=e2256]
+                - cell "Slider Test 1767532001244" [ref=e2257]
+                - cell "New" [ref=e2258]:
+                  - generic [ref=e2259]: New
+                - cell "-" [ref=e2260]
+                - cell "-" [ref=e2261]
+                - cell "--" [ref=e2262]:
+                  - generic [ref=e2263]: "--"
+                - cell "4d ago" [ref=e2264]
+              - row "Slider Test 1767531996578 New - - -- 4d ago" [ref=e2265] [cursor=pointer]:
+                - cell [ref=e2266]:
+                  - checkbox [ref=e2267]
+                - cell "Slider Test 1767531996578" [ref=e2268]
+                - cell "New" [ref=e2269]:
+                  - generic [ref=e2270]: New
+                - cell "-" [ref=e2271]
+                - cell "-" [ref=e2272]
+                - cell "--" [ref=e2273]:
+                  - generic [ref=e2274]: "--"
+                - cell "4d ago" [ref=e2275]
+              - row "Slider Test 1767531989981 Evaluating - - -- 4d ago" [ref=e2276] [cursor=pointer]:
+                - cell [ref=e2277]:
+                  - checkbox [ref=e2278]
+                - cell "Slider Test 1767531989981" [ref=e2279]
+                - cell "Evaluating" [ref=e2280]:
+                  - generic [ref=e2281]: Evaluating
+                - cell "-" [ref=e2282]
+                - cell "-" [ref=e2283]
+                - cell "--" [ref=e2284]:
+                  - generic [ref=e2285]: "--"
+                - cell "4d ago" [ref=e2286]
+              - row "Updated Slider Test 1767531983495 New - - -- 4d ago" [ref=e2287] [cursor=pointer]:
+                - cell [ref=e2288]:
+                  - checkbox [ref=e2289]
+                - cell "Updated Slider Test 1767531983495" [ref=e2290]
+                - cell "New" [ref=e2291]:
+                  - generic [ref=e2292]: New
+                - cell "-" [ref=e2293]
+                - cell "-" [ref=e2294]
+                - cell "--" [ref=e2295]:
+                  - generic [ref=e2296]: "--"
+                - cell "4d ago" [ref=e2297]
+              - row "Slider Test 1767531978069 New - - -- 4d ago" [ref=e2298] [cursor=pointer]:
+                - cell [ref=e2299]:
+                  - checkbox [ref=e2300]
+                - cell "Slider Test 1767531978069" [ref=e2301]
+                - cell "New" [ref=e2302]:
+                  - generic [ref=e2303]: New
+                - cell "-" [ref=e2304]
+                - cell "-" [ref=e2305]
+                - cell "--" [ref=e2306]:
+                  - generic [ref=e2307]: "--"
+                - cell "4d ago" [ref=e2308]
+              - row "Slider Test 1767531972126 New - - -- 4d ago" [ref=e2309] [cursor=pointer]:
+                - cell [ref=e2310]:
+                  - checkbox [ref=e2311]
+                - cell "Slider Test 1767531972126" [ref=e2312]
+                - cell "New" [ref=e2313]:
+                  - generic [ref=e2314]: New
+                - cell "-" [ref=e2315]
+                - cell "-" [ref=e2316]
+                - cell "--" [ref=e2317]:
+                  - generic [ref=e2318]: "--"
+                - cell "4d ago" [ref=e2319]
+              - row "Slider Test 1767531966787 New - - -- 4d ago" [ref=e2320] [cursor=pointer]:
+                - cell [ref=e2321]:
+                  - checkbox [ref=e2322]
+                - cell "Slider Test 1767531966787" [ref=e2323]
+                - cell "New" [ref=e2324]:
+                  - generic [ref=e2325]: New
+                - cell "-" [ref=e2326]
+                - cell "-" [ref=e2327]
+                - cell "--" [ref=e2328]:
+                  - generic [ref=e2329]: "--"
+                - cell "4d ago" [ref=e2330]
+              - row "Quick Capture Test 1767531959264 New - - -- 4d ago" [ref=e2331] [cursor=pointer]:
+                - cell [ref=e2332]:
+                  - checkbox [ref=e2333]
+                - cell "Quick Capture Test 1767531959264" [ref=e2334]
+                - cell "New" [ref=e2335]:
+                  - generic [ref=e2336]: New
+                - cell "-" [ref=e2337]
+                - cell "-" [ref=e2338]
+                - cell "--" [ref=e2339]:
+                  - generic [ref=e2340]: "--"
+                - cell "4d ago" [ref=e2341]
+              - row "Click Select Test 1767531325815 New - - -- 4d ago" [ref=e2342] [cursor=pointer]:
+                - cell [ref=e2343]:
+                  - checkbox [ref=e2344]
+                - cell "Click Select Test 1767531325815" [ref=e2345]
+                - cell "New" [ref=e2346]:
+                  - generic [ref=e2347]: New
+                - cell "-" [ref=e2348]
+                - cell "-" [ref=e2349]
+                - cell "--" [ref=e2350]:
+                  - generic [ref=e2351]: "--"
+                - cell "4d ago" [ref=e2352]
+              - row "Enter Select Test 1767531313055 New - - -- 4d ago" [ref=e2353] [cursor=pointer]:
+                - cell [ref=e2354]:
+                  - checkbox [ref=e2355]
+                - cell "Enter Select Test 1767531313055" [ref=e2356]
+                - cell "New" [ref=e2357]:
+                  - generic [ref=e2358]: New
+                - cell "-" [ref=e2359]
+                - cell "-" [ref=e2360]
+                - cell "--" [ref=e2361]:
+                  - generic [ref=e2362]: "--"
+                - cell "4d ago" [ref=e2363]
+              - row "Nav Test Idea 2 1767531300373 New - - -- 4d ago" [ref=e2364] [cursor=pointer]:
+                - cell [ref=e2365]:
+                  - checkbox [ref=e2366]
+                - cell "Nav Test Idea 2 1767531300373" [ref=e2367]
+                - cell "New" [ref=e2368]:
+                  - generic [ref=e2369]: New
+                - cell "-" [ref=e2370]
+                - cell "-" [ref=e2371]
+                - cell "--" [ref=e2372]:
+                  - generic [ref=e2373]: "--"
+                - cell "4d ago" [ref=e2374]
+              - row "Nav Test Idea 1 1767531300373 New - - -- 4d ago" [ref=e2375] [cursor=pointer]:
+                - cell [ref=e2376]:
+                  - checkbox [ref=e2377]
+                - cell "Nav Test Idea 1 1767531300373" [ref=e2378]
+                - cell "New" [ref=e2379]:
+                  - generic [ref=e2380]: New
+                - cell "-" [ref=e2381]
+                - cell "-" [ref=e2382]
+                - cell "--" [ref=e2383]:
+                  - generic [ref=e2384]: "--"
+                - cell "4d ago" [ref=e2385]
+              - row "Search Test Idea 1767531279085 New - - -- 4d ago" [ref=e2386] [cursor=pointer]:
+                - cell [ref=e2387]:
+                  - checkbox [ref=e2388]
+                - cell "Search Test Idea 1767531279085" [ref=e2389]
+                - cell "New" [ref=e2390]:
+                  - generic [ref=e2391]: New
+                - cell "-" [ref=e2392]
+                - cell "-" [ref=e2393]
+                - cell "--" [ref=e2394]:
+                  - generic [ref=e2395]: "--"
+                - cell "4d ago" [ref=e2396]
+              - row "Click Select Test 1767524829628 New - - -- 4d ago" [ref=e2397] [cursor=pointer]:
+                - cell [ref=e2398]:
+                  - checkbox [ref=e2399]
+                - cell "Click Select Test 1767524829628" [ref=e2400]
+                - cell "New" [ref=e2401]:
+                  - generic [ref=e2402]: New
+                - cell "-" [ref=e2403]
+                - cell "-" [ref=e2404]
+                - cell "--" [ref=e2405]:
+                  - generic [ref=e2406]: "--"
+                - cell "4d ago" [ref=e2407]
+              - row "Enter Select Test 1767524817443 New - - -- 4d ago" [ref=e2408] [cursor=pointer]:
+                - cell [ref=e2409]:
+                  - checkbox [ref=e2410]
+                - cell "Enter Select Test 1767524817443" [ref=e2411]
+                - cell "New" [ref=e2412]:
+                  - generic [ref=e2413]: New
+                - cell "-" [ref=e2414]
+                - cell "-" [ref=e2415]
+                - cell "--" [ref=e2416]:
+                  - generic [ref=e2417]: "--"
+                - cell "4d ago" [ref=e2418]
+              - row "Nav Test Idea 2 1767524803358 New - - -- 4d ago" [ref=e2419] [cursor=pointer]:
+                - cell [ref=e2420]:
+                  - checkbox [ref=e2421]
+                - cell "Nav Test Idea 2 1767524803358" [ref=e2422]
+                - cell "New" [ref=e2423]:
+                  - generic [ref=e2424]: New
+                - cell "-" [ref=e2425]
+                - cell "-" [ref=e2426]
+                - cell "--" [ref=e2427]:
+                  - generic [ref=e2428]: "--"
+                - cell "4d ago" [ref=e2429]
+              - row "Nav Test Idea 1 1767524803358 New - - -- 4d ago" [ref=e2430] [cursor=pointer]:
+                - cell [ref=e2431]:
+                  - checkbox [ref=e2432]
+                - cell "Nav Test Idea 1 1767524803358" [ref=e2433]
+                - cell "New" [ref=e2434]:
+                  - generic [ref=e2435]: New
+                - cell "-" [ref=e2436]
+                - cell "-" [ref=e2437]
+                - cell "--" [ref=e2438]:
+                  - generic [ref=e2439]: "--"
+                - cell "4d ago" [ref=e2440]
+              - row "Search Test Idea 1767524780182 New - - -- 4d ago" [ref=e2441] [cursor=pointer]:
+                - cell [ref=e2442]:
+                  - checkbox [ref=e2443]
+                - cell "Search Test Idea 1767524780182" [ref=e2444]
+                - cell "New" [ref=e2445]:
+                  - generic [ref=e2446]: New
+                - cell "-" [ref=e2447]
+                - cell "-" [ref=e2448]
+                - cell "--" [ref=e2449]:
+                  - generic [ref=e2450]: "--"
+                - cell "4d ago" [ref=e2451]
+              - row "Click Select Test 1767524415936 New - - -- 4d ago" [ref=e2452] [cursor=pointer]:
+                - cell [ref=e2453]:
+                  - checkbox [ref=e2454]
+                - cell "Click Select Test 1767524415936" [ref=e2455]
+                - cell "New" [ref=e2456]:
+                  - generic [ref=e2457]: New
+                - cell "-" [ref=e2458]
+                - cell "-" [ref=e2459]
+                - cell "--" [ref=e2460]:
+                  - generic [ref=e2461]: "--"
+                - cell "4d ago" [ref=e2462]
+              - row "Enter Select Test 1767524401065 New - - -- 4d ago" [ref=e2463] [cursor=pointer]:
+                - cell [ref=e2464]:
+                  - checkbox [ref=e2465]
+                - cell "Enter Select Test 1767524401065" [ref=e2466]
+                - cell "New" [ref=e2467]:
+                  - generic [ref=e2468]: New
+                - cell "-" [ref=e2469]
+                - cell "-" [ref=e2470]
+                - cell "--" [ref=e2471]:
+                  - generic [ref=e2472]: "--"
+                - cell "4d ago" [ref=e2473]
+              - row "Nav Test Idea 2 1767524384017 New - - -- 4d ago" [ref=e2474] [cursor=pointer]:
+                - cell [ref=e2475]:
+                  - checkbox [ref=e2476]
+                - cell "Nav Test Idea 2 1767524384017" [ref=e2477]
+                - cell "New" [ref=e2478]:
+                  - generic [ref=e2479]: New
+                - cell "-" [ref=e2480]
+                - cell "-" [ref=e2481]
+                - cell "--" [ref=e2482]:
+                  - generic [ref=e2483]: "--"
+                - cell "4d ago" [ref=e2484]
+              - row "Nav Test Idea 1 1767524384017 New - - -- 4d ago" [ref=e2485] [cursor=pointer]:
+                - cell [ref=e2486]:
+                  - checkbox [ref=e2487]
+                - cell "Nav Test Idea 1 1767524384017" [ref=e2488]
+                - cell "New" [ref=e2489]:
+                  - generic [ref=e2490]: New
+                - cell "-" [ref=e2491]
+                - cell "-" [ref=e2492]
+                - cell "--" [ref=e2493]:
+                  - generic [ref=e2494]: "--"
+                - cell "4d ago" [ref=e2495]
+              - row "Search Test Idea 1767524349825 New - - -- 4d ago" [ref=e2496] [cursor=pointer]:
+                - cell [ref=e2497]:
+                  - checkbox [ref=e2498]
+                - cell "Search Test Idea 1767524349825" [ref=e2499]
+                - cell "New" [ref=e2500]:
+                  - generic [ref=e2501]: New
+                - cell "-" [ref=e2502]
+                - cell "-" [ref=e2503]
+                - cell "--" [ref=e2504]:
+                  - generic [ref=e2505]: "--"
+                - cell "4d ago" [ref=e2506]
+              - row "Click Select Test 1767524065200 New - - -- 4d ago" [ref=e2507] [cursor=pointer]:
+                - cell [ref=e2508]:
+                  - checkbox [ref=e2509]
+                - cell "Click Select Test 1767524065200" [ref=e2510]
+                - cell "New" [ref=e2511]:
+                  - generic [ref=e2512]: New
+                - cell "-" [ref=e2513]
+                - cell "-" [ref=e2514]
+                - cell "--" [ref=e2515]:
+                  - generic [ref=e2516]: "--"
+                - cell "4d ago" [ref=e2517]
+              - row "Enter Select Test 1767524054297 New - - -- 4d ago" [ref=e2518] [cursor=pointer]:
+                - cell [ref=e2519]:
+                  - checkbox [ref=e2520]
+                - cell "Enter Select Test 1767524054297" [ref=e2521]
+                - cell "New" [ref=e2522]:
+                  - generic [ref=e2523]: New
+                - cell "-" [ref=e2524]
+                - cell "-" [ref=e2525]
+                - cell "--" [ref=e2526]:
+                  - generic [ref=e2527]: "--"
+                - cell "4d ago" [ref=e2528]
+              - row "Nav Test Idea 2 1767524038342 New - - -- 4d ago" [ref=e2529] [cursor=pointer]:
+                - cell [ref=e2530]:
+                  - checkbox [ref=e2531]
+                - cell "Nav Test Idea 2 1767524038342" [ref=e2532]
+                - cell "New" [ref=e2533]:
+                  - generic [ref=e2534]: New
+                - cell "-" [ref=e2535]
+                - cell "-" [ref=e2536]
+                - cell "--" [ref=e2537]:
+                  - generic [ref=e2538]: "--"
+                - cell "4d ago" [ref=e2539]
+              - row "Nav Test Idea 1 1767524038342 New - - -- 4d ago" [ref=e2540] [cursor=pointer]:
+                - cell [ref=e2541]:
+                  - checkbox [ref=e2542]
+                - cell "Nav Test Idea 1 1767524038342" [ref=e2543]
+                - cell "New" [ref=e2544]:
+                  - generic [ref=e2545]: New
+                - cell "-" [ref=e2546]
+                - cell "-" [ref=e2547]
+                - cell "--" [ref=e2548]:
+                  - generic [ref=e2549]: "--"
+                - cell "4d ago" [ref=e2550]
+              - row "Search Test Idea 1767524018046 New - - -- 4d ago" [ref=e2551] [cursor=pointer]:
+                - cell [ref=e2552]:
+                  - checkbox [ref=e2553]
+                - cell "Search Test Idea 1767524018046" [ref=e2554]
+                - cell "New" [ref=e2555]:
+                  - generic [ref=e2556]: New
+                - cell "-" [ref=e2557]
+                - cell "-" [ref=e2558]
+                - cell "--" [ref=e2559]:
+                  - generic [ref=e2560]: "--"
+                - cell "4d ago" [ref=e2561]
+              - row "Click Select Test 1767523649633 New - - -- 4d ago" [ref=e2562] [cursor=pointer]:
+                - cell [ref=e2563]:
+                  - checkbox [ref=e2564]
+                - cell "Click Select Test 1767523649633" [ref=e2565]
+                - cell "New" [ref=e2566]:
+                  - generic [ref=e2567]: New
+                - cell "-" [ref=e2568]
+                - cell "-" [ref=e2569]
+                - cell "--" [ref=e2570]:
+                  - generic [ref=e2571]: "--"
+                - cell "4d ago" [ref=e2572]
+              - row "Enter Select Test 1767523639778 New - - -- 4d ago" [ref=e2573] [cursor=pointer]:
+                - cell [ref=e2574]:
+                  - checkbox [ref=e2575]
+                - cell "Enter Select Test 1767523639778" [ref=e2576]
+                - cell "New" [ref=e2577]:
+                  - generic [ref=e2578]: New
+                - cell "-" [ref=e2579]
+                - cell "-" [ref=e2580]
+                - cell "--" [ref=e2581]:
+                  - generic [ref=e2582]: "--"
+                - cell "4d ago" [ref=e2583]
+              - row "Nav Test Idea 2 1767523629084 New - - -- 4d ago" [ref=e2584] [cursor=pointer]:
+                - cell [ref=e2585]:
+                  - checkbox [ref=e2586]
+                - cell "Nav Test Idea 2 1767523629084" [ref=e2587]
+                - cell "New" [ref=e2588]:
+                  - generic [ref=e2589]: New
+                - cell "-" [ref=e2590]
+                - cell "-" [ref=e2591]
+                - cell "--" [ref=e2592]:
+                  - generic [ref=e2593]: "--"
+                - cell "4d ago" [ref=e2594]
+              - row "Nav Test Idea 1 1767523629084 New - - -- 4d ago" [ref=e2595] [cursor=pointer]:
+                - cell [ref=e2596]:
+                  - checkbox [ref=e2597]
+                - cell "Nav Test Idea 1 1767523629084" [ref=e2598]
+                - cell "New" [ref=e2599]:
+                  - generic [ref=e2600]: New
+                - cell "-" [ref=e2601]
+                - cell "-" [ref=e2602]
+                - cell "--" [ref=e2603]:
+                  - generic [ref=e2604]: "--"
+                - cell "4d ago" [ref=e2605]
+              - row "Search Test Idea 1767523610685 New - - -- 4d ago" [ref=e2606] [cursor=pointer]:
+                - cell [ref=e2607]:
+                  - checkbox [ref=e2608]
+                - cell "Search Test Idea 1767523610685" [ref=e2609]
+                - cell "New" [ref=e2610]:
+                  - generic [ref=e2611]: New
+                - cell "-" [ref=e2612]
+                - cell "-" [ref=e2613]
+                - cell "--" [ref=e2614]:
+                  - generic [ref=e2615]: "--"
+                - cell "4d ago" [ref=e2616]
+              - row "Click Select Test 1767523377044 New - - -- 4d ago" [ref=e2617] [cursor=pointer]:
+                - cell [ref=e2618]:
+                  - checkbox [ref=e2619]
+                - cell "Click Select Test 1767523377044" [ref=e2620]
+                - cell "New" [ref=e2621]:
+                  - generic [ref=e2622]: New
+                - cell "-" [ref=e2623]
+                - cell "-" [ref=e2624]
+                - cell "--" [ref=e2625]:
+                  - generic [ref=e2626]: "--"
+                - cell "4d ago" [ref=e2627]
+              - row "Enter Select Test 1767523364545 New - - -- 4d ago" [ref=e2628] [cursor=pointer]:
+                - cell [ref=e2629]:
+                  - checkbox [ref=e2630]
+                - cell "Enter Select Test 1767523364545" [ref=e2631]
+                - cell "New" [ref=e2632]:
+                  - generic [ref=e2633]: New
+                - cell "-" [ref=e2634]
+                - cell "-" [ref=e2635]
+                - cell "--" [ref=e2636]:
+                  - generic [ref=e2637]: "--"
+                - cell "4d ago" [ref=e2638]
+              - row "Nav Test Idea 2 1767523351089 New - - -- 4d ago" [ref=e2639] [cursor=pointer]:
+                - cell [ref=e2640]:
+                  - checkbox [ref=e2641]
+                - cell "Nav Test Idea 2 1767523351089" [ref=e2642]
+                - cell "New" [ref=e2643]:
+                  - generic [ref=e2644]: New
+                - cell "-" [ref=e2645]
+                - cell "-" [ref=e2646]
+                - cell "--" [ref=e2647]:
+                  - generic [ref=e2648]: "--"
+                - cell "4d ago" [ref=e2649]
+              - row "Nav Test Idea 1 1767523351089 New - - -- 4d ago" [ref=e2650] [cursor=pointer]:
+                - cell [ref=e2651]:
+                  - checkbox [ref=e2652]
+                - cell "Nav Test Idea 1 1767523351089" [ref=e2653]
+                - cell "New" [ref=e2654]:
+                  - generic [ref=e2655]: New
+                - cell "-" [ref=e2656]
+                - cell "-" [ref=e2657]
+                - cell "--" [ref=e2658]:
+                  - generic [ref=e2659]: "--"
+                - cell "4d ago" [ref=e2660]
+              - row "Search Test Idea 1767523333158 New - - -- 4d ago" [ref=e2661] [cursor=pointer]:
+                - cell [ref=e2662]:
+                  - checkbox [ref=e2663]
+                - cell "Search Test Idea 1767523333158" [ref=e2664]
+                - cell "New" [ref=e2665]:
+                  - generic [ref=e2666]: New
+                - cell "-" [ref=e2667]
+                - cell "-" [ref=e2668]
+                - cell "--" [ref=e2669]:
+                  - generic [ref=e2670]: "--"
+                - cell "4d ago" [ref=e2671]
+              - row "Delete Test 1767521767111 New - - -- 4d ago" [ref=e2672] [cursor=pointer]:
+                - cell [ref=e2673]:
+                  - checkbox [ref=e2674]
+                - cell "Delete Test 1767521767111" [ref=e2675]
+                - cell "New" [ref=e2676]:
+                  - generic [ref=e2677]: New
+                - cell "-" [ref=e2678]
+                - cell "-" [ref=e2679]
+                - cell "--" [ref=e2680]:
+                  - generic [ref=e2681]: "--"
+                - cell "4d ago" [ref=e2682]
+              - row "Test Idea 1767521762387 New - - -- 4d ago" [ref=e2683] [cursor=pointer]:
+                - cell [ref=e2684]:
+                  - checkbox [ref=e2685]
+                - cell "Test Idea 1767521762387" [ref=e2686]
+                - cell "New" [ref=e2687]:
+                  - generic [ref=e2688]: New
+                - cell "-" [ref=e2689]
+                - cell "-" [ref=e2690]
+                - cell "--" [ref=e2691]:
+                  - generic [ref=e2692]: "--"
+                - cell "4d ago" [ref=e2693]
+              - row "Links Test 1767521754546 New - - -- 4d ago" [ref=e2694] [cursor=pointer]:
+                - cell [ref=e2695]:
+                  - checkbox [ref=e2696]
+                - cell "Links Test 1767521754546" [ref=e2697]
+                - cell "New" [ref=e2698]:
+                  - generic [ref=e2699]: New
+                - cell "-" [ref=e2700]
+                - cell "-" [ref=e2701]
+                - cell "--" [ref=e2702]:
+                  - generic [ref=e2703]: "--"
+                - cell "4d ago" [ref=e2704]
+              - row "Links Test 1767521750243 New - - -- 4d ago" [ref=e2705] [cursor=pointer]:
+                - cell [ref=e2706]:
+                  - checkbox [ref=e2707]
+                - cell "Links Test 1767521750243" [ref=e2708]
+                - cell "New" [ref=e2709]:
+                  - generic [ref=e2710]: New
+                - cell "-" [ref=e2711]
+                - cell "-" [ref=e2712]
+                - cell "--" [ref=e2713]:
+                  - generic [ref=e2714]: "--"
+                - cell "4d ago" [ref=e2715]
+              - row "Slider Test 1767521744500 New - Now -- 4d ago" [ref=e2716] [cursor=pointer]:
+                - cell [ref=e2717]:
+                  - checkbox [ref=e2718]
+                - cell "Slider Test 1767521744500" [ref=e2719]
+                - cell "New" [ref=e2720]:
+                  - generic [ref=e2721]: New
+                - cell "-" [ref=e2722]
+                - cell "Now" [ref=e2723]
+                - cell "--" [ref=e2724]:
+                  - generic [ref=e2725]: "--"
+                - cell "4d ago" [ref=e2726]
+              - row "Slider Test 1767521739521 New - - -- 4d ago" [ref=e2727] [cursor=pointer]:
+                - cell [ref=e2728]:
+                  - checkbox [ref=e2729]
+                - cell "Slider Test 1767521739521" [ref=e2730]
+                - cell "New" [ref=e2731]:
+                  - generic [ref=e2732]: New
+                - cell "-" [ref=e2733]
+                - cell "-" [ref=e2734]
+                - cell "--" [ref=e2735]:
+                  - generic [ref=e2736]: "--"
+                - cell "4d ago" [ref=e2737]
+              - row "Slider Test 1767521735917 New - - -- 4d ago" [ref=e2738] [cursor=pointer]:
+                - cell [ref=e2739]:
+                  - checkbox [ref=e2740]
+                - cell "Slider Test 1767521735917" [ref=e2741]
+                - cell "New" [ref=e2742]:
+                  - generic [ref=e2743]: New
+                - cell "-" [ref=e2744]
+                - cell "-" [ref=e2745]
+                - cell "--" [ref=e2746]:
+                  - generic [ref=e2747]: "--"
+                - cell "4d ago" [ref=e2748]
+              - row "Slider Test 1767521731061 (Copy) New - - -- 4d ago" [ref=e2749] [cursor=pointer]:
+                - cell [ref=e2750]:
+                  - checkbox [ref=e2751]
+                - cell "Slider Test 1767521731061 (Copy)" [ref=e2752]
+                - cell "New" [ref=e2753]:
+                  - generic [ref=e2754]: New
+                - cell "-" [ref=e2755]
+                - cell "-" [ref=e2756]
+                - cell "--" [ref=e2757]:
+                  - generic [ref=e2758]: "--"
+                - cell "4d ago" [ref=e2759]
+              - row "Slider Test 1767521731061 New - - -- 4d ago" [ref=e2760] [cursor=pointer]:
+                - cell [ref=e2761]:
+                  - checkbox [ref=e2762]
+                - cell "Slider Test 1767521731061" [ref=e2763]
+                - cell "New" [ref=e2764]:
+                  - generic [ref=e2765]: New
+                - cell "-" [ref=e2766]
+                - cell "-" [ref=e2767]
+                - cell "--" [ref=e2768]:
+                  - generic [ref=e2769]: "--"
+                - cell "4d ago" [ref=e2770]
+              - row "Slider Test 1767521718264 New - - -- 4d ago" [ref=e2771] [cursor=pointer]:
+                - cell [ref=e2772]:
+                  - checkbox [ref=e2773]
+                - cell "Slider Test 1767521718264" [ref=e2774]
+                - cell "New" [ref=e2775]:
+                  - generic [ref=e2776]: New
+                - cell "-" [ref=e2777]
+                - cell "-" [ref=e2778]
+                - cell "--" [ref=e2779]:
+                  - generic [ref=e2780]: "--"
+                - cell "4d ago" [ref=e2781]
+              - row "Slider Test 1767521714513 New - - -- 4d ago" [ref=e2782] [cursor=pointer]:
+                - cell [ref=e2783]:
+                  - checkbox [ref=e2784]
+                - cell "Slider Test 1767521714513" [ref=e2785]
+                - cell "New" [ref=e2786]:
+                  - generic [ref=e2787]: New
+                - cell "-" [ref=e2788]
+                - cell "-" [ref=e2789]
+                - cell "--" [ref=e2790]:
+                  - generic [ref=e2791]: "--"
+                - cell "4d ago" [ref=e2792]
+              - row "Slider Test 1767521709705 Evaluating - - -- 4d ago" [ref=e2793] [cursor=pointer]:
+                - cell [ref=e2794]:
+                  - checkbox [ref=e2795]
+                - cell "Slider Test 1767521709705" [ref=e2796]
+                - cell "Evaluating" [ref=e2797]:
+                  - generic [ref=e2798]: Evaluating
+                - cell "-" [ref=e2799]
+                - cell "-" [ref=e2800]
+                - cell "--" [ref=e2801]:
+                  - generic [ref=e2802]: "--"
+                - cell "4d ago" [ref=e2803]
+              - row "Updated Slider Test 1767521703790 New - - -- 4d ago" [ref=e2804] [cursor=pointer]:
+                - cell [ref=e2805]:
+                  - checkbox [ref=e2806]
+                - cell "Updated Slider Test 1767521703790" [ref=e2807]
+                - cell "New" [ref=e2808]:
+                  - generic [ref=e2809]: New
+                - cell "-" [ref=e2810]
+                - cell "-" [ref=e2811]
+                - cell "--" [ref=e2812]:
+                  - generic [ref=e2813]: "--"
+                - cell "4d ago" [ref=e2814]
+              - row "Slider Test 1767521699487 New - - -- 4d ago" [ref=e2815] [cursor=pointer]:
+                - cell [ref=e2816]:
+                  - checkbox [ref=e2817]
+                - cell "Slider Test 1767521699487" [ref=e2818]
+                - cell "New" [ref=e2819]:
+                  - generic [ref=e2820]: New
+                - cell "-" [ref=e2821]
+                - cell "-" [ref=e2822]
+                - cell "--" [ref=e2823]:
+                  - generic [ref=e2824]: "--"
+                - cell "4d ago" [ref=e2825]
+              - row "Slider Test 1767521695452 New - - -- 4d ago" [ref=e2826] [cursor=pointer]:
+                - cell [ref=e2827]:
+                  - checkbox [ref=e2828]
+                - cell "Slider Test 1767521695452" [ref=e2829]
+                - cell "New" [ref=e2830]:
+                  - generic [ref=e2831]: New
+                - cell "-" [ref=e2832]
+                - cell "-" [ref=e2833]
+                - cell "--" [ref=e2834]:
+                  - generic [ref=e2835]: "--"
+                - cell "4d ago" [ref=e2836]
+              - row "Slider Test 1767521692096 New - - -- 4d ago" [ref=e2837] [cursor=pointer]:
+                - cell [ref=e2838]:
+                  - checkbox [ref=e2839]
+                - cell "Slider Test 1767521692096" [ref=e2840]
+                - cell "New" [ref=e2841]:
+                  - generic [ref=e2842]: New
+                - cell "-" [ref=e2843]
+                - cell "-" [ref=e2844]
+                - cell "--" [ref=e2845]:
+                  - generic [ref=e2846]: "--"
+                - cell "4d ago" [ref=e2847]
+              - row "Quick Capture Test 1767521688804 New - - -- 4d ago" [ref=e2848] [cursor=pointer]:
+                - cell [ref=e2849]:
+                  - checkbox [ref=e2850]
+                - cell "Quick Capture Test 1767521688804" [ref=e2851]
+                - cell "New" [ref=e2852]:
+                  - generic [ref=e2853]: New
+                - cell "-" [ref=e2854]
+                - cell "-" [ref=e2855]
+                - cell "--" [ref=e2856]:
+                  - generic [ref=e2857]: "--"
+                - cell "4d ago" [ref=e2858]
+              - row "Delete Test 1767521387417 New - - -- 4d ago" [ref=e2859] [cursor=pointer]:
+                - cell [ref=e2860]:
+                  - checkbox [ref=e2861]
+                - cell "Delete Test 1767521387417" [ref=e2862]
+                - cell "New" [ref=e2863]:
+                  - generic [ref=e2864]: New
+                - cell "-" [ref=e2865]
+                - cell "-" [ref=e2866]
+                - cell "--" [ref=e2867]:
+                  - generic [ref=e2868]: "--"
+                - cell "4d ago" [ref=e2869]
+              - row "Test Idea 1767521382988 New - - -- 4d ago" [ref=e2870] [cursor=pointer]:
+                - cell [ref=e2871]:
+                  - checkbox [ref=e2872]
+                - cell "Test Idea 1767521382988" [ref=e2873]
+                - cell "New" [ref=e2874]:
+                  - generic [ref=e2875]: New
+                - cell "-" [ref=e2876]
+                - cell "-" [ref=e2877]
+                - cell "--" [ref=e2878]:
+                  - generic [ref=e2879]: "--"
+                - cell "4d ago" [ref=e2880]
+              - row "Links Test 1767521376915 New - - -- 4d ago" [ref=e2881] [cursor=pointer]:
+                - cell [ref=e2882]:
+                  - checkbox [ref=e2883]
+                - cell "Links Test 1767521376915" [ref=e2884]
+                - cell "New" [ref=e2885]:
+                  - generic [ref=e2886]: New
+                - cell "-" [ref=e2887]
+                - cell "-" [ref=e2888]
+                - cell "--" [ref=e2889]:
+                  - generic [ref=e2890]: "--"
+                - cell "4d ago" [ref=e2891]
+              - row "Links Test 1767521372814 New - - -- 4d ago" [ref=e2892] [cursor=pointer]:
+                - cell [ref=e2893]:
+                  - checkbox [ref=e2894]
+                - cell "Links Test 1767521372814" [ref=e2895]
+                - cell "New" [ref=e2896]:
+                  - generic [ref=e2897]: New
+                - cell "-" [ref=e2898]
+                - cell "-" [ref=e2899]
+                - cell "--" [ref=e2900]:
+                  - generic [ref=e2901]: "--"
+                - cell "4d ago" [ref=e2902]
+              - row "Slider Test 1767521367145 New - Now -- 4d ago" [ref=e2903] [cursor=pointer]:
+                - cell [ref=e2904]:
+                  - checkbox [ref=e2905]
+                - cell "Slider Test 1767521367145" [ref=e2906]
+                - cell "New" [ref=e2907]:
+                  - generic [ref=e2908]: New
+                - cell "-" [ref=e2909]
+                - cell "Now" [ref=e2910]
+                - cell "--" [ref=e2911]:
+                  - generic [ref=e2912]: "--"
+                - cell "4d ago" [ref=e2913]
+              - row "Slider Test 1767521362067 New - - -- 4d ago" [ref=e2914] [cursor=pointer]:
+                - cell [ref=e2915]:
+                  - checkbox [ref=e2916]
+                - cell "Slider Test 1767521362067" [ref=e2917]
+                - cell "New" [ref=e2918]:
+                  - generic [ref=e2919]: New
+                - cell "-" [ref=e2920]
+                - cell "-" [ref=e2921]
+                - cell "--" [ref=e2922]:
+                  - generic [ref=e2923]: "--"
+                - cell "4d ago" [ref=e2924]
+              - row "Slider Test 1767521358603 New - - -- 4d ago" [ref=e2925] [cursor=pointer]:
+                - cell [ref=e2926]:
+                  - checkbox [ref=e2927]
+                - cell "Slider Test 1767521358603" [ref=e2928]
+                - cell "New" [ref=e2929]:
+                  - generic [ref=e2930]: New
+                - cell "-" [ref=e2931]
+                - cell "-" [ref=e2932]
+                - cell "--" [ref=e2933]:
+                  - generic [ref=e2934]: "--"
+                - cell "4d ago" [ref=e2935]
+              - row "Slider Test 1767521354008 (Copy) New - - -- 4d ago" [ref=e2936] [cursor=pointer]:
+                - cell [ref=e2937]:
+                  - checkbox [ref=e2938]
+                - cell "Slider Test 1767521354008 (Copy)" [ref=e2939]
+                - cell "New" [ref=e2940]:
+                  - generic [ref=e2941]: New
+                - cell "-" [ref=e2942]
+                - cell "-" [ref=e2943]
+                - cell "--" [ref=e2944]:
+                  - generic [ref=e2945]: "--"
+                - cell "4d ago" [ref=e2946]
+              - row "Slider Test 1767521354008 New - - -- 4d ago" [ref=e2947] [cursor=pointer]:
+                - cell [ref=e2948]:
+                  - checkbox [ref=e2949]
+                - cell "Slider Test 1767521354008" [ref=e2950]
+                - cell "New" [ref=e2951]:
+                  - generic [ref=e2952]: New
+                - cell "-" [ref=e2953]
+                - cell "-" [ref=e2954]
+                - cell "--" [ref=e2955]:
+                  - generic [ref=e2956]: "--"
+                - cell "4d ago" [ref=e2957]
+              - row "Slider Test 1767521340961 New - - -- 4d ago" [ref=e2958] [cursor=pointer]:
+                - cell [ref=e2959]:
+                  - checkbox [ref=e2960]
+                - cell "Slider Test 1767521340961" [ref=e2961]
+                - cell "New" [ref=e2962]:
+                  - generic [ref=e2963]: New
+                - cell "-" [ref=e2964]
+                - cell "-" [ref=e2965]
+                - cell "--" [ref=e2966]:
+                  - generic [ref=e2967]: "--"
+                - cell "4d ago" [ref=e2968]
+              - row "Slider Test 1767521335737 New - - -- 4d ago" [ref=e2969] [cursor=pointer]:
+                - cell [ref=e2970]:
+                  - checkbox [ref=e2971]
+                - cell "Slider Test 1767521335737" [ref=e2972]
+                - cell "New" [ref=e2973]:
+                  - generic [ref=e2974]: New
+                - cell "-" [ref=e2975]
+                - cell "-" [ref=e2976]
+                - cell "--" [ref=e2977]:
+                  - generic [ref=e2978]: "--"
+                - cell "4d ago" [ref=e2979]
+              - row "Slider Test 1767521330678 Evaluating - - -- 4d ago" [ref=e2980] [cursor=pointer]:
+                - cell [ref=e2981]:
+                  - checkbox [ref=e2982]
+                - cell "Slider Test 1767521330678" [ref=e2983]
+                - cell "Evaluating" [ref=e2984]:
+                  - generic [ref=e2985]: Evaluating
+                - cell "-" [ref=e2986]
+                - cell "-" [ref=e2987]
+                - cell "--" [ref=e2988]:
+                  - generic [ref=e2989]: "--"
+                - cell "4d ago" [ref=e2990]
+              - row "Updated Slider Test 1767521325316 New - - -- 4d ago" [ref=e2991] [cursor=pointer]:
+                - cell [ref=e2992]:
+                  - checkbox [ref=e2993]
+                - cell "Updated Slider Test 1767521325316" [ref=e2994]
+                - cell "New" [ref=e2995]:
+                  - generic [ref=e2996]: New
+                - cell "-" [ref=e2997]
+                - cell "-" [ref=e2998]
+                - cell "--" [ref=e2999]:
+                  - generic [ref=e3000]: "--"
+                - cell "4d ago" [ref=e3001]
+              - row "Slider Test 1767521321151 New - - -- 4d ago" [ref=e3002] [cursor=pointer]:
+                - cell [ref=e3003]:
+                  - checkbox [ref=e3004]
+                - cell "Slider Test 1767521321151" [ref=e3005]
+                - cell "New" [ref=e3006]:
+                  - generic [ref=e3007]: New
+                - cell "-" [ref=e3008]
+                - cell "-" [ref=e3009]
+                - cell "--" [ref=e3010]:
+                  - generic [ref=e3011]: "--"
+                - cell "4d ago" [ref=e3012]
+              - row "Slider Test 1767521317073 New - - -- 4d ago" [ref=e3013] [cursor=pointer]:
+                - cell [ref=e3014]:
+                  - checkbox [ref=e3015]
+                - cell "Slider Test 1767521317073" [ref=e3016]
+                - cell "New" [ref=e3017]:
+                  - generic [ref=e3018]: New
+                - cell "-" [ref=e3019]
+                - cell "-" [ref=e3020]
+                - cell "--" [ref=e3021]:
+                  - generic [ref=e3022]: "--"
+                - cell "4d ago" [ref=e3023]
+              - row "Slider Test 1767521313118 New - - -- 4d ago" [ref=e3024] [cursor=pointer]:
+                - cell [ref=e3025]:
+                  - checkbox [ref=e3026]
+                - cell "Slider Test 1767521313118" [ref=e3027]
+                - cell "New" [ref=e3028]:
+                  - generic [ref=e3029]: New
+                - cell "-" [ref=e3030]
+                - cell "-" [ref=e3031]
+                - cell "--" [ref=e3032]:
+                  - generic [ref=e3033]: "--"
+                - cell "4d ago" [ref=e3034]
+              - row "Quick Capture Test 1767521309807 New - - -- 4d ago" [ref=e3035] [cursor=pointer]:
+                - cell [ref=e3036]:
+                  - checkbox [ref=e3037]
+                - cell "Quick Capture Test 1767521309807" [ref=e3038]
+                - cell "New" [ref=e3039]:
+                  - generic [ref=e3040]: New
+                - cell "-" [ref=e3041]
+                - cell "-" [ref=e3042]
+                - cell "--" [ref=e3043]:
+                  - generic [ref=e3044]: "--"
+                - cell "4d ago" [ref=e3045]
+              - row "Delete Test 1767445230685 New - - -- 5d ago" [ref=e3046] [cursor=pointer]:
+                - cell [ref=e3047]:
+                  - checkbox [ref=e3048]
+                - cell "Delete Test 1767445230685" [ref=e3049]
+                - cell "New" [ref=e3050]:
+                  - generic [ref=e3051]: New
+                - cell "-" [ref=e3052]
+                - cell "-" [ref=e3053]
+                - cell "--" [ref=e3054]:
+                  - generic [ref=e3055]: "--"
+                - cell "5d ago" [ref=e3056]
+              - row "Test Idea 1767445226455 New - - -- 5d ago" [ref=e3057] [cursor=pointer]:
+                - cell [ref=e3058]:
+                  - checkbox [ref=e3059]
+                - cell "Test Idea 1767445226455" [ref=e3060]
+                - cell "New" [ref=e3061]:
+                  - generic [ref=e3062]: New
+                - cell "-" [ref=e3063]
+                - cell "-" [ref=e3064]
+                - cell "--" [ref=e3065]:
+                  - generic [ref=e3066]: "--"
+                - cell "5d ago" [ref=e3067]
+              - row "Links Test 1767445220891 New - - -- 5d ago" [ref=e3068] [cursor=pointer]:
+                - cell [ref=e3069]:
+                  - checkbox [ref=e3070]
+                - cell "Links Test 1767445220891" [ref=e3071]
+                - cell "New" [ref=e3072]:
+                  - generic [ref=e3073]: New
+                - cell "-" [ref=e3074]
+                - cell "-" [ref=e3075]
+                - cell "--" [ref=e3076]:
+                  - generic [ref=e3077]: "--"
+                - cell "5d ago" [ref=e3078]
+              - row "Links Test 1767445216903 New - - -- 5d ago" [ref=e3079] [cursor=pointer]:
+                - cell [ref=e3080]:
+                  - checkbox [ref=e3081]
+                - cell "Links Test 1767445216903" [ref=e3082]
+                - cell "New" [ref=e3083]:
+                  - generic [ref=e3084]: New
+                - cell "-" [ref=e3085]
+                - cell "-" [ref=e3086]
+                - cell "--" [ref=e3087]:
+                  - generic [ref=e3088]: "--"
+                - cell "5d ago" [ref=e3089]
+              - row "Slider Test 1767445211275 New - Now -- 5d ago" [ref=e3090] [cursor=pointer]:
+                - cell [ref=e3091]:
+                  - checkbox [ref=e3092]
+                - cell "Slider Test 1767445211275" [ref=e3093]
+                - cell "New" [ref=e3094]:
+                  - generic [ref=e3095]: New
+                - cell "-" [ref=e3096]
+                - cell "Now" [ref=e3097]
+                - cell "--" [ref=e3098]:
+                  - generic [ref=e3099]: "--"
+                - cell "5d ago" [ref=e3100]
+              - row "Slider Test 1767445206269 New - - -- 5d ago" [ref=e3101] [cursor=pointer]:
+                - cell [ref=e3102]:
+                  - checkbox [ref=e3103]
+                - cell "Slider Test 1767445206269" [ref=e3104]
+                - cell "New" [ref=e3105]:
+                  - generic [ref=e3106]: New
+                - cell "-" [ref=e3107]
+                - cell "-" [ref=e3108]
+                - cell "--" [ref=e3109]:
+                  - generic [ref=e3110]: "--"
+                - cell "5d ago" [ref=e3111]
+              - row "Slider Test 1767445202660 New - - -- 5d ago" [ref=e3112] [cursor=pointer]:
+                - cell [ref=e3113]:
+                  - checkbox [ref=e3114]
+                - cell "Slider Test 1767445202660" [ref=e3115]
+                - cell "New" [ref=e3116]:
+                  - generic [ref=e3117]: New
+                - cell "-" [ref=e3118]
+                - cell "-" [ref=e3119]
+                - cell "--" [ref=e3120]:
+                  - generic [ref=e3121]: "--"
+                - cell "5d ago" [ref=e3122]
+              - row "Slider Test 1767445198113 (Copy) New - - -- 5d ago" [ref=e3123] [cursor=pointer]:
+                - cell [ref=e3124]:
+                  - checkbox [ref=e3125]
+                - cell "Slider Test 1767445198113 (Copy)" [ref=e3126]
+                - cell "New" [ref=e3127]:
+                  - generic [ref=e3128]: New
+                - cell "-" [ref=e3129]
+                - cell "-" [ref=e3130]
+                - cell "--" [ref=e3131]:
+                  - generic [ref=e3132]: "--"
+                - cell "5d ago" [ref=e3133]
+              - row "Slider Test 1767445198113 New - - -- 5d ago" [ref=e3134] [cursor=pointer]:
+                - cell [ref=e3135]:
+                  - checkbox [ref=e3136]
+                - cell "Slider Test 1767445198113" [ref=e3137]
+                - cell "New" [ref=e3138]:
+                  - generic [ref=e3139]: New
+                - cell "-" [ref=e3140]
+                - cell "-" [ref=e3141]
+                - cell "--" [ref=e3142]:
+                  - generic [ref=e3143]: "--"
+                - cell "5d ago" [ref=e3144]
+              - row "Slider Test 1767445184698 New - - -- 5d ago" [ref=e3145] [cursor=pointer]:
+                - cell [ref=e3146]:
+                  - checkbox [ref=e3147]
+                - cell "Slider Test 1767445184698" [ref=e3148]
+                - cell "New" [ref=e3149]:
+                  - generic [ref=e3150]: New
+                - cell "-" [ref=e3151]
+                - cell "-" [ref=e3152]
+                - cell "--" [ref=e3153]:
+                  - generic [ref=e3154]: "--"
+                - cell "5d ago" [ref=e3155]
+              - row "Slider Test 1767445180108 New - - -- 5d ago" [ref=e3156] [cursor=pointer]:
+                - cell [ref=e3157]:
+                  - checkbox [ref=e3158]
+                - cell "Slider Test 1767445180108" [ref=e3159]
+                - cell "New" [ref=e3160]:
+                  - generic [ref=e3161]: New
+                - cell "-" [ref=e3162]
+                - cell "-" [ref=e3163]
+                - cell "--" [ref=e3164]:
+                  - generic [ref=e3165]: "--"
+                - cell "5d ago" [ref=e3166]
+              - row "Slider Test 1767445175602 Evaluating - - -- 5d ago" [ref=e3167] [cursor=pointer]:
+                - cell [ref=e3168]:
+                  - checkbox [ref=e3169]
+                - cell "Slider Test 1767445175602" [ref=e3170]
+                - cell "Evaluating" [ref=e3171]:
+                  - generic [ref=e3172]: Evaluating
+                - cell "-" [ref=e3173]
+                - cell "-" [ref=e3174]
+                - cell "--" [ref=e3175]:
+                  - generic [ref=e3176]: "--"
+                - cell "5d ago" [ref=e3177]
+              - row "Updated Slider Test 1767445171022 New - - -- 5d ago" [ref=e3178] [cursor=pointer]:
+                - cell [ref=e3179]:
+                  - checkbox [ref=e3180]
+                - cell "Updated Slider Test 1767445171022" [ref=e3181]
+                - cell "New" [ref=e3182]:
+                  - generic [ref=e3183]: New
+                - cell "-" [ref=e3184]
+                - cell "-" [ref=e3185]
+                - cell "--" [ref=e3186]:
+                  - generic [ref=e3187]: "--"
+                - cell "5d ago" [ref=e3188]
+              - row "Slider Test 1767445167348 New - - -- 5d ago" [ref=e3189] [cursor=pointer]:
+                - cell [ref=e3190]:
+                  - checkbox [ref=e3191]
+                - cell "Slider Test 1767445167348" [ref=e3192]
+                - cell "New" [ref=e3193]:
+                  - generic [ref=e3194]: New
+                - cell "-" [ref=e3195]
+                - cell "-" [ref=e3196]
+                - cell "--" [ref=e3197]:
+                  - generic [ref=e3198]: "--"
+                - cell "5d ago" [ref=e3199]
+              - row "Slider Test 1767445163656 New - - -- 5d ago" [ref=e3200] [cursor=pointer]:
+                - cell [ref=e3201]:
+                  - checkbox [ref=e3202]
+                - cell "Slider Test 1767445163656" [ref=e3203]
+                - cell "New" [ref=e3204]:
+                  - generic [ref=e3205]: New
+                - cell "-" [ref=e3206]
+                - cell "-" [ref=e3207]
+                - cell "--" [ref=e3208]:
+                  - generic [ref=e3209]: "--"
+                - cell "5d ago" [ref=e3210]
+              - row "Slider Test 1767445160339 New - - -- 5d ago" [ref=e3211] [cursor=pointer]:
+                - cell [ref=e3212]:
+                  - checkbox [ref=e3213]
+                - cell "Slider Test 1767445160339" [ref=e3214]
+                - cell "New" [ref=e3215]:
+                  - generic [ref=e3216]: New
+                - cell "-" [ref=e3217]
+                - cell "-" [ref=e3218]
+                - cell "--" [ref=e3219]:
+                  - generic [ref=e3220]: "--"
+                - cell "5d ago" [ref=e3221]
+              - row "Quick Capture Test 1767445157198 New - - -- 5d ago" [ref=e3222] [cursor=pointer]:
+                - cell [ref=e3223]:
+                  - checkbox [ref=e3224]
+                - cell "Quick Capture Test 1767445157198" [ref=e3225]
+                - cell "New" [ref=e3226]:
+                  - generic [ref=e3227]: New
+                - cell "-" [ref=e3228]
+                - cell "-" [ref=e3229]
+                - cell "--" [ref=e3230]:
+                  - generic [ref=e3231]: "--"
+                - cell "5d ago" [ref=e3232]
+              - row "Delete Test 1767444920067 New - - -- 5d ago" [ref=e3233] [cursor=pointer]:
+                - cell [ref=e3234]:
+                  - checkbox [ref=e3235]
+                - cell "Delete Test 1767444920067" [ref=e3236]
+                - cell "New" [ref=e3237]:
+                  - generic [ref=e3238]: New
+                - cell "-" [ref=e3239]
+                - cell "-" [ref=e3240]
+                - cell "--" [ref=e3241]:
+                  - generic [ref=e3242]: "--"
+                - cell "5d ago" [ref=e3243]
+              - row "Test Idea 1767444915607 New - - -- 5d ago" [ref=e3244] [cursor=pointer]:
+                - cell [ref=e3245]:
+                  - checkbox [ref=e3246]
+                - cell "Test Idea 1767444915607" [ref=e3247]
+                - cell "New" [ref=e3248]:
+                  - generic [ref=e3249]: New
+                - cell "-" [ref=e3250]
+                - cell "-" [ref=e3251]
+                - cell "--" [ref=e3252]:
+                  - generic [ref=e3253]: "--"
+                - cell "5d ago" [ref=e3254]
+              - row "Links Test 1767444909395 New - - -- 5d ago" [ref=e3255] [cursor=pointer]:
+                - cell [ref=e3256]:
+                  - checkbox [ref=e3257]
+                - cell "Links Test 1767444909395" [ref=e3258]
+                - cell "New" [ref=e3259]:
+                  - generic [ref=e3260]: New
+                - cell "-" [ref=e3261]
+                - cell "-" [ref=e3262]
+                - cell "--" [ref=e3263]:
+                  - generic [ref=e3264]: "--"
+                - cell "5d ago" [ref=e3265]
+              - row "Links Test 1767444905347 New - - -- 5d ago" [ref=e3266] [cursor=pointer]:
+                - cell [ref=e3267]:
+                  - checkbox [ref=e3268]
+                - cell "Links Test 1767444905347" [ref=e3269]
+                - cell "New" [ref=e3270]:
+                  - generic [ref=e3271]: New
+                - cell "-" [ref=e3272]
+                - cell "-" [ref=e3273]
+                - cell "--" [ref=e3274]:
+                  - generic [ref=e3275]: "--"
+                - cell "5d ago" [ref=e3276]
+              - row "Slider Test 1767444897972 New - Now -- 5d ago" [ref=e3277] [cursor=pointer]:
+                - cell [ref=e3278]:
+                  - checkbox [ref=e3279]
+                - cell "Slider Test 1767444897972" [ref=e3280]
+                - cell "New" [ref=e3281]:
+                  - generic [ref=e3282]: New
+                - cell "-" [ref=e3283]
+                - cell "Now" [ref=e3284]
+                - cell "--" [ref=e3285]:
+                  - generic [ref=e3286]: "--"
+                - cell "5d ago" [ref=e3287]
+              - row "Slider Test 1767444891814 New - - -- 5d ago" [ref=e3288] [cursor=pointer]:
+                - cell [ref=e3289]:
+                  - checkbox [ref=e3290]
+                - cell "Slider Test 1767444891814" [ref=e3291]
+                - cell "New" [ref=e3292]:
+                  - generic [ref=e3293]: New
+                - cell "-" [ref=e3294]
+                - cell "-" [ref=e3295]
+                - cell "--" [ref=e3296]:
+                  - generic [ref=e3297]: "--"
+                - cell "5d ago" [ref=e3298]
+              - row "Slider Test 1767444886691 New - - -- 5d ago" [ref=e3299] [cursor=pointer]:
+                - cell [ref=e3300]:
+                  - checkbox [ref=e3301]
+                - cell "Slider Test 1767444886691" [ref=e3302]
+                - cell "New" [ref=e3303]:
+                  - generic [ref=e3304]: New
+                - cell "-" [ref=e3305]
+                - cell "-" [ref=e3306]
+                - cell "--" [ref=e3307]:
+                  - generic [ref=e3308]: "--"
+                - cell "5d ago" [ref=e3309]
+              - row "Slider Test 1767444882783 (Copy) New - - -- 5d ago" [ref=e3310] [cursor=pointer]:
+                - cell [ref=e3311]:
+                  - checkbox [ref=e3312]
+                - cell "Slider Test 1767444882783 (Copy)" [ref=e3313]
+                - cell "New" [ref=e3314]:
+                  - generic [ref=e3315]: New
+                - cell "-" [ref=e3316]
+                - cell "-" [ref=e3317]
+                - cell "--" [ref=e3318]:
+                  - generic [ref=e3319]: "--"
+                - cell "5d ago" [ref=e3320]
+              - row "Slider Test 1767444882783 New - - -- 5d ago" [ref=e3321] [cursor=pointer]:
+                - cell [ref=e3322]:
+                  - checkbox [ref=e3323]
+                - cell "Slider Test 1767444882783" [ref=e3324]
+                - cell "New" [ref=e3325]:
+                  - generic [ref=e3326]: New
+                - cell "-" [ref=e3327]
+                - cell "-" [ref=e3328]
+                - cell "--" [ref=e3329]:
+                  - generic [ref=e3330]: "--"
+                - cell "5d ago" [ref=e3331]
+              - row "Slider Test 1767444869270 New - - -- 5d ago" [ref=e3332] [cursor=pointer]:
+                - cell [ref=e3333]:
+                  - checkbox [ref=e3334]
+                - cell "Slider Test 1767444869270" [ref=e3335]
+                - cell "New" [ref=e3336]:
+                  - generic [ref=e3337]: New
+                - cell "-" [ref=e3338]
+                - cell "-" [ref=e3339]
+                - cell "--" [ref=e3340]:
+                  - generic [ref=e3341]: "--"
+                - cell "5d ago" [ref=e3342]
+              - row "Slider Test 1767444865806 New - - -- 5d ago" [ref=e3343] [cursor=pointer]:
+                - cell [ref=e3344]:
+                  - checkbox [ref=e3345]
+                - cell "Slider Test 1767444865806" [ref=e3346]
+                - cell "New" [ref=e3347]:
+                  - generic [ref=e3348]: New
+                - cell "-" [ref=e3349]
+                - cell "-" [ref=e3350]
+                - cell "--" [ref=e3351]:
+                  - generic [ref=e3352]: "--"
+                - cell "5d ago" [ref=e3353]
+              - row "Slider Test 1767444861336 Evaluating - - -- 5d ago" [ref=e3354] [cursor=pointer]:
+                - cell [ref=e3355]:
+                  - checkbox [ref=e3356]
+                - cell "Slider Test 1767444861336" [ref=e3357]
+                - cell "Evaluating" [ref=e3358]:
+                  - generic [ref=e3359]: Evaluating
+                - cell "-" [ref=e3360]
+                - cell "-" [ref=e3361]
+                - cell "--" [ref=e3362]:
+                  - generic [ref=e3363]: "--"
+                - cell "5d ago" [ref=e3364]
+              - row "Updated Slider Test 1767444856932 New - - -- 5d ago" [ref=e3365] [cursor=pointer]:
+                - cell [ref=e3366]:
+                  - checkbox [ref=e3367]
+                - cell "Updated Slider Test 1767444856932" [ref=e3368]
+                - cell "New" [ref=e3369]:
+                  - generic [ref=e3370]: New
+                - cell "-" [ref=e3371]
+                - cell "-" [ref=e3372]
+                - cell "--" [ref=e3373]:
+                  - generic [ref=e3374]: "--"
+                - cell "5d ago" [ref=e3375]
+              - row "Slider Test 1767444853196 New - - -- 5d ago" [ref=e3376] [cursor=pointer]:
+                - cell [ref=e3377]:
+                  - checkbox [ref=e3378]
+                - cell "Slider Test 1767444853196" [ref=e3379]
+                - cell "New" [ref=e3380]:
+                  - generic [ref=e3381]: New
+                - cell "-" [ref=e3382]
+                - cell "-" [ref=e3383]
+                - cell "--" [ref=e3384]:
+                  - generic [ref=e3385]: "--"
+                - cell "5d ago" [ref=e3386]
+              - row "Slider Test 1767444849411 New - - -- 5d ago" [ref=e3387] [cursor=pointer]:
+                - cell [ref=e3388]:
+                  - checkbox [ref=e3389]
+                - cell "Slider Test 1767444849411" [ref=e3390]
+                - cell "New" [ref=e3391]:
+                  - generic [ref=e3392]: New
+                - cell "-" [ref=e3393]
+                - cell "-" [ref=e3394]
+                - cell "--" [ref=e3395]:
+                  - generic [ref=e3396]: "--"
+                - cell "5d ago" [ref=e3397]
+              - row "Slider Test 1767444843097 New - - -- 5d ago" [ref=e3398] [cursor=pointer]:
+                - cell [ref=e3399]:
+                  - checkbox [ref=e3400]
+                - cell "Slider Test 1767444843097" [ref=e3401]
+                - cell "New" [ref=e3402]:
+                  - generic [ref=e3403]: New
+                - cell "-" [ref=e3404]
+                - cell "-" [ref=e3405]
+                - cell "--" [ref=e3406]:
+                  - generic [ref=e3407]: "--"
+                - cell "5d ago" [ref=e3408]
+              - row "Quick Capture Test 1767444839878 New - - -- 5d ago" [ref=e3409] [cursor=pointer]:
+                - cell [ref=e3410]:
+                  - checkbox [ref=e3411]
+                - cell "Quick Capture Test 1767444839878" [ref=e3412]
+                - cell "New" [ref=e3413]:
+                  - generic [ref=e3414]: New
+                - cell "-" [ref=e3415]
+                - cell "-" [ref=e3416]
+                - cell "--" [ref=e3417]:
+                  - generic [ref=e3418]: "--"
+                - cell "5d ago" [ref=e3419]
+              - row "Delete Test 1767444591397 New - - -- 5d ago" [ref=e3420] [cursor=pointer]:
+                - cell [ref=e3421]:
+                  - checkbox [ref=e3422]
+                - cell "Delete Test 1767444591397" [ref=e3423]
+                - cell "New" [ref=e3424]:
+                  - generic [ref=e3425]: New
+                - cell "-" [ref=e3426]
+                - cell "-" [ref=e3427]
+                - cell "--" [ref=e3428]:
+                  - generic [ref=e3429]: "--"
+                - cell "5d ago" [ref=e3430]
+              - row "Test Idea 1767444587081 New - - -- 5d ago" [ref=e3431] [cursor=pointer]:
+                - cell [ref=e3432]:
+                  - checkbox [ref=e3433]
+                - cell "Test Idea 1767444587081" [ref=e3434]
+                - cell "New" [ref=e3435]:
+                  - generic [ref=e3436]: New
+                - cell "-" [ref=e3437]
+                - cell "-" [ref=e3438]
+                - cell "--" [ref=e3439]:
+                  - generic [ref=e3440]: "--"
+                - cell "5d ago" [ref=e3441]
+              - row "Links Test 1767444581356 New - - -- 5d ago" [ref=e3442] [cursor=pointer]:
+                - cell [ref=e3443]:
+                  - checkbox [ref=e3444]
+                - cell "Links Test 1767444581356" [ref=e3445]
+                - cell "New" [ref=e3446]:
+                  - generic [ref=e3447]: New
+                - cell "-" [ref=e3448]
+                - cell "-" [ref=e3449]
+                - cell "--" [ref=e3450]:
+                  - generic [ref=e3451]: "--"
+                - cell "5d ago" [ref=e3452]
+              - row "Links Test 1767444577364 New - - -- 5d ago" [ref=e3453] [cursor=pointer]:
+                - cell [ref=e3454]:
+                  - checkbox [ref=e3455]
+                - cell "Links Test 1767444577364" [ref=e3456]
+                - cell "New" [ref=e3457]:
+                  - generic [ref=e3458]: New
+                - cell "-" [ref=e3459]
+                - cell "-" [ref=e3460]
+                - cell "--" [ref=e3461]:
+                  - generic [ref=e3462]: "--"
+                - cell "5d ago" [ref=e3463]
+              - row "Slider Test 1767444571797 New - Now -- 5d ago" [ref=e3464] [cursor=pointer]:
+                - cell [ref=e3465]:
+                  - checkbox [ref=e3466]
+                - cell "Slider Test 1767444571797" [ref=e3467]
+                - cell "New" [ref=e3468]:
+                  - generic [ref=e3469]: New
+                - cell "-" [ref=e3470]
+                - cell "Now" [ref=e3471]
+                - cell "--" [ref=e3472]:
+                  - generic [ref=e3473]: "--"
+                - cell "5d ago" [ref=e3474]
+              - row "Slider Test 1767444567248 New - - -- 5d ago" [ref=e3475] [cursor=pointer]:
+                - cell [ref=e3476]:
+                  - checkbox [ref=e3477]
+                - cell "Slider Test 1767444567248" [ref=e3478]
+                - cell "New" [ref=e3479]:
+                  - generic [ref=e3480]: New
+                - cell "-" [ref=e3481]
+                - cell "-" [ref=e3482]
+                - cell "--" [ref=e3483]:
+                  - generic [ref=e3484]: "--"
+                - cell "5d ago" [ref=e3485]
+              - row "Slider Test 1767444563712 New - - -- 5d ago" [ref=e3486] [cursor=pointer]:
+                - cell [ref=e3487]:
+                  - checkbox [ref=e3488]
+                - cell "Slider Test 1767444563712" [ref=e3489]
+                - cell "New" [ref=e3490]:
+                  - generic [ref=e3491]: New
+                - cell "-" [ref=e3492]
+                - cell "-" [ref=e3493]
+                - cell "--" [ref=e3494]:
+                  - generic [ref=e3495]: "--"
+                - cell "5d ago" [ref=e3496]
+              - row "Slider Test 1767444559212 (Copy) New - - -- 5d ago" [ref=e3497] [cursor=pointer]:
+                - cell [ref=e3498]:
+                  - checkbox [ref=e3499]
+                - cell "Slider Test 1767444559212 (Copy)" [ref=e3500]
+                - cell "New" [ref=e3501]:
+                  - generic [ref=e3502]: New
+                - cell "-" [ref=e3503]
+                - cell "-" [ref=e3504]
+                - cell "--" [ref=e3505]:
+                  - generic [ref=e3506]: "--"
+                - cell "5d ago" [ref=e3507]
+              - row "Slider Test 1767444559212 New - - -- 5d ago" [ref=e3508] [cursor=pointer]:
+                - cell [ref=e3509]:
+                  - checkbox [ref=e3510]
+                - cell "Slider Test 1767444559212" [ref=e3511]
+                - cell "New" [ref=e3512]:
+                  - generic [ref=e3513]: New
+                - cell "-" [ref=e3514]
+                - cell "-" [ref=e3515]
+                - cell "--" [ref=e3516]:
+                  - generic [ref=e3517]: "--"
+                - cell "5d ago" [ref=e3518]
+              - row "Slider Test 1767444547236 New - - -- 5d ago" [ref=e3519] [cursor=pointer]:
+                - cell [ref=e3520]:
+                  - checkbox [ref=e3521]
+                - cell "Slider Test 1767444547236" [ref=e3522]
+                - cell "New" [ref=e3523]:
+                  - generic [ref=e3524]: New
+                - cell "-" [ref=e3525]
+                - cell "-" [ref=e3526]
+                - cell "--" [ref=e3527]:
+                  - generic [ref=e3528]: "--"
+                - cell "5d ago" [ref=e3529]
+              - row "Slider Test 1767444542767 New - - -- 5d ago" [ref=e3530] [cursor=pointer]:
+                - cell [ref=e3531]:
+                  - checkbox [ref=e3532]
+                - cell "Slider Test 1767444542767" [ref=e3533]
+                - cell "New" [ref=e3534]:
+                  - generic [ref=e3535]: New
+                - cell "-" [ref=e3536]
+                - cell "-" [ref=e3537]
+                - cell "--" [ref=e3538]:
+                  - generic [ref=e3539]: "--"
+                - cell "5d ago" [ref=e3540]
+              - row "Slider Test 1767444538107 Evaluating - - -- 5d ago" [ref=e3541] [cursor=pointer]:
+                - cell [ref=e3542]:
+                  - checkbox [ref=e3543]
+                - cell "Slider Test 1767444538107" [ref=e3544]
+                - cell "Evaluating" [ref=e3545]:
+                  - generic [ref=e3546]: Evaluating
+                - cell "-" [ref=e3547]
+                - cell "-" [ref=e3548]
+                - cell "--" [ref=e3549]:
+                  - generic [ref=e3550]: "--"
+                - cell "5d ago" [ref=e3551]
+              - row "Updated Slider Test 1767444533480 New - - -- 5d ago" [ref=e3552] [cursor=pointer]:
+                - cell [ref=e3553]:
+                  - checkbox [ref=e3554]
+                - cell "Updated Slider Test 1767444533480" [ref=e3555]
+                - cell "New" [ref=e3556]:
+                  - generic [ref=e3557]: New
+                - cell "-" [ref=e3558]
+                - cell "-" [ref=e3559]
+                - cell "--" [ref=e3560]:
+                  - generic [ref=e3561]: "--"
+                - cell "5d ago" [ref=e3562]
+              - row "Slider Test 1767444529624 New - - -- 5d ago" [ref=e3563] [cursor=pointer]:
+                - cell [ref=e3564]:
+                  - checkbox [ref=e3565]
+                - cell "Slider Test 1767444529624" [ref=e3566]
+                - cell "New" [ref=e3567]:
+                  - generic [ref=e3568]: New
+                - cell "-" [ref=e3569]
+                - cell "-" [ref=e3570]
+                - cell "--" [ref=e3571]:
+                  - generic [ref=e3572]: "--"
+                - cell "5d ago" [ref=e3573]
+              - row "Slider Test 1767444526370 New - - -- 5d ago" [ref=e3574] [cursor=pointer]:
+                - cell [ref=e3575]:
+                  - checkbox [ref=e3576]
+                - cell "Slider Test 1767444526370" [ref=e3577]
+                - cell "New" [ref=e3578]:
+                  - generic [ref=e3579]: New
+                - cell "-" [ref=e3580]
+                - cell "-" [ref=e3581]
+                - cell "--" [ref=e3582]:
+                  - generic [ref=e3583]: "--"
+                - cell "5d ago" [ref=e3584]
+              - row "Slider Test 1767444523050 New - - -- 5d ago" [ref=e3585] [cursor=pointer]:
+                - cell [ref=e3586]:
+                  - checkbox [ref=e3587]
+                - cell "Slider Test 1767444523050" [ref=e3588]
+                - cell "New" [ref=e3589]:
+                  - generic [ref=e3590]: New
+                - cell "-" [ref=e3591]
+                - cell "-" [ref=e3592]
+                - cell "--" [ref=e3593]:
+                  - generic [ref=e3594]: "--"
+                - cell "5d ago" [ref=e3595]
+              - row "Quick Capture Test 1767444520088 New - - -- 5d ago" [ref=e3596] [cursor=pointer]:
+                - cell [ref=e3597]:
+                  - checkbox [ref=e3598]
+                - cell "Quick Capture Test 1767444520088" [ref=e3599]
+                - cell "New" [ref=e3600]:
+                  - generic [ref=e3601]: New
+                - cell "-" [ref=e3602]
+                - cell "-" [ref=e3603]
+                - cell "--" [ref=e3604]:
+                  - generic [ref=e3605]: "--"
+                - cell "5d ago" [ref=e3606]
+              - row "Delete Test 1767444321125 New - - -- 5d ago" [ref=e3607] [cursor=pointer]:
+                - cell [ref=e3608]:
+                  - checkbox [ref=e3609]
+                - cell "Delete Test 1767444321125" [ref=e3610]
+                - cell "New" [ref=e3611]:
+                  - generic [ref=e3612]: New
+                - cell "-" [ref=e3613]
+                - cell "-" [ref=e3614]
+                - cell "--" [ref=e3615]:
+                  - generic [ref=e3616]: "--"
+                - cell "5d ago" [ref=e3617]
+              - row "Test Idea 1767444316988 New - - -- 5d ago" [ref=e3618] [cursor=pointer]:
+                - cell [ref=e3619]:
+                  - checkbox [ref=e3620]
+                - cell "Test Idea 1767444316988" [ref=e3621]
+                - cell "New" [ref=e3622]:
+                  - generic [ref=e3623]: New
+                - cell "-" [ref=e3624]
+                - cell "-" [ref=e3625]
+                - cell "--" [ref=e3626]:
+                  - generic [ref=e3627]: "--"
+                - cell "5d ago" [ref=e3628]
+              - row "Links Test 1767444311598 New - - -- 5d ago" [ref=e3629] [cursor=pointer]:
+                - cell [ref=e3630]:
+                  - checkbox [ref=e3631]
+                - cell "Links Test 1767444311598" [ref=e3632]
+                - cell "New" [ref=e3633]:
+                  - generic [ref=e3634]: New
+                - cell "-" [ref=e3635]
+                - cell "-" [ref=e3636]
+                - cell "--" [ref=e3637]:
+                  - generic [ref=e3638]: "--"
+                - cell "5d ago" [ref=e3639]
+              - row "Links Test 1767444307491 New - - -- 5d ago" [ref=e3640] [cursor=pointer]:
+                - cell [ref=e3641]:
+                  - checkbox [ref=e3642]
+                - cell "Links Test 1767444307491" [ref=e3643]
+                - cell "New" [ref=e3644]:
+                  - generic [ref=e3645]: New
+                - cell "-" [ref=e3646]
+                - cell "-" [ref=e3647]
+                - cell "--" [ref=e3648]:
+                  - generic [ref=e3649]: "--"
+                - cell "5d ago" [ref=e3650]
+              - row "Slider Test 1767444301984 New - Now -- 5d ago" [ref=e3651] [cursor=pointer]:
+                - cell [ref=e3652]:
+                  - checkbox [ref=e3653]
+                - cell "Slider Test 1767444301984" [ref=e3654]
+                - cell "New" [ref=e3655]:
+                  - generic [ref=e3656]: New
+                - cell "-" [ref=e3657]
+                - cell "Now" [ref=e3658]
+                - cell "--" [ref=e3659]:
+                  - generic [ref=e3660]: "--"
+                - cell "5d ago" [ref=e3661]
+              - row "Slider Test 1767444296974 New - - -- 5d ago" [ref=e3662] [cursor=pointer]:
+                - cell [ref=e3663]:
+                  - checkbox [ref=e3664]
+                - cell "Slider Test 1767444296974" [ref=e3665]
+                - cell "New" [ref=e3666]:
+                  - generic [ref=e3667]: New
+                - cell "-" [ref=e3668]
+                - cell "-" [ref=e3669]
+                - cell "--" [ref=e3670]:
+                  - generic [ref=e3671]: "--"
+                - cell "5d ago" [ref=e3672]
+              - row "Slider Test 1767444293967 New - - -- 5d ago" [ref=e3673] [cursor=pointer]:
+                - cell [ref=e3674]:
+                  - checkbox [ref=e3675]
+                - cell "Slider Test 1767444293967" [ref=e3676]
+                - cell "New" [ref=e3677]:
+                  - generic [ref=e3678]: New
+                - cell "-" [ref=e3679]
+                - cell "-" [ref=e3680]
+                - cell "--" [ref=e3681]:
+                  - generic [ref=e3682]: "--"
+                - cell "5d ago" [ref=e3683]
+              - row "Slider Test 1767444289426 (Copy) New - - -- 5d ago" [ref=e3684] [cursor=pointer]:
+                - cell [ref=e3685]:
+                  - checkbox [ref=e3686]
+                - cell "Slider Test 1767444289426 (Copy)" [ref=e3687]
+                - cell "New" [ref=e3688]:
+                  - generic [ref=e3689]: New
+                - cell "-" [ref=e3690]
+                - cell "-" [ref=e3691]
+                - cell "--" [ref=e3692]:
+                  - generic [ref=e3693]: "--"
+                - cell "5d ago" [ref=e3694]
+              - row "Slider Test 1767444289426 New - - -- 5d ago" [ref=e3695] [cursor=pointer]:
+                - cell [ref=e3696]:
+                  - checkbox [ref=e3697]
+                - cell "Slider Test 1767444289426" [ref=e3698]
+                - cell "New" [ref=e3699]:
+                  - generic [ref=e3700]: New
+                - cell "-" [ref=e3701]
+                - cell "-" [ref=e3702]
+                - cell "--" [ref=e3703]:
+                  - generic [ref=e3704]: "--"
+                - cell "5d ago" [ref=e3705]
+              - row "Slider Test 1767444277931 New - - -- 5d ago" [ref=e3706] [cursor=pointer]:
+                - cell [ref=e3707]:
+                  - checkbox [ref=e3708]
+                - cell "Slider Test 1767444277931" [ref=e3709]
+                - cell "New" [ref=e3710]:
+                  - generic [ref=e3711]: New
+                - cell "-" [ref=e3712]
+                - cell "-" [ref=e3713]
+                - cell "--" [ref=e3714]:
+                  - generic [ref=e3715]: "--"
+                - cell "5d ago" [ref=e3716]
+              - row "Slider Test 1767444275211 New - - -- 5d ago" [ref=e3717] [cursor=pointer]:
+                - cell [ref=e3718]:
+                  - checkbox [ref=e3719]
+                - cell "Slider Test 1767444275211" [ref=e3720]
+                - cell "New" [ref=e3721]:
+                  - generic [ref=e3722]: New
+                - cell "-" [ref=e3723]
+                - cell "-" [ref=e3724]
+                - cell "--" [ref=e3725]:
+                  - generic [ref=e3726]: "--"
+                - cell "5d ago" [ref=e3727]
+              - row "Slider Test 1767444270845 Evaluating - - -- 5d ago" [ref=e3728] [cursor=pointer]:
+                - cell [ref=e3729]:
+                  - checkbox [ref=e3730]
+                - cell "Slider Test 1767444270845" [ref=e3731]
+                - cell "Evaluating" [ref=e3732]:
+                  - generic [ref=e3733]: Evaluating
+                - cell "-" [ref=e3734]
+                - cell "-" [ref=e3735]
+                - cell "--" [ref=e3736]:
+                  - generic [ref=e3737]: "--"
+                - cell "5d ago" [ref=e3738]
+              - row "Updated Slider Test 1767444266329 New - - -- 5d ago" [ref=e3739] [cursor=pointer]:
+                - cell [ref=e3740]:
+                  - checkbox [ref=e3741]
+                - cell "Updated Slider Test 1767444266329" [ref=e3742]
+                - cell "New" [ref=e3743]:
+                  - generic [ref=e3744]: New
+                - cell "-" [ref=e3745]
+                - cell "-" [ref=e3746]
+                - cell "--" [ref=e3747]:
+                  - generic [ref=e3748]: "--"
+                - cell "5d ago" [ref=e3749]
+              - row "Slider Test 1767444257358 New - - -- 5d ago" [ref=e3750] [cursor=pointer]:
+                - cell [ref=e3751]:
+                  - checkbox [ref=e3752]
+                - cell "Slider Test 1767444257358" [ref=e3753]
+                - cell "New" [ref=e3754]:
+                  - generic [ref=e3755]: New
+                - cell "-" [ref=e3756]
+                - cell "-" [ref=e3757]
+                - cell "--" [ref=e3758]:
+                  - generic [ref=e3759]: "--"
+                - cell "5d ago" [ref=e3760]
+              - row "Slider Test 1767444253765 New - - -- 5d ago" [ref=e3761] [cursor=pointer]:
+                - cell [ref=e3762]:
+                  - checkbox [ref=e3763]
+                - cell "Slider Test 1767444253765" [ref=e3764]
+                - cell "New" [ref=e3765]:
+                  - generic [ref=e3766]: New
+                - cell "-" [ref=e3767]
+                - cell "-" [ref=e3768]
+                - cell "--" [ref=e3769]:
+                  - generic [ref=e3770]: "--"
+                - cell "5d ago" [ref=e3771]
+              - row "Slider Test 1767444250547 New - - -- 5d ago" [ref=e3772] [cursor=pointer]:
+                - cell [ref=e3773]:
+                  - checkbox [ref=e3774]
+                - cell "Slider Test 1767444250547" [ref=e3775]
+                - cell "New" [ref=e3776]:
+                  - generic [ref=e3777]: New
+                - cell "-" [ref=e3778]
+                - cell "-" [ref=e3779]
+                - cell "--" [ref=e3780]:
+                  - generic [ref=e3781]: "--"
+                - cell "5d ago" [ref=e3782]
+              - row "Quick Capture Test 1767444246797 New - - -- 5d ago" [ref=e3783] [cursor=pointer]:
+                - cell [ref=e3784]:
+                  - checkbox [ref=e3785]
+                - cell "Quick Capture Test 1767444246797" [ref=e3786]
+                - cell "New" [ref=e3787]:
+                  - generic [ref=e3788]: New
+                - cell "-" [ref=e3789]
+                - cell "-" [ref=e3790]
+                - cell "--" [ref=e3791]:
+                  - generic [ref=e3792]: "--"
+                - cell "5d ago" [ref=e3793]
+              - row "Test Idea 1767443588935 New - - -- 5d ago" [ref=e3794] [cursor=pointer]:
+                - cell [ref=e3795]:
+                  - checkbox [ref=e3796]
+                - cell "Test Idea 1767443588935" [ref=e3797]
+                - cell "New" [ref=e3798]:
+                  - generic [ref=e3799]: New
+                - cell "-" [ref=e3800]
+                - cell "-" [ref=e3801]
+                - cell "--" [ref=e3802]:
+                  - generic [ref=e3803]: "--"
+                - cell "5d ago" [ref=e3804]
+              - row "Links Test 1767443581305 New - - -- 5d ago" [ref=e3805] [cursor=pointer]:
+                - cell [ref=e3806]:
+                  - checkbox [ref=e3807]
+                - cell "Links Test 1767443581305" [ref=e3808]
+                - cell "New" [ref=e3809]:
+                  - generic [ref=e3810]: New
+                - cell "-" [ref=e3811]
+                - cell "-" [ref=e3812]
+                - cell "--" [ref=e3813]:
+                  - generic [ref=e3814]: "--"
+                - cell "5d ago" [ref=e3815]
+              - row "Links Test 1767443577174 New - - -- 5d ago" [ref=e3816] [cursor=pointer]:
+                - cell [ref=e3817]:
+                  - checkbox [ref=e3818]
+                - cell "Links Test 1767443577174" [ref=e3819]
+                - cell "New" [ref=e3820]:
+                  - generic [ref=e3821]: New
+                - cell "-" [ref=e3822]
+                - cell "-" [ref=e3823]
+                - cell "--" [ref=e3824]:
+                  - generic [ref=e3825]: "--"
+                - cell "5d ago" [ref=e3826]
+              - row "Slider Test 1767443571364 New - Now -- 5d ago" [ref=e3827] [cursor=pointer]:
+                - cell [ref=e3828]:
+                  - checkbox [ref=e3829]
+                - cell "Slider Test 1767443571364" [ref=e3830]
+                - cell "New" [ref=e3831]:
+                  - generic [ref=e3832]: New
+                - cell "-" [ref=e3833]
+                - cell "Now" [ref=e3834]
+                - cell "--" [ref=e3835]:
+                  - generic [ref=e3836]: "--"
+                - cell "5d ago" [ref=e3837]
+              - row "Slider Test 1767443563937 New - - -- 5d ago" [ref=e3838] [cursor=pointer]:
+                - cell [ref=e3839]:
+                  - checkbox [ref=e3840]
+                - cell "Slider Test 1767443563937" [ref=e3841]
+                - cell "New" [ref=e3842]:
+                  - generic [ref=e3843]: New
+                - cell "-" [ref=e3844]
+                - cell "-" [ref=e3845]
+                - cell "--" [ref=e3846]:
+                  - generic [ref=e3847]: "--"
+                - cell "5d ago" [ref=e3848]
+              - row "Slider Test 1767443560351 New - - -- 5d ago" [ref=e3849] [cursor=pointer]:
+                - cell [ref=e3850]:
+                  - checkbox [ref=e3851]
+                - cell "Slider Test 1767443560351" [ref=e3852]
+                - cell "New" [ref=e3853]:
+                  - generic [ref=e3854]: New
+                - cell "-" [ref=e3855]
+                - cell "-" [ref=e3856]
+                - cell "--" [ref=e3857]:
+                  - generic [ref=e3858]: "--"
+                - cell "5d ago" [ref=e3859]
+              - row "Slider Test 1767443555178 (Copy) New - - -- 5d ago" [ref=e3860] [cursor=pointer]:
+                - cell [ref=e3861]:
+                  - checkbox [ref=e3862]
+                - cell "Slider Test 1767443555178 (Copy)" [ref=e3863]
+                - cell "New" [ref=e3864]:
+                  - generic [ref=e3865]: New
+                - cell "-" [ref=e3866]
+                - cell "-" [ref=e3867]
+                - cell "--" [ref=e3868]:
+                  - generic [ref=e3869]: "--"
+                - cell "5d ago" [ref=e3870]
+              - row "Slider Test 1767443555178 New - - -- 5d ago" [ref=e3871] [cursor=pointer]:
+                - cell [ref=e3872]:
+                  - checkbox [ref=e3873]
+                - cell "Slider Test 1767443555178" [ref=e3874]
+                - cell "New" [ref=e3875]:
+                  - generic [ref=e3876]: New
+                - cell "-" [ref=e3877]
+                - cell "-" [ref=e3878]
+                - cell "--" [ref=e3879]:
+                  - generic [ref=e3880]: "--"
+                - cell "5d ago" [ref=e3881]
+              - row "Slider Test 1767443543408 New - - -- 5d ago" [ref=e3882] [cursor=pointer]:
+                - cell [ref=e3883]:
+                  - checkbox [ref=e3884]
+                - cell "Slider Test 1767443543408" [ref=e3885]
+                - cell "New" [ref=e3886]:
+                  - generic [ref=e3887]: New
+                - cell "-" [ref=e3888]
+                - cell "-" [ref=e3889]
+                - cell "--" [ref=e3890]:
+                  - generic [ref=e3891]: "--"
+                - cell "5d ago" [ref=e3892]
+              - row "Slider Test 1767443540055 New - - -- 5d ago" [ref=e3893] [cursor=pointer]:
+                - cell [ref=e3894]:
+                  - checkbox [ref=e3895]
+                - cell "Slider Test 1767443540055" [ref=e3896]
+                - cell "New" [ref=e3897]:
+                  - generic [ref=e3898]: New
+                - cell "-" [ref=e3899]
+                - cell "-" [ref=e3900]
+                - cell "--" [ref=e3901]:
+                  - generic [ref=e3902]: "--"
+                - cell "5d ago" [ref=e3903]
+              - row "Slider Test 1767443535433 Evaluating - - -- 5d ago" [ref=e3904] [cursor=pointer]:
+                - cell [ref=e3905]:
+                  - checkbox [ref=e3906]
+                - cell "Slider Test 1767443535433" [ref=e3907]
+                - cell "Evaluating" [ref=e3908]:
+                  - generic [ref=e3909]: Evaluating
+                - cell "-" [ref=e3910]
+                - cell "-" [ref=e3911]
+                - cell "--" [ref=e3912]:
+                  - generic [ref=e3913]: "--"
+                - cell "5d ago" [ref=e3914]
+              - row "Updated Slider Test 1767443531127 New - - -- 5d ago" [ref=e3915] [cursor=pointer]:
+                - cell [ref=e3916]:
+                  - checkbox [ref=e3917]
+                - cell "Updated Slider Test 1767443531127" [ref=e3918]
+                - cell "New" [ref=e3919]:
+                  - generic [ref=e3920]: New
+                - cell "-" [ref=e3921]
+                - cell "-" [ref=e3922]
+                - cell "--" [ref=e3923]:
+                  - generic [ref=e3924]: "--"
+                - cell "5d ago" [ref=e3925]
+              - row "Slider Test 1767443527165 New - - -- 5d ago" [ref=e3926] [cursor=pointer]:
+                - cell [ref=e3927]:
+                  - checkbox [ref=e3928]
+                - cell "Slider Test 1767443527165" [ref=e3929]
+                - cell "New" [ref=e3930]:
+                  - generic [ref=e3931]: New
+                - cell "-" [ref=e3932]
+                - cell "-" [ref=e3933]
+                - cell "--" [ref=e3934]:
+                  - generic [ref=e3935]: "--"
+                - cell "5d ago" [ref=e3936]
+              - row "Slider Test 1767443522090 New - - -- 5d ago" [ref=e3937] [cursor=pointer]:
+                - cell [ref=e3938]:
+                  - checkbox [ref=e3939]
+                - cell "Slider Test 1767443522090" [ref=e3940]
+                - cell "New" [ref=e3941]:
+                  - generic [ref=e3942]: New
+                - cell "-" [ref=e3943]
+                - cell "-" [ref=e3944]
+                - cell "--" [ref=e3945]:
+                  - generic [ref=e3946]: "--"
+                - cell "5d ago" [ref=e3947]
+              - row "Slider Test 1767443517984 New - - -- 5d ago" [ref=e3948] [cursor=pointer]:
+                - cell [ref=e3949]:
+                  - checkbox [ref=e3950]
+                - cell "Slider Test 1767443517984" [ref=e3951]
+                - cell "New" [ref=e3952]:
+                  - generic [ref=e3953]: New
+                - cell "-" [ref=e3954]
+                - cell "-" [ref=e3955]
+                - cell "--" [ref=e3956]:
+                  - generic [ref=e3957]: "--"
+                - cell "5d ago" [ref=e3958]
+              - row "Quick Capture Test 1767443512209 New - - -- 5d ago" [ref=e3959] [cursor=pointer]:
+                - cell [ref=e3960]:
+                  - checkbox [ref=e3961]
+                - cell "Quick Capture Test 1767443512209" [ref=e3962]
+                - cell "New" [ref=e3963]:
+                  - generic [ref=e3964]: New
+                - cell "-" [ref=e3965]
+                - cell "-" [ref=e3966]
+                - cell "--" [ref=e3967]:
+                  - generic [ref=e3968]: "--"
+                - cell "5d ago" [ref=e3969]
+              - row "Slider Test 1767443348232 New - - -- 5d ago" [ref=e3970] [cursor=pointer]:
+                - cell [ref=e3971]:
+                  - checkbox [ref=e3972]
+                - cell "Slider Test 1767443348232" [ref=e3973]
+                - cell "New" [ref=e3974]:
+                  - generic [ref=e3975]: New
+                - cell "-" [ref=e3976]
+                - cell "-" [ref=e3977]
+                - cell "--" [ref=e3978]:
+                  - generic [ref=e3979]: "--"
+                - cell "5d ago" [ref=e3980]
+              - row "Test Idea 1767443294987 New - - -- 5d ago" [ref=e3981] [cursor=pointer]:
+                - cell [ref=e3982]:
+                  - checkbox [ref=e3983]
+                - cell "Test Idea 1767443294987" [ref=e3984]
+                - cell "New" [ref=e3985]:
+                  - generic [ref=e3986]: New
+                - cell "-" [ref=e3987]
+                - cell "-" [ref=e3988]
+                - cell "--" [ref=e3989]:
+                  - generic [ref=e3990]: "--"
+                - cell "5d ago" [ref=e3991]
+              - row "Links Test 1767443289143 New - - -- 5d ago" [ref=e3992] [cursor=pointer]:
+                - cell [ref=e3993]:
+                  - checkbox [ref=e3994]
+                - cell "Links Test 1767443289143" [ref=e3995]
+                - cell "New" [ref=e3996]:
+                  - generic [ref=e3997]: New
+                - cell "-" [ref=e3998]
+                - cell "-" [ref=e3999]
+                - cell "--" [ref=e4000]:
+                  - generic [ref=e4001]: "--"
+                - cell "5d ago" [ref=e4002]
+              - row "Links Test 1767443285242 New - - -- 5d ago" [ref=e4003] [cursor=pointer]:
+                - cell [ref=e4004]:
+                  - checkbox [ref=e4005]
+                - cell "Links Test 1767443285242" [ref=e4006]
+                - cell "New" [ref=e4007]:
+                  - generic [ref=e4008]: New
+                - cell "-" [ref=e4009]
+                - cell "-" [ref=e4010]
+                - cell "--" [ref=e4011]:
+                  - generic [ref=e4012]: "--"
+                - cell "5d ago" [ref=e4013]
+              - row "Slider Test 1767443279773 New - Now -- 5d ago" [ref=e4014] [cursor=pointer]:
+                - cell [ref=e4015]:
+                  - checkbox [ref=e4016]
+                - cell "Slider Test 1767443279773" [ref=e4017]
+                - cell "New" [ref=e4018]:
+                  - generic [ref=e4019]: New
+                - cell "-" [ref=e4020]
+                - cell "Now" [ref=e4021]
+                - cell "--" [ref=e4022]:
+                  - generic [ref=e4023]: "--"
+                - cell "5d ago" [ref=e4024]
+              - row "Slider Test 1767443274801 New - - -- 5d ago" [ref=e4025] [cursor=pointer]:
+                - cell [ref=e4026]:
+                  - checkbox [ref=e4027]
+                - cell "Slider Test 1767443274801" [ref=e4028]
+                - cell "New" [ref=e4029]:
+                  - generic [ref=e4030]: New
+                - cell "-" [ref=e4031]
+                - cell "-" [ref=e4032]
+                - cell "--" [ref=e4033]:
+                  - generic [ref=e4034]: "--"
+                - cell "5d ago" [ref=e4035]
+              - row "Slider Test 1767443271725 New - - -- 5d ago" [ref=e4036] [cursor=pointer]:
+                - cell [ref=e4037]:
+                  - checkbox [ref=e4038]
+                - cell "Slider Test 1767443271725" [ref=e4039]
+                - cell "New" [ref=e4040]:
+                  - generic [ref=e4041]: New
+                - cell "-" [ref=e4042]
+                - cell "-" [ref=e4043]
+                - cell "--" [ref=e4044]:
+                  - generic [ref=e4045]: "--"
+                - cell "5d ago" [ref=e4046]
+              - row "Slider Test 1767443266672 (Copy) New - - -- 5d ago" [ref=e4047] [cursor=pointer]:
+                - cell [ref=e4048]:
+                  - checkbox [ref=e4049]
+                - cell "Slider Test 1767443266672 (Copy)" [ref=e4050]
+                - cell "New" [ref=e4051]:
+                  - generic [ref=e4052]: New
+                - cell "-" [ref=e4053]
+                - cell "-" [ref=e4054]
+                - cell "--" [ref=e4055]:
+                  - generic [ref=e4056]: "--"
+                - cell "5d ago" [ref=e4057]
+              - row "Slider Test 1767443266672 New - - -- 5d ago" [ref=e4058] [cursor=pointer]:
+                - cell [ref=e4059]:
+                  - checkbox [ref=e4060]
+                - cell "Slider Test 1767443266672" [ref=e4061]
+                - cell "New" [ref=e4062]:
+                  - generic [ref=e4063]: New
+                - cell "-" [ref=e4064]
+                - cell "-" [ref=e4065]
+                - cell "--" [ref=e4066]:
+                  - generic [ref=e4067]: "--"
+                - cell "5d ago" [ref=e4068]
+              - row "Slider Test 1767443254051 New - - -- 5d ago" [ref=e4069] [cursor=pointer]:
+                - cell [ref=e4070]:
+                  - checkbox [ref=e4071]
+                - cell "Slider Test 1767443254051" [ref=e4072]
+                - cell "New" [ref=e4073]:
+                  - generic [ref=e4074]: New
+                - cell "-" [ref=e4075]
+                - cell "-" [ref=e4076]
+                - cell "--" [ref=e4077]:
+                  - generic [ref=e4078]: "--"
+                - cell "5d ago" [ref=e4079]
+              - row "Slider Test 1767443251298 New - - -- 5d ago" [ref=e4080] [cursor=pointer]:
+                - cell [ref=e4081]:
+                  - checkbox [ref=e4082]
+                - cell "Slider Test 1767443251298" [ref=e4083]
+                - cell "New" [ref=e4084]:
+                  - generic [ref=e4085]: New
+                - cell "-" [ref=e4086]
+                - cell "-" [ref=e4087]
+                - cell "--" [ref=e4088]:
+                  - generic [ref=e4089]: "--"
+                - cell "5d ago" [ref=e4090]
+              - row "Slider Test 1767443246805 Evaluating - - -- 5d ago" [ref=e4091] [cursor=pointer]:
+                - cell [ref=e4092]:
+                  - checkbox [ref=e4093]
+                - cell "Slider Test 1767443246805" [ref=e4094]
+                - cell "Evaluating" [ref=e4095]:
+                  - generic [ref=e4096]: Evaluating
+                - cell "-" [ref=e4097]
+                - cell "-" [ref=e4098]
+                - cell "--" [ref=e4099]:
+                  - generic [ref=e4100]: "--"
+                - cell "5d ago" [ref=e4101]
+              - row "Updated Slider Test 1767443240987 New - - -- 5d ago" [ref=e4102] [cursor=pointer]:
+                - cell [ref=e4103]:
+                  - checkbox [ref=e4104]
+                - cell "Updated Slider Test 1767443240987" [ref=e4105]
+                - cell "New" [ref=e4106]:
+                  - generic [ref=e4107]: New
+                - cell "-" [ref=e4108]
+                - cell "-" [ref=e4109]
+                - cell "--" [ref=e4110]:
+                  - generic [ref=e4111]: "--"
+                - cell "5d ago" [ref=e4112]
+              - row "Slider Test 1767443231938 New - - -- 5d ago" [ref=e4113] [cursor=pointer]:
+                - cell [ref=e4114]:
+                  - checkbox [ref=e4115]
+                - cell "Slider Test 1767443231938" [ref=e4116]
+                - cell "New" [ref=e4117]:
+                  - generic [ref=e4118]: New
+                - cell "-" [ref=e4119]
+                - cell "-" [ref=e4120]
+                - cell "--" [ref=e4121]:
+                  - generic [ref=e4122]: "--"
+                - cell "5d ago" [ref=e4123]
+              - row "Slider Test 1767443226211 New - - -- 5d ago" [ref=e4124] [cursor=pointer]:
+                - cell [ref=e4125]:
+                  - checkbox [ref=e4126]
+                - cell "Slider Test 1767443226211" [ref=e4127]
+                - cell "New" [ref=e4128]:
+                  - generic [ref=e4129]: New
+                - cell "-" [ref=e4130]
+                - cell "-" [ref=e4131]
+                - cell "--" [ref=e4132]:
+                  - generic [ref=e4133]: "--"
+                - cell "5d ago" [ref=e4134]
+              - row "Slider Test 1767443222699 New - - -- 5d ago" [ref=e4135] [cursor=pointer]:
+                - cell [ref=e4136]:
+                  - checkbox [ref=e4137]
+                - cell "Slider Test 1767443222699" [ref=e4138]
+                - cell "New" [ref=e4139]:
+                  - generic [ref=e4140]: New
+                - cell "-" [ref=e4141]
+                - cell "-" [ref=e4142]
+                - cell "--" [ref=e4143]:
+                  - generic [ref=e4144]: "--"
+                - cell "5d ago" [ref=e4145]
+              - row "Quick Capture Test 1767443218305 New - - -- 5d ago" [ref=e4146] [cursor=pointer]:
+                - cell [ref=e4147]:
+                  - checkbox [ref=e4148]
+                - cell "Quick Capture Test 1767443218305" [ref=e4149]
+                - cell "New" [ref=e4150]:
+                  - generic [ref=e4151]: New
+                - cell "-" [ref=e4152]
+                - cell "-" [ref=e4153]
+                - cell "--" [ref=e4154]:
+                  - generic [ref=e4155]: "--"
+                - cell "5d ago" [ref=e4156]
+              - row "Slider Test 1767443151367 New - Now -- 5d ago" [ref=e4157] [cursor=pointer]:
+                - cell [ref=e4158]:
+                  - checkbox [ref=e4159]
+                - cell "Slider Test 1767443151367" [ref=e4160]
+                - cell "New" [ref=e4161]:
+                  - generic [ref=e4162]: New
+                - cell "-" [ref=e4163]
+                - cell "Now" [ref=e4164]
+                - cell "--" [ref=e4165]:
+                  - generic [ref=e4166]: "--"
+                - cell "5d ago" [ref=e4167]
+              - row "Slider Test 1767443117154 New - Now -- 5d ago" [ref=e4168] [cursor=pointer]:
+                - cell [ref=e4169]:
+                  - checkbox [ref=e4170]
+                - cell "Slider Test 1767443117154" [ref=e4171]
+                - cell "New" [ref=e4172]:
+                  - generic [ref=e4173]: New
+                - cell "-" [ref=e4174]
+                - cell "Now" [ref=e4175]
+                - cell "--" [ref=e4176]:
+                  - generic [ref=e4177]: "--"
+                - cell "5d ago" [ref=e4178]
+              - row "Test Idea 1767443077397 New - - -- 5d ago" [ref=e4179] [cursor=pointer]:
+                - cell [ref=e4180]:
+                  - checkbox [ref=e4181]
+                - cell "Test Idea 1767443077397" [ref=e4182]
+                - cell "New" [ref=e4183]:
+                  - generic [ref=e4184]: New
+                - cell "-" [ref=e4185]
+                - cell "-" [ref=e4186]
+                - cell "--" [ref=e4187]:
+                  - generic [ref=e4188]: "--"
+                - cell "5d ago" [ref=e4189]
+              - row "Links Test 1767443071814 New - - -- 5d ago" [ref=e4190] [cursor=pointer]:
+                - cell [ref=e4191]:
+                  - checkbox [ref=e4192]
+                - cell "Links Test 1767443071814" [ref=e4193]
+                - cell "New" [ref=e4194]:
+                  - generic [ref=e4195]: New
+                - cell "-" [ref=e4196]
+                - cell "-" [ref=e4197]
+                - cell "--" [ref=e4198]:
+                  - generic [ref=e4199]: "--"
+                - cell "5d ago" [ref=e4200]
+              - row "Links Test 1767443067102 New - - -- 5d ago" [ref=e4201] [cursor=pointer]:
+                - cell [ref=e4202]:
+                  - checkbox [ref=e4203]
+                - cell "Links Test 1767443067102" [ref=e4204]
+                - cell "New" [ref=e4205]:
+                  - generic [ref=e4206]: New
+                - cell "-" [ref=e4207]
+                - cell "-" [ref=e4208]
+                - cell "--" [ref=e4209]:
+                  - generic [ref=e4210]: "--"
+                - cell "5d ago" [ref=e4211]
+              - row "Slider Test 1767443055669 New - Now -- 5d ago" [ref=e4212] [cursor=pointer]:
+                - cell [ref=e4213]:
+                  - checkbox [ref=e4214]
+                - cell "Slider Test 1767443055669" [ref=e4215]
+                - cell "New" [ref=e4216]:
+                  - generic [ref=e4217]: New
+                - cell "-" [ref=e4218]
+                - cell "Now" [ref=e4219]
+                - cell "--" [ref=e4220]:
+                  - generic [ref=e4221]: "--"
+                - cell "5d ago" [ref=e4222]
+              - row "Slider Test 1767443050588 New - - -- 5d ago" [ref=e4223] [cursor=pointer]:
+                - cell [ref=e4224]:
+                  - checkbox [ref=e4225]
+                - cell "Slider Test 1767443050588" [ref=e4226]
+                - cell "New" [ref=e4227]:
+                  - generic [ref=e4228]: New
+                - cell "-" [ref=e4229]
+                - cell "-" [ref=e4230]
+                - cell "--" [ref=e4231]:
+                  - generic [ref=e4232]: "--"
+                - cell "5d ago" [ref=e4233]
+              - row "Slider Test 1767443047887 New - - -- 5d ago" [ref=e4234] [cursor=pointer]:
+                - cell [ref=e4235]:
+                  - checkbox [ref=e4236]
+                - cell "Slider Test 1767443047887" [ref=e4237]
+                - cell "New" [ref=e4238]:
+                  - generic [ref=e4239]: New
+                - cell "-" [ref=e4240]
+                - cell "-" [ref=e4241]
+                - cell "--" [ref=e4242]:
+                  - generic [ref=e4243]: "--"
+                - cell "5d ago" [ref=e4244]
+              - row "Slider Test 1767443043328 (Copy) New - - -- 5d ago" [ref=e4245] [cursor=pointer]:
+                - cell [ref=e4246]:
+                  - checkbox [ref=e4247]
+                - cell "Slider Test 1767443043328 (Copy)" [ref=e4248]
+                - cell "New" [ref=e4249]:
+                  - generic [ref=e4250]: New
+                - cell "-" [ref=e4251]
+                - cell "-" [ref=e4252]
+                - cell "--" [ref=e4253]:
+                  - generic [ref=e4254]: "--"
+                - cell "5d ago" [ref=e4255]
+              - row "Slider Test 1767443043328 New - - -- 5d ago" [ref=e4256] [cursor=pointer]:
+                - cell [ref=e4257]:
+                  - checkbox [ref=e4258]
+                - cell "Slider Test 1767443043328" [ref=e4259]
+                - cell "New" [ref=e4260]:
+                  - generic [ref=e4261]: New
+                - cell "-" [ref=e4262]
+                - cell "-" [ref=e4263]
+                - cell "--" [ref=e4264]:
+                  - generic [ref=e4265]: "--"
+                - cell "5d ago" [ref=e4266]
+              - row "Slider Test 1767443029323 New - - -- 5d ago" [ref=e4267] [cursor=pointer]:
+                - cell [ref=e4268]:
+                  - checkbox [ref=e4269]
+                - cell "Slider Test 1767443029323" [ref=e4270]
+                - cell "New" [ref=e4271]:
+                  - generic [ref=e4272]: New
+                - cell "-" [ref=e4273]
+                - cell "-" [ref=e4274]
+                - cell "--" [ref=e4275]:
+                  - generic [ref=e4276]: "--"
+                - cell "5d ago" [ref=e4277]
+              - row "Slider Test 1767443026247 New - - -- 5d ago" [ref=e4278] [cursor=pointer]:
+                - cell [ref=e4279]:
+                  - checkbox [ref=e4280]
+                - cell "Slider Test 1767443026247" [ref=e4281]
+                - cell "New" [ref=e4282]:
+                  - generic [ref=e4283]: New
+                - cell "-" [ref=e4284]
+                - cell "-" [ref=e4285]
+                - cell "--" [ref=e4286]:
+                  - generic [ref=e4287]: "--"
+                - cell "5d ago" [ref=e4288]
+              - row "Slider Test 1767443021716 Evaluating - - -- 5d ago" [ref=e4289] [cursor=pointer]:
+                - cell [ref=e4290]:
+                  - checkbox [ref=e4291]
+                - cell "Slider Test 1767443021716" [ref=e4292]
+                - cell "Evaluating" [ref=e4293]:
+                  - generic [ref=e4294]: Evaluating
+                - cell "-" [ref=e4295]
+                - cell "-" [ref=e4296]
+                - cell "--" [ref=e4297]:
+                  - generic [ref=e4298]: "--"
+                - cell "5d ago" [ref=e4299]
+              - row "Updated Slider Test 1767443017059 New - - -- 5d ago" [ref=e4300] [cursor=pointer]:
+                - cell [ref=e4301]:
+                  - checkbox [ref=e4302]
+                - cell "Updated Slider Test 1767443017059" [ref=e4303]
+                - cell "New" [ref=e4304]:
+                  - generic [ref=e4305]: New
+                - cell "-" [ref=e4306]
+                - cell "-" [ref=e4307]
+                - cell "--" [ref=e4308]:
+                  - generic [ref=e4309]: "--"
+                - cell "5d ago" [ref=e4310]
+              - row "Slider Test 1767443012610 New - - -- 5d ago" [ref=e4311] [cursor=pointer]:
+                - cell [ref=e4312]:
+                  - checkbox [ref=e4313]
+                - cell "Slider Test 1767443012610" [ref=e4314]
+                - cell "New" [ref=e4315]:
+                  - generic [ref=e4316]: New
+                - cell "-" [ref=e4317]
+                - cell "-" [ref=e4318]
+                - cell "--" [ref=e4319]:
+                  - generic [ref=e4320]: "--"
+                - cell "5d ago" [ref=e4321]
+              - row "Slider Test 1767443008447 New - - -- 5d ago" [ref=e4322] [cursor=pointer]:
+                - cell [ref=e4323]:
+                  - checkbox [ref=e4324]
+                - cell "Slider Test 1767443008447" [ref=e4325]
+                - cell "New" [ref=e4326]:
+                  - generic [ref=e4327]: New
+                - cell "-" [ref=e4328]
+                - cell "-" [ref=e4329]
+                - cell "--" [ref=e4330]:
+                  - generic [ref=e4331]: "--"
+                - cell "5d ago" [ref=e4332]
+              - row "Slider Test 1767443004918 New - - -- 5d ago" [ref=e4333] [cursor=pointer]:
+                - cell [ref=e4334]:
+                  - checkbox [ref=e4335]
+                - cell "Slider Test 1767443004918" [ref=e4336]
+                - cell "New" [ref=e4337]:
+                  - generic [ref=e4338]: New
+                - cell "-" [ref=e4339]
+                - cell "-" [ref=e4340]
+                - cell "--" [ref=e4341]:
+                  - generic [ref=e4342]: "--"
+                - cell "5d ago" [ref=e4343]
+              - row "Quick Capture Test 1767442999200 New - - -- 5d ago" [ref=e4344] [cursor=pointer]:
+                - cell [ref=e4345]:
+                  - checkbox [ref=e4346]
+                - cell "Quick Capture Test 1767442999200" [ref=e4347]
+                - cell "New" [ref=e4348]:
+                  - generic [ref=e4349]: New
+                - cell "-" [ref=e4350]
+                - cell "-" [ref=e4351]
+                - cell "--" [ref=e4352]:
+                  - generic [ref=e4353]: "--"
+                - cell "5d ago" [ref=e4354]
+              - row "Test Idea 1767442899976 New - - -- 5d ago" [ref=e4355] [cursor=pointer]:
+                - cell [ref=e4356]:
+                  - checkbox [ref=e4357]
+                - cell "Test Idea 1767442899976" [ref=e4358]
+                - cell "New" [ref=e4359]:
+                  - generic [ref=e4360]: New
+                - cell "-" [ref=e4361]
+                - cell "-" [ref=e4362]
+                - cell "--" [ref=e4363]:
+                  - generic [ref=e4364]: "--"
+                - cell "5d ago" [ref=e4365]
+              - row "Links Test 1767442894424 New - - -- 5d ago" [ref=e4366] [cursor=pointer]:
+                - cell [ref=e4367]:
+                  - checkbox [ref=e4368]
+                - cell "Links Test 1767442894424" [ref=e4369]
+                - cell "New" [ref=e4370]:
+                  - generic [ref=e4371]: New
+                - cell "-" [ref=e4372]
+                - cell "-" [ref=e4373]
+                - cell "--" [ref=e4374]:
+                  - generic [ref=e4375]: "--"
+                - cell "5d ago" [ref=e4376]
+              - row "Links Test 1767442890193 New - - -- 5d ago" [ref=e4377] [cursor=pointer]:
+                - cell [ref=e4378]:
+                  - checkbox [ref=e4379]
+                - cell "Links Test 1767442890193" [ref=e4380]
+                - cell "New" [ref=e4381]:
+                  - generic [ref=e4382]: New
+                - cell "-" [ref=e4383]
+                - cell "-" [ref=e4384]
+                - cell "--" [ref=e4385]:
+                  - generic [ref=e4386]: "--"
+                - cell "5d ago" [ref=e4387]
+              - row "Slider Test 1767442878196 New - Now -- 5d ago" [ref=e4388] [cursor=pointer]:
+                - cell [ref=e4389]:
+                  - checkbox [ref=e4390]
+                - cell "Slider Test 1767442878196" [ref=e4391]
+                - cell "New" [ref=e4392]:
+                  - generic [ref=e4393]: New
+                - cell "-" [ref=e4394]
+                - cell "Now" [ref=e4395]
+                - cell "--" [ref=e4396]:
+                  - generic [ref=e4397]: "--"
+                - cell "5d ago" [ref=e4398]
+              - row "Slider Test 1767442872573 New - - -- 5d ago" [ref=e4399] [cursor=pointer]:
+                - cell [ref=e4400]:
+                  - checkbox [ref=e4401]
+                - cell "Slider Test 1767442872573" [ref=e4402]
+                - cell "New" [ref=e4403]:
+                  - generic [ref=e4404]: New
+                - cell "-" [ref=e4405]
+                - cell "-" [ref=e4406]
+                - cell "--" [ref=e4407]:
+                  - generic [ref=e4408]: "--"
+                - cell "5d ago" [ref=e4409]
+              - row "Slider Test 1767442869395 New - - -- 5d ago" [ref=e4410] [cursor=pointer]:
+                - cell [ref=e4411]:
+                  - checkbox [ref=e4412]
+                - cell "Slider Test 1767442869395" [ref=e4413]
+                - cell "New" [ref=e4414]:
+                  - generic [ref=e4415]: New
+                - cell "-" [ref=e4416]
+                - cell "-" [ref=e4417]
+                - cell "--" [ref=e4418]:
+                  - generic [ref=e4419]: "--"
+                - cell "5d ago" [ref=e4420]
+              - row "Slider Test 1767442865062 (Copy) New - - -- 5d ago" [ref=e4421] [cursor=pointer]:
+                - cell [ref=e4422]:
+                  - checkbox [ref=e4423]
+                - cell "Slider Test 1767442865062 (Copy)" [ref=e4424]
+                - cell "New" [ref=e4425]:
+                  - generic [ref=e4426]: New
+                - cell "-" [ref=e4427]
+                - cell "-" [ref=e4428]
+                - cell "--" [ref=e4429]:
+                  - generic [ref=e4430]: "--"
+                - cell "5d ago" [ref=e4431]
+              - row "Slider Test 1767442865062 New - - -- 5d ago" [ref=e4432] [cursor=pointer]:
+                - cell [ref=e4433]:
+                  - checkbox [ref=e4434]
+                - cell "Slider Test 1767442865062" [ref=e4435]
+                - cell "New" [ref=e4436]:
+                  - generic [ref=e4437]: New
+                - cell "-" [ref=e4438]
+                - cell "-" [ref=e4439]
+                - cell "--" [ref=e4440]:
+                  - generic [ref=e4441]: "--"
+                - cell "5d ago" [ref=e4442]
+              - row "Slider Test 1767442853214 New - - -- 5d ago" [ref=e4443] [cursor=pointer]:
+                - cell [ref=e4444]:
+                  - checkbox [ref=e4445]
+                - cell "Slider Test 1767442853214" [ref=e4446]
+                - cell "New" [ref=e4447]:
+                  - generic [ref=e4448]: New
+                - cell "-" [ref=e4449]
+                - cell "-" [ref=e4450]
+                - cell "--" [ref=e4451]:
+                  - generic [ref=e4452]: "--"
+                - cell "5d ago" [ref=e4453]
+              - row "Slider Test 1767442849959 New - - -- 5d ago" [ref=e4454] [cursor=pointer]:
+                - cell [ref=e4455]:
+                  - checkbox [ref=e4456]
+                - cell "Slider Test 1767442849959" [ref=e4457]
+                - cell "New" [ref=e4458]:
+                  - generic [ref=e4459]: New
+                - cell "-" [ref=e4460]
+                - cell "-" [ref=e4461]
+                - cell "--" [ref=e4462]:
+                  - generic [ref=e4463]: "--"
+                - cell "5d ago" [ref=e4464]
+              - row "Slider Test 1767442843415 Evaluating - - -- 5d ago" [ref=e4465] [cursor=pointer]:
+                - cell [ref=e4466]:
+                  - checkbox [ref=e4467]
+                - cell "Slider Test 1767442843415" [ref=e4468]
+                - cell "Evaluating" [ref=e4469]:
+                  - generic [ref=e4470]: Evaluating
+                - cell "-" [ref=e4471]
+                - cell "-" [ref=e4472]
+                - cell "--" [ref=e4473]:
+                  - generic [ref=e4474]: "--"
+                - cell "5d ago" [ref=e4475]
+              - row "Updated Slider Test 1767442838889 New - - -- 5d ago" [ref=e4476] [cursor=pointer]:
+                - cell [ref=e4477]:
+                  - checkbox [ref=e4478]
+                - cell "Updated Slider Test 1767442838889" [ref=e4479]
+                - cell "New" [ref=e4480]:
+                  - generic [ref=e4481]: New
+                - cell "-" [ref=e4482]
+                - cell "-" [ref=e4483]
+                - cell "--" [ref=e4484]:
+                  - generic [ref=e4485]: "--"
+                - cell "5d ago" [ref=e4486]
+              - row "Slider Test 1767442835435 New - - -- 5d ago" [ref=e4487] [cursor=pointer]:
+                - cell [ref=e4488]:
+                  - checkbox [ref=e4489]
+                - cell "Slider Test 1767442835435" [ref=e4490]
+                - cell "New" [ref=e4491]:
+                  - generic [ref=e4492]: New
+                - cell "-" [ref=e4493]
+                - cell "-" [ref=e4494]
+                - cell "--" [ref=e4495]:
+                  - generic [ref=e4496]: "--"
+                - cell "5d ago" [ref=e4497]
+              - row "Slider Test 1767442831761 New - - -- 5d ago" [ref=e4498] [cursor=pointer]:
+                - cell [ref=e4499]:
+                  - checkbox [ref=e4500]
+                - cell "Slider Test 1767442831761" [ref=e4501]
+                - cell "New" [ref=e4502]:
+                  - generic [ref=e4503]: New
+                - cell "-" [ref=e4504]
+                - cell "-" [ref=e4505]
+                - cell "--" [ref=e4506]:
+                  - generic [ref=e4507]: "--"
+                - cell "5d ago" [ref=e4508]
+              - row "Slider Test 1767442828316 New - - -- 5d ago" [ref=e4509] [cursor=pointer]:
+                - cell [ref=e4510]:
+                  - checkbox [ref=e4511]
+                - cell "Slider Test 1767442828316" [ref=e4512]
+                - cell "New" [ref=e4513]:
+                  - generic [ref=e4514]: New
+                - cell "-" [ref=e4515]
+                - cell "-" [ref=e4516]
+                - cell "--" [ref=e4517]:
+                  - generic [ref=e4518]: "--"
+                - cell "5d ago" [ref=e4519]
+              - row "Quick Capture Test 1767442823803 New - - -- 5d ago" [ref=e4520] [cursor=pointer]:
+                - cell [ref=e4521]:
+                  - checkbox [ref=e4522]
+                - cell "Quick Capture Test 1767442823803" [ref=e4523]
+                - cell "New" [ref=e4524]:
+                  - generic [ref=e4525]: New
+                - cell "-" [ref=e4526]
+                - cell "-" [ref=e4527]
+                - cell "--" [ref=e4528]:
+                  - generic [ref=e4529]: "--"
+                - cell "5d ago" [ref=e4530]
+              - row "Slider Test 1767442771185 New - Now -- 5d ago" [ref=e4531] [cursor=pointer]:
+                - cell [ref=e4532]:
+                  - checkbox [ref=e4533]
+                - cell "Slider Test 1767442771185" [ref=e4534]
+                - cell "New" [ref=e4535]:
+                  - generic [ref=e4536]: New
+                - cell "-" [ref=e4537]
+                - cell "Now" [ref=e4538]
+                - cell "--" [ref=e4539]:
+                  - generic [ref=e4540]: "--"
+                - cell "5d ago" [ref=e4541]
+              - row "Test Idea 1767442725509 New - - -- 5d ago" [ref=e4542] [cursor=pointer]:
+                - cell [ref=e4543]:
+                  - checkbox [ref=e4544]
+                - cell "Test Idea 1767442725509" [ref=e4545]
+                - cell "New" [ref=e4546]:
+                  - generic [ref=e4547]: New
+                - cell "-" [ref=e4548]
+                - cell "-" [ref=e4549]
+                - cell "--" [ref=e4550]:
+                  - generic [ref=e4551]: "--"
+                - cell "5d ago" [ref=e4552]
+              - row "Links Test 1767442720188 New - - -- 5d ago" [ref=e4553] [cursor=pointer]:
+                - cell [ref=e4554]:
+                  - checkbox [ref=e4555]
+                - cell "Links Test 1767442720188" [ref=e4556]
+                - cell "New" [ref=e4557]:
+                  - generic [ref=e4558]: New
+                - cell "-" [ref=e4559]
+                - cell "-" [ref=e4560]
+                - cell "--" [ref=e4561]:
+                  - generic [ref=e4562]: "--"
+                - cell "5d ago" [ref=e4563]
+              - row "Links Test 1767442715779 New - - -- 5d ago" [ref=e4564] [cursor=pointer]:
+                - cell [ref=e4565]:
+                  - checkbox [ref=e4566]
+                - cell "Links Test 1767442715779" [ref=e4567]
+                - cell "New" [ref=e4568]:
+                  - generic [ref=e4569]: New
+                - cell "-" [ref=e4570]
+                - cell "-" [ref=e4571]
+                - cell "--" [ref=e4572]:
+                  - generic [ref=e4573]: "--"
+                - cell "5d ago" [ref=e4574]
+              - row "Slider Test 1767442708092 New - Now -- 5d ago" [ref=e4575] [cursor=pointer]:
+                - cell [ref=e4576]:
+                  - checkbox [ref=e4577]
+                - cell "Slider Test 1767442708092" [ref=e4578]
+                - cell "New" [ref=e4579]:
+                  - generic [ref=e4580]: New
+                - cell "-" [ref=e4581]
+                - cell "Now" [ref=e4582]
+                - cell "--" [ref=e4583]:
+                  - generic [ref=e4584]: "--"
+                - cell "5d ago" [ref=e4585]
+              - row "Slider Test 1767442702976 New - - -- 5d ago" [ref=e4586] [cursor=pointer]:
+                - cell [ref=e4587]:
+                  - checkbox [ref=e4588]
+                - cell "Slider Test 1767442702976" [ref=e4589]
+                - cell "New" [ref=e4590]:
+                  - generic [ref=e4591]: New
+                - cell "-" [ref=e4592]
+                - cell "-" [ref=e4593]
+                - cell "--" [ref=e4594]:
+                  - generic [ref=e4595]: "--"
+                - cell "5d ago" [ref=e4596]
+              - row "Slider Test 1767442699758 New - - -- 5d ago" [ref=e4597] [cursor=pointer]:
+                - cell [ref=e4598]:
+                  - checkbox [ref=e4599]
+                - cell "Slider Test 1767442699758" [ref=e4600]
+                - cell "New" [ref=e4601]:
+                  - generic [ref=e4602]: New
+                - cell "-" [ref=e4603]
+                - cell "-" [ref=e4604]
+                - cell "--" [ref=e4605]:
+                  - generic [ref=e4606]: "--"
+                - cell "5d ago" [ref=e4607]
+              - row "Slider Test 1767442694220 (Copy) New - - -- 5d ago" [ref=e4608] [cursor=pointer]:
+                - cell [ref=e4609]:
+                  - checkbox [ref=e4610]
+                - cell "Slider Test 1767442694220 (Copy)" [ref=e4611]
+                - cell "New" [ref=e4612]:
+                  - generic [ref=e4613]: New
+                - cell "-" [ref=e4614]
+                - cell "-" [ref=e4615]
+                - cell "--" [ref=e4616]:
+                  - generic [ref=e4617]: "--"
+                - cell "5d ago" [ref=e4618]
+              - row "Slider Test 1767442694220 New - - -- 5d ago" [ref=e4619] [cursor=pointer]:
+                - cell [ref=e4620]:
+                  - checkbox [ref=e4621]
+                - cell "Slider Test 1767442694220" [ref=e4622]
+                - cell "New" [ref=e4623]:
+                  - generic [ref=e4624]: New
+                - cell "-" [ref=e4625]
+                - cell "-" [ref=e4626]
+                - cell "--" [ref=e4627]:
+                  - generic [ref=e4628]: "--"
+                - cell "5d ago" [ref=e4629]
+              - row "Slider Test 1767442681409 New - - -- 5d ago" [ref=e4630] [cursor=pointer]:
+                - cell [ref=e4631]:
+                  - checkbox [ref=e4632]
+                - cell "Slider Test 1767442681409" [ref=e4633]
+                - cell "New" [ref=e4634]:
+                  - generic [ref=e4635]: New
+                - cell "-" [ref=e4636]
+                - cell "-" [ref=e4637]
+                - cell "--" [ref=e4638]:
+                  - generic [ref=e4639]: "--"
+                - cell "5d ago" [ref=e4640]
+              - row "Slider Test 1767442676930 New - - -- 5d ago" [ref=e4641] [cursor=pointer]:
+                - cell [ref=e4642]:
+                  - checkbox [ref=e4643]
+                - cell "Slider Test 1767442676930" [ref=e4644]
+                - cell "New" [ref=e4645]:
+                  - generic [ref=e4646]: New
+                - cell "-" [ref=e4647]
+                - cell "-" [ref=e4648]
+                - cell "--" [ref=e4649]:
+                  - generic [ref=e4650]: "--"
+                - cell "5d ago" [ref=e4651]
+              - row "Slider Test 1767442670559 Evaluating - - -- 5d ago" [ref=e4652] [cursor=pointer]:
+                - cell [ref=e4653]:
+                  - checkbox [ref=e4654]
+                - cell "Slider Test 1767442670559" [ref=e4655]
+                - cell "Evaluating" [ref=e4656]:
+                  - generic [ref=e4657]: Evaluating
+                - cell "-" [ref=e4658]
+                - cell "-" [ref=e4659]
+                - cell "--" [ref=e4660]:
+                  - generic [ref=e4661]: "--"
+                - cell "5d ago" [ref=e4662]
+              - row "Updated Slider Test 1767442664579 New - - -- 5d ago" [ref=e4663] [cursor=pointer]:
+                - cell [ref=e4664]:
+                  - checkbox [ref=e4665]
+                - cell "Updated Slider Test 1767442664579" [ref=e4666]
+                - cell "New" [ref=e4667]:
+                  - generic [ref=e4668]: New
+                - cell "-" [ref=e4669]
+                - cell "-" [ref=e4670]
+                - cell "--" [ref=e4671]:
+                  - generic [ref=e4672]: "--"
+                - cell "5d ago" [ref=e4673]
+              - row "Slider Test 1767442658617 New - - -- 5d ago" [ref=e4674] [cursor=pointer]:
+                - cell [ref=e4675]:
+                  - checkbox [ref=e4676]
+                - cell "Slider Test 1767442658617" [ref=e4677]
+                - cell "New" [ref=e4678]:
+                  - generic [ref=e4679]: New
+                - cell "-" [ref=e4680]
+                - cell "-" [ref=e4681]
+                - cell "--" [ref=e4682]:
+                  - generic [ref=e4683]: "--"
+                - cell "5d ago" [ref=e4684]
+              - row "Slider Test 1767442654554 New - - -- 5d ago" [ref=e4685] [cursor=pointer]:
+                - cell [ref=e4686]:
+                  - checkbox [ref=e4687]
+                - cell "Slider Test 1767442654554" [ref=e4688]
+                - cell "New" [ref=e4689]:
+                  - generic [ref=e4690]: New
+                - cell "-" [ref=e4691]
+                - cell "-" [ref=e4692]
+                - cell "--" [ref=e4693]:
+                  - generic [ref=e4694]: "--"
+                - cell "5d ago" [ref=e4695]
+              - row "Slider Test 1767442651138 New - - -- 5d ago" [ref=e4696] [cursor=pointer]:
+                - cell [ref=e4697]:
+                  - checkbox [ref=e4698]
+                - cell "Slider Test 1767442651138" [ref=e4699]
+                - cell "New" [ref=e4700]:
+                  - generic [ref=e4701]: New
+                - cell "-" [ref=e4702]
+                - cell "-" [ref=e4703]
+                - cell "--" [ref=e4704]:
+                  - generic [ref=e4705]: "--"
+                - cell "5d ago" [ref=e4706]
+              - row "Quick Capture Test 1767442646647 New - - -- 5d ago" [ref=e4707] [cursor=pointer]:
+                - cell [ref=e4708]:
+                  - checkbox [ref=e4709]
+                - cell "Quick Capture Test 1767442646647" [ref=e4710]
+                - cell "New" [ref=e4711]:
+                  - generic [ref=e4712]: New
+                - cell "-" [ref=e4713]
+                - cell "-" [ref=e4714]
+                - cell "--" [ref=e4715]:
+                  - generic [ref=e4716]: "--"
+                - cell "5d ago" [ref=e4717]
+              - row "Test Idea 1767442541286 New - - -- 5d ago" [ref=e4718] [cursor=pointer]:
+                - cell [ref=e4719]:
+                  - checkbox [ref=e4720]
+                - cell "Test Idea 1767442541286" [ref=e4721]
+                - cell "New" [ref=e4722]:
+                  - generic [ref=e4723]: New
+                - cell "-" [ref=e4724]
+                - cell "-" [ref=e4725]
+                - cell "--" [ref=e4726]:
+                  - generic [ref=e4727]: "--"
+                - cell "5d ago" [ref=e4728]
+              - row "Links Test 1767442529588 New - - -- 5d ago" [ref=e4729] [cursor=pointer]:
+                - cell [ref=e4730]:
+                  - checkbox [ref=e4731]
+                - cell "Links Test 1767442529588" [ref=e4732]
+                - cell "New" [ref=e4733]:
+                  - generic [ref=e4734]: New
+                - cell "-" [ref=e4735]
+                - cell "-" [ref=e4736]
+                - cell "--" [ref=e4737]:
+                  - generic [ref=e4738]: "--"
+                - cell "5d ago" [ref=e4739]
+              - row "Links Test 1767442524603 New - - -- 5d ago" [ref=e4740] [cursor=pointer]:
+                - cell [ref=e4741]:
+                  - checkbox [ref=e4742]
+                - cell "Links Test 1767442524603" [ref=e4743]
+                - cell "New" [ref=e4744]:
+                  - generic [ref=e4745]: New
+                - cell "-" [ref=e4746]
+                - cell "-" [ref=e4747]
+                - cell "--" [ref=e4748]:
+                  - generic [ref=e4749]: "--"
+                - cell "5d ago" [ref=e4750]
+              - row "Slider Test 1767442520426 (Copy) New - - -- 5d ago" [ref=e4751] [cursor=pointer]:
+                - cell [ref=e4752]:
+                  - checkbox [ref=e4753]
+                - cell "Slider Test 1767442520426 (Copy)" [ref=e4754]
+                - cell "New" [ref=e4755]:
+                  - generic [ref=e4756]: New
+                - cell "-" [ref=e4757]
+                - cell "-" [ref=e4758]
+                - cell "--" [ref=e4759]:
+                  - generic [ref=e4760]: "--"
+                - cell "5d ago" [ref=e4761]
+              - row "Slider Test 1767442520426 New - - -- 5d ago" [ref=e4762] [cursor=pointer]:
+                - cell [ref=e4763]:
+                  - checkbox [ref=e4764]
+                - cell "Slider Test 1767442520426" [ref=e4765]
+                - cell "New" [ref=e4766]:
+                  - generic [ref=e4767]: New
+                - cell "-" [ref=e4768]
+                - cell "-" [ref=e4769]
+                - cell "--" [ref=e4770]:
+                  - generic [ref=e4771]: "--"
+                - cell "5d ago" [ref=e4772]
+              - row "Slider Test 1767442506494 New - - -- 5d ago" [ref=e4773] [cursor=pointer]:
+                - cell [ref=e4774]:
+                  - checkbox [ref=e4775]
+                - cell "Slider Test 1767442506494" [ref=e4776]
+                - cell "New" [ref=e4777]:
+                  - generic [ref=e4778]: New
+                - cell "-" [ref=e4779]
+                - cell "-" [ref=e4780]
+                - cell "--" [ref=e4781]:
+                  - generic [ref=e4782]: "--"
+                - cell "5d ago" [ref=e4783]
+              - row "Slider Test 1767442501794 New - - -- 5d ago" [ref=e4784] [cursor=pointer]:
+                - cell [ref=e4785]:
+                  - checkbox [ref=e4786]
+                - cell "Slider Test 1767442501794" [ref=e4787]
+                - cell "New" [ref=e4788]:
+                  - generic [ref=e4789]: New
+                - cell "-" [ref=e4790]
+                - cell "-" [ref=e4791]
+                - cell "--" [ref=e4792]:
+                  - generic [ref=e4793]: "--"
+                - cell "5d ago" [ref=e4794]
+              - row "Slider Test 1767442497391 Evaluating - - -- 5d ago" [ref=e4795] [cursor=pointer]:
+                - cell [ref=e4796]:
+                  - checkbox [ref=e4797]
+                - cell "Slider Test 1767442497391" [ref=e4798]
+                - cell "Evaluating" [ref=e4799]:
+                  - generic [ref=e4800]: Evaluating
+                - cell "-" [ref=e4801]
+                - cell "-" [ref=e4802]
+                - cell "--" [ref=e4803]:
+                  - generic [ref=e4804]: "--"
+                - cell "5d ago" [ref=e4805]
+              - row "Updated Slider Test 1767442492085 New - - -- 5d ago" [ref=e4806] [cursor=pointer]:
+                - cell [ref=e4807]:
+                  - checkbox [ref=e4808]
+                - cell "Updated Slider Test 1767442492085" [ref=e4809]
+                - cell "New" [ref=e4810]:
+                  - generic [ref=e4811]: New
+                - cell "-" [ref=e4812]
+                - cell "-" [ref=e4813]
+                - cell "--" [ref=e4814]:
+                  - generic [ref=e4815]: "--"
+                - cell "5d ago" [ref=e4816]
+              - row "Slider Test 1767442488271 New - - -- 5d ago" [ref=e4817] [cursor=pointer]:
+                - cell [ref=e4818]:
+                  - checkbox [ref=e4819]
+                - cell "Slider Test 1767442488271" [ref=e4820]
+                - cell "New" [ref=e4821]:
+                  - generic [ref=e4822]: New
+                - cell "-" [ref=e4823]
+                - cell "-" [ref=e4824]
+                - cell "--" [ref=e4825]:
+                  - generic [ref=e4826]: "--"
+                - cell "5d ago" [ref=e4827]
+              - row "Slider Test 1767442484452 New - - -- 5d ago" [ref=e4828] [cursor=pointer]:
+                - cell [ref=e4829]:
+                  - checkbox [ref=e4830]
+                - cell "Slider Test 1767442484452" [ref=e4831]
+                - cell "New" [ref=e4832]:
+                  - generic [ref=e4833]: New
+                - cell "-" [ref=e4834]
+                - cell "-" [ref=e4835]
+                - cell "--" [ref=e4836]:
+                  - generic [ref=e4837]: "--"
+                - cell "5d ago" [ref=e4838]
+              - row "Slider Test 1767442479512 New - - -- 5d ago" [ref=e4839] [cursor=pointer]:
+                - cell [ref=e4840]:
+                  - checkbox [ref=e4841]
+                - cell "Slider Test 1767442479512" [ref=e4842]
+                - cell "New" [ref=e4843]:
+                  - generic [ref=e4844]: New
+                - cell "-" [ref=e4845]
+                - cell "-" [ref=e4846]
+                - cell "--" [ref=e4847]:
+                  - generic [ref=e4848]: "--"
+                - cell "5d ago" [ref=e4849]
+              - row "Quick Capture Test 1767442475098 New - - -- 5d ago" [ref=e4850] [cursor=pointer]:
+                - cell [ref=e4851]:
+                  - checkbox [ref=e4852]
+                - cell "Quick Capture Test 1767442475098" [ref=e4853]
+                - cell "New" [ref=e4854]:
+                  - generic [ref=e4855]: New
+                - cell "-" [ref=e4856]
+                - cell "-" [ref=e4857]
+                - cell "--" [ref=e4858]:
+                  - generic [ref=e4859]: "--"
+                - cell "5d ago" [ref=e4860]
+              - row "Slider Test 1767442405886 (Copy) New - - -- 5d ago" [ref=e4861] [cursor=pointer]:
+                - cell [ref=e4862]:
+                  - checkbox [ref=e4863]
+                - cell "Slider Test 1767442405886 (Copy)" [ref=e4864]
+                - cell "New" [ref=e4865]:
+                  - generic [ref=e4866]: New
+                - cell "-" [ref=e4867]
+                - cell "-" [ref=e4868]
+                - cell "--" [ref=e4869]:
+                  - generic [ref=e4870]: "--"
+                - cell "5d ago" [ref=e4871]
+              - row "Slider Test 1767442405886 New - - -- 5d ago" [ref=e4872] [cursor=pointer]:
+                - cell [ref=e4873]:
+                  - checkbox [ref=e4874]
+                - cell "Slider Test 1767442405886" [ref=e4875]
+                - cell "New" [ref=e4876]:
+                  - generic [ref=e4877]: New
+                - cell "-" [ref=e4878]
+                - cell "-" [ref=e4879]
+                - cell "--" [ref=e4880]:
+                  - generic [ref=e4881]: "--"
+                - cell "5d ago" [ref=e4882]
+              - row "Test Idea 1767442247825 New - - -- 5d ago" [ref=e4883] [cursor=pointer]:
+                - cell [ref=e4884]:
+                  - checkbox [ref=e4885]
+                - cell "Test Idea 1767442247825" [ref=e4886]
+                - cell "New" [ref=e4887]:
+                  - generic [ref=e4888]: New
+                - cell "-" [ref=e4889]
+                - cell "-" [ref=e4890]
+                - cell "--" [ref=e4891]:
+                  - generic [ref=e4892]: "--"
+                - cell "5d ago" [ref=e4893]
+              - row "Links Test 1767442242200 New - - -- 5d ago" [ref=e4894] [cursor=pointer]:
+                - cell [ref=e4895]:
+                  - checkbox [ref=e4896]
+                - cell "Links Test 1767442242200" [ref=e4897]
+                - cell "New" [ref=e4898]:
+                  - generic [ref=e4899]: New
+                - cell "-" [ref=e4900]
+                - cell "-" [ref=e4901]
+                - cell "--" [ref=e4902]:
+                  - generic [ref=e4903]: "--"
+                - cell "5d ago" [ref=e4904]
+              - row "Links Test 1767442237466 New - - -- 5d ago" [ref=e4905] [cursor=pointer]:
+                - cell [ref=e4906]:
+                  - checkbox [ref=e4907]
+                - cell "Links Test 1767442237466" [ref=e4908]
+                - cell "New" [ref=e4909]:
+                  - generic [ref=e4910]: New
+                - cell "-" [ref=e4911]
+                - cell "-" [ref=e4912]
+                - cell "--" [ref=e4913]:
+                  - generic [ref=e4914]: "--"
+                - cell "5d ago" [ref=e4915]
+              - row "Slider Test 1767442231924 (Copy) New - - -- 5d ago" [ref=e4916] [cursor=pointer]:
+                - cell [ref=e4917]:
+                  - checkbox [ref=e4918]
+                - cell "Slider Test 1767442231924 (Copy)" [ref=e4919]
+                - cell "New" [ref=e4920]:
+                  - generic [ref=e4921]: New
+                - cell "-" [ref=e4922]
+                - cell "-" [ref=e4923]
+                - cell "--" [ref=e4924]:
+                  - generic [ref=e4925]: "--"
+                - cell "5d ago" [ref=e4926]
+              - row "Slider Test 1767442231924 New - - -- 5d ago" [ref=e4927] [cursor=pointer]:
+                - cell [ref=e4928]:
+                  - checkbox [ref=e4929]
+                - cell "Slider Test 1767442231924" [ref=e4930]
+                - cell "New" [ref=e4931]:
+                  - generic [ref=e4932]: New
+                - cell "-" [ref=e4933]
+                - cell "-" [ref=e4934]
+                - cell "--" [ref=e4935]:
+                  - generic [ref=e4936]: "--"
+                - cell "5d ago" [ref=e4937]
+              - row "Slider Test 1767442218005 New - - -- 5d ago" [ref=e4938] [cursor=pointer]:
+                - cell [ref=e4939]:
+                  - checkbox [ref=e4940]
+                - cell "Slider Test 1767442218005" [ref=e4941]
+                - cell "New" [ref=e4942]:
+                  - generic [ref=e4943]: New
+                - cell "-" [ref=e4944]
+                - cell "-" [ref=e4945]
+                - cell "--" [ref=e4946]:
+                  - generic [ref=e4947]: "--"
+                - cell "5d ago" [ref=e4948]
+              - row "Slider Test 1767442214016 New - - -- 5d ago" [ref=e4949] [cursor=pointer]:
+                - cell [ref=e4950]:
+                  - checkbox [ref=e4951]
+                - cell "Slider Test 1767442214016" [ref=e4952]
+                - cell "New" [ref=e4953]:
+                  - generic [ref=e4954]: New
+                - cell "-" [ref=e4955]
+                - cell "-" [ref=e4956]
+                - cell "--" [ref=e4957]:
+                  - generic [ref=e4958]: "--"
+                - cell "5d ago" [ref=e4959]
+              - row "Slider Test 1767442209744 Evaluating - - -- 5d ago" [ref=e4960] [cursor=pointer]:
+                - cell [ref=e4961]:
+                  - checkbox [ref=e4962]
+                - cell "Slider Test 1767442209744" [ref=e4963]
+                - cell "Evaluating" [ref=e4964]:
+                  - generic [ref=e4965]: Evaluating
+                - cell "-" [ref=e4966]
+                - cell "-" [ref=e4967]
+                - cell "--" [ref=e4968]:
+                  - generic [ref=e4969]: "--"
+                - cell "5d ago" [ref=e4970]
+              - row "Updated Slider Test 1767442205431 New - - -- 5d ago" [ref=e4971] [cursor=pointer]:
+                - cell [ref=e4972]:
+                  - checkbox [ref=e4973]
+                - cell "Updated Slider Test 1767442205431" [ref=e4974]
+                - cell "New" [ref=e4975]:
+                  - generic [ref=e4976]: New
+                - cell "-" [ref=e4977]
+                - cell "-" [ref=e4978]
+                - cell "--" [ref=e4979]:
+                  - generic [ref=e4980]: "--"
+                - cell "5d ago" [ref=e4981]
+              - row "Slider Test 1767442201832 New - - -- 5d ago" [ref=e4982] [cursor=pointer]:
+                - cell [ref=e4983]:
+                  - checkbox [ref=e4984]
+                - cell "Slider Test 1767442201832" [ref=e4985]
+                - cell "New" [ref=e4986]:
+                  - generic [ref=e4987]: New
+                - cell "-" [ref=e4988]
+                - cell "-" [ref=e4989]
+                - cell "--" [ref=e4990]:
+                  - generic [ref=e4991]: "--"
+                - cell "5d ago" [ref=e4992]
+              - row "Slider Test 1767442198043 New - - -- 5d ago" [ref=e4993] [cursor=pointer]:
+                - cell [ref=e4994]:
+                  - checkbox [ref=e4995]
+                - cell "Slider Test 1767442198043" [ref=e4996]
+                - cell "New" [ref=e4997]:
+                  - generic [ref=e4998]: New
+                - cell "-" [ref=e4999]
+                - cell "-" [ref=e5000]
+                - cell "--" [ref=e5001]:
+                  - generic [ref=e5002]: "--"
+                - cell "5d ago" [ref=e5003]
+              - row "Slider Test 1767442195468 New - - -- 5d ago" [ref=e5004] [cursor=pointer]:
+                - cell [ref=e5005]:
+                  - checkbox [ref=e5006]
+                - cell "Slider Test 1767442195468" [ref=e5007]
+                - cell "New" [ref=e5008]:
+                  - generic [ref=e5009]: New
+                - cell "-" [ref=e5010]
+                - cell "-" [ref=e5011]
+                - cell "--" [ref=e5012]:
+                  - generic [ref=e5013]: "--"
+                - cell "5d ago" [ref=e5014]
+              - row "Quick Capture Test 1767442191274 New - - -- 5d ago" [ref=e5015] [cursor=pointer]:
+                - cell [ref=e5016]:
+                  - checkbox [ref=e5017]
+                - cell "Quick Capture Test 1767442191274" [ref=e5018]
+                - cell "New" [ref=e5019]:
+                  - generic [ref=e5020]: New
+                - cell "-" [ref=e5021]
+                - cell "-" [ref=e5022]
+                - cell "--" [ref=e5023]:
+                  - generic [ref=e5024]: "--"
+                - cell "5d ago" [ref=e5025]
+              - row "Test Idea 1767442043225 New - - -- 5d ago" [ref=e5026] [cursor=pointer]:
+                - cell [ref=e5027]:
+                  - checkbox [ref=e5028]
+                - cell "Test Idea 1767442043225" [ref=e5029]
+                - cell "New" [ref=e5030]:
+                  - generic [ref=e5031]: New
+                - cell "-" [ref=e5032]
+                - cell "-" [ref=e5033]
+                - cell "--" [ref=e5034]:
+                  - generic [ref=e5035]: "--"
+                - cell "5d ago" [ref=e5036]
+              - row "Links Test 1767442037490 New - - -- 5d ago" [ref=e5037] [cursor=pointer]:
+                - cell [ref=e5038]:
+                  - checkbox [ref=e5039]
+                - cell "Links Test 1767442037490" [ref=e5040]
+                - cell "New" [ref=e5041]:
+                  - generic [ref=e5042]: New
+                - cell "-" [ref=e5043]
+                - cell "-" [ref=e5044]
+                - cell "--" [ref=e5045]:
+                  - generic [ref=e5046]: "--"
+                - cell "5d ago" [ref=e5047]
+              - row "Links Test 1767442033481 New - - -- 5d ago" [ref=e5048] [cursor=pointer]:
+                - cell [ref=e5049]:
+                  - checkbox [ref=e5050]
+                - cell "Links Test 1767442033481" [ref=e5051]
+                - cell "New" [ref=e5052]:
+                  - generic [ref=e5053]: New
+                - cell "-" [ref=e5054]
+                - cell "-" [ref=e5055]
+                - cell "--" [ref=e5056]:
+                  - generic [ref=e5057]: "--"
+                - cell "5d ago" [ref=e5058]
+              - row "Slider Test 1767442028111 (Copy) New - - -- 5d ago" [ref=e5059] [cursor=pointer]:
+                - cell [ref=e5060]:
+                  - checkbox [ref=e5061]
+                - cell "Slider Test 1767442028111 (Copy)" [ref=e5062]
+                - cell "New" [ref=e5063]:
+                  - generic [ref=e5064]: New
+                - cell "-" [ref=e5065]
+                - cell "-" [ref=e5066]
+                - cell "--" [ref=e5067]:
+                  - generic [ref=e5068]: "--"
+                - cell "5d ago" [ref=e5069]
+              - row "Slider Test 1767442028111 New - - -- 5d ago" [ref=e5070] [cursor=pointer]:
+                - cell [ref=e5071]:
+                  - checkbox [ref=e5072]
+                - cell "Slider Test 1767442028111" [ref=e5073]
+                - cell "New" [ref=e5074]:
+                  - generic [ref=e5075]: New
+                - cell "-" [ref=e5076]
+                - cell "-" [ref=e5077]
+                - cell "--" [ref=e5078]:
+                  - generic [ref=e5079]: "--"
+                - cell "5d ago" [ref=e5080]
+              - row "Slider Test 1767442015989 New - - -- 5d ago" [ref=e5081] [cursor=pointer]:
+                - cell [ref=e5082]:
+                  - checkbox [ref=e5083]
+                - cell "Slider Test 1767442015989" [ref=e5084]
+                - cell "New" [ref=e5085]:
+                  - generic [ref=e5086]: New
+                - cell "-" [ref=e5087]
+                - cell "-" [ref=e5088]
+                - cell "--" [ref=e5089]:
+                  - generic [ref=e5090]: "--"
+                - cell "5d ago" [ref=e5091]
+              - row "Slider Test 1767442012619 New - - -- 5d ago" [ref=e5092] [cursor=pointer]:
+                - cell [ref=e5093]:
+                  - checkbox [ref=e5094]
+                - cell "Slider Test 1767442012619" [ref=e5095]
+                - cell "New" [ref=e5096]:
+                  - generic [ref=e5097]: New
+                - cell "-" [ref=e5098]
+                - cell "-" [ref=e5099]
+                - cell "--" [ref=e5100]:
+                  - generic [ref=e5101]: "--"
+                - cell "5d ago" [ref=e5102]
+              - row "Slider Test 1767442008264 Evaluating - - -- 5d ago" [ref=e5103] [cursor=pointer]:
+                - cell [ref=e5104]:
+                  - checkbox [ref=e5105]
+                - cell "Slider Test 1767442008264" [ref=e5106]
+                - cell "Evaluating" [ref=e5107]:
+                  - generic [ref=e5108]: Evaluating
+                - cell "-" [ref=e5109]
+                - cell "-" [ref=e5110]
+                - cell "--" [ref=e5111]:
+                  - generic [ref=e5112]: "--"
+                - cell "5d ago" [ref=e5113]
+              - row "Updated Slider Test 1767442003923 New - - -- 5d ago" [ref=e5114] [cursor=pointer]:
+                - cell [ref=e5115]:
+                  - checkbox [ref=e5116]
+                - cell "Updated Slider Test 1767442003923" [ref=e5117]
+                - cell "New" [ref=e5118]:
+                  - generic [ref=e5119]: New
+                - cell "-" [ref=e5120]
+                - cell "-" [ref=e5121]
+                - cell "--" [ref=e5122]:
+                  - generic [ref=e5123]: "--"
+                - cell "5d ago" [ref=e5124]
+              - row "Slider Test 1767442000531 New - - -- 5d ago" [ref=e5125] [cursor=pointer]:
+                - cell [ref=e5126]:
+                  - checkbox [ref=e5127]
+                - cell "Slider Test 1767442000531" [ref=e5128]
+                - cell "New" [ref=e5129]:
+                  - generic [ref=e5130]: New
+                - cell "-" [ref=e5131]
+                - cell "-" [ref=e5132]
+                - cell "--" [ref=e5133]:
+                  - generic [ref=e5134]: "--"
+                - cell "5d ago" [ref=e5135]
+              - row "Slider Test 1767441997292 New - - -- 5d ago" [ref=e5136] [cursor=pointer]:
+                - cell [ref=e5137]:
+                  - checkbox [ref=e5138]
+                - cell "Slider Test 1767441997292" [ref=e5139]
+                - cell "New" [ref=e5140]:
+                  - generic [ref=e5141]: New
+                - cell "-" [ref=e5142]
+                - cell "-" [ref=e5143]
+                - cell "--" [ref=e5144]:
+                  - generic [ref=e5145]: "--"
+                - cell "5d ago" [ref=e5146]
+              - row "Slider Test 1767441993876 New - - -- 5d ago" [ref=e5147] [cursor=pointer]:
+                - cell [ref=e5148]:
+                  - checkbox [ref=e5149]
+                - cell "Slider Test 1767441993876" [ref=e5150]
+                - cell "New" [ref=e5151]:
+                  - generic [ref=e5152]: New
+                - cell "-" [ref=e5153]
+                - cell "-" [ref=e5154]
+                - cell "--" [ref=e5155]:
+                  - generic [ref=e5156]: "--"
+                - cell "5d ago" [ref=e5157]
+              - row "Quick Capture Test 1767441989743 New - - -- 5d ago" [ref=e5158] [cursor=pointer]:
+                - cell [ref=e5159]:
+                  - checkbox [ref=e5160]
+                - cell "Quick Capture Test 1767441989743" [ref=e5161]
+                - cell "New" [ref=e5162]:
+                  - generic [ref=e5163]: New
+                - cell "-" [ref=e5164]
+                - cell "-" [ref=e5165]
+                - cell "--" [ref=e5166]:
+                  - generic [ref=e5167]: "--"
+                - cell "5d ago" [ref=e5168]
+              - row "Test Idea 1767441823835 New - - -- 5d ago" [ref=e5169] [cursor=pointer]:
+                - cell [ref=e5170]:
+                  - checkbox [ref=e5171]
+                - cell "Test Idea 1767441823835" [ref=e5172]
+                - cell "New" [ref=e5173]:
+                  - generic [ref=e5174]: New
+                - cell "-" [ref=e5175]
+                - cell "-" [ref=e5176]
+                - cell "--" [ref=e5177]:
+                  - generic [ref=e5178]: "--"
+                - cell "5d ago" [ref=e5179]
+              - row "Links Test 1767441817784 New - - -- 5d ago" [ref=e5180] [cursor=pointer]:
+                - cell [ref=e5181]:
+                  - checkbox [ref=e5182]
+                - cell "Links Test 1767441817784" [ref=e5183]
+                - cell "New" [ref=e5184]:
+                  - generic [ref=e5185]: New
+                - cell "-" [ref=e5186]
+                - cell "-" [ref=e5187]
+                - cell "--" [ref=e5188]:
+                  - generic [ref=e5189]: "--"
+                - cell "5d ago" [ref=e5190]
+              - row "Links Test 1767441813378 New - - -- 5d ago" [ref=e5191] [cursor=pointer]:
+                - cell [ref=e5192]:
+                  - checkbox [ref=e5193]
+                - cell "Links Test 1767441813378" [ref=e5194]
+                - cell "New" [ref=e5195]:
+                  - generic [ref=e5196]: New
+                - cell "-" [ref=e5197]
+                - cell "-" [ref=e5198]
+                - cell "--" [ref=e5199]:
+                  - generic [ref=e5200]: "--"
+                - cell "5d ago" [ref=e5201]
+              - row "Slider Test 1767441807808 (Copy) New - - -- 5d ago" [ref=e5202] [cursor=pointer]:
+                - cell [ref=e5203]:
+                  - checkbox [ref=e5204]
+                - cell "Slider Test 1767441807808 (Copy)" [ref=e5205]
+                - cell "New" [ref=e5206]:
+                  - generic [ref=e5207]: New
+                - cell "-" [ref=e5208]
+                - cell "-" [ref=e5209]
+                - cell "--" [ref=e5210]:
+                  - generic [ref=e5211]: "--"
+                - cell "5d ago" [ref=e5212]
+              - row "Slider Test 1767441807808 New - - -- 5d ago" [ref=e5213] [cursor=pointer]:
+                - cell [ref=e5214]:
+                  - checkbox [ref=e5215]
+                - cell "Slider Test 1767441807808" [ref=e5216]
+                - cell "New" [ref=e5217]:
+                  - generic [ref=e5218]: New
+                - cell "-" [ref=e5219]
+                - cell "-" [ref=e5220]
+                - cell "--" [ref=e5221]:
+                  - generic [ref=e5222]: "--"
+                - cell "5d ago" [ref=e5223]
+              - row "Slider Test 1767441796000 New - - -- 5d ago" [ref=e5224] [cursor=pointer]:
+                - cell [ref=e5225]:
+                  - checkbox [ref=e5226]
+                - cell "Slider Test 1767441796000" [ref=e5227]
+                - cell "New" [ref=e5228]:
+                  - generic [ref=e5229]: New
+                - cell "-" [ref=e5230]
+                - cell "-" [ref=e5231]
+                - cell "--" [ref=e5232]:
+                  - generic [ref=e5233]: "--"
+                - cell "5d ago" [ref=e5234]
+              - row "Slider Test 1767441792631 New - - -- 5d ago" [ref=e5235] [cursor=pointer]:
+                - cell [ref=e5236]:
+                  - checkbox [ref=e5237]
+                - cell "Slider Test 1767441792631" [ref=e5238]
+                - cell "New" [ref=e5239]:
+                  - generic [ref=e5240]: New
+                - cell "-" [ref=e5241]
+                - cell "-" [ref=e5242]
+                - cell "--" [ref=e5243]:
+                  - generic [ref=e5244]: "--"
+                - cell "5d ago" [ref=e5245]
+              - row "Slider Test 1767441788294 Evaluating - - -- 5d ago" [ref=e5246] [cursor=pointer]:
+                - cell [ref=e5247]:
+                  - checkbox [ref=e5248]
+                - cell "Slider Test 1767441788294" [ref=e5249]
+                - cell "Evaluating" [ref=e5250]:
+                  - generic [ref=e5251]: Evaluating
+                - cell "-" [ref=e5252]
+                - cell "-" [ref=e5253]
+                - cell "--" [ref=e5254]:
+                  - generic [ref=e5255]: "--"
+                - cell "5d ago" [ref=e5256]
+              - row "Updated Slider Test 1767441783897 New - - -- 5d ago" [ref=e5257] [cursor=pointer]:
+                - cell [ref=e5258]:
+                  - checkbox [ref=e5259]
+                - cell "Updated Slider Test 1767441783897" [ref=e5260]
+                - cell "New" [ref=e5261]:
+                  - generic [ref=e5262]: New
+                - cell "-" [ref=e5263]
+                - cell "-" [ref=e5264]
+                - cell "--" [ref=e5265]:
+                  - generic [ref=e5266]: "--"
+                - cell "5d ago" [ref=e5267]
+              - row "Slider Test 1767441780266 New - - -- 5d ago" [ref=e5268] [cursor=pointer]:
+                - cell [ref=e5269]:
+                  - checkbox [ref=e5270]
+                - cell "Slider Test 1767441780266" [ref=e5271]
+                - cell "New" [ref=e5272]:
+                  - generic [ref=e5273]: New
+                - cell "-" [ref=e5274]
+                - cell "-" [ref=e5275]
+                - cell "--" [ref=e5276]:
+                  - generic [ref=e5277]: "--"
+                - cell "5d ago" [ref=e5278]
+              - row "Slider Test 1767441776586 New - - -- 5d ago" [ref=e5279] [cursor=pointer]:
+                - cell [ref=e5280]:
+                  - checkbox [ref=e5281]
+                - cell "Slider Test 1767441776586" [ref=e5282]
+                - cell "New" [ref=e5283]:
+                  - generic [ref=e5284]: New
+                - cell "-" [ref=e5285]
+                - cell "-" [ref=e5286]
+                - cell "--" [ref=e5287]:
+                  - generic [ref=e5288]: "--"
+                - cell "5d ago" [ref=e5289]
+              - row "Slider Test 1767441773318 New - - -- 5d ago" [ref=e5290] [cursor=pointer]:
+                - cell [ref=e5291]:
+                  - checkbox [ref=e5292]
+                - cell "Slider Test 1767441773318" [ref=e5293]
+                - cell "New" [ref=e5294]:
+                  - generic [ref=e5295]: New
+                - cell "-" [ref=e5296]
+                - cell "-" [ref=e5297]
+                - cell "--" [ref=e5298]:
+                  - generic [ref=e5299]: "--"
+                - cell "5d ago" [ref=e5300]
+              - row "Quick Capture Test 1767441769073 New - - -- 5d ago" [ref=e5301] [cursor=pointer]:
+                - cell [ref=e5302]:
+                  - checkbox [ref=e5303]
+                - cell "Quick Capture Test 1767441769073" [ref=e5304]
+                - cell "New" [ref=e5305]:
+                  - generic [ref=e5306]: New
+                - cell "-" [ref=e5307]
+                - cell "-" [ref=e5308]
+                - cell "--" [ref=e5309]:
+                  - generic [ref=e5310]: "--"
+                - cell "5d ago" [ref=e5311]
+              - row "Test Idea 1767441662968 New - - -- 5d ago" [ref=e5312] [cursor=pointer]:
+                - cell [ref=e5313]:
+                  - checkbox [ref=e5314]
+                - cell "Test Idea 1767441662968" [ref=e5315]
+                - cell "New" [ref=e5316]:
+                  - generic [ref=e5317]: New
+                - cell "-" [ref=e5318]
+                - cell "-" [ref=e5319]
+                - cell "--" [ref=e5320]:
+                  - generic [ref=e5321]: "--"
+                - cell "5d ago" [ref=e5322]
+              - row "Links Test 1767441656928 New - - -- 5d ago" [ref=e5323] [cursor=pointer]:
+                - cell [ref=e5324]:
+                  - checkbox [ref=e5325]
+                - cell "Links Test 1767441656928" [ref=e5326]
+                - cell "New" [ref=e5327]:
+                  - generic [ref=e5328]: New
+                - cell "-" [ref=e5329]
+                - cell "-" [ref=e5330]
+                - cell "--" [ref=e5331]:
+                  - generic [ref=e5332]: "--"
+                - cell "5d ago" [ref=e5333]
+              - row "Links Test 1767441652651 New - - -- 5d ago" [ref=e5334] [cursor=pointer]:
+                - cell [ref=e5335]:
+                  - checkbox [ref=e5336]
+                - cell "Links Test 1767441652651" [ref=e5337]
+                - cell "New" [ref=e5338]:
+                  - generic [ref=e5339]: New
+                - cell "-" [ref=e5340]
+                - cell "-" [ref=e5341]
+                - cell "--" [ref=e5342]:
+                  - generic [ref=e5343]: "--"
+                - cell "5d ago" [ref=e5344]
+              - row "Slider Test 1767441647650 (Copy) New - - -- 5d ago" [ref=e5345] [cursor=pointer]:
+                - cell [ref=e5346]:
+                  - checkbox [ref=e5347]
+                - cell "Slider Test 1767441647650 (Copy)" [ref=e5348]
+                - cell "New" [ref=e5349]:
+                  - generic [ref=e5350]: New
+                - cell "-" [ref=e5351]
+                - cell "-" [ref=e5352]
+                - cell "--" [ref=e5353]:
+                  - generic [ref=e5354]: "--"
+                - cell "5d ago" [ref=e5355]
+              - row "Slider Test 1767441647650 New - - -- 5d ago" [ref=e5356] [cursor=pointer]:
+                - cell [ref=e5357]:
+                  - checkbox [ref=e5358]
+                - cell "Slider Test 1767441647650" [ref=e5359]
+                - cell "New" [ref=e5360]:
+                  - generic [ref=e5361]: New
+                - cell "-" [ref=e5362]
+                - cell "-" [ref=e5363]
+                - cell "--" [ref=e5364]:
+                  - generic [ref=e5365]: "--"
+                - cell "5d ago" [ref=e5366]
+              - row "Slider Test 1767441635446 New - - -- 5d ago" [ref=e5367] [cursor=pointer]:
+                - cell [ref=e5368]:
+                  - checkbox [ref=e5369]
+                - cell "Slider Test 1767441635446" [ref=e5370]
+                - cell "New" [ref=e5371]:
+                  - generic [ref=e5372]: New
+                - cell "-" [ref=e5373]
+                - cell "-" [ref=e5374]
+                - cell "--" [ref=e5375]:
+                  - generic [ref=e5376]: "--"
+                - cell "5d ago" [ref=e5377]
+              - row "Slider Test 1767441632171 New - - -- 5d ago" [ref=e5378] [cursor=pointer]:
+                - cell [ref=e5379]:
+                  - checkbox [ref=e5380]
+                - cell "Slider Test 1767441632171" [ref=e5381]
+                - cell "New" [ref=e5382]:
+                  - generic [ref=e5383]: New
+                - cell "-" [ref=e5384]
+                - cell "-" [ref=e5385]
+                - cell "--" [ref=e5386]:
+                  - generic [ref=e5387]: "--"
+                - cell "5d ago" [ref=e5388]
+              - row "Slider Test 1767441627888 Evaluating - - -- 5d ago" [ref=e5389] [cursor=pointer]:
+                - cell [ref=e5390]:
+                  - checkbox [ref=e5391]
+                - cell "Slider Test 1767441627888" [ref=e5392]
+                - cell "Evaluating" [ref=e5393]:
+                  - generic [ref=e5394]: Evaluating
+                - cell "-" [ref=e5395]
+                - cell "-" [ref=e5396]
+                - cell "--" [ref=e5397]:
+                  - generic [ref=e5398]: "--"
+                - cell "5d ago" [ref=e5399]
+              - row "Updated Slider Test 1767441623986 New - - -- 5d ago" [ref=e5400] [cursor=pointer]:
+                - cell [ref=e5401]:
+                  - checkbox [ref=e5402]
+                - cell "Updated Slider Test 1767441623986" [ref=e5403]
+                - cell "New" [ref=e5404]:
+                  - generic [ref=e5405]: New
+                - cell "-" [ref=e5406]
+                - cell "-" [ref=e5407]
+                - cell "--" [ref=e5408]:
+                  - generic [ref=e5409]: "--"
+                - cell "5d ago" [ref=e5410]
+              - row "Slider Test 1767441620606 New - - -- 5d ago" [ref=e5411] [cursor=pointer]:
+                - cell [ref=e5412]:
+                  - checkbox [ref=e5413]
+                - cell "Slider Test 1767441620606" [ref=e5414]
+                - cell "New" [ref=e5415]:
+                  - generic [ref=e5416]: New
+                - cell "-" [ref=e5417]
+                - cell "-" [ref=e5418]
+                - cell "--" [ref=e5419]:
+                  - generic [ref=e5420]: "--"
+                - cell "5d ago" [ref=e5421]
+              - row "Slider Test 1767441616966 New - - -- 5d ago" [ref=e5422] [cursor=pointer]:
+                - cell [ref=e5423]:
+                  - checkbox [ref=e5424]
+                - cell "Slider Test 1767441616966" [ref=e5425]
+                - cell "New" [ref=e5426]:
+                  - generic [ref=e5427]: New
+                - cell "-" [ref=e5428]
+                - cell "-" [ref=e5429]
+                - cell "--" [ref=e5430]:
+                  - generic [ref=e5431]: "--"
+                - cell "5d ago" [ref=e5432]
+              - row "Slider Test 1767441613884 New - - -- 5d ago" [ref=e5433] [cursor=pointer]:
+                - cell [ref=e5434]:
+                  - checkbox [ref=e5435]
+                - cell "Slider Test 1767441613884" [ref=e5436]
+                - cell "New" [ref=e5437]:
+                  - generic [ref=e5438]: New
+                - cell "-" [ref=e5439]
+                - cell "-" [ref=e5440]
+                - cell "--" [ref=e5441]:
+                  - generic [ref=e5442]: "--"
+                - cell "5d ago" [ref=e5443]
+              - row "Quick Capture Test 1767441610156 New - - -- 5d ago" [ref=e5444] [cursor=pointer]:
+                - cell [ref=e5445]:
+                  - checkbox [ref=e5446]
+                - cell "Quick Capture Test 1767441610156" [ref=e5447]
+                - cell "New" [ref=e5448]:
+                  - generic [ref=e5449]: New
+                - cell "-" [ref=e5450]
+                - cell "-" [ref=e5451]
+                - cell "--" [ref=e5452]:
+                  - generic [ref=e5453]: "--"
+                - cell "5d ago" [ref=e5454]
+              - row "Test Idea 1767441472079 New - - -- 5d ago" [ref=e5455] [cursor=pointer]:
+                - cell [ref=e5456]:
+                  - checkbox [ref=e5457]
+                - cell "Test Idea 1767441472079" [ref=e5458]
+                - cell "New" [ref=e5459]:
+                  - generic [ref=e5460]: New
+                - cell "-" [ref=e5461]
+                - cell "-" [ref=e5462]
+                - cell "--" [ref=e5463]:
+                  - generic [ref=e5464]: "--"
+                - cell "5d ago" [ref=e5465]
+              - row "Slider Test 1767441460487 New - - -- 5d ago" [ref=e5466] [cursor=pointer]:
+                - cell [ref=e5467]:
+                  - checkbox [ref=e5468]
+                - cell "Slider Test 1767441460487" [ref=e5469]
+                - cell "New" [ref=e5470]:
+                  - generic [ref=e5471]: New
+                - cell "-" [ref=e5472]
+                - cell "-" [ref=e5473]
+                - cell "--" [ref=e5474]:
+                  - generic [ref=e5475]: "--"
+                - cell "5d ago" [ref=e5476]
+              - row "Slider Test 1767441456410 New - - -- 5d ago" [ref=e5477] [cursor=pointer]:
+                - cell [ref=e5478]:
+                  - checkbox [ref=e5479]
+                - cell "Slider Test 1767441456410" [ref=e5480]
+                - cell "New" [ref=e5481]:
+                  - generic [ref=e5482]: New
+                - cell "-" [ref=e5483]
+                - cell "-" [ref=e5484]
+                - cell "--" [ref=e5485]:
+                  - generic [ref=e5486]: "--"
+                - cell "5d ago" [ref=e5487]
+              - row "Slider Test 1767441451137 Evaluating - - -- 5d ago" [ref=e5488] [cursor=pointer]:
+                - cell [ref=e5489]:
+                  - checkbox [ref=e5490]
+                - cell "Slider Test 1767441451137" [ref=e5491]
+                - cell "Evaluating" [ref=e5492]:
+                  - generic [ref=e5493]: Evaluating
+                - cell "-" [ref=e5494]
+                - cell "-" [ref=e5495]
+                - cell "--" [ref=e5496]:
+                  - generic [ref=e5497]: "--"
+                - cell "5d ago" [ref=e5498]
+              - row "Updated Slider Test 1767441445775 New - - -- 5d ago" [ref=e5499] [cursor=pointer]:
+                - cell [ref=e5500]:
+                  - checkbox [ref=e5501]
+                - cell "Updated Slider Test 1767441445775" [ref=e5502]
+                - cell "New" [ref=e5503]:
+                  - generic [ref=e5504]: New
+                - cell "-" [ref=e5505]
+                - cell "-" [ref=e5506]
+                - cell "--" [ref=e5507]:
+                  - generic [ref=e5508]: "--"
+                - cell "5d ago" [ref=e5509]
+              - row "Slider Test 1767441441483 New - - -- 5d ago" [ref=e5510] [cursor=pointer]:
+                - cell [ref=e5511]:
+                  - checkbox [ref=e5512]
+                - cell "Slider Test 1767441441483" [ref=e5513]
+                - cell "New" [ref=e5514]:
+                  - generic [ref=e5515]: New
+                - cell "-" [ref=e5516]
+                - cell "-" [ref=e5517]
+                - cell "--" [ref=e5518]:
+                  - generic [ref=e5519]: "--"
+                - cell "5d ago" [ref=e5520]
+              - row "Slider Test 1767441437814 New - - -- 5d ago" [ref=e5521] [cursor=pointer]:
+                - cell [ref=e5522]:
+                  - checkbox [ref=e5523]
+                - cell "Slider Test 1767441437814" [ref=e5524]
+                - cell "New" [ref=e5525]:
+                  - generic [ref=e5526]: New
+                - cell "-" [ref=e5527]
+                - cell "-" [ref=e5528]
+                - cell "--" [ref=e5529]:
+                  - generic [ref=e5530]: "--"
+                - cell "5d ago" [ref=e5531]
+              - row "Slider Test 1767441434575 New - - -- 5d ago" [ref=e5532] [cursor=pointer]:
+                - cell [ref=e5533]:
+                  - checkbox [ref=e5534]
+                - cell "Slider Test 1767441434575" [ref=e5535]
+                - cell "New" [ref=e5536]:
+                  - generic [ref=e5537]: New
+                - cell "-" [ref=e5538]
+                - cell "-" [ref=e5539]
+                - cell "--" [ref=e5540]:
+                  - generic [ref=e5541]: "--"
+                - cell "5d ago" [ref=e5542]
+              - row "Quick Capture Test 1767441430169 New - - -- 5d ago" [ref=e5543] [cursor=pointer]:
+                - cell [ref=e5544]:
+                  - checkbox [ref=e5545]
+                - cell "Quick Capture Test 1767441430169" [ref=e5546]
+                - cell "New" [ref=e5547]:
+                  - generic [ref=e5548]: New
+                - cell "-" [ref=e5549]
+                - cell "-" [ref=e5550]
+                - cell "--" [ref=e5551]:
+                  - generic [ref=e5552]: "--"
+                - cell "5d ago" [ref=e5553]
+              - row "Test Idea 1767441260968 New - - -- 5d ago" [ref=e5554] [cursor=pointer]:
+                - cell [ref=e5555]:
+                  - checkbox [ref=e5556]
+                - cell "Test Idea 1767441260968" [ref=e5557]
+                - cell "New" [ref=e5558]:
+                  - generic [ref=e5559]: New
+                - cell "-" [ref=e5560]
+                - cell "-" [ref=e5561]
+                - cell "--" [ref=e5562]:
+                  - generic [ref=e5563]: "--"
+                - cell "5d ago" [ref=e5564]
+              - row "Slider Test 1767441244127 New - - -- 5d ago" [ref=e5565] [cursor=pointer]:
+                - cell [ref=e5566]:
+                  - checkbox [ref=e5567]
+                - cell "Slider Test 1767441244127" [ref=e5568]
+                - cell "New" [ref=e5569]:
+                  - generic [ref=e5570]: New
+                - cell "-" [ref=e5571]
+                - cell "-" [ref=e5572]
+                - cell "--" [ref=e5573]:
+                  - generic [ref=e5574]: "--"
+                - cell "5d ago" [ref=e5575]
+              - row "Slider Test 1767441240167 New - - -- 5d ago" [ref=e5576] [cursor=pointer]:
+                - cell [ref=e5577]:
+                  - checkbox [ref=e5578]
+                - cell "Slider Test 1767441240167" [ref=e5579]
+                - cell "New" [ref=e5580]:
+                  - generic [ref=e5581]: New
+                - cell "-" [ref=e5582]
+                - cell "-" [ref=e5583]
+                - cell "--" [ref=e5584]:
+                  - generic [ref=e5585]: "--"
+                - cell "5d ago" [ref=e5586]
+              - row "Slider Test 1767441236782 New - - -- 5d ago" [ref=e5587] [cursor=pointer]:
+                - cell [ref=e5588]:
+                  - checkbox [ref=e5589]
+                - cell "Slider Test 1767441236782" [ref=e5590]
+                - cell "New" [ref=e5591]:
+                  - generic [ref=e5592]: New
+                - cell "-" [ref=e5593]
+                - cell "-" [ref=e5594]
+                - cell "--" [ref=e5595]:
+                  - generic [ref=e5596]: "--"
+                - cell "5d ago" [ref=e5597]
+              - row "Slider Test 1767441232782 Evaluating - - -- 5d ago" [ref=e5598] [cursor=pointer]:
+                - cell [ref=e5599]:
+                  - checkbox [ref=e5600]
+                - cell "Slider Test 1767441232782" [ref=e5601]
+                - cell "Evaluating" [ref=e5602]:
+                  - generic [ref=e5603]: Evaluating
+                - cell "-" [ref=e5604]
+                - cell "-" [ref=e5605]
+                - cell "--" [ref=e5606]:
+                  - generic [ref=e5607]: "--"
+                - cell "5d ago" [ref=e5608]
+              - row "Updated Slider Test 1767441228430 New - - -- 5d ago" [ref=e5609] [cursor=pointer]:
+                - cell [ref=e5610]:
+                  - checkbox [ref=e5611]
+                - cell "Updated Slider Test 1767441228430" [ref=e5612]
+                - cell "New" [ref=e5613]:
+                  - generic [ref=e5614]: New
+                - cell "-" [ref=e5615]
+                - cell "-" [ref=e5616]
+                - cell "--" [ref=e5617]:
+                  - generic [ref=e5618]: "--"
+                - cell "5d ago" [ref=e5619]
+              - row "Slider Test 1767441225593 New - - -- 5d ago" [ref=e5620] [cursor=pointer]:
+                - cell [ref=e5621]:
+                  - checkbox [ref=e5622]
+                - cell "Slider Test 1767441225593" [ref=e5623]
+                - cell "New" [ref=e5624]:
+                  - generic [ref=e5625]: New
+                - cell "-" [ref=e5626]
+                - cell "-" [ref=e5627]
+                - cell "--" [ref=e5628]:
+                  - generic [ref=e5629]: "--"
+                - cell "5d ago" [ref=e5630]
+              - row "Slider Test 1767441222474 New - - -- 5d ago" [ref=e5631] [cursor=pointer]:
+                - cell [ref=e5632]:
+                  - checkbox [ref=e5633]
+                - cell "Slider Test 1767441222474" [ref=e5634]
+                - cell "New" [ref=e5635]:
+                  - generic [ref=e5636]: New
+                - cell "-" [ref=e5637]
+                - cell "-" [ref=e5638]
+                - cell "--" [ref=e5639]:
+                  - generic [ref=e5640]: "--"
+                - cell "5d ago" [ref=e5641]
+              - row "Slider Test 1767441219133 New - - -- 5d ago" [ref=e5642] [cursor=pointer]:
+                - cell [ref=e5643]:
+                  - checkbox [ref=e5644]
+                - cell "Slider Test 1767441219133" [ref=e5645]
+                - cell "New" [ref=e5646]:
+                  - generic [ref=e5647]: New
+                - cell "-" [ref=e5648]
+                - cell "-" [ref=e5649]
+                - cell "--" [ref=e5650]:
+                  - generic [ref=e5651]: "--"
+                - cell "5d ago" [ref=e5652]
+              - row "Quick Capture Test 1767441214906 New - - -- 5d ago" [ref=e5653] [cursor=pointer]:
+                - cell [ref=e5654]:
+                  - checkbox [ref=e5655]
+                - cell "Quick Capture Test 1767441214906" [ref=e5656]
+                - cell "New" [ref=e5657]:
+                  - generic [ref=e5658]: New
+                - cell "-" [ref=e5659]
+                - cell "-" [ref=e5660]
+                - cell "--" [ref=e5661]:
+                  - generic [ref=e5662]: "--"
+                - cell "5d ago" [ref=e5663]
+              - row "Test Idea 1767437501969 New - - -- 5d ago" [ref=e5664] [cursor=pointer]:
+                - cell [ref=e5665]:
+                  - checkbox [ref=e5666]
+                - cell "Test Idea 1767437501969" [ref=e5667]
+                - cell "New" [ref=e5668]:
+                  - generic [ref=e5669]: New
+                - cell "-" [ref=e5670]
+                - cell "-" [ref=e5671]
+                - cell "--" [ref=e5672]:
+                  - generic [ref=e5673]: "--"
+                - cell "5d ago" [ref=e5674]
+              - row "Slider Test 1767437476142 New - - -- 5d ago" [ref=e5675] [cursor=pointer]:
+                - cell [ref=e5676]:
+                  - checkbox [ref=e5677]
+                - cell "Slider Test 1767437476142" [ref=e5678]
+                - cell "New" [ref=e5679]:
+                  - generic [ref=e5680]: New
+                - cell "-" [ref=e5681]
+                - cell "-" [ref=e5682]
+                - cell "--" [ref=e5683]:
+                  - generic [ref=e5684]: "--"
+                - cell "5d ago" [ref=e5685]
+              - row "Slider Test 1767437472679 New - - -- 5d ago" [ref=e5686] [cursor=pointer]:
+                - cell [ref=e5687]:
+                  - checkbox [ref=e5688]
+                - cell "Slider Test 1767437472679" [ref=e5689]
+                - cell "New" [ref=e5690]:
+                  - generic [ref=e5691]: New
+                - cell "-" [ref=e5692]
+                - cell "-" [ref=e5693]
+                - cell "--" [ref=e5694]:
+                  - generic [ref=e5695]: "--"
+                - cell "5d ago" [ref=e5696]
+              - row "Slider Test 1767437468161 New - - -- 5d ago" [ref=e5697] [cursor=pointer]:
+                - cell [ref=e5698]:
+                  - checkbox [ref=e5699]
+                - cell "Slider Test 1767437468161" [ref=e5700]
+                - cell "New" [ref=e5701]:
+                  - generic [ref=e5702]: New
+                - cell "-" [ref=e5703]
+                - cell "-" [ref=e5704]
+                - cell "--" [ref=e5705]:
+                  - generic [ref=e5706]: "--"
+                - cell "5d ago" [ref=e5707]
+              - row "Slider Test 1767437462778 Evaluating - - -- 5d ago" [ref=e5708] [cursor=pointer]:
+                - cell [ref=e5709]:
+                  - checkbox [ref=e5710]
+                - cell "Slider Test 1767437462778" [ref=e5711]
+                - cell "Evaluating" [ref=e5712]:
+                  - generic [ref=e5713]: Evaluating
+                - cell "-" [ref=e5714]
+                - cell "-" [ref=e5715]
+                - cell "--" [ref=e5716]:
+                  - generic [ref=e5717]: "--"
+                - cell "5d ago" [ref=e5718]
+              - row "Updated Slider Test 1767437457511 New - - -- 5d ago" [ref=e5719] [cursor=pointer]:
+                - cell [ref=e5720]:
+                  - checkbox [ref=e5721]
+                - cell "Updated Slider Test 1767437457511" [ref=e5722]
+                - cell "New" [ref=e5723]:
+                  - generic [ref=e5724]: New
+                - cell "-" [ref=e5725]
+                - cell "-" [ref=e5726]
+                - cell "--" [ref=e5727]:
+                  - generic [ref=e5728]: "--"
+                - cell "5d ago" [ref=e5729]
+              - row "Slider Test 1767437451961 New - - -- 5d ago" [ref=e5730] [cursor=pointer]:
+                - cell [ref=e5731]:
+                  - checkbox [ref=e5732]
+                - cell "Slider Test 1767437451961" [ref=e5733]
+                - cell "New" [ref=e5734]:
+                  - generic [ref=e5735]: New
+                - cell "-" [ref=e5736]
+                - cell "-" [ref=e5737]
+                - cell "--" [ref=e5738]:
+                  - generic [ref=e5739]: "--"
+                - cell "5d ago" [ref=e5740]
+              - row "Slider Test 1767437442395 New - - -- 5d ago" [ref=e5741] [cursor=pointer]:
+                - cell [ref=e5742]:
+                  - checkbox [ref=e5743]
+                - cell "Slider Test 1767437442395" [ref=e5744]
+                - cell "New" [ref=e5745]:
+                  - generic [ref=e5746]: New
+                - cell "-" [ref=e5747]
+                - cell "-" [ref=e5748]
+                - cell "--" [ref=e5749]:
+                  - generic [ref=e5750]: "--"
+                - cell "5d ago" [ref=e5751]
+              - row "Slider Test 1767437436560 New - - -- 5d ago" [ref=e5752] [cursor=pointer]:
+                - cell [ref=e5753]:
+                  - checkbox [ref=e5754]
+                - cell "Slider Test 1767437436560" [ref=e5755]
+                - cell "New" [ref=e5756]:
+                  - generic [ref=e5757]: New
+                - cell "-" [ref=e5758]
+                - cell "-" [ref=e5759]
+                - cell "--" [ref=e5760]:
+                  - generic [ref=e5761]: "--"
+                - cell "5d ago" [ref=e5762]
+              - row "Quick Capture Test 1767437428682 New - - -- 5d ago" [ref=e5763] [cursor=pointer]:
+                - cell [ref=e5764]:
+                  - checkbox [ref=e5765]
+                - cell "Quick Capture Test 1767437428682" [ref=e5766]
+                - cell "New" [ref=e5767]:
+                  - generic [ref=e5768]: New
+                - cell "-" [ref=e5769]
+                - cell "-" [ref=e5770]
+                - cell "--" [ref=e5771]:
+                  - generic [ref=e5772]: "--"
+                - cell "5d ago" [ref=e5773]
+        - dialog "Label Test 1767945326425" [ref=e5775]:
+          - generic [ref=e5777]:
+            - heading "Label Test 1767945326425" [level=1] [ref=e5779]
+            - button "New" [ref=e5781] [cursor=pointer]:
+              - generic [ref=e5782]: New
+              - img [ref=e5783]
+            - button "More actions" [ref=e5786] [cursor=pointer]:
+              - img [ref=e5787]
+            - button "Close (Esc)" [active] [ref=e5791] [cursor=pointer]:
+              - img [ref=e5792]
+          - generic [ref=e5796]:
+            - button "Accept & Start" [ref=e5797] [cursor=pointer]:
+              - img [ref=e5798]
+              - text: Accept & Start
+            - generic [ref=e5800]:
+              - generic [ref=e5801]:
+                - generic [ref=e5802]:
+                  - img [ref=e5803]
+                  - text: Labels
+                  - generic [ref=e5806]: "1"
+                - button "Add" [ref=e5809] [cursor=pointer]:
+                  - img [ref=e5810]
+                  - text: Add
+              - generic [ref=e5812]:
+                - text: Delete Test 1767945330776
+                - button [ref=e5813] [cursor=pointer]:
+                  - img [ref=e5814]
+            - generic [ref=e5817]:
+              - heading "Description" [level=3] [ref=e5818]
+              - paragraph [ref=e5820]: Click to add a description...
+            - generic [ref=e5821]:
+              - button "Tasks" [ref=e5822] [cursor=pointer]:
+                - generic [ref=e5823]:
+                  - img [ref=e5825]
+                  - generic [ref=e5828]: Tasks
+                - img [ref=e5829]
+              - generic [ref=e5831]:
+                - generic [ref=e5832]:
+                  - heading "Tasks" [level=3] [ref=e5833]
+                  - link "View Board" [ref=e5834] [cursor=pointer]:
+                    - /url: /dashboard/tasks?idea=baea5134-f2a8-433d-adbf-e384e41887c8
+                    - text: View Board
+                    - img [ref=e5835]
+                - paragraph [ref=e5840]: No tasks yet
+                - generic [ref=e5841]:
+                  - textbox "Add a task..." [ref=e5842]
+                  - button [disabled]:
+                    - img
+            - generic [ref=e5843]:
+              - button "Checklists" [ref=e5844] [cursor=pointer]:
+                - generic [ref=e5845]:
+                  - img [ref=e5847]
+                  - generic [ref=e5850]: Checklists
+                - img [ref=e5851]
+              - generic [ref=e5853]:
+                - button "Add checklist" [ref=e5854] [cursor=pointer]:
+                  - img [ref=e5855]
+                  - text: Add checklist
+                - generic [ref=e5856]: No checklists
+            - generic [ref=e5857]:
+              - button "Attachments" [ref=e5858] [cursor=pointer]:
+                - generic [ref=e5859]:
+                  - img [ref=e5861]
+                  - generic [ref=e5863]: Attachments
+                - img [ref=e5864]
+              - generic [ref=e5866]:
+                - button "Add Attachment" [ref=e5867] [cursor=pointer]:
+                  - img [ref=e5868]
+                  - text: Add Attachment
+                - generic [ref=e5870]: No attachments. Drag files here or click Add.
+            - generic [ref=e5871]:
+              - button "Links" [ref=e5872] [cursor=pointer]:
+                - generic [ref=e5873]:
+                  - img [ref=e5875]
+                  - generic [ref=e5878]: Links
+                - img [ref=e5879]
+              - generic [ref=e5881]:
+                - button "Add Link" [ref=e5882] [cursor=pointer]:
+                  - img [ref=e5883]
+                  - text: Add Link
+                - generic [ref=e5884]: No links
+            - generic [ref=e5885]:
+              - button "AI Evaluation" [ref=e5886] [cursor=pointer]:
+                - generic [ref=e5887]:
+                  - img [ref=e5889]
+                  - generic [ref=e5899]: AI Evaluation
+                - img [ref=e5900]
+              - generic [ref=e5902]:
+                - img [ref=e5903]
+                - paragraph [ref=e5905]: Get AI-powered insights on complexity, ROI, and implementation recommendations.
+                - button "Run AI Evaluation" [ref=e5906] [cursor=pointer]:
+                  - img [ref=e5907]
+                  - text: Run AI Evaluation
+            - generic [ref=e5909]:
+              - button "RICE Score" [ref=e5910] [cursor=pointer]:
+                - generic [ref=e5912]: RICE Score
+                - img [ref=e5913]
+              - generic [ref=e5915]:
+                - generic [ref=e5917]:
+                  - img [ref=e5918]
+                  - heading "RICE Score" [level=3] [ref=e5920]
+                  - button [ref=e5921] [cursor=pointer]:
+                    - img [ref=e5922]
+                - generic [ref=e5925]:
+                  - generic [ref=e5926]:
+                    - generic [ref=e5927]: Reach (1-10)
+                    - combobox [ref=e5928]:
+                      - option "Select..." [selected]
+                      - option "1 - Very few"
+                      - option "2"
+                      - option "3 - Some"
+                      - option "4"
+                      - option "5 - Moderate"
+                      - option "6"
+                      - option "7 - Many"
+                      - option "8"
+                      - option "9"
+                      - option "10 - Everyone"
+                  - generic [ref=e5929]:
+                    - generic [ref=e5930]: Impact
+                    - combobox [ref=e5931]:
+                      - option "Select..." [selected]
+                      - option "Minimal (0.25x)"
+                      - option "Low (0.5x)"
+                      - option "Medium (1x)"
+                      - option "High (2x)"
+                      - option "Massive (3x)"
+                  - generic [ref=e5932]:
+                    - generic [ref=e5933]: Confidence (0%)
+                    - slider [ref=e5934]: "50"
+                    - generic [ref=e5935]:
+                      - generic [ref=e5936]: Low
+                      - generic [ref=e5937]: Medium
+                      - generic [ref=e5938]: High
+                  - generic [ref=e5939]:
+                    - generic [ref=e5940]: Effort (person-weeks)
+                    - combobox [ref=e5941]:
+                      - option "Select..." [selected]
+                      - option "1 - Hours"
+                      - option "2 - 1 day"
+                      - option "3 - 2-3 days"
+                      - option "4 - 1 week"
+                      - option "5 - 2 weeks"
+                      - option "6 - 3 weeks"
+                      - option "7 - 1 month"
+                      - option "8 - 6 weeks"
+                      - option "9 - 2 months"
+                      - option "10 - Quarter+"
+                - generic [ref=e5943]: Reach, Impact, Confidence, Effort needed
+            - generic [ref=e5945]:
+              - generic [ref=e5946]:
+                - img [ref=e5947]
+                - button "Effort?" [ref=e5950] [cursor=pointer]
+              - generic [ref=e5951]: ·
+              - generic [ref=e5952]:
+                - img [ref=e5953]
+                - button "Horizon?" [ref=e5956] [cursor=pointer]
+              - generic [ref=e5957]: ·
+              - generic [ref=e5958]:
+                - img [ref=e5959]
+                - generic [ref=e5962]: Unassigned
+              - generic [ref=e5963]: ·
+              - generic [ref=e5964]:
+                - img [ref=e5965]
+                - generic [ref=e5967]: Created 9 Jan 2026
+              - generic [ref=e5968]: ·
+              - generic [ref=e5969]: Updated just now
+            - generic [ref=e5970]:
+              - button "Activity" [ref=e5971] [cursor=pointer]:
+                - generic [ref=e5972]:
+                  - img [ref=e5974]
+                  - generic [ref=e5976]: Activity
+                - img [ref=e5977]
+              - paragraph [ref=e5979]: No activity recorded yet.
+            - generic [ref=e5980]:
+              - button "Comments" [ref=e5981] [cursor=pointer]:
+                - generic [ref=e5982]:
+                  - img [ref=e5984]
+                  - generic [ref=e5986]: Comments
+                - img [ref=e5987]
+              - generic [ref=e5989]:
+                - generic [ref=e5990]:
+                  - img [ref=e5991]
+                  - heading "Comments (0)" [level=3] [ref=e5993]:
+                    - text: Comments
+                    - generic [ref=e5994]: (0)
+                - generic [ref=e5996]:
+                  - textbox "Add a comment..." [ref=e5997]
+                  - button [disabled]:
+                    - img
+                - paragraph [ref=e5998]: No comments yet. Be the first to comment!
+```

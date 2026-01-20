@@ -14,7 +14,7 @@ const COLUMN_COLORS: { value: ColumnColor; label: string; hex: string }[] = [
   { value: "blue", label: "Blue", hex: "#3B82F6" },
   { value: "green", label: "Green", hex: "#22C55E" },
   { value: "orange", label: "Orange", hex: "#F59E0B" },
-  { value: "purple", label: "Purple", hex: "#14B8A6" },
+  { value: "purple", label: "Purple", hex: "#A855F7" },
   { value: "red", label: "Red", hex: "#EF4444" },
   { value: "yellow", label: "Yellow", hex: "#EAB308" },
   { value: "pink", label: "Pink", hex: "#EC4899" },

@@ -33,12 +33,12 @@ const columnColors: Record<string, string> = {
   blue: "#3B82F6",
   green: "#22C55E",
   orange: "#F59E0B",
-  purple: "#14B8A6",
+  purple: "#A855F7",
   teal: "#14B8A6",
   red: "#EF4444",
   yellow: "#EAB308",
   pink: "#EC4899",
-  indigo: "#14B8A6",
+  indigo: "#6366F1",
   emerald: "#10B981",
   cyan: "#06B6D4",
 };
@@ -170,6 +170,7 @@ function TaskColumnComponent({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
+        relative
         flex flex-col w-[85vw] sm:w-[280px] min-w-[85vw] sm:min-w-[280px] max-h-[calc(100vh-200px)]
         bg-bg-secondary rounded-xl
         transition-all duration-150 ease-out

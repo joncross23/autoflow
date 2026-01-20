@@ -98,7 +98,7 @@ export function ColumnMenu({
   return (
     <div
       ref={menuRef}
-      className="absolute top-10 right-2 z-50 w-48 rounded-lg border border-border bg-bg-elevated shadow-lg py-1 animate-in fade-in slide-in-from-top-2"
+      className="absolute top-12 right-3 z-50 w-48 rounded-lg border border-border bg-bg-elevated shadow-lg py-1 animate-in fade-in slide-in-from-top-2"
       role="menu"
       aria-label="Column actions"
     >
