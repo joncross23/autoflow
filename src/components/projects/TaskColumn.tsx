@@ -5,7 +5,13 @@ import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Plus, MoreVertical } from "lucide-react";
 import { TaskCard } from "./TaskCard";
-import type { DbColumn, DbTask, DbLabel } from "@/types/database";
+import { ColumnMenu } from "./ColumnMenu";
+import { RenameColumnDialog } from "./RenameColumnDialog";
+import { ChangeColorDialog } from "./ChangeColorDialog";
+import { SetWipLimitDialog } from "./SetWipLimitDialog";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { updateColumn, deleteColumn } from "@/lib/api/columns";
+import type { DbColumn, DbTask, DbLabel, ColumnColor } from "@/types/database";
 
 interface TaskColumnProps {
   column: DbColumn;
@@ -17,6 +23,8 @@ interface TaskColumnProps {
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
   onDeleteTask?: (task: DbTask) => void;
+  onColumnUpdate?: () => void;
+  dragHandleProps?: Record<string, any>;
 }
 
 // Mapping column colors to actual hex values
@@ -45,6 +53,8 @@ function TaskColumnComponent({
   onToggleTask,
   onEditTask,
   onDeleteTask,
+  onColumnUpdate,
+  dragHandleProps,
 }: TaskColumnProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -52,6 +62,14 @@ function TaskColumnComponent({
   const [isSaving, setIsSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Column management state
+  const [showMenu, setShowMenu] = useState(false);
+  const [showRenameDialog, setShowRenameDialog] = useState(false);
+  const [showColorDialog, setShowColorDialog] = useState(false);
+  const [showWipLimitDialog, setShowWipLimitDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
@@ -117,6 +135,32 @@ function TaskColumnComponent({
     }
   }, [handleSaveCard, cancelAdding]);
 
+  // Column management handlers
+  const handleRename = async (newName: string) => {
+    await updateColumn(column.id, { name: newName });
+    onColumnUpdate?.();
+  };
+
+  const handleChangeColor = async (newColor: ColumnColor) => {
+    await updateColumn(column.id, { color: newColor });
+    onColumnUpdate?.();
+  };
+
+  const handleSetWipLimit = async (limit: number | null) => {
+    await updateColumn(column.id, { wip_limit: limit });
+    onColumnUpdate?.();
+  };
+
+  const handleDelete = async () => {
+    // Check if column has tasks
+    if (tasks.length > 0) {
+      setShowDeleteDialog(false);
+      return;
+    }
+    await deleteColumn(column.id);
+    onColumnUpdate?.();
+  };
+
   const colorHex = columnColors[column.color || "slate"] || columnColors.slate;
   const isOverLimit = column.wip_limit && tasks.length >= column.wip_limit;
 
@@ -135,7 +179,8 @@ function TaskColumnComponent({
     >
       {/* Column Header */}
       <div
-        className="flex items-center gap-2.5 px-3.5 py-3 border-b border-white/[0.04] select-none"
+        {...dragHandleProps}
+        className="flex items-center gap-2.5 px-3.5 py-3 border-b border-white/[0.04] select-none cursor-grab active:cursor-grabbing"
       >
         {/* Colored indicator square */}
         <div
@@ -156,9 +201,15 @@ function TaskColumnComponent({
 
         {/* Menu button (shows on hover) */}
         <button
+          ref={menuButtonRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowMenu(!showMenu);
+          }}
           className={`p-1 text-foreground-muted hover:text-foreground transition-opacity ${
-            isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
+            isHovered || showMenu ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
+          aria-label="Column actions"
         >
           <MoreVertical className="h-4 w-4" />
         </button>
@@ -254,6 +305,58 @@ function TaskColumnComponent({
           WIP limit exceeded ({tasks.length}/{column.wip_limit})
         </div>
       )}
+
+      {/* Column Menu */}
+      <ColumnMenu
+        isOpen={showMenu}
+        onClose={() => setShowMenu(false)}
+        onRename={() => setShowRenameDialog(true)}
+        onChangeColor={() => setShowColorDialog(true)}
+        onSetWipLimit={() => setShowWipLimitDialog(true)}
+        onDelete={() => setShowDeleteDialog(true)}
+        anchorEl={menuButtonRef.current}
+      />
+
+      {/* Rename Dialog */}
+      <RenameColumnDialog
+        isOpen={showRenameDialog}
+        currentName={column.name}
+        onClose={() => setShowRenameDialog(false)}
+        onRename={handleRename}
+      />
+
+      {/* Change Color Dialog */}
+      <ChangeColorDialog
+        isOpen={showColorDialog}
+        currentColor={column.color || "slate"}
+        onClose={() => setShowColorDialog(false)}
+        onChange={handleChangeColor}
+      />
+
+      {/* Set WIP Limit Dialog */}
+      <SetWipLimitDialog
+        isOpen={showWipLimitDialog}
+        currentLimit={column.wip_limit}
+        onClose={() => setShowWipLimitDialog(false)}
+        onSet={handleSetWipLimit}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={handleDelete}
+        title="Delete Column?"
+        message={
+          tasks.length > 0
+            ? `Cannot delete column "${column.name}" because it contains ${tasks.length} task${tasks.length === 1 ? "" : "s"}. Please move or delete all tasks before removing this column.`
+            : `Are you sure you want to delete the "${column.name}" column? This action cannot be undone.`
+        }
+        confirmLabel={tasks.length > 0 ? "OK" : "Delete Column"}
+        cancelLabel={tasks.length > 0 ? undefined : "Cancel"}
+        variant={tasks.length > 0 ? "warning" : "danger"}
+        icon={tasks.length > 0 ? "warning" : "trash"}
+      />
     </div>
   );
 }

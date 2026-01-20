@@ -14,10 +14,17 @@ import {
   type DragEndEvent,
   type DragOverEvent,
 } from "@dnd-kit/core";
-import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
-import { TaskColumn } from "./TaskColumn";
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+  sortableKeyboardCoordinates,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { SortableColumn } from "./SortableColumn";
+import { CreateColumnButton } from "./CreateColumnButton";
 import { TaskCard } from "./TaskCard";
 import { updateTask } from "@/lib/api/tasks";
+import { reorderGlobalColumns } from "@/lib/api/columns";
 import type { DbColumn, DbTask, DbLabel } from "@/types/database";
 
 interface TaskKanbanBoardProps {
@@ -31,6 +38,7 @@ interface TaskKanbanBoardProps {
   onToggleTask?: (task: DbTask) => void;
   onEditTask?: (task: DbTask) => void;
   onDeleteTask?: (task: DbTask) => void;
+  onColumnUpdate?: () => void;
 }
 
 export function TaskKanbanBoard({
@@ -44,8 +52,16 @@ export function TaskKanbanBoard({
   onToggleTask,
   onEditTask,
   onDeleteTask,
+  onColumnUpdate,
 }: TaskKanbanBoardProps) {
   const [activeTask, setActiveTask] = useState<DbTask | null>(null);
+  const [activeColumn, setActiveColumn] = useState<DbColumn | null>(null);
+  const [localColumns, setLocalColumns] = useState<DbColumn[]>(columns);
+
+  // Sync localColumns with columns prop
+  useMemo(() => {
+    setLocalColumns(columns);
+  }, [columns]);
 
   // Configure sensors for optimal touch and mouse behaviour
   // - PointerSensor: for mouse with small distance threshold
@@ -95,12 +111,20 @@ export function TaskKanbanBoard({
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
       const { active } = event;
+
+      // Check if dragging a column or task
+      const column = localColumns.find((c) => c.id === active.id);
+      if (column) {
+        setActiveColumn(column);
+        return;
+      }
+
       const task = tasks.find((t) => t.id === active.id);
       if (task) {
         setActiveTask(task);
       }
     },
-    [tasks]
+    [tasks, localColumns]
   );
 
   const handleDragOver = useCallback(
@@ -110,6 +134,12 @@ export function TaskKanbanBoard({
 
       const activeId = active.id as string;
       const overId = over.id as string;
+
+      // Skip if dragging a column - SortableContext handles column reordering
+      const isColumnDrag = localColumns.some((c) => c.id === activeId);
+      if (isColumnDrag) {
+        return;
+      }
 
       const activeTask = tasks.find((t) => t.id === activeId);
       if (!activeTask) return;
@@ -176,12 +206,35 @@ export function TaskKanbanBoard({
   const handleDragEnd = useCallback(
     async (event: DragEndEvent) => {
       setActiveTask(null);
+      setActiveColumn(null);
 
       const { active, over } = event;
       if (!over) return;
 
       const activeId = active.id as string;
       const overId = over.id as string;
+
+      // Check if dragging a column
+      const activeColumnIndex = localColumns.findIndex((c) => c.id === activeId);
+      if (activeColumnIndex !== -1) {
+        const overColumnIndex = localColumns.findIndex((c) => c.id === overId);
+        if (overColumnIndex !== -1 && activeColumnIndex !== overColumnIndex) {
+          // Reorder columns
+          const newColumns = arrayMove(localColumns, activeColumnIndex, overColumnIndex);
+          setLocalColumns(newColumns);
+
+          // Save new order to database
+          try {
+            await reorderGlobalColumns(newColumns.map((c) => c.id));
+            onColumnUpdate?.();
+          } catch (error) {
+            console.error("Failed to reorder columns:", error);
+            // Revert on error
+            setLocalColumns(localColumns);
+          }
+        }
+        return;
+      }
 
       // Find the task in current state (which has updated column_id from handleDragOver)
       const task = tasks.find((t) => t.id === activeId);
@@ -213,13 +266,13 @@ export function TaskKanbanBoard({
         console.error("Failed to save task position:", error);
       }
     },
-    [tasks, columns]
+    [tasks, columns, localColumns, onColumnUpdate]
   );
 
   // Sort columns by position
   const sortedColumns = useMemo(
-    () => [...columns].sort((a, b) => a.position - b.position),
-    [columns]
+    () => [...localColumns].sort((a, b) => a.position - b.position),
+    [localColumns]
   );
 
   return (
@@ -230,22 +283,31 @@ export function TaskKanbanBoard({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 h-full snap-x snap-mandatory sm:snap-none scroll-smooth px-4 sm:px-0 -mx-4 sm:mx-0">
-        {sortedColumns.map((column) => (
-          <TaskColumn
-            key={column.id}
-            column={column}
-            tasks={tasksByColumn[column.id] || []}
-            taskLabels={taskLabels}
-            checklistProgress={checklistProgress}
-            onAddTask={onAddTask}
-            onTaskClick={onTaskClick}
-            onToggleTask={onToggleTask}
-            onEditTask={onEditTask}
-            onDeleteTask={onDeleteTask}
-          />
-        ))}
-      </div>
+      <SortableContext
+        items={sortedColumns.map((c) => c.id)}
+        strategy={horizontalListSortingStrategy}
+      >
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 h-full snap-x snap-mandatory sm:snap-none scroll-smooth px-4 sm:px-0 -mx-4 sm:mx-0">
+          {sortedColumns.map((column) => (
+            <SortableColumn
+              key={column.id}
+              column={column}
+              tasks={tasksByColumn[column.id] || []}
+              taskLabels={taskLabels}
+              checklistProgress={checklistProgress}
+              onAddTask={onAddTask}
+              onTaskClick={onTaskClick}
+              onToggleTask={onToggleTask}
+              onEditTask={onEditTask}
+              onDeleteTask={onDeleteTask}
+              onColumnUpdate={onColumnUpdate}
+            />
+          ))}
+
+          {/* Create Column Button */}
+          <CreateColumnButton onColumnCreated={() => onColumnUpdate?.()} />
+        </div>
+      </SortableContext>
 
       <DragOverlay>
         {activeTask && (
@@ -255,6 +317,16 @@ export function TaskKanbanBoard({
               labels={taskLabels[activeTask.id] || []}
               checklistProgress={checklistProgress[activeTask.id]}
               isDragging
+            />
+          </div>
+        )}
+        {activeColumn && (
+          <div className="opacity-80 rotate-1">
+            <SortableColumn
+              column={activeColumn}
+              tasks={tasksByColumn[activeColumn.id] || []}
+              taskLabels={taskLabels}
+              checklistProgress={checklistProgress}
             />
           </div>
         )}

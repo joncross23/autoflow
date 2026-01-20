@@ -550,6 +550,7 @@ export function TaskBoard({ initialIdeaFilter, initialTaskId }: TaskBoardProps) 
             onTaskClick={handleTaskClick}
             onToggleTask={handleToggleTask}
             onDeleteTask={handleTaskDelete}
+            onColumnUpdate={loadData}
           />
         )}
       </div>
