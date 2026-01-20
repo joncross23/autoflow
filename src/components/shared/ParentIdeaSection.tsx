@@ -53,9 +53,8 @@ export function ParentIdeaSection({
   async function loadIdeas() {
     setIsLoading(false);
     try {
-      // Only load active ideas (accepted or doing)
+      // Load all non-archived ideas (any status can be linked)
       const data = await getIdeas({
-        status: ["accepted", "doing"],
         archived: false,
       });
       setIdeas(data);
