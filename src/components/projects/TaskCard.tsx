@@ -146,7 +146,7 @@ function TaskCardComponent({
           ? "bg-bg-tertiary opacity-40"
           : "bg-bg-elevated"
         }
-        ${showHover ? "shadow-lg -translate-y-0.5 ring-1 ring-primary/50" : ""}
+        ${showHover ? "shadow-lg ring-1 ring-primary/50" : ""}
         ${isBeingDragged ? "rotate-[1.5deg] shadow-xl opacity-95" : ""}
         ${task.completed && !isGhost ? "opacity-60" : ""}
       `}
@@ -158,11 +158,10 @@ function TaskCardComponent({
           {labels.map((label) => (
             <span
               key={label.id}
-              className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded text-white min-w-[16px] ${
-                isGhost
-                  ? "bg-border text-foreground-muted"
-                  : getLabelColorClass(label.color)
-              }`}
+              className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded text-white min-w-[16px] ${isGhost
+                ? "bg-border text-foreground-muted"
+                : getLabelColorClass(label.color)
+                }`}
             >
               {label.name || "\u00A0"}
             </span>
@@ -181,7 +180,7 @@ function TaskCardComponent({
           onPointerDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           className={`
-            absolute left-0 top-[-3px]
+            absolute left-0 -top-2
             shrink-0 touch-target-sm
             transition-opacity duration-200
             text-foreground-muted hover:text-primary
@@ -252,17 +251,15 @@ function TaskCardComponent({
       {/* Progress bar - full width like mockup */}
       {progress !== undefined && progress > 0 && (
         <div className="mt-2">
-          <div className={`h-1 rounded-full overflow-hidden ${
-            isGhost ? "bg-border/50" : "bg-bg-tertiary/50"
-          }`}>
+          <div className={`h-1 rounded-full overflow-hidden ${isGhost ? "bg-border/50" : "bg-bg-tertiary/50"
+            }`}>
             <div
-              className={`h-full rounded-full transition-all ${
-                isGhost
-                  ? "bg-foreground-muted"
-                  : progress === 100
-                    ? "bg-success"
-                    : "bg-primary"
-              }`}
+              className={`h-full rounded-full transition-all ${isGhost
+                ? "bg-foreground-muted"
+                : progress === 100
+                  ? "bg-success"
+                  : "bg-primary"
+                }`}
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -283,11 +280,10 @@ function TaskCardComponent({
 
             {/* Checklist progress */}
             {checklistProgress && checklistProgress.total > 0 && (
-              <span className={`flex items-center gap-1 text-[11px] ${
-                checklistProgress.completed === checklistProgress.total
-                  ? "text-success"
-                  : "text-foreground-muted"
-              }`}>
+              <span className={`flex items-center gap-1 text-[11px] ${checklistProgress.completed === checklistProgress.total
+                ? "text-success"
+                : "text-foreground-muted"
+                }`}>
                 <CheckSquare className="h-3 w-3" />
                 {checklistProgress.completed}/{checklistProgress.total}
               </span>
@@ -295,9 +291,8 @@ function TaskCardComponent({
 
             {/* Due date */}
             {dueDate && (
-              <span className={`flex items-center gap-1 text-[11px] ${
-                isOverdue ? "text-error" : "text-foreground-muted"
-              }`}>
+              <span className={`flex items-center gap-1 text-[11px] ${isOverdue ? "text-error" : "text-foreground-muted"
+                }`}>
                 <Clock className="h-3 w-3" />
                 {formatDueDate(dueDate)}
               </span>
