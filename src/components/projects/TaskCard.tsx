@@ -181,8 +181,8 @@ function TaskCardComponent({
           onPointerDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           className={`
-            absolute left-[-4px] top-[2px]
-            p-1 shrink-0 touch-target-sm
+            absolute left-0 top-[-3px]
+            shrink-0 touch-target-sm
             transition-opacity duration-200
             text-foreground-muted hover:text-primary
             ${task.completed
@@ -204,13 +204,13 @@ function TaskCardComponent({
           onClick={() => onClick?.(task)}
           className={`
             flex-1 text-[13px] font-medium leading-[1.4] cursor-pointer
-            transition-transform duration-200 ease-out
+            will-change-transform
             ${!task.completed && 'group-hover:translate-x-7'}
             ${isGhost
-              ? "text-foreground-muted"
+              ? "text-foreground-muted transition-colors duration-200"
               : task.completed
-                ? "line-through text-foreground-muted"
-                : "text-foreground"
+                ? "line-through text-foreground-muted transition-colors duration-200"
+                : "text-foreground transition-transform duration-200 ease-out"
             }
           `}
         >
