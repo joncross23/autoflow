@@ -1323,4 +1323,9 @@
   .tap-transparent {
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* Disable browser touch gestures for draggable elements */
+  .touch-none {
+    touch-action: none;
+  }
 }

@@ -137,7 +137,7 @@ function TaskCardComponent({
       className={`
         group rounded-[10px] p-3 select-none
         transition-all duration-150 ease-out shadow-sm
-        tap-transparent no-select touch-target
+        tap-transparent no-select touch-target touch-none
         ${isBeingDragged || isDragging
           ? "cursor-grabbing"
           : "cursor-grab"
