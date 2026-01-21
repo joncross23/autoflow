@@ -220,7 +220,7 @@ function TaskColumnComponent({
       <div
         ref={setNodeRef}
         data-cards-container={column.id}
-        className="flex-1 flex flex-col gap-2 p-2 overflow-y-auto min-h-[100px]"
+        className="flex-1 flex flex-col gap-2 p-2 overflow-y-auto min-h-[200px]"
       >
         <SortableContext
           items={tasks.map((t) => t.id)}

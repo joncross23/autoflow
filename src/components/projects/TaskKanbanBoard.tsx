@@ -70,13 +70,13 @@ export function TaskKanbanBoard({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px movement before drag starts (mouse)
+        distance: 10  // 10px movement before drag starts (mouse, three-finger drag compatible)
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 200, // 200ms delay before drag starts (touch)
-        tolerance: 5, // 5px movement tolerance during delay
+        delay: 250,    // 250ms delay before drag starts (touch)
+        tolerance: 5,  // 5px movement tolerance during delay
       },
     }),
     useSensor(KeyboardSensor, {

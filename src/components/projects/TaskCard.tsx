@@ -3,7 +3,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  GripVertical,
   CheckCircle2,
   Circle,
   MoreHorizontal,
@@ -131,12 +130,18 @@ function TaskCardComponent({
       ref={setNodeRef}
       style={style}
       data-testid={`task-card-${task.id}`}
+      {...attributes}
+      {...listeners}
       onMouseEnter={() => !isBeingDragged && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
-        group rounded-[10px] p-3 cursor-pointer select-none
+        group rounded-[10px] p-3 select-none
         transition-all duration-150 ease-out shadow-sm
         tap-transparent no-select touch-target
+        ${isBeingDragged || isDragging
+          ? "cursor-grabbing"
+          : "cursor-grab"
+        }
         ${isGhost
           ? "bg-bg-tertiary opacity-40"
           : "bg-bg-elevated"
@@ -165,25 +170,26 @@ function TaskCardComponent({
         </div>
       )}
 
-      {/* Title row with checkbox and drag handle */}
-      <div className="flex items-start gap-2">
-        {/* Drag handle - always visible on touch, hover on desktop */}
-        <button
-          {...attributes}
-          {...listeners}
-          onClick={(e) => e.stopPropagation()}
-          className="mt-0.5 p-1 -ml-0.5 text-foreground-muted hover:text-foreground cursor-grab active:cursor-grabbing opacity-40 md:opacity-0 group-hover:opacity-100 transition-opacity touch-target-sm"
-        >
-          <GripVertical className="h-4 w-4" />
-        </button>
-
-        {/* Checkbox - touch-friendly size */}
+      {/* Title row with checkbox */}
+      <div className={`flex items-start gap-2 relative ${task.completed ? 'pl-7' : ''}`}>
+        {/* Checkbox - hover-to-reveal, always visible when checked */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             onToggle?.(task);
           }}
-          className="mt-0.5 p-1 -my-1 text-foreground-muted hover:text-primary transition-colors shrink-0 touch-target-sm"
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          className={`
+            absolute left-[-4px] top-[2px]
+            p-1 shrink-0 touch-target-sm
+            transition-opacity duration-200
+            text-foreground-muted hover:text-primary
+            ${task.completed
+              ? 'opacity-100'
+              : 'opacity-0 group-hover:opacity-100'
+            }
+          `}
         >
           {task.completed ? (
             <CheckCircle2 className="h-4 w-4 text-success" />
@@ -192,17 +198,22 @@ function TaskCardComponent({
           )}
         </button>
 
-        {/* Title - clickable to open modal */}
+        {/* Title - slides right on hover to reveal checkbox */}
         <p
           data-testid={`task-title-${task.id}`}
           onClick={() => onClick?.(task)}
-          className={`flex-1 text-[13px] font-medium leading-snug cursor-pointer ${
-          isGhost
-            ? "text-foreground-muted"
-            : task.completed
-              ? "line-through text-foreground-muted"
-              : "text-foreground"
-        }`}>
+          className={`
+            flex-1 text-[13px] font-medium leading-[1.4] cursor-pointer
+            transition-transform duration-200 ease-out
+            ${!task.completed && 'group-hover:translate-x-7'}
+            ${isGhost
+              ? "text-foreground-muted"
+              : task.completed
+                ? "line-through text-foreground-muted"
+                : "text-foreground"
+            }
+          `}
+        >
           {task.title}
         </p>
 
@@ -213,6 +224,8 @@ function TaskCardComponent({
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
             className="p-1 text-foreground-muted hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <MoreHorizontal className="h-4 w-4" />
@@ -258,7 +271,7 @@ function TaskCardComponent({
 
       {/* Footer - due date, indicators, assignees */}
       {hasFooterContent && (
-        <div className="flex items-center justify-between mt-2 ml-7">
+        <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-3">
             {/* Priority */}
             {task.priority && (
