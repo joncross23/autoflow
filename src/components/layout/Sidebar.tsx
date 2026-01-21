@@ -87,12 +87,7 @@ export function Sidebar() {
       )}
     >
       {/* Header */}
-      <div className="flex h-14 items-center justify-between border-b border-border px-4">
-        {!isCollapsed && (
-          <Link href="/" className="text-lg font-bold">
-            Auto<span className="text-primary">Flow</span>
-          </Link>
-        )}
+      <div className="flex h-14 items-center justify-end border-b border-border px-4">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="btn-ghost rounded-md p-2"
