@@ -17,12 +17,15 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks";
 import packageJson from "../../../package.json";
 
+// Hide features on production only (visible on local dev and staging)
+const isProduction = process.env.NEXT_PUBLIC_APP_URL?.includes('autoflow23.vercel.app');
+
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
   { href: "/dashboard/tasks", label: "Tasks", icon: Kanban },
   { href: "/dashboard/matrix", label: "Matrix", icon: Grid3X3 },
-  { href: "/dashboard/time-audit", label: "Time Audit", icon: Clock },
+  ...(!isProduction ? [{ href: "/dashboard/time-audit", label: "Time Audit", icon: Clock }] : []),
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
