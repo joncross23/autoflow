@@ -15,6 +15,7 @@ export function ideaFiltersToValues(filters: IdeaFilters): FilterValue[] {
   // Defensive checks for old saved views
   const statuses = filters.statuses ?? [];
   const horizons = filters.horizons ?? [];
+  const categories = filters.categories ?? [];
   const labelIds = filters.labelIds ?? [];
   const owners = filters.owners ?? [];
   const efforts = filters.efforts ?? [];
@@ -52,6 +53,19 @@ export function ideaFiltersToValues(filters: IdeaFilters): FilterValue[] {
             : `${horizonValues.length} horizons`,
       });
     }
+  }
+
+  // Category filter
+  if (categories.length > 0) {
+    values.push({
+      id: "category-filter",
+      type: "category",
+      value: categories,
+      displayLabel:
+        categories.length === 1
+          ? categories[0]
+          : `${categories.length} categories`,
+    });
   }
 
   // Label filter
@@ -126,6 +140,7 @@ export function valuesToIdeaFilters(
   const filters: IdeaFilters = {
     statuses: [],
     horizons: [],
+    categories: [],
     labelIds: [],
     owners: [],
     efforts: [],
@@ -148,6 +163,10 @@ export function valuesToIdeaFilters(
         filters.horizons = filterValues.map((v) =>
           v === "unplanned" ? null : v
         ) as IdeaFilters["horizons"];
+        break;
+
+      case "category":
+        filters.categories = filterValues as IdeaFilters["categories"];
         break;
 
       case "label":

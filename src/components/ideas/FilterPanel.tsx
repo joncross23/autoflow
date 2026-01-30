@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Filter, X, ChevronDown, Tag, User, Gauge } from "lucide-react";
+import { Filter, X, ChevronDown, Tag, User, Gauge, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
-import type { IdeaStatus, PlanningHorizon, EffortEstimate, DbLabel } from "@/types/database";
+import type { IdeaStatus, PlanningHorizon, EffortEstimate, IdeaCategory, DbLabel } from "@/types/database";
+import { IDEA_CATEGORY_OPTIONS } from "@/types/database";
 
 export interface IdeaFilters {
   statuses: IdeaStatus[];
   horizons: PlanningHorizon[];
+  categories: IdeaCategory[];
   labelIds: string[];
   owners: string[];
   efforts: EffortEstimate[];
@@ -53,6 +55,7 @@ const ALL_EFFORTS: { value: EffortEstimate; label: string }[] = [
 export const DEFAULT_FILTERS: IdeaFilters = {
   statuses: [],
   horizons: [],
+  categories: [],
   labelIds: [],
   owners: [],
   efforts: [],
@@ -83,9 +86,12 @@ export function FilterPanel({
   const owners = filters.owners ?? [];
   const efforts = filters.efforts ?? [];
 
+  const categories = filters.categories ?? [];
+
   const activeFilterCount =
     (filters.statuses?.length ?? 0) +
     (filters.horizons?.length ?? 0) +
+    categories.length +
     labelIds.length +
     owners.length +
     efforts.length +
@@ -120,6 +126,13 @@ export function FilterPanel({
     onFiltersChange({ ...filters, owners: newOwners });
   };
 
+  const toggleCategory = (category: IdeaCategory) => {
+    const newCategories = categories.includes(category)
+      ? categories.filter((c) => c !== category)
+      : [...categories, category];
+    onFiltersChange({ ...filters, categories: newCategories });
+  };
+
   const toggleEffort = (effort: EffortEstimate) => {
     const newEfforts = efforts.includes(effort)
       ? efforts.filter((e) => e !== effort)
@@ -131,6 +144,7 @@ export function FilterPanel({
     onFiltersChange({
       statuses: [],
       horizons: [],
+      categories: [],
       labelIds: [],
       owners: [],
       efforts: [],
@@ -251,6 +265,30 @@ export function FilterPanel({
                     <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", horizon.color)}>
                       {horizon.label}
                     </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Category filter */}
+            <div>
+              <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                <Lightbulb className="h-3.5 w-3.5" />
+                Category
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {IDEA_CATEGORY_OPTIONS.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => toggleCategory(cat.value)}
+                    className={cn(
+                      "px-2.5 py-1.5 rounded-md border text-sm transition-colors",
+                      categories.includes(cat.value)
+                        ? "border-primary bg-primary/10"
+                        : "border-border-subtle hover:bg-bg-hover"
+                    )}
+                  >
+                    {cat.label}
                   </button>
                 ))}
               </div>

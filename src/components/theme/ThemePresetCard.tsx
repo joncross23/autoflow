@@ -11,7 +11,7 @@ const ACCENT_COLORS: Record<string, string> = {
   blue: "#3B82F6",
   emerald: "#10B981",
   amber: "#F59E0B",
-  indigo: "#6366F1",
+  indigo: "#14B8A6",
   rose: "#F43F5E",
 };
 

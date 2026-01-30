@@ -75,7 +75,7 @@ export function DateRangeControl({
               className={cn(
                 "flex items-center justify-between w-full px-3 py-2 text-sm text-left rounded-md transition-colors",
                 isSelected
-                  ? "bg-purple-500/20 text-purple-400"
+                  ? "bg-teal-500/20 text-teal-400"
                   : "hover:bg-bg-hover"
               )}
             >

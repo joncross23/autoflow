@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Archive, Trash2, Check, X, ChevronDown, Loader2, Tag, Gauge, Clock } from "lucide-react";
+import { Archive, Trash2, Check, X, ChevronDown, Loader2, Tag, Gauge, Clock, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { useToast } from "@/hooks/useToast";
-import type { IdeaStatus, DbLabel, EffortEstimate, PlanningHorizon } from "@/types/database";
+import type { IdeaStatus, DbLabel, EffortEstimate, PlanningHorizon, IdeaCategory } from "@/types/database";
+import { IDEA_CATEGORY_OPTIONS } from "@/types/database";
 
 interface BulkActionBarProps {
   selectedCount: number;
@@ -15,6 +16,7 @@ interface BulkActionBarProps {
   onLabelChange?: (labelId: string, action: "add" | "remove") => Promise<void>;
   onEffortChange?: (effort: EffortEstimate) => Promise<void>;
   onHorizonChange?: (horizon: PlanningHorizon) => Promise<void>;
+  onCategoryChange?: (category: IdeaCategory | null) => Promise<void>;
   onClearSelection: () => void;
   availableLabels?: DbLabel[];
 }
@@ -52,6 +54,7 @@ export function BulkActionBar({
   onLabelChange,
   onEffortChange,
   onHorizonChange,
+  onCategoryChange,
   onClearSelection,
   availableLabels = [],
 }: BulkActionBarProps) {
@@ -60,6 +63,7 @@ export function BulkActionBar({
   const [showLabelMenu, setShowLabelMenu] = useState(false);
   const [showEffortMenu, setShowEffortMenu] = useState(false);
   const [showHorizonMenu, setShowHorizonMenu] = useState(false);
+  const [showCategoryMenu, setShowCategoryMenu] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -121,6 +125,17 @@ export function BulkActionBar({
     );
   };
 
+  const handleCategoryChange = async (category: IdeaCategory | null) => {
+    if (!onCategoryChange) return;
+    setShowCategoryMenu(false);
+    const label = category ? IDEA_CATEGORY_OPTIONS.find(c => c.value === category)?.label : "None";
+    await handleAction(
+      `category-${category}`,
+      () => onCategoryChange(category),
+      `Set category to ${label} for ${selectedCount} idea${selectedCount !== 1 ? "s" : ""}`
+    );
+  };
+
   const handleArchive = async () => {
     await handleAction(
       "archive",
@@ -148,6 +163,7 @@ export function BulkActionBar({
     setShowLabelMenu(false);
     setShowEffortMenu(false);
     setShowHorizonMenu(false);
+    setShowCategoryMenu(false);
   };
 
   if (selectedCount === 0) return null;
@@ -244,6 +260,51 @@ export function BulkActionBar({
                       </span>
                     </button>
                   ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Category dropdown */}
+        {onCategoryChange && (
+          <div className="relative">
+            <button
+              onClick={() => {
+                closeAllMenus();
+                setShowCategoryMenu(!showCategoryMenu);
+              }}
+              disabled={loading !== null}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-bg-hover transition-colors disabled:opacity-50"
+            >
+              {loading?.startsWith("category") ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Lightbulb className="h-4 w-4" />
+              )}
+              <span className="text-sm">Category</span>
+              <ChevronDown className="h-3 w-3" />
+            </button>
+
+            {showCategoryMenu && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowCategoryMenu(false)} />
+                <div className="absolute bottom-full left-0 mb-2 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                  {IDEA_CATEGORY_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => handleCategoryChange(opt.value)}
+                      className="w-full px-3 py-2 text-sm hover:bg-bg-hover text-left"
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => handleCategoryChange(null)}
+                    className="w-full px-3 py-2 text-sm hover:bg-bg-hover text-left text-muted-foreground"
+                  >
+                    None
+                  </button>
                 </div>
               </>
             )}

@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import {
   X,
   Trash2,
-  ArrowRight,
   ArrowLeft,
   Loader2,
   ChevronDown,
@@ -25,6 +23,7 @@ import {
   Activity,
   ListTodo,
   CheckSquare,
+  GripVertical,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useToast } from "@/hooks/useToast";
@@ -34,7 +33,7 @@ import { CollapsibleSection } from "@/components/shared/CollapsibleSection";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { AiEvaluationPanel } from "./AiEvaluationPanel";
 import { RiceScorePanel } from "./RiceScorePanel";
-import { StatusBadge, STATUS_CONFIG } from "./StatusBadge";
+import { StatusBadge } from "./StatusBadge";
 import { IdeaTasksSection } from "./IdeaTasksSection";
 import { CommentsSection } from "./CommentsSection";
 import { ActivityLog } from "./ActivityLog";
@@ -43,7 +42,8 @@ import { ChecklistsSection } from "@/components/shared/ChecklistsSection";
 import { AttachmentsSection } from "@/components/shared/AttachmentsSection";
 import { LinksSection } from "@/components/shared/LinksSection";
 import { updateIdea, updateIdeaStatus, deleteIdea, archiveIdea, duplicateIdea } from "@/lib/api/ideas";
-import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon } from "@/types/database";
+import type { DbIdea, IdeaStatus, EffortEstimate, PlanningHorizon, IdeaCategory } from "@/types/database";
+import { IDEA_CATEGORY_OPTIONS } from "@/types/database";
 
 interface IdeaDetailSliderProps {
   idea: DbIdea;
@@ -83,7 +83,6 @@ export function IdeaDetailSlider({
   onUpdate,
   onDelete,
 }: IdeaDetailSliderProps) {
-  const router = useRouter();
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { confirm, dialog } = useConfirmDialog();
@@ -97,9 +96,25 @@ export function IdeaDetailSlider({
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [showEffortMenu, setShowEffortMenu] = useState(false);
   const [showHorizonMenu, setShowHorizonMenu] = useState(false);
+  const [showCategoryMenu, setShowCategoryMenu] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [converting, setConverting] = useState(false);
+
+  // Property row ordering
+  const PROPERTY_IDS = ["status", "category", "effort", "horizon", "labels", "owner"] as const;
+  type PropertyId = typeof PROPERTY_IDS[number];
+
+  const DEFAULT_PROPERTY_ORDER: PropertyId[] = ["status", "category", "effort", "horizon", "labels", "owner"];
+
+  const [propertyOrder, setPropertyOrder] = useState<PropertyId[]>(() => {
+    if (typeof window === "undefined") return DEFAULT_PROPERTY_ORDER;
+    try {
+      const saved = localStorage.getItem("autoflow:ideas:property-order");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return DEFAULT_PROPERTY_ORDER;
+  });
+  const [dragProperty, setDragProperty] = useState<PropertyId | null>(null);
 
   // Track section data for auto-opening populated accordions
   const [tasksCount, setTasksCount] = useState(0);
@@ -137,6 +152,34 @@ export function IdeaDetailSlider({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleClose]);
+
+  // Persist property order
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("autoflow:ideas:property-order", JSON.stringify(propertyOrder));
+    }
+  }, [propertyOrder]);
+
+  const handlePropertyDragStart = (id: PropertyId) => {
+    setDragProperty(id);
+  };
+
+  const handlePropertyDragOver = (e: React.DragEvent, targetId: PropertyId) => {
+    e.preventDefault();
+    if (!dragProperty || dragProperty === targetId) return;
+
+    const newOrder = [...propertyOrder];
+    const dragIdx = newOrder.indexOf(dragProperty);
+    const targetIdx = newOrder.indexOf(targetId);
+
+    newOrder.splice(dragIdx, 1);
+    newOrder.splice(targetIdx, 0, dragProperty);
+    setPropertyOrder(newOrder);
+  };
+
+  const handlePropertyDragEnd = () => {
+    setDragProperty(null);
+  };
 
   const handleSaveTitle = async () => {
     if (title.trim() === idea.title) {
@@ -254,6 +297,21 @@ export function IdeaDetailSlider({
     }
   };
 
+  const handleCategoryChange = async (category: IdeaCategory | null) => {
+    setShowCategoryMenu(false);
+    setSaving(true);
+    try {
+      const updated = await updateIdea(idea.id, { category });
+      onUpdate(updated);
+      toast("Category updated", "success");
+    } catch (error) {
+      console.error("Failed to update category:", error);
+      toast("Failed to update category", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleDelete = async () => {
     setShowMoreMenu(false);
     const confirmed = await confirm({
@@ -311,32 +369,13 @@ export function IdeaDetailSlider({
     }
   };
 
-  const handleAcceptIdea = async () => {
-    if (idea.status === "accepted" || idea.status === "doing") {
-      router.push("/dashboard/tasks");
-      handleClose();
-      return;
-    }
-
-    setConverting(true);
-    try {
-      // Update status to "accepted" to move to task board
-      const updated = await updateIdeaStatus(idea.id, "accepted");
-      onUpdate(updated);
-      router.push("/dashboard/tasks");
-      handleClose();
-    } catch (error) {
-      console.error("Failed to accept idea:", error);
-      setConverting(false);
-    }
-  };
 
   return (
     <>
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-200",
+          "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-150",
           isVisible ? "opacity-100" : "opacity-0"
         )}
         onClick={handleClose}
@@ -350,9 +389,9 @@ export function IdeaDetailSlider({
         aria-labelledby="slider-title"
         data-testid="idea-detail-slider"
         className={cn(
-          "fixed top-0 right-0 bottom-0 z-50 bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
+          "fixed top-0 right-0 bottom-0 z-50 bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-150 ease-out flex flex-col",
           // Full-screen on mobile, half-width on desktop
-          "w-full md:w-3/4",
+          "w-full md:w-3/5",
           isVisible ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -399,45 +438,6 @@ export function IdeaDetailSlider({
                 >
                   {idea.title}
                 </h1>
-              )}
-            </div>
-
-            {/* Status dropdown */}
-            <div className="relative shrink-0">
-              <button
-                data-testid="idea-slider-status-button"
-                onClick={() => setShowStatusMenu(!showStatusMenu)}
-                className="flex items-center gap-1 hover:bg-bg-hover rounded-md p-1 transition-colors"
-                disabled={saving}
-              >
-                <StatusBadge status={idea.status} size="sm" />
-                <ChevronDown className="h-3 w-3 text-muted-foreground" />
-              </button>
-
-              {showStatusMenu && (
-                <>
-                  <div
-                    className="fixed inset-0 z-10"
-                    onClick={() => setShowStatusMenu(false)}
-                  />
-                  <div data-testid="idea-slider-status-menu" className="absolute right-0 top-full mt-1 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
-                    {STATUS_OPTIONS.map((opt) => (
-                      <button
-                        key={opt.value}
-                        data-testid={opt.value === "evaluating" ? "idea-slider-status-evaluating" : undefined}
-                        onClick={() => handleStatusChange(opt.value)}
-                        className={cn(
-                          "flex items-center gap-2 w-full px-3 py-2 text-sm text-left transition-colors",
-                          opt.value === idea.status
-                            ? "bg-primary/10 text-primary"
-                            : "hover:bg-bg-hover"
-                        )}
-                      >
-                        <StatusBadge status={opt.value} size="sm" />
-                      </button>
-                    ))}
-                  </div>
-                </>
               )}
             </div>
 
@@ -509,36 +509,217 @@ export function IdeaDetailSlider({
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 space-y-4 md:p-6 md:space-y-6">
-            {/* View Tasks / Accept Button - Prominent placement */}
-            {idea.status !== "parked" &&
-              idea.status !== "dropped" &&
-              idea.status !== "complete" && (
-                <button
-                  data-testid="idea-slider-accept-button"
-                  onClick={handleAcceptIdea}
-                  disabled={converting}
-                  className={cn(
-                    "btn w-full sm:w-auto",
-                    idea.status === "accepted" || idea.status === "doing"
-                      ? "btn-outline"
-                      : "btn-primary"
-                  )}
-                >
-                  {converting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <ArrowRight className="h-4 w-4 mr-2" />
-                      {idea.status === "accepted" || idea.status === "doing"
-                        ? "View Tasks"
-                        : "Accept & Start"}
-                    </>
-                  )}
-                </button>
-              )}
+            {/* Properties Grid - Notion-style */}
+            <div className="space-y-0.5">
+              {propertyOrder.map((propId) => {
+                const propConfig: Record<PropertyId, { icon: React.ReactNode; label: string; content: React.ReactNode }> = {
+                  status: {
+                    icon: <Activity className="h-3.5 w-3.5" />,
+                    label: "Status",
+                    content: (
+                      <div className="relative">
+                        <button
+                          data-testid="idea-slider-status-button"
+                          onClick={() => setShowStatusMenu(!showStatusMenu)}
+                          className="flex items-center gap-1 hover:opacity-80 transition-opacity"
+                          disabled={saving}
+                        >
+                          <StatusBadge status={idea.status} size="sm" />
+                        </button>
+                        {showStatusMenu && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setShowStatusMenu(false)} />
+                            <div data-testid="idea-slider-status-menu" className="absolute left-0 top-full mt-1 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                              {STATUS_OPTIONS.map((opt) => (
+                                <button
+                                  key={opt.value}
+                                  data-testid={opt.value === "evaluating" ? "idea-slider-status-evaluating" : undefined}
+                                  onClick={() => handleStatusChange(opt.value)}
+                                  className={cn(
+                                    "flex items-center gap-2 w-full px-3 py-2 text-sm text-left transition-colors",
+                                    opt.value === idea.status ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                                  )}
+                                >
+                                  <StatusBadge status={opt.value} size="sm" />
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ),
+                  },
+                  category: {
+                    icon: <Lightbulb className="h-3.5 w-3.5" />,
+                    label: "Category",
+                    content: (
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowCategoryMenu(!showCategoryMenu)}
+                          className="hover:opacity-80 transition-opacity"
+                        >
+                          {idea.category ? (
+                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-teal-500/15 text-teal-400">
+                              {IDEA_CATEGORY_OPTIONS.find((c) => c.value === idea.category)?.label}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground/60 italic">Empty</span>
+                          )}
+                        </button>
+                        {showCategoryMenu && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setShowCategoryMenu(false)} />
+                            <div className="absolute left-0 top-full mt-1 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                              {IDEA_CATEGORY_OPTIONS.map((opt) => (
+                                <button
+                                  key={opt.value}
+                                  onClick={() => handleCategoryChange(opt.value)}
+                                  className={cn(
+                                    "w-full px-3 py-2 text-sm text-left transition-colors",
+                                    opt.value === idea.category ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                                  )}
+                                >
+                                  {opt.label}
+                                </button>
+                              ))}
+                              <button
+                                onClick={() => handleCategoryChange(null)}
+                                className={cn(
+                                  "w-full px-3 py-2 text-sm text-left transition-colors",
+                                  !idea.category ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                                )}
+                              >
+                                None
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ),
+                  },
+                  effort: {
+                    icon: <Clock className="h-3.5 w-3.5" />,
+                    label: "Effort",
+                    content: (
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowEffortMenu(!showEffortMenu)}
+                          className="hover:opacity-80 transition-opacity"
+                        >
+                          {idea.effort_estimate ? (
+                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-amber-500/15 text-amber-400">
+                              {EFFORT_OPTIONS.find((e) => e.value === idea.effort_estimate)?.label}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground/60 italic">Empty</span>
+                          )}
+                        </button>
+                        {showEffortMenu && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setShowEffortMenu(false)} />
+                            <div className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                              {EFFORT_OPTIONS.map((opt) => (
+                                <button
+                                  key={opt.value}
+                                  onClick={() => handleEffortChange(opt.value)}
+                                  className={cn(
+                                    "w-full px-3 py-2 text-sm text-left transition-colors",
+                                    opt.value === idea.effort_estimate ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                                  )}
+                                >
+                                  {opt.label}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ),
+                  },
+                  horizon: {
+                    icon: <Tag className="h-3.5 w-3.5" />,
+                    label: "Horizon",
+                    content: (
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowHorizonMenu(!showHorizonMenu)}
+                          className="hover:opacity-80 transition-opacity"
+                        >
+                          {idea.horizon ? (
+                            <span className={cn(
+                              "inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md",
+                              HORIZON_OPTIONS.find((h) => h.value === idea.horizon)?.color
+                            )}>
+                              {HORIZON_OPTIONS.find((h) => h.value === idea.horizon)?.label}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground/60 italic">Empty</span>
+                          )}
+                        </button>
+                        {showHorizonMenu && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setShowHorizonMenu(false)} />
+                            <div className="absolute left-0 top-full mt-1 w-36 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
+                              {HORIZON_OPTIONS.map((opt) => (
+                                <button
+                                  key={opt.value ?? "null"}
+                                  onClick={() => handleHorizonChange(opt.value)}
+                                  className={cn(
+                                    "w-full px-3 py-2 text-sm text-left transition-colors flex items-center gap-2",
+                                    opt.value === idea.horizon ? "bg-primary/10 text-primary" : "hover:bg-bg-hover"
+                                  )}
+                                >
+                                  <span className={cn("text-xs font-medium", opt.color)}>{opt.label}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ),
+                  },
+                  labels: {
+                    icon: <Tag className="h-3.5 w-3.5" />,
+                    label: "Labels",
+                    content: <LabelsSection ideaId={idea.id} inline />,
+                  },
+                  owner: {
+                    icon: <User className="h-3.5 w-3.5" />,
+                    label: "Owner",
+                    content: (
+                      <span className={cn("text-sm", !idea.owner && "text-muted-foreground/60 italic")}>
+                        {idea.owner || "Empty"}
+                      </span>
+                    ),
+                  },
+                };
 
-            {/* Labels */}
-            <LabelsSection ideaId={idea.id} />
+                const config = propConfig[propId];
+                return (
+                  <div
+                    key={propId}
+                    draggable
+                    onDragStart={() => handlePropertyDragStart(propId)}
+                    onDragOver={(e) => handlePropertyDragOver(e, propId)}
+                    onDragEnd={handlePropertyDragEnd}
+                    className={cn(
+                      "grid grid-cols-[140px_1fr] items-center gap-2 py-1.5 px-2 -mx-2 rounded-md group transition-colors cursor-default",
+                      "hover:bg-bg-hover/50",
+                      dragProperty === propId && "opacity-50"
+                    )}
+                  >
+                    <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <GripVertical className="h-3 w-3 opacity-0 group-hover:opacity-40 cursor-grab shrink-0" />
+                      {config.icon}
+                      {config.label}
+                    </span>
+                    <div className="min-h-[24px] flex items-center">
+                      {config.content}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
             {/* Description */}
             <div>
@@ -764,127 +945,19 @@ export function IdeaDetailSlider({
               );
             })()}
 
-            {/* Compact Metadata Row */}
+            {/* Metadata Footer - Read-only */}
             <div className="pt-4 border-t border-border">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-                {/* Effort */}
-                <div className="relative flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <button
-                    onClick={() => setShowEffortMenu(!showEffortMenu)}
-                    className="hover:text-text transition-colors"
-                  >
-                    {idea.effort_estimate
-                      ? EFFORT_OPTIONS.find((e) => e.value === idea.effort_estimate)?.label.split(" ")[0]
-                      : "Effort?"}
-                  </button>
-                  {showEffortMenu && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-10"
-                        onClick={() => setShowEffortMenu(false)}
-                      />
-                      <div className="absolute left-0 bottom-full mb-1 w-48 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
-                        {EFFORT_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() => handleEffortChange(opt.value)}
-                            className={cn(
-                              "w-full px-3 py-2 text-sm text-left transition-colors",
-                              opt.value === idea.effort_estimate
-                                ? "bg-primary/10 text-primary"
-                                : "hover:bg-bg-hover"
-                            )}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <span className="text-border">·</span>
-
-                {/* Horizon */}
-                <div className="relative flex items-center gap-1">
-                  <Tag className="h-3 w-3" />
-                  <button
-                    onClick={() => setShowHorizonMenu(!showHorizonMenu)}
-                    className={cn(
-                      "hover:opacity-80 transition-opacity",
-                      idea.horizon
-                        ? HORIZON_OPTIONS.find((h) => h.value === idea.horizon)?.color
-                        : ""
-                    )}
-                  >
-                    {idea.horizon
-                      ? HORIZON_OPTIONS.find((h) => h.value === idea.horizon)?.label
-                      : "Horizon?"}
-                  </button>
-                  {showHorizonMenu && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-10"
-                        onClick={() => setShowHorizonMenu(false)}
-                      />
-                      <div className="absolute left-0 bottom-full mb-1 w-36 rounded-lg border border-border bg-bg-elevated shadow-lg z-20 py-1">
-                        {HORIZON_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value ?? "null"}
-                            onClick={() => handleHorizonChange(opt.value)}
-                            className={cn(
-                              "w-full px-3 py-2 text-sm text-left transition-colors flex items-center gap-2",
-                              opt.value === idea.horizon
-                                ? "bg-primary/10 text-primary"
-                                : "hover:bg-bg-hover"
-                            )}
-                          >
-                            <span className={cn("text-xs font-medium", opt.color)}>
-                              {opt.label}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <span className="text-border">·</span>
-
-                {/* Owner */}
-                <div className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
-                  <span>{idea.owner || "Unassigned"}</span>
-                </div>
-
-                <span className="text-border">·</span>
-
-                {/* Created */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
                   <span>Created {formatDate(idea.created_at)}</span>
                 </div>
-
-                <span className="text-border">·</span>
-
-                {/* Updated */}
                 <span>Updated {formatRelativeTime(idea.updated_at)}</span>
-
-                {/* Started */}
                 {idea.started_at && (
-                  <>
-                    <span className="text-border">·</span>
-                    <span>Started {formatDate(idea.started_at)}</span>
-                  </>
+                  <span>Started {formatDate(idea.started_at)}</span>
                 )}
-
-                {/* Completed */}
                 {idea.completed_at && (
-                  <>
-                    <span className="text-border">·</span>
-                    <span>Completed {formatDate(idea.completed_at)}</span>
-                  </>
+                  <span>Completed {formatDate(idea.completed_at)}</span>
                 )}
               </div>
             </div>

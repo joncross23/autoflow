@@ -227,7 +227,7 @@ export function getActivityColor(action: ActivityAction): string {
     case "unarchived":
       return "text-slate-500";
     case "commented":
-      return "text-purple-500";
+      return "text-teal-500";
     case "updated":
       return "text-yellow-500";
     default:

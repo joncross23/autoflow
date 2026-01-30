@@ -34,6 +34,16 @@ export const PLANNING_HORIZON_LABELS: Record<NonNullable<PlanningHorizon>, strin
   later: "Later",
 };
 
+// Idea category (Innovation, Optimisation, Cost Reduction, Compliance)
+export type IdeaCategory = "innovation" | "optimisation" | "cost_reduction" | "compliance";
+
+export const IDEA_CATEGORY_OPTIONS: { value: IdeaCategory; label: string }[] = [
+  { value: "innovation", label: "Innovation" },
+  { value: "optimisation", label: "Optimisation" },
+  { value: "cost_reduction", label: "Cost Reduction" },
+  { value: "compliance", label: "Compliance" },
+];
+
 // Content type categorisation (extensible - add new types here)
 export type ContentType = "idea" | "read" | "watch" | "listen" | "note";
 
@@ -108,6 +118,7 @@ export interface DbIdea {
   rice_effort: number | null;     // 1-10: Person-weeks equivalent
   rice_score: number | null;      // Calculated: (R×I×C%)/E
   content_type: ContentType | null;  // V1.x: idea/read/watch/listen/note
+  category: IdeaCategory | null;    // Innovation/Optimisation/Cost Reduction/Compliance
   // Source tracking (V1.8: guided capture)
   source_type: "manual" | "guided" | "import" | "voice";
   source_id: string | null;        // Reference to source (e.g., response ID)
@@ -140,6 +151,7 @@ export interface DbIdeaInsert {
   rice_effort?: number | null;
   rice_score?: number | null;
   content_type?: ContentType | null;
+  category?: IdeaCategory | null;
   // Source tracking (V1.8: guided capture)
   source_type?: "manual" | "guided" | "import" | "voice";
   source_id?: string | null;
@@ -170,6 +182,7 @@ export interface DbIdeaUpdate {
   rice_effort?: number | null;
   rice_score?: number | null;
   content_type?: ContentType | null;
+  category?: IdeaCategory | null;
   metadata?: IdeaMetadata | null;
   updated_at?: string;
 }
@@ -657,23 +670,24 @@ export interface ColumnConfig {
 
 export const DEFAULT_IDEA_COLUMNS: ColumnConfig[] = [
   { id: "title", visible: true, width: 300, order: 0 },
-  { id: "status", visible: true, width: 120, order: 1 },
-  { id: "horizon", visible: true, width: 100, order: 2 },  // V1.1: Now/Next/Later
-  { id: "rice_score", visible: true, width: 100, order: 3 },  // V1.1: RICE score
-  { id: "updated_at", visible: true, width: 140, order: 4 },
-  { id: "created_at", visible: false, width: 140, order: 5 },
-  { id: "description", visible: false, width: 200, order: 6 },
-  { id: "effort_estimate", visible: false, width: 100, order: 7 },
-  { id: "owner", visible: false, width: 100, order: 8 },
-  { id: "started_at", visible: false, width: 140, order: 9 },
-  { id: "completed_at", visible: false, width: 140, order: 10 },
-  { id: "themes", visible: false, width: 150, order: 11 },
+  { id: "category", visible: true, width: 130, order: 1 },
+  { id: "status", visible: true, width: 120, order: 2 },
+  { id: "horizon", visible: true, width: 100, order: 3 },  // V1.1: Now/Next/Later
+  { id: "rice_score", visible: true, width: 100, order: 4 },  // V1.1: RICE score
+  { id: "updated_at", visible: true, width: 140, order: 5 },
+  { id: "created_at", visible: false, width: 140, order: 6 },
+  { id: "description", visible: false, width: 200, order: 7 },
+  { id: "effort_estimate", visible: false, width: 100, order: 8 },
+  { id: "owner", visible: false, width: 100, order: 9 },
+  { id: "started_at", visible: false, width: 140, order: 10 },
+  { id: "completed_at", visible: false, width: 140, order: 11 },
+  { id: "themes", visible: false, width: 150, order: 12 },
   // RICE components (V1.1)
-  { id: "rice_reach", visible: false, width: 80, order: 12 },
-  { id: "rice_impact", visible: false, width: 80, order: 13 },
-  { id: "rice_confidence", visible: false, width: 100, order: 14 },
-  { id: "rice_effort", visible: false, width: 80, order: 15 },
-  { id: "content_type", visible: false, width: 100, order: 16 },
+  { id: "rice_reach", visible: false, width: 80, order: 13 },
+  { id: "rice_impact", visible: false, width: 80, order: 14 },
+  { id: "rice_confidence", visible: false, width: 100, order: 15 },
+  { id: "rice_effort", visible: false, width: 80, order: 16 },
+  { id: "content_type", visible: false, width: 100, order: 17 },
 ];
 
 // ============================================
@@ -693,6 +707,7 @@ export interface IdeaFilters {
   };
   themes?: string[];
   contentTypes?: ContentType[];
+  categories?: IdeaCategory[];
   search?: string;
 }
 
