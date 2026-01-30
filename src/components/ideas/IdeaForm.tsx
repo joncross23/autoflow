@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { createIdea, updateIdea } from "@/lib/api/ideas";
-import type { DbIdea, IdeaStatus, IdeaFrequency } from "@/types/database";
+import type { DbIdea, IdeaStatus, IdeaFrequency, IdeaCategory } from "@/types/database";
+import { IDEA_CATEGORY_OPTIONS } from "@/types/database";
 
 interface IdeaFormProps {
   idea?: DbIdea | null;
@@ -38,6 +39,7 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
   const [status, setStatus] = useState<IdeaStatus>(idea?.status || "new");
   const [frequency, setFrequency] = useState<IdeaFrequency | "">(idea?.frequency || "");
   const [timeSpent, setTimeSpent] = useState(idea?.time_spent?.toString() || "");
+  const [category, setCategory] = useState<IdeaCategory | "">(idea?.category || "");
   const [owner, setOwner] = useState(idea?.owner || "");
   const [painPoints, setPainPoints] = useState(idea?.pain_points || "");
   const [desiredOutcome, setDesiredOutcome] = useState(idea?.desired_outcome || "");
@@ -60,6 +62,7 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
         title: title.trim(),
         description: description.trim() || null,
         status,
+        category: category || null,
         frequency: frequency || null,
         time_spent: timeSpent ? parseInt(timeSpent, 10) : null,
         owner: owner.trim() || null,
@@ -160,6 +163,27 @@ export function IdeaForm({ idea, onClose, onSuccess }: IdeaFormProps) {
                 disabled={loading}
               >
                 {STATUS_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Category */}
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium mb-1.5">
+                Category
+              </label>
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as IdeaCategory | "")}
+                className="input w-full"
+                disabled={loading}
+              >
+                <option value="">Select category...</option>
+                {IDEA_CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>

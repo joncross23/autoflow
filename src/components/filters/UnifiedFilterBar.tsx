@@ -27,6 +27,7 @@ import {
   DATE_CREATED_OPTIONS,
   STARTED_DATE_OPTIONS,
   COMPLETED_DATE_OPTIONS,
+  CATEGORY_OPTIONS,
   QUADRANT_OPTIONS,
 } from "./types";
 import { getFiltersForContext, getFilterDefinition } from "./definitions";
@@ -200,6 +201,14 @@ export function UnifiedFilterBar({
           .filter(Boolean);
         displayLabel =
           names.length === 1 ? names[0]! : `${names.length} efforts`;
+        break;
+      }
+      case "category": {
+        const names = values
+          .map((v) => CATEGORY_OPTIONS.find((c) => c.value === v)?.label)
+          .filter(Boolean);
+        displayLabel =
+          names.length === 1 ? names[0]! : `${names.length} categories`;
         break;
       }
       case "linkedIdea": {
@@ -398,6 +407,19 @@ export function UnifiedFilterBar({
             onToggle={(v) => handleToggleOption("effort", v)}
             onApply={() => handleApplyFilter("effort")}
             title="Effort"
+          />
+        );
+
+      case "category":
+        return (
+          <MultiSelectControl
+            isOpen={true}
+            onClose={() => setActiveControl(null)}
+            options={CATEGORY_OPTIONS}
+            selected={currentValues}
+            onToggle={(v) => handleToggleOption("category", v)}
+            onApply={() => handleApplyFilter("category")}
+            title="Category"
           />
         );
 

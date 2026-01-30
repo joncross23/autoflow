@@ -12,6 +12,7 @@ import {
   bulkUpdateStatus,
   bulkUpdateEffort,
   bulkUpdateHorizon,
+  bulkUpdateCategory,
   bulkAddLabel,
   bulkRemoveLabel,
   getAllIdeasTaskProgress,
@@ -84,23 +85,24 @@ function isWithinDateRange(date: string | null, range: string): boolean {
 // Default columns for the ideas table
 const DEFAULT_COLUMNS: ColumnConfig[] = [
   { id: "title", visible: true, width: 300, order: 0 },
-  { id: "status", visible: true, width: 120, order: 1 },
-  { id: "labels", visible: true, width: 150, order: 2 },
-  { id: "horizon", visible: true, width: 100, order: 3 },
-  { id: "rice_score", visible: true, width: 80, order: 4 },
-  { id: "progress", visible: false, width: 120, order: 5 },
-  { id: "updated_at", visible: true, width: 140, order: 6 },
-  { id: "created_at", visible: false, width: 140, order: 7 },
-  { id: "description", visible: false, width: 200, order: 8 },
-  { id: "effort_estimate", visible: false, width: 100, order: 9 },
-  { id: "owner", visible: false, width: 100, order: 10 },
-  { id: "started_at", visible: false, width: 140, order: 11 },
-  { id: "completed_at", visible: false, width: 140, order: 12 },
-  { id: "themes", visible: false, width: 150, order: 13 },
-  { id: "rice_reach", visible: false, width: 80, order: 14 },
-  { id: "rice_impact", visible: false, width: 80, order: 15 },
-  { id: "rice_confidence", visible: false, width: 100, order: 16 },
-  { id: "rice_effort", visible: false, width: 80, order: 17 },
+  { id: "category", visible: true, width: 130, order: 1 },
+  { id: "status", visible: true, width: 120, order: 2 },
+  { id: "labels", visible: true, width: 150, order: 3 },
+  { id: "horizon", visible: true, width: 100, order: 4 },
+  { id: "rice_score", visible: true, width: 80, order: 5 },
+  { id: "progress", visible: false, width: 120, order: 6 },
+  { id: "updated_at", visible: true, width: 140, order: 7 },
+  { id: "created_at", visible: false, width: 140, order: 8 },
+  { id: "description", visible: false, width: 200, order: 9 },
+  { id: "effort_estimate", visible: false, width: 100, order: 10 },
+  { id: "owner", visible: false, width: 100, order: 11 },
+  { id: "started_at", visible: false, width: 140, order: 12 },
+  { id: "completed_at", visible: false, width: 140, order: 13 },
+  { id: "themes", visible: false, width: 150, order: 14 },
+  { id: "rice_reach", visible: false, width: 80, order: 15 },
+  { id: "rice_impact", visible: false, width: 80, order: 16 },
+  { id: "rice_confidence", visible: false, width: 100, order: 17 },
+  { id: "rice_effort", visible: false, width: 80, order: 18 },
 ];
 
 // Load column config from localStorage or use defaults
@@ -337,6 +339,13 @@ export default function IdeasPage() {
     loadIdeas();
   };
 
+  const handleBulkCategoryChange = async (category: DbIdea["category"]) => {
+    const ids = Array.from(selectedIds);
+    await bulkUpdateCategory(ids, category);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
   // Handle loading a saved view
   const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[]) => {
     setFilters(viewFilters);
@@ -389,6 +398,12 @@ export default function IdeasPage() {
     const filterOwners = filters.owners ?? [];
     if (filterOwners.length > 0) {
       if (!idea.owner || !filterOwners.includes(idea.owner)) return false;
+    }
+
+    // Category filter
+    const filterCategories = filters.categories ?? [];
+    if (filterCategories.length > 0) {
+      if (!idea.category || !filterCategories.includes(idea.category)) return false;
     }
 
     // Effort filter
@@ -558,6 +573,7 @@ export default function IdeasPage() {
         onLabelChange={handleBulkLabelChange}
         onEffortChange={handleBulkEffortChange}
         onHorizonChange={handleBulkHorizonChange}
+        onCategoryChange={handleBulkCategoryChange}
         onClearSelection={() => setSelectedIds(new Set())}
         availableLabels={availableLabels}
       />

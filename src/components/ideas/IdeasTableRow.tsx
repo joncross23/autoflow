@@ -4,8 +4,16 @@ import { memo } from "react";
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { ScoreBadge } from "./ScoreBadge";
-import type { DbIdea, DbLabel, ColumnConfig, EffortEstimate, PlanningHorizon } from "@/types/database";
+import type { DbIdea, DbLabel, ColumnConfig, EffortEstimate, PlanningHorizon, IdeaCategory } from "@/types/database";
+import { IDEA_CATEGORY_OPTIONS } from "@/types/database";
 import type { IdeaTaskProgress } from "@/lib/api/ideas";
+
+const CATEGORY_COLORS: Record<IdeaCategory, string> = {
+  innovation: "bg-teal-500/10 text-teal-500 border-teal-500/20",
+  optimisation: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  cost_reduction: "bg-green-500/10 text-green-500 border-green-500/20",
+  compliance: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+};
 
 const HORIZON_COLORS: Record<NonNullable<PlanningHorizon>, string> = {
   now: "bg-green-500/10 text-green-500 border-green-500/20",
@@ -70,6 +78,23 @@ function IdeasTableRowComponent({
         return (
           <td key={columnId} className={cellClass} style={style}>
             <StatusBadge status={idea.status} size="sm" />
+          </td>
+        );
+      case "category":
+        return (
+          <td key={columnId} className={cellClass} style={style}>
+            {idea.category ? (
+              <span
+                className={cn(
+                  "px-2 py-0.5 rounded-full text-xs font-medium border",
+                  CATEGORY_COLORS[idea.category]
+                )}
+              >
+                {IDEA_CATEGORY_OPTIONS.find((o) => o.value === idea.category)?.label ?? idea.category}
+              </span>
+            ) : (
+              <span className="text-muted-foreground text-sm">-</span>
+            )}
           </td>
         );
       case "horizon":

@@ -450,6 +450,22 @@ export async function bulkUpdateHorizon(ids: string[], horizon: DbIdea["horizon"
 }
 
 /**
+ * Update category for multiple ideas
+ */
+export async function bulkUpdateCategory(ids: string[], category: DbIdea["category"]): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("ideas")
+    .update({ category: category, updated_at: new Date().toISOString() })
+    .in("id", ids);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
  * Add a label to multiple ideas
  */
 export async function bulkAddLabel(ideaIds: string[], labelId: string): Promise<void> {

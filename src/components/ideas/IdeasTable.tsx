@@ -42,6 +42,7 @@ interface IdeasTableProps {
 
 const COLUMN_LABELS: Record<string, string> = {
   title: "Title",
+  category: "Category",
   status: "Status",
   labels: "Labels",
   score: "Score",

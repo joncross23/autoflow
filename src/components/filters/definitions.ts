@@ -54,7 +54,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     label: "Date Created",
     icon: Calendar,
     control: "dateRange",
-    chipColor: "purple",
+    chipColor: "teal",
     context: "both",
   },
   {
@@ -80,7 +80,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     label: "Due Date",
     icon: Calendar,
     control: "dateRange",
-    chipColor: "purple",
+    chipColor: "teal",
     context: "tasks",
   },
   {
@@ -101,6 +101,14 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
   },
 
   // Ideas-specific filters
+  {
+    type: "category",
+    label: "Category",
+    icon: Lightbulb,
+    control: "multiSelect",
+    chipColor: "teal",
+    context: "ideas",
+  },
   {
     type: "status",
     label: "Status",
