@@ -7,12 +7,12 @@ function transformEvaluation(data: Record<string, unknown>): DbAiEvaluation {
     recommendations: Array.isArray(data.recommendations)
       ? data.recommendations
       : typeof data.recommendations === 'string'
-        ? JSON.parse(data.recommendations)
+        ? (() => { try { return JSON.parse(data.recommendations as string); } catch { return []; } })()
         : [],
     risks: Array.isArray(data.risks)
       ? data.risks
       : typeof data.risks === 'string'
-        ? JSON.parse(data.risks)
+        ? (() => { try { return JSON.parse(data.risks as string); } catch { return []; } })()
         : [],
   } as DbAiEvaluation;
 }

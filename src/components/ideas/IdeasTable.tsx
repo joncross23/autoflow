@@ -349,9 +349,9 @@ export function IdeasTable({
   }
 
   return (
-    <div className="relative">
+    <div className="relative pt-10">
       {/* Column settings dropdown */}
-      <div className="absolute right-0 -top-10 z-10">
+      <div className="absolute right-0 top-0 z-10">
         <button
           onClick={() => setShowColumnSettings(!showColumnSettings)}
           className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-bg-hover rounded-md transition-colors"

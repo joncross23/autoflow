@@ -19,6 +19,7 @@ import {
   Paperclip,
   Link2,
   Brain,
+  Sparkles,
   Lightbulb,
   MessageSquare,
   Activity,
@@ -90,6 +91,7 @@ export function IdeaDetailSlider({
   const [isVisible, setIsVisible] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
+  const [improvingDescription, setImprovingDescription] = useState(false);
   const [title, setTitle] = useState(idea.title);
   const [description, setDescription] = useState(idea.description || "");
   const [showStatusMenu, setShowStatusMenu] = useState(false);
@@ -177,6 +179,33 @@ export function IdeaDetailSlider({
       toast("Failed to save description", "error");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleImproveDescription = async () => {
+    if (!description.trim()) {
+      toast("Write some notes first, then click to improve", "error");
+      return;
+    }
+    setImprovingDescription(true);
+    try {
+      const response = await fetch(`/api/ideas/${idea.id}/improve-description`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: description, title: idea.title }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to improve description");
+      }
+      const { description: improved } = await response.json();
+      setDescription(improved);
+      toast("Description improved by AI — review and save", "success");
+    } catch (err) {
+      console.error("Failed to improve description:", err);
+      toast(err instanceof Error ? err.message : "Failed to improve description", "error");
+    } finally {
+      setImprovingDescription(false);
     }
   };
 
@@ -323,7 +352,7 @@ export function IdeaDetailSlider({
         className={cn(
           "fixed top-0 right-0 bottom-0 z-50 bg-bg-elevated border-l border-border shadow-2xl transition-transform duration-200 ease-out flex flex-col",
           // Full-screen on mobile, half-width on desktop
-          "w-full md:w-1/2 md:min-w-[500px] md:max-w-[1000px]",
+          "w-full md:w-3/4",
           isVisible ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -517,20 +546,45 @@ export function IdeaDetailSlider({
                 Description
               </h3>
               {editingDescription ? (
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  onBlur={handleSaveDescription}
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") {
-                      setDescription(idea.description || "");
-                      setEditingDescription(false);
-                    }
-                  }}
-                  className="input w-full min-h-[120px] resize-y"
-                  placeholder="Add a description..."
-                  autoFocus
-                />
+                <div>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    onBlur={(e) => {
+                      // Don't save if user clicked the AI button
+                      const related = e.relatedTarget as HTMLElement | null;
+                      if (related?.dataset?.aiButton) return;
+                      handleSaveDescription();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") {
+                        setDescription(idea.description || "");
+                        setEditingDescription(false);
+                      }
+                    }}
+                    className="input w-full min-h-[120px] resize-y"
+                    placeholder="Write rough notes here..."
+                    autoFocus
+                  />
+                  <button
+                    data-ai-button="true"
+                    onClick={handleImproveDescription}
+                    disabled={improvingDescription || !description.trim()}
+                    className="btn btn-ghost text-xs px-2 py-1 mt-2 flex items-center gap-1.5 text-primary hover:text-primary"
+                  >
+                    {improvingDescription ? (
+                      <>
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        Improving...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-3 w-3" />
+                        Improve with AI
+                      </>
+                    )}
+                  </button>
+                </div>
               ) : (
                 <div
                   onClick={() => setEditingDescription(true)}
@@ -547,6 +601,29 @@ export function IdeaDetailSlider({
                 </div>
               )}
             </div>
+
+            {/* AI Evaluation - Collapsible, auto-open when evaluation exists */}
+            <CollapsibleSection
+              title="AI Evaluation"
+              icon={<Brain className="h-4 w-4" />}
+              defaultOpen={false}
+              autoOpen={hasEvaluation}
+            >
+              <AiEvaluationPanel
+                ideaId={idea.id}
+                hideHeader
+                onHasEvaluationChange={setHasEvaluation}
+              />
+            </CollapsibleSection>
+
+            {/* RICE Score - Collapsible, auto-open when RICE data exists */}
+            <CollapsibleSection
+              title="RICE Score"
+              defaultOpen={false}
+              autoOpen={idea.rice_reach !== null || idea.rice_impact !== null}
+            >
+              <RiceScorePanel idea={idea} onUpdate={onUpdate} />
+            </CollapsibleSection>
 
             {/* Pain Points */}
             {idea.pain_points && (
@@ -627,20 +704,6 @@ export function IdeaDetailSlider({
               />
             </CollapsibleSection>
 
-            {/* AI Evaluation - Collapsible, auto-open when evaluation exists */}
-            <CollapsibleSection
-              title="AI Evaluation"
-              icon={<Brain className="h-4 w-4" />}
-              defaultOpen={false}
-              autoOpen={hasEvaluation}
-            >
-              <AiEvaluationPanel
-                ideaId={idea.id}
-                hideHeader
-                onHasEvaluationChange={setHasEvaluation}
-              />
-            </CollapsibleSection>
-
             {/* Guided Capture Q&A - Show if metadata exists */}
             {idea.metadata?.guided_capture && (() => {
               const capture = idea.metadata.guided_capture as {
@@ -700,15 +763,6 @@ export function IdeaDetailSlider({
                 </CollapsibleSection>
               );
             })()}
-
-            {/* RICE Score - Collapsible, auto-open when RICE data exists */}
-            <CollapsibleSection
-              title="RICE Score"
-              defaultOpen={false}
-              autoOpen={idea.rice_reach !== null || idea.rice_impact !== null}
-            >
-              <RiceScorePanel idea={idea} onUpdate={onUpdate} />
-            </CollapsibleSection>
 
             {/* Compact Metadata Row */}
             <div className="pt-4 border-t border-border">

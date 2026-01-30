@@ -18,6 +18,7 @@ import {
   Gauge,
   Archive,
   ListTodo,
+  Grid2x2,
 } from "lucide-react";
 import type { FilterDefinition, FilterContext } from "./types";
 
@@ -38,7 +39,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     icon: AlertCircle,
     control: "multiSelect",
     chipColor: "red",
-    context: "both",
+    context: "tasks",
   },
   {
     type: "hasAttachment",
@@ -46,7 +47,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     icon: Paperclip,
     control: "boolean",
     chipColor: "blue",
-    context: "both",
+    context: "tasks",
   },
   {
     type: "createdAt",
@@ -153,6 +154,14 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     label: "Completed Date",
     icon: CheckCircle2,
     control: "dateRange",
+    chipColor: "green",
+    context: "ideas",
+  },
+  {
+    type: "quadrant",
+    label: "Matrix Quadrant",
+    icon: Grid2x2,
+    control: "multiSelect",
     chipColor: "green",
     context: "ideas",
   },

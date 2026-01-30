@@ -184,7 +184,7 @@ export function SavedViewsDropdown({
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute top-full left-0 mt-2 w-72 rounded-lg border border-border bg-bg-elevated shadow-lg z-50">
+          <div className="absolute top-full right-0 mt-2 w-72 rounded-lg border border-border bg-bg-elevated shadow-lg z-50">
             {/* Header */}
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
               <span className="text-sm font-medium">Saved Views</span>
