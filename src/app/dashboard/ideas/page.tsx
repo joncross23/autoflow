@@ -35,6 +35,7 @@ import {
   ideaFiltersToValues,
   valuesToIdeaFilters,
   type FilterValue,
+  QUADRANT_OPTIONS,
 } from "@/components/filters";
 import type { DbIdea, DbSavedView, DbLabel, IdeaStatus, ColumnConfig, SavedViewFilters, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 
@@ -143,6 +144,7 @@ export default function IdeasPage() {
   const [columns, setColumns] = useState<ColumnConfig[]>(loadColumnConfig);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<IdeaFilters>(DEFAULT_FILTERS);
+  const [rawFilterValues, setRawFilterValues] = useState<FilterValue[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<SortField>("updated_at");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
@@ -158,6 +160,27 @@ export default function IdeasPage() {
       localStorage.setItem("autoflow:ideas:columns", JSON.stringify(columns));
     }
   }, [columns]);
+
+  // Seed quadrant filter from URL param (e.g. from matrix view navigation)
+  useEffect(() => {
+    const quadrantParam = searchParams.get("quadrant");
+    if (quadrantParam && QUADRANT_OPTIONS.some((q) => q.value === quadrantParam)) {
+      const option = QUADRANT_OPTIONS.find((q) => q.value === quadrantParam);
+      const quadrantFilter: FilterValue = {
+        id: `quadrant-${Date.now()}`,
+        type: "quadrant",
+        value: [quadrantParam],
+        displayLabel: option?.label || "Quadrant",
+      };
+      setRawFilterValues((prev) => [...prev.filter((f) => f.type !== "quadrant"), quadrantFilter]);
+      // Clear the URL param to avoid re-seeding
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("quadrant");
+      const newUrl = params.toString() ? `?${params.toString()}` : "/dashboard/ideas";
+      router.replace(newUrl, { scroll: false });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadIdeas = useCallback(async () => {
     try {
@@ -317,6 +340,7 @@ export default function IdeasPage() {
   // Handle loading a saved view
   const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[]) => {
     setFilters(viewFilters);
+    setRawFilterValues(ideaFiltersToValues(viewFilters));
     if (viewColumns) {
       setColumns(viewColumns);
     }
@@ -333,11 +357,10 @@ export default function IdeasPage() {
     new Set(ideas.map((idea) => idea.owner).filter(Boolean))
   ) as string[];
 
-  // Convert IdeaFilters to FilterValue[] for UnifiedFilterBar
-  const filterValues = ideaFiltersToValues(filters);
-
   // Handle filter changes from UnifiedFilterBar
+  // Store raw FilterValue[] to avoid lossy round-trip conversion
   const handleFilterValuesChange = (newValues: FilterValue[]) => {
+    setRawFilterValues(newValues);
     setFilters(valuesToIdeaFilters(newValues, searchQuery));
   };
 
@@ -382,24 +405,40 @@ export default function IdeasPage() {
 
     // Date filters - use filterValues since they contain the raw filter data
     // CreatedAt filter
-    const createdAtFilter = filterValues.find((f) => f.type === "createdAt");
+    const createdAtFilter = rawFilterValues.find((f) => f.type === "createdAt");
     if (createdAtFilter) {
       const range = Array.isArray(createdAtFilter.value) ? createdAtFilter.value[0] : createdAtFilter.value;
       if (!isWithinDateRange(idea.created_at, range as string)) return false;
     }
 
     // StartedAt filter
-    const startedAtFilter = filterValues.find((f) => f.type === "startedAt");
+    const startedAtFilter = rawFilterValues.find((f) => f.type === "startedAt");
     if (startedAtFilter) {
       const range = Array.isArray(startedAtFilter.value) ? startedAtFilter.value[0] : startedAtFilter.value;
       if (!isWithinDateRange(idea.started_at, range as string)) return false;
     }
 
     // CompletedAt filter
-    const completedAtFilter = filterValues.find((f) => f.type === "completedAt");
+    const completedAtFilter = rawFilterValues.find((f) => f.type === "completedAt");
     if (completedAtFilter) {
       const range = Array.isArray(completedAtFilter.value) ? completedAtFilter.value[0] : completedAtFilter.value;
       if (!isWithinDateRange(idea.completed_at, range as string)) return false;
+    }
+
+    // Quadrant filter (from filter bar or matrix view navigation)
+    const quadrantFilter = rawFilterValues.find((f) => f.type === "quadrant");
+    if (quadrantFilter) {
+      const selectedQuadrants = Array.isArray(quadrantFilter.value) ? quadrantFilter.value : [quadrantFilter.value];
+      const effort = idea.rice_effort;
+      const impact = idea.rice_impact;
+      const impactMapping: Record<number, number> = { 0.25: 10, 0.5: 25, 1: 50, 2: 75, 3: 90 };
+      const y = impact ? (impactMapping[impact] ?? 50) : 50;
+      const x = effort ? 5 + (effort - 1) * 10 : 50;
+      const ideaQuadrant =
+        y >= 50 && x < 50 ? "topLeft" :
+        y >= 50 && x >= 50 ? "topRight" :
+        y < 50 && x < 50 ? "bottomLeft" : "bottomRight";
+      if (!selectedQuadrants.includes(ideaQuadrant)) return false;
     }
 
     return true;
@@ -463,7 +502,7 @@ export default function IdeasPage() {
       <div className="mb-4">
         <UnifiedFilterBar
           context="ideas"
-          filters={filterValues}
+          filters={rawFilterValues}
           onFiltersChange={handleFilterValuesChange}
           labels={availableLabels}
           owners={availableOwners}

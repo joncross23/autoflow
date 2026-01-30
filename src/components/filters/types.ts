@@ -30,7 +30,8 @@ export type FilterType =
   | "effort"
   | "archived"
   | "startedAt"
-  | "completedAt";
+  | "completedAt"
+  | "quadrant";
 
 /** Context determines which filters are available */
 export type FilterContext = "tasks" | "ideas";
@@ -167,5 +168,12 @@ export const COMPLETED_DATE_OPTIONS: FilterOption[] = [
   { value: "this-week", label: "Completed This Week" },
   { value: "this-month", label: "Completed This Month" },
   { value: "not-completed", label: "Not Completed" },
+];
+
+export const QUADRANT_OPTIONS: FilterOption[] = [
+  { value: "topLeft", label: "Quick Wins", color: "#22c55e" },
+  { value: "topRight", label: "Major Projects", color: "#3b82f6" },
+  { value: "bottomLeft", label: "Fill-ins", color: "#eab308" },
+  { value: "bottomRight", label: "Time Sinks", color: "#ef4444" },
 ];
 

@@ -63,7 +63,7 @@ export const RICE_IMPACT_LABELS: Record<RiceImpact, string> = {
 
 // Guided Capture metadata structure
 export interface GuidedCaptureMetadata {
-  version: "1.0";
+  version: "1.0" | "2.0";
   captured_at: string;
   started_at?: string;
   time_to_complete_seconds?: number;
