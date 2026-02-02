@@ -691,6 +691,15 @@ export const DEFAULT_IDEA_COLUMNS: ColumnConfig[] = [
 ];
 
 // ============================================
+// SORT CONFIG TYPES (V1.8)
+// ============================================
+
+export interface SortConfig {
+  field: string;    // column id or "custom" for manual drag-and-drop order
+  direction: "asc" | "desc";
+}
+
+// ============================================
 // SAVED VIEWS TYPES (V1.1)
 // ============================================
 

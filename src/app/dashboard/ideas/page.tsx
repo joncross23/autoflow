@@ -16,6 +16,7 @@ import {
   bulkAddLabel,
   bulkRemoveLabel,
   getAllIdeasTaskProgress,
+  reorderIdeas,
   type IdeaTaskProgress,
 } from "@/lib/api/ideas";
 import { getAllIdeaLabels, getLabels } from "@/lib/api/labels";
@@ -38,7 +39,7 @@ import {
   type FilterValue,
   QUADRANT_OPTIONS,
 } from "@/components/filters";
-import type { DbIdea, DbSavedView, DbLabel, IdeaStatus, ColumnConfig, SavedViewFilters, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+import type { DbIdea, DbSavedView, DbLabel, IdeaStatus, ColumnConfig, SavedViewFilters, SortConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 
 // Helper function for date filtering
 function isWithinDateRange(date: string | null, range: string): boolean {
@@ -192,8 +193,8 @@ export default function IdeasPage() {
       // Build filter params
       const filterParams: Parameters<typeof getIdeas>[0] = {
         archived: filters.archived,
-        sortBy: sortField === "score" ? "updated_at" : sortField,
-        sortOrder,
+        sortBy: sortField === "score" ? "updated_at" : sortField === "custom" ? "position" : sortField,
+        sortOrder: sortField === "custom" ? "asc" : sortOrder,
       };
 
       if (filters.statuses.length > 0) {
@@ -288,6 +289,26 @@ export default function IdeasPage() {
     setSortOrder(order);
   };
 
+  // Handle drag-and-drop reorder
+  const handleReorder = async (reorderedIdeas: DbIdea[]) => {
+    // Optimistic update — set new order immediately
+    setIdeas(reorderedIdeas);
+
+    // Build position updates
+    const items = reorderedIdeas.map((idea, index) => ({
+      id: idea.id,
+      position: index,
+    }));
+
+    try {
+      await reorderIdeas(items);
+    } catch (err) {
+      console.error("Failed to save order:", err);
+      // Reload to restore server state on error
+      loadIdeas();
+    }
+  };
+
   // Bulk operations
   const handleBulkArchive = async () => {
     const ids = Array.from(selectedIds);
@@ -347,11 +368,15 @@ export default function IdeasPage() {
   };
 
   // Handle loading a saved view
-  const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[]) => {
+  const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[], viewSort?: SortConfig) => {
     setFilters(viewFilters);
     setRawFilterValues(ideaFiltersToValues(viewFilters));
     if (viewColumns) {
       setColumns(viewColumns);
+    }
+    if (viewSort) {
+      setSortField(viewSort.field as SortField);
+      setSortOrder(viewSort.direction);
     }
   };
 
@@ -508,6 +533,7 @@ export default function IdeasPage() {
         <SavedViewsDropdown
           currentFilters={filters}
           currentColumns={columns}
+          currentSort={{ field: sortField, direction: sortOrder }}
           onLoadView={handleLoadView}
           onShareView={handleShareView}
         />
@@ -558,6 +584,7 @@ export default function IdeasPage() {
           sortField={sortField}
           sortOrder={sortOrder}
           onSort={handleSort}
+          onReorder={handleReorder}
           ideaLabels={ideaLabels}
           ideaProgress={ideaProgress}
           loading={loading}
