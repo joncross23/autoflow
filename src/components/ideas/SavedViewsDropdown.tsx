@@ -23,19 +23,22 @@ import {
   deleteSavedView,
   setDefaultView,
 } from "@/lib/api/views";
-import type { DbSavedView, ColumnConfig, SavedViewFilters } from "@/types/database";
+import type { DbSavedView, ColumnConfig, SavedViewFilters, SortConfig } from "@/types/database";
 import type { IdeaFilters } from "./FilterPanel";
+import type { SortField, SortOrder } from "./IdeasTable";
 
 interface SavedViewsDropdownProps {
   currentFilters: IdeaFilters;
   currentColumns?: ColumnConfig[];
-  onLoadView: (filters: IdeaFilters, columns?: ColumnConfig[]) => void;
+  currentSort?: SortConfig;
+  onLoadView: (filters: IdeaFilters, columns?: ColumnConfig[], sort?: SortConfig) => void;
   onShareView?: (view: DbSavedView | null) => void;
 }
 
 export function SavedViewsDropdown({
   currentFilters,
   currentColumns,
+  currentSort,
   onLoadView,
   onShareView,
 }: SavedViewsDropdownProps) {
@@ -75,8 +78,11 @@ export function SavedViewsDropdown({
 
     setSaving(true);
     try {
-      // Cast filters to SavedViewFilters for storage
-      const filtersToSave = currentFilters as unknown as SavedViewFilters;
+      // Cast filters to SavedViewFilters for storage, including sort config
+      const filtersToSave: SavedViewFilters = {
+        ...(currentFilters as unknown as SavedViewFilters),
+        ...(currentSort ? { _sort: currentSort } : {}),
+      };
 
       if (editingView) {
         // Update existing view
@@ -111,9 +117,15 @@ export function SavedViewsDropdown({
 
   const handleLoadView = (view: DbSavedView) => {
     setActiveViewId(view.id);
-    // Cast saved filters back to IdeaFilters
-    const loadedFilters = view.filters as unknown as IdeaFilters;
-    onLoadView(loadedFilters, view.column_config || undefined);
+    // Extract sort config from saved filters (stored under _sort key)
+    const savedFilters = view.filters as Record<string, unknown>;
+    const savedSort = savedFilters._sort as SortConfig | undefined;
+
+    // Cast saved filters back to IdeaFilters (excluding _sort)
+    const { _sort, ...filterData } = savedFilters;
+    const loadedFilters = filterData as unknown as IdeaFilters;
+
+    onLoadView(loadedFilters, view.column_config || undefined, savedSort);
     setIsOpen(false);
   };
 

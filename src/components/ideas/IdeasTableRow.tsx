@@ -30,6 +30,8 @@ interface IdeasTableRowProps {
   aiScore?: number | null;
   labels?: DbLabel[];
   progress?: IdeaTaskProgress;
+  /** When set, renders only the specified cell's <td> (no <tr> wrapper, no checkbox). Used by SortableRow. */
+  renderCellOnly?: string;
 }
 
 const EFFORT_LABELS: Record<EffortEstimate, string> = {
@@ -49,6 +51,7 @@ function IdeasTableRowComponent({
   aiScore,
   labels = [],
   progress,
+  renderCellOnly,
 }: IdeasTableRowProps) {
   const visibleColumns = columns
     .filter((col) => col.visible)
@@ -292,6 +295,13 @@ function IdeasTableRowComponent({
         );
     }
   };
+
+  // When renderCellOnly is set, just return the single cell <td> (used by SortableRow)
+  if (renderCellOnly) {
+    const col = visibleColumns.find((c) => c.id === renderCellOnly);
+    if (!col) return null;
+    return renderCell(col.id, col.width);
+  }
 
   return (
     <tr
