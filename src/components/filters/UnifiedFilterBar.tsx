@@ -27,6 +27,8 @@ import {
   DATE_CREATED_OPTIONS,
   STARTED_DATE_OPTIONS,
   COMPLETED_DATE_OPTIONS,
+  CATEGORY_OPTIONS,
+  QUADRANT_OPTIONS,
 } from "./types";
 import { getFiltersForContext, getFilterDefinition } from "./definitions";
 import { FilterChip } from "./FilterChip";
@@ -201,6 +203,14 @@ export function UnifiedFilterBar({
           names.length === 1 ? names[0]! : `${names.length} efforts`;
         break;
       }
+      case "category": {
+        const names = values
+          .map((v) => CATEGORY_OPTIONS.find((c) => c.value === v)?.label)
+          .filter(Boolean);
+        displayLabel =
+          names.length === 1 ? names[0]! : `${names.length} categories`;
+        break;
+      }
       case "linkedIdea": {
         const selectedIdeas = values
           .map((v) => ideas.find((i) => i.id === v))
@@ -254,6 +264,14 @@ export function UnifiedFilterBar({
       case "completedAt": {
         const option = COMPLETED_DATE_OPTIONS.find((d) => d.value === values[0]);
         displayLabel = option?.label || "Completed";
+        break;
+      }
+      case "quadrant": {
+        const names = values
+          .map((v) => QUADRANT_OPTIONS.find((q) => q.value === v)?.label)
+          .filter(Boolean);
+        displayLabel =
+          names.length === 1 ? names[0]! : `${names.length} quadrants`;
         break;
       }
       default:
@@ -392,6 +410,19 @@ export function UnifiedFilterBar({
           />
         );
 
+      case "category":
+        return (
+          <MultiSelectControl
+            isOpen={true}
+            onClose={() => setActiveControl(null)}
+            options={CATEGORY_OPTIONS}
+            selected={currentValues}
+            onToggle={(v) => handleToggleOption("category", v)}
+            onApply={() => handleApplyFilter("category")}
+            title="Category"
+          />
+        );
+
       case "column":
         return (
           <MultiSelectControl
@@ -504,6 +535,19 @@ export function UnifiedFilterBar({
             title="Owners"
             icon={User}
             iconColor="text-slate-400"
+          />
+        );
+
+      case "quadrant":
+        return (
+          <MultiSelectControl
+            isOpen={true}
+            onClose={() => setActiveControl(null)}
+            options={QUADRANT_OPTIONS}
+            selected={currentValues}
+            onToggle={(v) => handleToggleOption("quadrant", v)}
+            onApply={() => handleApplyFilter("quadrant")}
+            title="Matrix Quadrant"
           />
         );
 

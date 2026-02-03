@@ -150,7 +150,7 @@ export function FilterBar({
       case "dueDate":
         return chip.value === "overdue"
           ? "bg-error/15 text-red-300"
-          : "bg-purple-500/15 text-purple-300";
+          : "bg-teal-500/15 text-teal-300";
       case "priority":
         return chip.value === "high"
           ? "bg-error/15 text-red-300"
@@ -219,7 +219,7 @@ export function FilterBar({
                 onClick={() => setActiveFilterType("dueDate")}
                 className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left rounded hover:bg-bg-hover transition-colors"
               >
-                <Calendar className="w-4 h-4 text-purple-500" />
+                <Calendar className="w-4 h-4 text-teal-500" />
                 Filter by Due Date
               </button>
               <button

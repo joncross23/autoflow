@@ -24,13 +24,15 @@ export type FilterType =
   | "column"
   | "completed"
   // Ideas-specific
+  | "category"
   | "status"
   | "linkedTask"
   | "horizon"
   | "effort"
   | "archived"
   | "startedAt"
-  | "completedAt";
+  | "completedAt"
+  | "quadrant";
 
 /** Context determines which filters are available */
 export type FilterContext = "tasks" | "ideas";
@@ -85,7 +87,7 @@ export interface FilterOption {
 export type ChipColor =
   | "amber"
   | "blue"
-  | "purple"
+  | "teal"
   | "red"
   | "green"
   | "cyan"
@@ -95,7 +97,7 @@ export type ChipColor =
 export const CHIP_COLOR_CLASSES: Record<ChipColor, string> = {
   amber: "bg-amber-500/15 text-amber-400 border-amber-500/20",
   blue: "bg-blue-500/15 text-blue-400 border-blue-500/20",
-  purple: "bg-purple-500/15 text-purple-400 border-purple-500/20",
+  teal: "bg-teal-500/15 text-teal-400 border-teal-500/20",
   red: "bg-red-500/15 text-red-400 border-red-500/20",
   green: "bg-green-500/15 text-green-400 border-green-500/20",
   cyan: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
@@ -167,5 +169,19 @@ export const COMPLETED_DATE_OPTIONS: FilterOption[] = [
   { value: "this-week", label: "Completed This Week" },
   { value: "this-month", label: "Completed This Month" },
   { value: "not-completed", label: "Not Completed" },
+];
+
+export const CATEGORY_OPTIONS: FilterOption[] = [
+  { value: "innovation", label: "Innovation", color: "#a855f7" },
+  { value: "optimisation", label: "Optimisation", color: "#3b82f6" },
+  { value: "cost_reduction", label: "Cost Reduction", color: "#22c55e" },
+  { value: "compliance", label: "Compliance", color: "#f97316" },
+];
+
+export const QUADRANT_OPTIONS: FilterOption[] = [
+  { value: "topLeft", label: "Quick Wins", color: "#22c55e" },
+  { value: "topRight", label: "Major Projects", color: "#3b82f6" },
+  { value: "bottomLeft", label: "Fill-ins", color: "#eab308" },
+  { value: "bottomRight", label: "Time Sinks", color: "#ef4444" },
 ];
 

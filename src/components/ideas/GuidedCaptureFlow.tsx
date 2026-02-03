@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Lightbulb, ArrowLeft, ArrowRight, Check, Clock, X } from "lucide-react";
+import { Lightbulb, ArrowLeft, ArrowRight, Check, Clock, X, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,57 +25,27 @@ interface Question {
   minLength: number;
 }
 
-const GUIDED_CAPTURE_QUESTIONS: Question[] = [
-  {
-    id: "what",
-    label: "What task or process drains your time unnecessarily?",
-    hint: "Be specific about what you or your team currently do manually",
-    placeholder: "e.g., Every Monday I spend 2 hours manually copying sales data from multiple spreadsheets...",
-    minLength: 20,
-  },
-  {
-    id: "why_painful",
-    label: "Why does this matter? What's the real cost?",
-    hint: "What's the impact on your work or team?",
-    placeholder: "e.g., It's error-prone and delays our weekly reporting. When mistakes happen, we lose client trust...",
-    minLength: 20,
-  },
-  {
-    id: "frequency_time",
-    label: "How often does this happen, and how long does it take?",
-    hint: "Be specific: e.g., 'Every Monday, 2 hours'",
-    placeholder: "e.g., Every week, takes about 2 hours each time. Sometimes more if there are data issues...",
-    minLength: 20,
-  },
-  {
-    id: "ideal_outcome",
-    label: "If this was automated or fixed, what would be different?",
-    hint: "Describe the specific change you'd see",
-    placeholder: "e.g., Data would sync automatically overnight, and I'd just review a summary dashboard on Monday morning...",
-    minLength: 20,
-  },
-];
+const OPENING_QUESTION: Question = {
+  id: "pain_point",
+  label: "Describe the biggest pain point or time-waster you're facing",
+  hint: "Be specific about what drains your time, causes errors, or frustrates your team",
+  placeholder: "e.g., Every Monday I spend 2 hours manually copying sales data from multiple spreadsheets into our reporting tool...",
+  minLength: 0,
+};
 
 // ============================================
 // UTILITY FUNCTIONS
 // ============================================
 
-/**
- * Extract a clean title from user's answer
- * Better than simple truncation - tries to find natural breakpoints
- */
 function extractTitle(text: string): string {
   if (!text) return "Untitled Idea";
-
   if (text.length <= 60) return text.trim();
 
-  // Try to extract first sentence
   const firstSentence = text.split(/[.!?]/)[0];
   if (firstSentence.length > 0 && firstSentence.length <= 60) {
     return firstSentence.trim();
   }
 
-  // Otherwise truncate at word boundary
   const truncated = text.slice(0, 60).trim();
   const lastSpace = truncated.lastIndexOf(' ');
   if (lastSpace > 40) {
@@ -189,26 +159,30 @@ export function GuidedCaptureFlow() {
   const [startTime] = useState(Date.now());
   const [autoSaved, setAutoSaved] = useState(false);
 
-  const totalQuestions = GUIDED_CAPTURE_QUESTIONS.length;
-  const currentQuestion = GUIDED_CAPTURE_QUESTIONS[currentStep];
-  const isLastQuestion = currentStep === totalQuestions - 1;
+  // AI follow-up state
+  const [followUpQuestions, setFollowUpQuestions] = useState<Question[]>([]);
+  const [loadingFollowUps, setLoadingFollowUps] = useState(false);
+  const [followUpError, setFollowUpError] = useState<string | null>(null);
+
+  // Build full questions list: opening question + AI-generated follow-ups
+  const allQuestions: Question[] = [OPENING_QUESTION, ...followUpQuestions];
+  const totalQuestions = allQuestions.length;
+  const currentQuestion = allQuestions[currentStep];
+  const isLastQuestion = currentStep === totalQuestions - 1 && followUpQuestions.length > 0;
 
   // ============================================
   // AUTO-SAVE & RESTORE
   // ============================================
 
-  // Auto-save to localStorage with error handling
   useEffect(() => {
     if (Object.keys(answers).length > 0) {
       try {
         localStorage.setItem('guided-capture-draft', JSON.stringify(answers));
         setAutoSaved(true);
-        // Reset after 2 seconds
         const timer = setTimeout(() => setAutoSaved(false), 2000);
         return () => clearTimeout(timer);
       } catch (e) {
         console.error('Failed to auto-save:', e);
-        // Show warning once per session
         if (!sessionStorage.getItem('autosave-warning-shown')) {
           toast("Auto-save isn't working. Your answers may not be saved if you close the page.", "error");
           sessionStorage.setItem('autosave-warning-shown', 'true');
@@ -217,7 +191,6 @@ export function GuidedCaptureFlow() {
     }
   }, [answers, toast]);
 
-  // Restore draft on mount
   useEffect(() => {
     const draft = localStorage.getItem('guided-capture-draft');
     if (draft) {
@@ -232,21 +205,63 @@ export function GuidedCaptureFlow() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ============================================
+  // AI FOLLOW-UP GENERATION
+  // ============================================
+
+  const generateFollowUps = async (painPointAnswer: string) => {
+    setLoadingFollowUps(true);
+    setFollowUpError(null);
+
+    try {
+      const response = await fetch("/api/guided-capture/follow-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answer: painPointAnswer }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to generate follow-up questions");
+      }
+
+      const { questions } = await response.json();
+      // Add minLength to each AI-generated question
+      const withMinLength: Question[] = questions.map((q: Omit<Question, "minLength">) => ({
+        ...q,
+        minLength: 0,
+      }));
+      setFollowUpQuestions(withMinLength);
+      setCurrentStep(1);
+    } catch (err) {
+      console.error("Failed to generate follow-ups:", err);
+      setFollowUpError(
+        err instanceof Error ? err.message : "Failed to generate follow-up questions"
+      );
+    } finally {
+      setLoadingFollowUps(false);
+    }
+  };
+
+  // ============================================
   // NAVIGATION HANDLERS
   // ============================================
 
   const handleNext = () => {
+    if (!currentQuestion) return;
     const currentAnswer = answers[currentQuestion.id] || "";
 
-    // Validate minimum length
-    if (currentAnswer.length < currentQuestion.minLength) {
-      toast(`Please provide at least ${currentQuestion.minLength} characters for this question`, "error");
+    // After Q1, generate AI follow-ups (need at least some text for AI)
+    if (currentStep === 0 && followUpQuestions.length === 0) {
+      if (currentAnswer.trim().length < 10) {
+        toast("Please provide a bit more detail so AI can generate relevant follow-up questions", "error");
+        return;
+      }
+      generateFollowUps(currentAnswer);
       return;
     }
 
     if (isLastQuestion) {
-      // Generate title and show review screen
-      const generatedTitle = extractTitle(answers.what || "");
+      const generatedTitle = extractTitle(answers.pain_point || "");
       setEditableTitle(generatedTitle);
       setShowReview(true);
     } else {
@@ -263,6 +278,7 @@ export function GuidedCaptureFlow() {
   };
 
   const handleAnswerChange = (value: string) => {
+    if (!currentQuestion) return;
     setAnswers(prev => ({
       ...prev,
       [currentQuestion.id]: value,
@@ -270,8 +286,6 @@ export function GuidedCaptureFlow() {
   };
 
   const handleCancel = () => {
-    // Navigate back to ideas dashboard
-    // Auto-save will preserve the draft if user wants to return
     router.push('/dashboard/ideas');
   };
 
@@ -280,34 +294,29 @@ export function GuidedCaptureFlow() {
   // ============================================
 
   const handleCreateIdea = async () => {
-    if (isSubmitting) return; // Prevent double-submit
+    if (isSubmitting) return;
 
     setIsSubmitting(true);
 
     try {
-      // Combine answers into structured description
-      const description = `
-## What we currently do
-${answers.what}
-
-## Why it's painful
-${answers.why_painful}
-
-## Frequency and time
-${answers.frequency_time}
-
-## Ideal outcome
-${answers.ideal_outcome}
-      `.trim();
+      // Build a concise readable summary (full Q&A is preserved in Capture Details metadata)
+      const painPoint = answers.pain_point || "";
+      const followUps = followUpQuestions
+        .map(q => answers[q.id] || "")
+        .filter(a => a.trim().length > 0);
+      const description = [
+        painPoint,
+        ...followUps,
+      ].join("\n\n").trim();
 
       // Build metadata
       const metadata: IdeaMetadata = {
         guided_capture: {
-          version: "1.0",
+          version: "2.0",
           captured_at: new Date().toISOString(),
           started_at: new Date(startTime).toISOString(),
           time_to_complete_seconds: Math.floor((Date.now() - startTime) / 1000),
-          questions: GUIDED_CAPTURE_QUESTIONS.map(q => ({
+          questions: allQuestions.map(q => ({
             id: q.id,
             question: q.label,
             answer: answers[q.id] || "",
@@ -315,24 +324,18 @@ ${answers.ideal_outcome}
         },
       };
 
-      // Create idea
       const newIdea = await createIdea({
         title: editableTitle.trim(),
         description,
-        pain_points: answers.why_painful,
-        desired_outcome: answers.ideal_outcome,
+        pain_points: answers.pain_point,
+        desired_outcome: answers.followup_3 || answers.followup_2 || "",
         status: "new",
         source_type: "guided",
         metadata,
       });
 
-      // Clear draft
       localStorage.removeItem('guided-capture-draft');
-
-      // Show success toast
       toast("Idea created from Guided Capture", "success");
-
-      // Redirect to idea detail slider (use 'selected' query param)
       router.push(`/dashboard/ideas?selected=${newIdea.id}`);
     } catch (error) {
       console.error('Failed to create idea:', error);
@@ -344,6 +347,95 @@ ${answers.ideal_outcome}
       setIsSubmitting(false);
     }
   };
+
+  // ============================================
+  // RENDER LOADING STATE (AI generating follow-ups)
+  // ============================================
+
+  if (loadingFollowUps) {
+    return (
+      <div className="min-h-screen bg-background p-4 sm:p-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Lightbulb className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold">Guided Capture</h1>
+              <p className="text-sm text-muted-foreground">
+                Generating follow-up questions...
+              </p>
+            </div>
+          </div>
+
+          <Card>
+            <CardContent className="py-12">
+              <div className="flex flex-col items-center gap-4 text-center">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+                </div>
+                <div>
+                  <p className="font-medium mb-1">Analysing your response...</p>
+                  <p className="text-sm text-muted-foreground">
+                    AI is generating tailored follow-up questions to uncover more detail
+                  </p>
+                </div>
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ============================================
+  // RENDER ERROR STATE (follow-up generation failed)
+  // ============================================
+
+  if (followUpError && followUpQuestions.length === 0 && currentStep === 0) {
+    return (
+      <div className="min-h-screen bg-background p-4 sm:p-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Lightbulb className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold">Guided Capture</h1>
+            </div>
+            <Button variant="ghost" size="icon" onClick={handleCancel} className="h-10 w-10">
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <Card>
+            <CardContent className="py-8">
+              <div className="flex flex-col items-center gap-4 text-center">
+                <p className="text-sm text-error">{followUpError}</p>
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setFollowUpError(null);
+                    }}
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Edit Answer
+                  </Button>
+                  <Button
+                    onClick={() => generateFollowUps(answers.pain_point || "")}
+                  >
+                    Try Again
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   // ============================================
   // RENDER REVIEW SCREEN
@@ -404,7 +496,6 @@ ${answers.ideal_outcome}
                   value={editableTitle}
                   onChange={(e) => setEditableTitle(e.target.value)}
                   onFocus={(e) => {
-                    // Auto-scroll into view on mobile
                     if (typeof window !== 'undefined' && window.innerWidth < 640) {
                       setTimeout(() => {
                         e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -429,7 +520,7 @@ ${answers.ideal_outcome}
               <div>
                 <Label className="text-base font-semibold">Your Answers</Label>
                 <div className="mt-3 space-y-4 max-h-[400px] overflow-y-auto">
-                  {GUIDED_CAPTURE_QUESTIONS.map((q, idx) => (
+                  {allQuestions.map((q, idx) => (
                     <div key={q.id} className="border-l-4 border-primary/30 pl-4 py-2 bg-muted/20 rounded-r-lg">
                       <div className="flex items-start gap-2 mb-2">
                         <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
@@ -487,6 +578,8 @@ ${answers.ideal_outcome}
   // RENDER QUESTION SCREEN
   // ============================================
 
+  if (!currentQuestion) return null;
+
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
       <div className="max-w-2xl mx-auto">
@@ -542,6 +635,12 @@ ${answers.ideal_outcome}
                 </CardDescription>
               </div>
             </div>
+            {currentStep > 0 && (
+              <div className="flex items-center gap-1.5 mt-3 text-xs text-primary/70">
+                <Sparkles className="h-3 w-3" />
+                <span>AI-generated based on your first answer</span>
+              </div>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Answer textarea */}
@@ -554,6 +653,12 @@ ${answers.ideal_outcome}
               <Textarea
                 value={answers[currentQuestion.id] || ""}
                 onChange={(e) => handleAnswerChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    handleNext();
+                  }
+                }}
                 placeholder={currentQuestion.placeholder}
                 className={cn(
                   "min-h-[150px] md:min-h-[180px] resize-y",
@@ -594,7 +699,12 @@ ${answers.ideal_outcome}
                 }
                 aria-disabled={(answers[currentQuestion.id] || "").length < currentQuestion.minLength}
               >
-                {isLastQuestion ? (
+                {currentStep === 0 && followUpQuestions.length === 0 ? (
+                  <>
+                    Next
+                    <Sparkles className="h-4 w-4" />
+                  </>
+                ) : isLastQuestion ? (
                   <>
                     Review
                     <Check className="h-4 w-4" />
@@ -612,7 +722,9 @@ ${answers.ideal_outcome}
 
         {/* Footer hint */}
         <p className="text-center text-sm text-muted-foreground mt-4">
-          Your answers are auto-saved. Feel free to take your time.
+          {currentStep === 0
+            ? "Describe your pain point and AI will generate targeted follow-up questions."
+            : "Your answers are auto-saved. Feel free to take your time."}
         </p>
       </div>
     </div>

@@ -12,9 +12,11 @@ import {
   bulkUpdateStatus,
   bulkUpdateEffort,
   bulkUpdateHorizon,
+  bulkUpdateCategory,
   bulkAddLabel,
   bulkRemoveLabel,
   getAllIdeasTaskProgress,
+  reorderIdeas,
   type IdeaTaskProgress,
 } from "@/lib/api/ideas";
 import { getAllIdeaLabels, getLabels } from "@/lib/api/labels";
@@ -35,8 +37,9 @@ import {
   ideaFiltersToValues,
   valuesToIdeaFilters,
   type FilterValue,
+  QUADRANT_OPTIONS,
 } from "@/components/filters";
-import type { DbIdea, DbSavedView, DbLabel, IdeaStatus, ColumnConfig, SavedViewFilters, DEFAULT_IDEA_COLUMNS } from "@/types/database";
+import type { DbIdea, DbSavedView, DbLabel, IdeaStatus, ColumnConfig, SavedViewFilters, SortConfig, DEFAULT_IDEA_COLUMNS } from "@/types/database";
 
 // Helper function for date filtering
 function isWithinDateRange(date: string | null, range: string): boolean {
@@ -83,23 +86,24 @@ function isWithinDateRange(date: string | null, range: string): boolean {
 // Default columns for the ideas table
 const DEFAULT_COLUMNS: ColumnConfig[] = [
   { id: "title", visible: true, width: 300, order: 0 },
-  { id: "status", visible: true, width: 120, order: 1 },
-  { id: "labels", visible: true, width: 150, order: 2 },
-  { id: "horizon", visible: true, width: 100, order: 3 },
-  { id: "rice_score", visible: true, width: 80, order: 4 },
-  { id: "progress", visible: false, width: 120, order: 5 },
-  { id: "updated_at", visible: true, width: 140, order: 6 },
-  { id: "created_at", visible: false, width: 140, order: 7 },
-  { id: "description", visible: false, width: 200, order: 8 },
-  { id: "effort_estimate", visible: false, width: 100, order: 9 },
-  { id: "owner", visible: false, width: 100, order: 10 },
-  { id: "started_at", visible: false, width: 140, order: 11 },
-  { id: "completed_at", visible: false, width: 140, order: 12 },
-  { id: "themes", visible: false, width: 150, order: 13 },
-  { id: "rice_reach", visible: false, width: 80, order: 14 },
-  { id: "rice_impact", visible: false, width: 80, order: 15 },
-  { id: "rice_confidence", visible: false, width: 100, order: 16 },
-  { id: "rice_effort", visible: false, width: 80, order: 17 },
+  { id: "category", visible: true, width: 130, order: 1 },
+  { id: "status", visible: true, width: 120, order: 2 },
+  { id: "labels", visible: true, width: 150, order: 3 },
+  { id: "horizon", visible: true, width: 100, order: 4 },
+  { id: "rice_score", visible: true, width: 80, order: 5 },
+  { id: "progress", visible: false, width: 120, order: 6 },
+  { id: "updated_at", visible: true, width: 140, order: 7 },
+  { id: "created_at", visible: false, width: 140, order: 8 },
+  { id: "description", visible: false, width: 200, order: 9 },
+  { id: "effort_estimate", visible: false, width: 100, order: 10 },
+  { id: "owner", visible: false, width: 100, order: 11 },
+  { id: "started_at", visible: false, width: 140, order: 12 },
+  { id: "completed_at", visible: false, width: 140, order: 13 },
+  { id: "themes", visible: false, width: 150, order: 14 },
+  { id: "rice_reach", visible: false, width: 80, order: 15 },
+  { id: "rice_impact", visible: false, width: 80, order: 16 },
+  { id: "rice_confidence", visible: false, width: 100, order: 17 },
+  { id: "rice_effort", visible: false, width: 80, order: 18 },
 ];
 
 // Load column config from localStorage or use defaults
@@ -143,6 +147,7 @@ export default function IdeasPage() {
   const [columns, setColumns] = useState<ColumnConfig[]>(loadColumnConfig);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<IdeaFilters>(DEFAULT_FILTERS);
+  const [rawFilterValues, setRawFilterValues] = useState<FilterValue[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<SortField>("updated_at");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
@@ -159,6 +164,27 @@ export default function IdeasPage() {
     }
   }, [columns]);
 
+  // Seed quadrant filter from URL param (e.g. from matrix view navigation)
+  useEffect(() => {
+    const quadrantParam = searchParams.get("quadrant");
+    if (quadrantParam && QUADRANT_OPTIONS.some((q) => q.value === quadrantParam)) {
+      const option = QUADRANT_OPTIONS.find((q) => q.value === quadrantParam);
+      const quadrantFilter: FilterValue = {
+        id: `quadrant-${Date.now()}`,
+        type: "quadrant",
+        value: [quadrantParam],
+        displayLabel: option?.label || "Quadrant",
+      };
+      setRawFilterValues((prev) => [...prev.filter((f) => f.type !== "quadrant"), quadrantFilter]);
+      // Clear the URL param to avoid re-seeding
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("quadrant");
+      const newUrl = params.toString() ? `?${params.toString()}` : "/dashboard/ideas";
+      router.replace(newUrl, { scroll: false });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const loadIdeas = useCallback(async () => {
     try {
       setLoading(true);
@@ -167,8 +193,8 @@ export default function IdeasPage() {
       // Build filter params
       const filterParams: Parameters<typeof getIdeas>[0] = {
         archived: filters.archived,
-        sortBy: sortField === "score" ? "updated_at" : sortField,
-        sortOrder,
+        sortBy: sortField === "score" ? "updated_at" : sortField === "custom" ? "position" : sortField,
+        sortOrder: sortField === "custom" ? "asc" : sortOrder,
       };
 
       if (filters.statuses.length > 0) {
@@ -263,6 +289,26 @@ export default function IdeasPage() {
     setSortOrder(order);
   };
 
+  // Handle drag-and-drop reorder
+  const handleReorder = async (reorderedIdeas: DbIdea[]) => {
+    // Optimistic update — set new order immediately
+    setIdeas(reorderedIdeas);
+
+    // Build position updates
+    const items = reorderedIdeas.map((idea, index) => ({
+      id: idea.id,
+      position: index,
+    }));
+
+    try {
+      await reorderIdeas(items);
+    } catch (err) {
+      console.error("Failed to save order:", err);
+      // Reload to restore server state on error
+      loadIdeas();
+    }
+  };
+
   // Bulk operations
   const handleBulkArchive = async () => {
     const ids = Array.from(selectedIds);
@@ -314,11 +360,23 @@ export default function IdeasPage() {
     loadIdeas();
   };
 
+  const handleBulkCategoryChange = async (category: DbIdea["category"]) => {
+    const ids = Array.from(selectedIds);
+    await bulkUpdateCategory(ids, category);
+    setSelectedIds(new Set());
+    loadIdeas();
+  };
+
   // Handle loading a saved view
-  const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[]) => {
+  const handleLoadView = (viewFilters: IdeaFilters, viewColumns?: ColumnConfig[], viewSort?: SortConfig) => {
     setFilters(viewFilters);
+    setRawFilterValues(ideaFiltersToValues(viewFilters));
     if (viewColumns) {
       setColumns(viewColumns);
+    }
+    if (viewSort) {
+      setSortField(viewSort.field as SortField);
+      setSortOrder(viewSort.direction);
     }
   };
 
@@ -333,11 +391,10 @@ export default function IdeasPage() {
     new Set(ideas.map((idea) => idea.owner).filter(Boolean))
   ) as string[];
 
-  // Convert IdeaFilters to FilterValue[] for UnifiedFilterBar
-  const filterValues = ideaFiltersToValues(filters);
-
   // Handle filter changes from UnifiedFilterBar
+  // Store raw FilterValue[] to avoid lossy round-trip conversion
   const handleFilterValuesChange = (newValues: FilterValue[]) => {
+    setRawFilterValues(newValues);
     setFilters(valuesToIdeaFilters(newValues, searchQuery));
   };
 
@@ -368,6 +425,12 @@ export default function IdeasPage() {
       if (!idea.owner || !filterOwners.includes(idea.owner)) return false;
     }
 
+    // Category filter
+    const filterCategories = filters.categories ?? [];
+    if (filterCategories.length > 0) {
+      if (!idea.category || !filterCategories.includes(idea.category)) return false;
+    }
+
     // Effort filter
     const filterEfforts = filters.efforts ?? [];
     if (filterEfforts.length > 0) {
@@ -382,24 +445,40 @@ export default function IdeasPage() {
 
     // Date filters - use filterValues since they contain the raw filter data
     // CreatedAt filter
-    const createdAtFilter = filterValues.find((f) => f.type === "createdAt");
+    const createdAtFilter = rawFilterValues.find((f) => f.type === "createdAt");
     if (createdAtFilter) {
       const range = Array.isArray(createdAtFilter.value) ? createdAtFilter.value[0] : createdAtFilter.value;
       if (!isWithinDateRange(idea.created_at, range as string)) return false;
     }
 
     // StartedAt filter
-    const startedAtFilter = filterValues.find((f) => f.type === "startedAt");
+    const startedAtFilter = rawFilterValues.find((f) => f.type === "startedAt");
     if (startedAtFilter) {
       const range = Array.isArray(startedAtFilter.value) ? startedAtFilter.value[0] : startedAtFilter.value;
       if (!isWithinDateRange(idea.started_at, range as string)) return false;
     }
 
     // CompletedAt filter
-    const completedAtFilter = filterValues.find((f) => f.type === "completedAt");
+    const completedAtFilter = rawFilterValues.find((f) => f.type === "completedAt");
     if (completedAtFilter) {
       const range = Array.isArray(completedAtFilter.value) ? completedAtFilter.value[0] : completedAtFilter.value;
       if (!isWithinDateRange(idea.completed_at, range as string)) return false;
+    }
+
+    // Quadrant filter (from filter bar or matrix view navigation)
+    const quadrantFilter = rawFilterValues.find((f) => f.type === "quadrant");
+    if (quadrantFilter) {
+      const selectedQuadrants = Array.isArray(quadrantFilter.value) ? quadrantFilter.value : [quadrantFilter.value];
+      const effort = idea.rice_effort;
+      const impact = idea.rice_impact;
+      const impactMapping: Record<number, number> = { 0.25: 10, 0.5: 25, 1: 50, 2: 75, 3: 90 };
+      const y = impact ? (impactMapping[impact] ?? 50) : 50;
+      const x = effort ? 5 + (effort - 1) * 10 : 50;
+      const ideaQuadrant =
+        y >= 50 && x < 50 ? "topLeft" :
+        y >= 50 && x >= 50 ? "topRight" :
+        y < 50 && x < 50 ? "bottomLeft" : "bottomRight";
+      if (!selectedQuadrants.includes(ideaQuadrant)) return false;
     }
 
     return true;
@@ -454,6 +533,7 @@ export default function IdeasPage() {
         <SavedViewsDropdown
           currentFilters={filters}
           currentColumns={columns}
+          currentSort={{ field: sortField, direction: sortOrder }}
           onLoadView={handleLoadView}
           onShareView={handleShareView}
         />
@@ -463,7 +543,7 @@ export default function IdeasPage() {
       <div className="mb-4">
         <UnifiedFilterBar
           context="ideas"
-          filters={filterValues}
+          filters={rawFilterValues}
           onFiltersChange={handleFilterValuesChange}
           labels={availableLabels}
           owners={availableOwners}
@@ -504,6 +584,7 @@ export default function IdeasPage() {
           sortField={sortField}
           sortOrder={sortOrder}
           onSort={handleSort}
+          onReorder={handleReorder}
           ideaLabels={ideaLabels}
           ideaProgress={ideaProgress}
           loading={loading}
@@ -519,6 +600,7 @@ export default function IdeasPage() {
         onLabelChange={handleBulkLabelChange}
         onEffortChange={handleBulkEffortChange}
         onHorizonChange={handleBulkHorizonChange}
+        onCategoryChange={handleBulkCategoryChange}
         onClearSelection={() => setSelectedIds(new Set())}
         availableLabels={availableLabels}
       />

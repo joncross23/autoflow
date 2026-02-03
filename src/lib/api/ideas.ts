@@ -34,7 +34,8 @@ export interface IdeaFilters {
     | "rice_impact"
     | "rice_confidence"
     | "rice_effort"
-    | "effort_estimate";
+    | "effort_estimate"
+    | "position";
   sortOrder?: "asc" | "desc";
   limit?: number;
   offset?: number;
@@ -450,6 +451,22 @@ export async function bulkUpdateHorizon(ids: string[], horizon: DbIdea["horizon"
 }
 
 /**
+ * Update category for multiple ideas
+ */
+export async function bulkUpdateCategory(ids: string[], category: DbIdea["category"]): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("ideas")
+    .update({ category: category, updated_at: new Date().toISOString() })
+    .in("id", ids);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
  * Add a label to multiple ideas
  */
 export async function bulkAddLabel(ideaIds: string[], labelId: string): Promise<void> {
@@ -484,6 +501,29 @@ export async function bulkRemoveLabel(ideaIds: string[], labelId: string): Promi
 
   if (error) {
     throw new Error(error.message);
+  }
+}
+
+/**
+ * Reorder ideas by updating their position values
+ * Accepts an array of { id, position } pairs
+ */
+export async function reorderIdeas(items: { id: string; position: number }[]): Promise<void> {
+  const supabase = createClient();
+
+  // Update each idea's position in parallel
+  const updates = items.map(({ id, position }) =>
+    supabase
+      .from("ideas")
+      .update({ position, updated_at: new Date().toISOString() })
+      .eq("id", id)
+  );
+
+  const results = await Promise.all(updates);
+
+  const firstError = results.find((r) => r.error);
+  if (firstError?.error) {
+    throw new Error(firstError.error.message);
   }
 }
 

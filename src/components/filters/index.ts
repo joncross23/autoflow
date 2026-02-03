@@ -38,6 +38,7 @@ export {
   DATE_CREATED_OPTIONS,
   STARTED_DATE_OPTIONS,
   COMPLETED_DATE_OPTIONS,
+  QUADRANT_OPTIONS,
 } from "./types";
 
 // Definitions

@@ -1,7 +1,23 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect, useMemo } from "react";
-import { ChevronUp, ChevronDown, GripVertical, Settings2, ChevronRight } from "lucide-react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { ChevronUp, ChevronDown, GripVertical, Settings2, ChevronRight, X } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { IdeasTableRow } from "./IdeasTableRow";
@@ -21,7 +37,8 @@ export type SortField =
   | "rice_impact"
   | "rice_confidence"
   | "rice_effort"
-  | "effort_estimate";
+  | "effort_estimate"
+  | "custom";
 export type SortOrder = "asc" | "desc";
 
 interface IdeasTableProps {
@@ -34,6 +51,7 @@ interface IdeasTableProps {
   sortField: SortField;
   sortOrder: SortOrder;
   onSort: (field: SortField, order: SortOrder) => void;
+  onReorder?: (reorderedIdeas: DbIdea[]) => void;
   aiScores?: Record<string, number>;
   ideaLabels?: Record<string, DbLabel[]>;
   ideaProgress?: Record<string, IdeaTaskProgress>;
@@ -42,6 +60,7 @@ interface IdeasTableProps {
 
 const COLUMN_LABELS: Record<string, string> = {
   title: "Title",
+  category: "Category",
   status: "Status",
   labels: "Labels",
   score: "Score",
@@ -62,6 +81,111 @@ const COLUMN_LABELS: Record<string, string> = {
   rice_effort: "Effort (RICE)",
 };
 
+// Sortable row wrapper for dnd-kit
+function SortableRow({
+  idea,
+  columns,
+  selected,
+  onSelect,
+  onClick,
+  aiScore,
+  labels,
+  progress,
+  isDragActive,
+}: {
+  idea: DbIdea;
+  columns: ColumnConfig[];
+  selected: boolean;
+  onSelect: (id: string, selected: boolean, shiftKey?: boolean) => void;
+  onClick: (idea: DbIdea) => void;
+  aiScore?: number | null;
+  labels: DbLabel[];
+  progress?: IdeaTaskProgress;
+  isDragActive: boolean;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: idea.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
+
+  const visibleColumns = columns
+    .filter((col) => col.visible)
+    .sort((a, b) => a.order - b.order);
+
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelect(idea.id, !selected, e.shiftKey);
+  };
+
+  return (
+    <tr
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "group cursor-pointer border-b border-white/[0.03] transition-colors",
+        "hover:bg-bg-hover",
+        selected && "bg-primary/5",
+        isDragging && "bg-bg-hover shadow-lg"
+      )}
+      onClick={() => onClick(idea)}
+    >
+      {/* Drag handle + Checkbox cell */}
+      <td className="w-16 px-1 py-3">
+        <div className="flex items-center gap-1">
+          <button
+            ref={setActivatorNodeRef}
+            {...attributes}
+            {...listeners}
+            className={cn(
+              "p-0.5 rounded cursor-grab active:cursor-grabbing text-muted-foreground/30 hover:text-muted-foreground/60 transition-colors",
+              isDragActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            )}
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Drag to reorder"
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
+          <input
+            type="checkbox"
+            checked={selected}
+            onClick={handleCheckboxClick}
+            onChange={() => {}}
+            className="h-4 w-4 rounded border-border bg-bg-secondary text-primary focus:ring-primary focus:ring-offset-0"
+          />
+        </div>
+      </td>
+
+      {/* Data cells - delegate to IdeasTableRow's renderCell logic */}
+      {visibleColumns.map((col) => (
+        <IdeasTableRow
+          key={col.id}
+          idea={idea}
+          columns={columns}
+          selected={selected}
+          onSelect={onSelect}
+          onClick={onClick}
+          aiScore={aiScore}
+          labels={labels}
+          progress={progress}
+          renderCellOnly={col.id}
+        />
+      ))}
+    </tr>
+  );
+}
+
 export function IdeasTable({
   ideas,
   columns,
@@ -72,6 +196,7 @@ export function IdeasTable({
   sortField,
   sortOrder,
   onSort,
+  onReorder,
   aiScores = {},
   ideaLabels = {},
   ideaProgress = {},
@@ -81,17 +206,27 @@ export function IdeasTable({
   const [showColumnSettings, setShowColumnSettings] = useState(false);
   const [resizingColumn, setResizingColumn] = useState<string | null>(null);
   const [dragColumn, setDragColumn] = useState<string | null>(null);
+  const [isDragActive, setIsDragActive] = useState(false);
   const tableRef = useRef<HTMLTableElement>(null);
   const resizeStartX = useRef(0);
   const resizeStartWidth = useRef(0);
   const lastSelectedId = useRef<string | null>(null);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
+  // dnd-kit sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(KeyboardSensor)
+  );
+
   // Memoise visible columns to prevent recalculation on every render
   const visibleColumns = useMemo(
     () => columns.filter((col) => col.visible).sort((a, b) => a.order - b.order),
     [columns]
   );
+
+  const ideaIds = useMemo(() => ideas.map((idea) => idea.id), [ideas]);
 
   // Handle select all
   const allSelected = ideas.length > 0 && ideas.every((idea) => selectedIds.has(idea.id));
@@ -162,6 +297,34 @@ export function IdeasTable({
     }
   };
 
+  // Handle drag end - reorder ideas and switch to custom sort
+  const handleDragEnd = (event: DragEndEvent) => {
+    setIsDragActive(false);
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = ideas.findIndex((i) => i.id === active.id);
+    const newIndex = ideas.findIndex((i) => i.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // Reorder the array
+    const reordered = [...ideas];
+    const [moved] = reordered.splice(oldIndex, 1);
+    reordered.splice(newIndex, 0, moved);
+
+    // Switch to custom order sort
+    if (sortField !== "custom") {
+      onSort("custom", "asc");
+    }
+
+    // Notify parent with reordered ideas
+    if (onReorder) {
+      onReorder(reordered);
+    }
+  };
+
   // Handle column resize
   const handleResizeStart = (e: React.MouseEvent, columnId: string) => {
     e.preventDefault();
@@ -209,11 +372,11 @@ export function IdeasTable({
   };
 
   // Handle column drag reorder
-  const handleDragStart = (columnId: string) => {
+  const handleColumnDragStart = (columnId: string) => {
     setDragColumn(columnId);
   };
 
-  const handleDragOver = (e: React.DragEvent, targetColumnId: string) => {
+  const handleColumnDragOver = (e: React.DragEvent, targetColumnId: string) => {
     e.preventDefault();
     if (!dragColumn || dragColumn === targetColumnId) return;
 
@@ -233,7 +396,7 @@ export function IdeasTable({
     onColumnsChange(newColumns);
   };
 
-  const handleDragEnd = () => {
+  const handleColumnDragEnd = () => {
     setDragColumn(null);
   };
 
@@ -252,6 +415,21 @@ export function IdeasTable({
   if (isMobile) {
     return (
       <div className="space-y-2">
+        {/* Custom order indicator for mobile */}
+        {sortField === "custom" && (
+          <div className="flex items-center gap-2 px-2 py-1.5 mb-1">
+            <span className="text-xs text-primary font-medium px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-1">
+              Custom order
+              <button
+                onClick={() => onSort("updated_at", "desc")}
+                className="hover:text-primary/70"
+                aria-label="Clear custom order"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          </div>
+        )}
         {loading ? (
           // Skeleton loading
           Array.from({ length: 5 }).map((_, i) => (
@@ -265,77 +443,31 @@ export function IdeasTable({
             No ideas found
           </div>
         ) : (
-          ideas.map((idea) => {
-            const labels = ideaLabels[idea.id] || [];
-            const isSelected = selectedIds.has(idea.id);
-            return (
-              <div
-                key={idea.id}
-                className={cn(
-                  "w-full text-left p-4 bg-bg-secondary rounded-lg border transition-colors",
-                  isSelected
-                    ? "border-primary bg-primary/5"
-                    : "border-border hover:border-primary/50 hover:bg-bg-hover"
-                )}
-                onTouchStart={() => handleMobileTouchStart(idea.id)}
-                onTouchEnd={handleMobileTouchEnd}
-                onTouchCancel={handleMobileTouchEnd}
-              >
-                <div className="flex items-start gap-3">
-                  {/* Checkbox for selection */}
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      handleSelectOne(idea.id, e.target.checked);
-                    }}
-                    className="h-4 w-4 mt-0.5 rounded border-border bg-bg-secondary text-primary focus:ring-primary focus:ring-offset-0 shrink-0"
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={() => setIsDragActive(true)}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={ideaIds} strategy={verticalListSortingStrategy}>
+              {ideas.map((idea) => {
+                const labels = ideaLabels[idea.id] || [];
+                const isSelected = selectedIds.has(idea.id);
+                return (
+                  <MobileSortableCard
+                    key={idea.id}
+                    idea={idea}
+                    labels={labels}
+                    isSelected={isSelected}
+                    onSelect={handleSelectOne}
+                    onIdeaClick={onIdeaClick}
+                    onMobileTouchStart={handleMobileTouchStart}
+                    onMobileTouchEnd={handleMobileTouchEnd}
                   />
-
-                  {/* Card content - clickable */}
-                  <button
-                    onClick={() => onIdeaClick(idea)}
-                    className="flex-1 min-w-0 text-left"
-                  >
-                    <h3 className="font-medium text-foreground truncate mb-1">
-                      {idea.title}
-                    </h3>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <StatusBadge status={idea.status} size="sm" />
-                      {idea.rice_score !== null && idea.rice_score !== undefined && (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">
-                          RICE: {idea.rice_score}
-                        </span>
-                      )}
-                      {labels.slice(0, 2).map((label) => (
-                        <span
-                          key={label.id}
-                          className="text-xs px-1.5 py-0.5 rounded"
-                          style={{
-                            backgroundColor: `${label.color}20`,
-                            color: label.color,
-                          }}
-                        >
-                          {label.name}
-                        </span>
-                      ))}
-                      {labels.length > 2 && (
-                        <span className="text-xs text-muted-foreground">
-                          +{labels.length - 2}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1.5">
-                      Updated {formatRelativeTime(idea.updated_at)}
-                    </p>
-                  </button>
-
-                  <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
-                </div>
-              </div>
-            );
-          })
+                );
+              })}
+            </SortableContext>
+          </DndContext>
         )}
 
         {/* Selection info */}
@@ -349,9 +481,21 @@ export function IdeasTable({
   }
 
   return (
-    <div className="relative">
-      {/* Column settings dropdown */}
-      <div className="absolute right-0 -top-10 z-10">
+    <div className="relative pt-10">
+      {/* Column settings + custom order indicator */}
+      <div className="absolute right-0 top-0 z-10 flex items-center gap-2">
+        {sortField === "custom" && (
+          <span className="text-xs text-primary font-medium px-2 py-1 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-1">
+            Custom order
+            <button
+              onClick={() => onSort("updated_at", "desc")}
+              className="hover:text-primary/70"
+              aria-label="Clear custom order"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        )}
         <button
           onClick={() => setShowColumnSettings(!showColumnSettings)}
           className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-bg-hover rounded-md transition-colors"
@@ -392,115 +536,128 @@ export function IdeasTable({
 
       {/* Table */}
       <div data-testid="ideas-table" className="overflow-x-auto rounded-lg border border-border bg-bg-secondary">
-        <table ref={tableRef} className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-white/[0.06]">
-              {/* Checkbox header */}
-              <th className="w-12 px-3 py-3 text-left">
-                <input
-                  type="checkbox"
-                  checked={allSelected}
-                  ref={(el) => {
-                    if (el) el.indeterminate = someSelected && !allSelected;
-                  }}
-                  onChange={handleSelectAll}
-                  className="h-4 w-4 rounded border-border bg-bg-secondary text-primary focus:ring-primary focus:ring-offset-0"
-                />
-              </th>
-
-              {/* Column headers */}
-              {visibleColumns.map((col) => {
-                const isSortable = [
-                  "title",
-                  "status",
-                  "score",
-                  "updated_at",
-                  "created_at",
-                  "horizon",
-                  "rice_score",
-                  "rice_reach",
-                  "rice_impact",
-                  "rice_confidence",
-                  "rice_effort",
-                  "effort_estimate",
-                ].includes(col.id);
-
-                return (
-                  <th
-                    key={col.id}
-                    className="relative text-left group"
-                    style={{ width: col.width, minWidth: col.width }}
-                    draggable
-                    onDragStart={() => handleDragStart(col.id)}
-                    onDragOver={(e) => handleDragOver(e, col.id)}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <div
-                      className={cn(
-                        "relative flex items-center gap-1.5 px-3 py-3 text-[13px] font-normal text-muted-foreground/80",
-                        isSortable && "cursor-pointer hover:text-foreground"
-                      )}
-                      onClick={() => isSortable && handleSort(col.id as SortField)}
-                    >
-                      <GripVertical className="absolute -left-1 h-3 w-3 opacity-0 group-hover:opacity-30 cursor-grab" />
-                      {COLUMN_LABELS[col.id]}
-                      {isSortable && renderSortIcon(col.id as SortField)}
-                    </div>
-
-                    {/* Resize handle */}
-                    <div
-                      className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/50 transition-colors"
-                      onMouseDown={(e) => handleResizeStart(e, col.id)}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={() => setIsDragActive(true)}
+          onDragEnd={handleDragEnd}
+        >
+          <table ref={tableRef} className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-white/[0.06]">
+                {/* Drag handle + Checkbox header */}
+                <th className="w-16 px-1 py-3 text-left">
+                  <div className="flex items-center gap-1">
+                    <div className="w-5" /> {/* Spacer for drag handle alignment */}
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      ref={(el) => {
+                        if (el) el.indeterminate = someSelected && !allSelected;
+                      }}
+                      onChange={handleSelectAll}
+                      className="h-4 w-4 rounded border-border bg-bg-secondary text-primary focus:ring-primary focus:ring-offset-0"
                     />
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              // Skeleton loading rows
-              Array.from({ length: 5 }).map((_, i) => (
-                <tr key={i} className="border-b border-white/[0.03] animate-pulse">
-                  <td className="px-3 py-3">
-                    <div className="h-4 w-4 bg-bg-tertiary rounded" />
-                  </td>
-                  {visibleColumns.map((col) => (
-                    <td key={col.id} className="px-3 py-3">
+                  </div>
+                </th>
+
+                {/* Column headers */}
+                {visibleColumns.map((col) => {
+                  const isSortable = [
+                    "title",
+                    "status",
+                    "score",
+                    "updated_at",
+                    "created_at",
+                    "horizon",
+                    "rice_score",
+                    "rice_reach",
+                    "rice_impact",
+                    "rice_confidence",
+                    "rice_effort",
+                    "effort_estimate",
+                  ].includes(col.id);
+
+                  return (
+                    <th
+                      key={col.id}
+                      className="relative text-left group"
+                      style={{ width: col.width, minWidth: col.width }}
+                      draggable
+                      onDragStart={() => handleColumnDragStart(col.id)}
+                      onDragOver={(e) => handleColumnDragOver(e, col.id)}
+                      onDragEnd={handleColumnDragEnd}
+                    >
                       <div
-                        className="h-4 bg-bg-tertiary rounded"
-                        style={{ width: `${Math.random() * 40 + 40}%` }}
+                        className={cn(
+                          "relative flex items-center gap-1.5 px-3 py-3 text-[13px] font-normal text-muted-foreground/80",
+                          isSortable && "cursor-pointer hover:text-foreground"
+                        )}
+                        onClick={() => isSortable && handleSort(col.id as SortField)}
+                      >
+                        <GripVertical className="absolute -left-1 h-3 w-3 opacity-0 group-hover:opacity-30 cursor-grab" />
+                        {COLUMN_LABELS[col.id]}
+                        {isSortable && renderSortIcon(col.id as SortField)}
+                      </div>
+
+                      {/* Resize handle */}
+                      <div
+                        className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/50 transition-colors"
+                        onMouseDown={(e) => handleResizeStart(e, col.id)}
                       />
-                    </td>
-                  ))}
-                </tr>
-              ))
-            ) : ideas.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={visibleColumns.length + 1}
-                  className="px-3 py-12 text-center text-muted-foreground"
-                >
-                  No ideas found
-                </td>
+                    </th>
+                  );
+                })}
               </tr>
-            ) : (
-              ideas.map((idea) => (
-                <IdeasTableRow
-                  key={idea.id}
-                  idea={idea}
-                  columns={columns}
-                  selected={selectedIds.has(idea.id)}
-                  onSelect={handleSelectOne}
-                  onClick={onIdeaClick}
-                  aiScore={aiScores[idea.id]}
-                  labels={ideaLabels[idea.id] || []}
-                  progress={ideaProgress[idea.id]}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <SortableContext items={ideaIds} strategy={verticalListSortingStrategy}>
+              <tbody>
+                {loading ? (
+                  // Skeleton loading rows
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <tr key={i} className="border-b border-white/[0.03] animate-pulse">
+                      <td className="px-3 py-3">
+                        <div className="h-4 w-4 bg-bg-tertiary rounded" />
+                      </td>
+                      {visibleColumns.map((col) => (
+                        <td key={col.id} className="px-3 py-3">
+                          <div
+                            className="h-4 bg-bg-tertiary rounded"
+                            style={{ width: `${Math.random() * 40 + 40}%` }}
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : ideas.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={visibleColumns.length + 1}
+                      className="px-3 py-12 text-center text-muted-foreground"
+                    >
+                      No ideas found
+                    </td>
+                  </tr>
+                ) : (
+                  ideas.map((idea) => (
+                    <SortableRow
+                      key={idea.id}
+                      idea={idea}
+                      columns={columns}
+                      selected={selectedIds.has(idea.id)}
+                      onSelect={handleSelectOne}
+                      onClick={onIdeaClick}
+                      aiScore={aiScores[idea.id]}
+                      labels={ideaLabels[idea.id] || []}
+                      progress={ideaProgress[idea.id]}
+                      isDragActive={isDragActive}
+                    />
+                  ))
+                )}
+              </tbody>
+            </SortableContext>
+          </table>
+        </DndContext>
       </div>
 
       {/* Selection info */}
@@ -509,6 +666,124 @@ export function IdeasTable({
           {selectedIds.size} idea{selectedIds.size !== 1 ? "s" : ""} selected
         </div>
       )}
+    </div>
+  );
+}
+
+// Mobile sortable card
+function MobileSortableCard({
+  idea,
+  labels,
+  isSelected,
+  onSelect,
+  onIdeaClick,
+  onMobileTouchStart,
+  onMobileTouchEnd,
+}: {
+  idea: DbIdea;
+  labels: DbLabel[];
+  isSelected: boolean;
+  onSelect: (id: string, selected: boolean, shiftKey?: boolean) => void;
+  onIdeaClick: (idea: DbIdea) => void;
+  onMobileTouchStart: (id: string) => void;
+  onMobileTouchEnd: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: idea.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "w-full text-left p-4 bg-bg-secondary rounded-lg border transition-colors",
+        isSelected
+          ? "border-primary bg-primary/5"
+          : "border-border hover:border-primary/50 hover:bg-bg-hover",
+        isDragging && "shadow-lg"
+      )}
+      onTouchStart={() => onMobileTouchStart(idea.id)}
+      onTouchEnd={onMobileTouchEnd}
+      onTouchCancel={onMobileTouchEnd}
+    >
+      <div className="flex items-start gap-3">
+        {/* Drag handle */}
+        <button
+          ref={setActivatorNodeRef}
+          {...attributes}
+          {...listeners}
+          className="p-0.5 rounded cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors shrink-0 mt-0.5 touch-none"
+          onClick={(e) => e.stopPropagation()}
+          aria-label="Drag to reorder"
+        >
+          <GripVertical className="h-4 w-4" />
+        </button>
+
+        {/* Checkbox for selection */}
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={(e) => {
+            e.stopPropagation();
+            onSelect(idea.id, e.target.checked);
+          }}
+          className="h-4 w-4 mt-0.5 rounded border-border bg-bg-secondary text-primary focus:ring-primary focus:ring-offset-0 shrink-0"
+        />
+
+        {/* Card content - clickable */}
+        <button
+          onClick={() => onIdeaClick(idea)}
+          className="flex-1 min-w-0 text-left"
+        >
+          <h3 className="font-medium text-foreground truncate mb-1">
+            {idea.title}
+          </h3>
+          <div className="flex items-center gap-2 flex-wrap">
+            <StatusBadge status={idea.status} size="sm" />
+            {idea.rice_score !== null && idea.rice_score !== undefined && (
+              <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">
+                RICE: {idea.rice_score}
+              </span>
+            )}
+            {labels.slice(0, 2).map((label) => (
+              <span
+                key={label.id}
+                className="text-xs px-1.5 py-0.5 rounded"
+                style={{
+                  backgroundColor: `${label.color}20`,
+                  color: label.color,
+                }}
+              >
+                {label.name}
+              </span>
+            ))}
+            {labels.length > 2 && (
+              <span className="text-xs text-muted-foreground">
+                +{labels.length - 2}
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground mt-1.5">
+            Updated {formatRelativeTime(idea.updated_at)}
+          </p>
+        </button>
+
+        <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+      </div>
     </div>
   );
 }

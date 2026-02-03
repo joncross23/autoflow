@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import type { DbIdea, RiceImpact } from "@/types/database";
@@ -127,7 +128,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       </div>
 
       {/* Matrix Container */}
-      <div className="relative aspect-square max-w-2xl mx-auto border border-border/30 rounded-lg bg-bg-secondary overflow-hidden">
+      <div className="relative aspect-square max-w-2xl mx-auto border border-border/30 rounded-lg bg-bg-secondary">
         {/* Axis Labels */}
         <div className="absolute left-0 top-1/2 text-sm font-semibold text-foreground origin-left" style={{ transform: 'translateX(16px) translateY(85px) rotate(-90deg)' }}>
           Impact (Low → High)
@@ -262,15 +263,16 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
         {(Object.entries(QUADRANTS) as [keyof typeof QUADRANTS, typeof QUADRANTS[keyof typeof QUADRANTS]][]).map(
           ([key, quad]) => (
-            <div
+            <Link
               key={key}
-              className="p-3 rounded-lg bg-bg-secondary border border-white/[0.04]"
+              href={`/dashboard/ideas?quadrant=${key}`}
+              className="p-3 rounded-lg bg-bg-secondary border border-white/[0.04] hover:border-primary/50 transition-colors"
             >
               <div className={cn("text-2xl font-bold", quad.color)}>
                 {quadrantStats[key]}
               </div>
               <div className="text-xs text-muted-foreground">{quad.label}</div>
-            </div>
+            </Link>
           )
         )}
       </div>

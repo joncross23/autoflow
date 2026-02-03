@@ -30,35 +30,21 @@ export default function Home() {
         </div>
 
         <div className="mt-16 grid gap-6 sm:grid-cols-3">
-          <FeatureCard
-            title="Capture"
-            description="Rapid idea collection via text, voice, or forms"
-          />
-          <FeatureCard
-            title="Evaluate"
-            description="AI-assisted scoring and prioritisation"
-          />
-          <FeatureCard
-            title="Execute"
-            description="Structured project tracking with Kanban boards"
-          />
+          <Link href="/dashboard/ideas" className="card text-left hover:border-primary transition-colors">
+            <h3 className="mb-2 font-semibold text-primary">Ideas</h3>
+            <p className="text-sm text-foreground-secondary">Capture and evaluate automation opportunities</p>
+          </Link>
+          <Link href="/dashboard/tasks" className="card text-left hover:border-primary transition-colors">
+            <h3 className="mb-2 font-semibold text-primary">Tasks</h3>
+            <p className="text-sm text-foreground-secondary">Kanban board for tracking implementation</p>
+          </Link>
+          <Link href="/dashboard/matrix" className="card text-left hover:border-primary transition-colors">
+            <h3 className="mb-2 font-semibold text-primary">Matrix</h3>
+            <p className="text-sm text-foreground-secondary">Prioritise ideas by impact and effort</p>
+          </Link>
         </div>
       </div>
     </main>
   );
 }
 
-function FeatureCard({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="card text-left">
-      <h3 className="mb-2 font-semibold text-primary">{title}</h3>
-      <p className="text-sm text-foreground-secondary">{description}</p>
-    </div>
-  );
-}
