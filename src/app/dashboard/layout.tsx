@@ -4,7 +4,10 @@ import { GlobalCommandPalette } from "@/components/search";
 import { KeyboardShortcutsWrapper } from "@/components/shared";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: {
+    default: "Dashboard",
+    template: "%s | IdeaTracker",
+  },
   description: "View your automation ideas pipeline and project progress.",
 };
 
