@@ -490,7 +490,19 @@ export default function IdeasPage() {
         <div>
           <h1 className="text-xl md:text-2xl font-bold">Ideas</h1>
           <p className="text-sm md:text-base text-muted-foreground">
-            Capture and evaluate automation ideas
+            {loading ? (
+              "Loading ideas..."
+            ) : (
+              <>
+                {filteredIdeas.length} idea{filteredIdeas.length !== 1 ? "s" : ""}
+                {filteredIdeas.length !== ideas.length && ` (of ${ideas.length})`}
+                {selectedIds.size > 0 && (
+                  <span className="ml-2 text-primary font-medium">
+                    · {selectedIds.size} selected
+                  </span>
+                )}
+              </>
+            )}
           </p>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">

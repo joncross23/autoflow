@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -20,7 +20,7 @@ import {
   Trash2,
   Activity,
 } from "lucide-react";
-import { QuickCapture } from "@/components/ideas";
+import { QuickCapture, IdeaForm } from "@/components/ideas";
 import { getIdeaCounts, getIdeas } from "@/lib/api/ideas";
 import { getRecentActivity, type ActivityLogEntry, type ActivityAction } from "@/lib/api/activity";
 import { StatusBadge } from "@/components/ideas/StatusBadge";
@@ -35,6 +35,7 @@ export default function DashboardPage() {
   const [activities, setActivities] = useState<ActivityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [activitiesLoading, setActivitiesLoading] = useState(true);
+  const [showNewIdeaForm, setShowNewIdeaForm] = useState(false);
 
   const loadStats = async () => {
     try {
@@ -103,27 +104,29 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto pb-24 md:pb-6">
-      {/* Header */}
-      <header className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-[28px] font-bold tracking-tight">Dashboard</h1>
-        <p className="text-foreground-muted mt-1 text-sm md:text-base">
-          Welcome back. Here&apos;s your automation overview.
-        </p>
-      </header>
-
-      {/* Quick Capture */}
-      <div className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1">
-            <QuickCapture onSuccess={loadStats} />
-          </div>
-          <div className="relative group">
+      {/* Header with action buttons - matches Ideas page layout */}
+      <header className="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
+            Welcome back. Here&apos;s your automation overview.
+          </p>
+        </div>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button
+            onClick={() => setShowNewIdeaForm(true)}
+            className="btn btn-primary flex-1 sm:flex-initial"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Idea
+          </button>
+          <div className="relative group flex-1 sm:flex-initial">
             <button
               onClick={() => router.push('/dashboard/ideas/capture')}
-              className="btn btn-outline h-12 gap-2 whitespace-nowrap w-full sm:w-auto"
+              className="btn btn-outline w-full"
               aria-label="Guided Capture - 2 minutes, 4 questions"
             >
-              <Lightbulb className="h-4 w-4" />
+              <Lightbulb className="h-4 w-4 mr-2" />
               Guided Capture
               <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary/10 text-primary text-xs font-bold">
                 ?
@@ -135,6 +138,11 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </header>
+
+      {/* Quick Capture */}
+      <div className="mb-6">
+        <QuickCapture onSuccess={loadStats} />
       </div>
 
       {/* Stats Row */}
@@ -242,6 +250,18 @@ export default function DashboardPage() {
           <ActivityFeed activities={activities} loading={activitiesLoading} />
         </div>
       </div>
+
+      {/* New Idea Form Modal */}
+      {showNewIdeaForm && (
+        <IdeaForm
+          idea={null}
+          onClose={() => setShowNewIdeaForm(false)}
+          onSuccess={() => {
+            setShowNewIdeaForm(false);
+            loadStats();
+          }}
+        />
+      )}
     </div>
   );
 }

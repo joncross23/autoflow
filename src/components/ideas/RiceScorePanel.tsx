@@ -34,15 +34,15 @@ const IMPACT_OPTIONS: { value: RiceImpact; label: string; description: string }[
 ];
 
 const EFFORT_OPTIONS = [
-  { value: 1, label: "1 - Hours" },
-  { value: 2, label: "2 - 1 day" },
-  { value: 3, label: "3 - 2-3 days" },
-  { value: 4, label: "4 - 1 week" },
-  { value: 5, label: "5 - 2 weeks" },
-  { value: 6, label: "6 - 3 weeks" },
-  { value: 7, label: "7 - 1 month" },
-  { value: 8, label: "8 - 6 weeks" },
-  { value: 9, label: "9 - 2 months" },
+  { value: 1, label: "1 - A few hours" },
+  { value: 2, label: "2 - Half a day" },
+  { value: 3, label: "3 - 1-2 days" },
+  { value: 4, label: "4 - 3-5 days" },
+  { value: 5, label: "5 - 1 week" },
+  { value: 6, label: "6 - 2 weeks" },
+  { value: 7, label: "7 - 3-4 weeks" },
+  { value: 8, label: "8 - 1-2 months" },
+  { value: 9, label: "9 - 2-3 months" },
   { value: 10, label: "10 - Quarter+" },
 ];
 

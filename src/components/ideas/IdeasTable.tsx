@@ -92,6 +92,7 @@ function SortableRow({
   labels,
   progress,
   isDragActive,
+  rowNumber,
 }: {
   idea: DbIdea;
   columns: ColumnConfig[];
@@ -102,6 +103,7 @@ function SortableRow({
   labels: DbLabel[];
   progress?: IdeaTaskProgress;
   isDragActive: boolean;
+  rowNumber: number;
 }) {
   const {
     attributes,
@@ -141,8 +143,8 @@ function SortableRow({
       )}
       onClick={() => onClick(idea)}
     >
-      {/* Drag handle + Checkbox cell */}
-      <td className="w-16 px-1 py-3">
+      {/* Drag handle + Row number + Checkbox cell */}
+      <td className="w-20 px-1 py-3">
         <div className="flex items-center gap-1">
           <button
             ref={setActivatorNodeRef}
@@ -157,6 +159,9 @@ function SortableRow({
           >
             <GripVertical className="h-4 w-4" />
           </button>
+          <span className="text-xs text-muted-foreground/50 w-5 text-right tabular-nums shrink-0">
+            {rowNumber}
+          </span>
           <input
             type="checkbox"
             checked={selected}
@@ -450,7 +455,7 @@ export function IdeasTable({
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={ideaIds} strategy={verticalListSortingStrategy}>
-              {ideas.map((idea) => {
+              {ideas.map((idea, index) => {
                 const labels = ideaLabels[idea.id] || [];
                 const isSelected = selectedIds.has(idea.id);
                 return (
@@ -463,6 +468,7 @@ export function IdeasTable({
                     onIdeaClick={onIdeaClick}
                     onMobileTouchStart={handleMobileTouchStart}
                     onMobileTouchEnd={handleMobileTouchEnd}
+                    rowNumber={index + 1}
                   />
                 );
               })}
@@ -545,10 +551,11 @@ export function IdeasTable({
           <table ref={tableRef} className="w-full border-collapse">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                {/* Drag handle + Checkbox header */}
-                <th className="w-16 px-1 py-3 text-left">
+                {/* Drag handle + Row number + Checkbox header */}
+                <th className="w-20 px-1 py-3 text-left">
                   <div className="flex items-center gap-1">
                     <div className="w-5" /> {/* Spacer for drag handle alignment */}
+                    <span className="text-[11px] text-muted-foreground/50 w-5 text-right">#</span>
                     <input
                       type="checkbox"
                       checked={allSelected}
@@ -616,8 +623,12 @@ export function IdeasTable({
                   // Skeleton loading rows
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="border-b border-white/[0.03] animate-pulse">
-                      <td className="px-3 py-3">
-                        <div className="h-4 w-4 bg-bg-tertiary rounded" />
+                      <td className="px-1 py-3">
+                        <div className="flex items-center gap-1">
+                          <div className="w-5" />
+                          <div className="h-3 w-5 bg-bg-tertiary rounded" />
+                          <div className="h-4 w-4 bg-bg-tertiary rounded" />
+                        </div>
                       </td>
                       {visibleColumns.map((col) => (
                         <td key={col.id} className="px-3 py-3">
@@ -639,7 +650,7 @@ export function IdeasTable({
                     </td>
                   </tr>
                 ) : (
-                  ideas.map((idea) => (
+                  ideas.map((idea, index) => (
                     <SortableRow
                       key={idea.id}
                       idea={idea}
@@ -651,6 +662,7 @@ export function IdeasTable({
                       labels={ideaLabels[idea.id] || []}
                       progress={ideaProgress[idea.id]}
                       isDragActive={isDragActive}
+                      rowNumber={index + 1}
                     />
                   ))
                 )}
@@ -679,6 +691,7 @@ function MobileSortableCard({
   onIdeaClick,
   onMobileTouchStart,
   onMobileTouchEnd,
+  rowNumber,
 }: {
   idea: DbIdea;
   labels: DbLabel[];
@@ -687,6 +700,7 @@ function MobileSortableCard({
   onIdeaClick: (idea: DbIdea) => void;
   onMobileTouchStart: (id: string) => void;
   onMobileTouchEnd: () => void;
+  rowNumber: number;
 }) {
   const {
     attributes,
@@ -732,6 +746,11 @@ function MobileSortableCard({
         >
           <GripVertical className="h-4 w-4" />
         </button>
+
+        {/* Row number */}
+        <span className="text-xs text-muted-foreground/50 w-5 text-right tabular-nums shrink-0 mt-0.5">
+          {rowNumber}
+        </span>
 
         {/* Checkbox for selection */}
         <input

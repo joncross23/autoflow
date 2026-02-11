@@ -20,6 +20,20 @@ const QUADRANTS = {
   bottomRight: { label: "Time Sinks", description: "Low impact, high effort", color: "text-red-500" },
 };
 
+// Effort scale labels (aligned with RiceScorePanel)
+const EFFORT_LABELS: Record<number, string> = {
+  1: "A few hours",
+  2: "Half a day",
+  3: "1-2 days",
+  4: "3-5 days",
+  5: "1 week",
+  6: "2 weeks",
+  7: "3-4 weeks",
+  8: "1-2 months",
+  9: "2-3 months",
+  10: "Quarter+",
+};
+
 // Map RICE values to grid positions
 function getImpactY(impact: RiceImpact | null): number {
   if (!impact) return 50; // Center if unknown
@@ -134,7 +148,7 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
           Impact (Low → High)
         </div>
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-sm font-semibold text-foreground">
-          Effort (Low → High)
+          Effort (Hours → Months)
         </div>
 
         {/* Grid Lines */}
@@ -145,9 +159,29 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
           <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-yellow-500/40" /> {/* Fill-ins */}
           <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-red-500/40" /> {/* Time Sinks */}
 
-          {/* Center lines - slightly more visible */}
+          {/* Center lines - effort boundary at 50% (separates <2 weeks from 2+ weeks) */}
           <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10" />
           <div className="absolute top-1/2 left-0 right-0 h-px bg-white/10" />
+
+          {/* Effort scale tick labels along the bottom */}
+          <div className="absolute -bottom-5 left-0 right-0 flex justify-between px-[2%]">
+            {[
+              { pos: "5%", label: "Hours" },
+              { pos: "25%", label: "Days" },
+              { pos: "45%", label: "1 wk" },
+              { pos: "55%", label: "2 wk" },
+              { pos: "75%", label: "1-2 mo" },
+              { pos: "95%", label: "Qtr+" },
+            ].map((tick) => (
+              <span
+                key={tick.pos}
+                className="absolute text-[10px] text-muted-foreground/60 -translate-x-1/2"
+                style={{ left: tick.pos }}
+              >
+                {tick.label}
+              </span>
+            ))}
+          </div>
 
           {/* Quadrant Labels */}
           <div className="absolute top-3 left-3 text-sm font-bold text-white bg-black/60 px-2 py-1 rounded border border-white/20">
@@ -217,7 +251,9 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
                       <div>
                         Effort:{" "}
                         <span className="text-text">
-                          {point.idea.rice_effort || "Not set"}
+                          {point.idea.rice_effort
+                            ? EFFORT_LABELS[point.idea.rice_effort] || point.idea.rice_effort
+                            : "Not set"}
                         </span>
                       </div>
                       <div>
@@ -281,16 +317,19 @@ export function MatrixView({ ideas, onIdeaClick }: MatrixViewProps) {
       <div className="text-xs text-muted-foreground bg-bg-tertiary rounded-lg p-3 space-y-1">
         <p className="font-medium">Prioritisation Tips:</p>
         <p>
-          <span className="text-green-500">Quick Wins</span> - High impact, low effort. Do these first!
+          <span className="text-green-500">Quick Wins</span> - High impact, under 2 weeks. Do these first!
         </p>
         <p>
-          <span className="text-blue-500">Major Projects</span> - High impact but require significant investment. Plan carefully.
+          <span className="text-blue-500">Major Projects</span> - High impact, 2+ weeks. Plan carefully.
         </p>
         <p>
-          <span className="text-yellow-500">Fill-ins</span> - Low impact, low effort. Nice to have when you have spare time.
+          <span className="text-yellow-500">Fill-ins</span> - Low impact, under 2 weeks. Nice to have when you have spare time.
         </p>
         <p>
-          <span className="text-red-500">Time Sinks</span> - Low impact, high effort. Avoid or delegate these.
+          <span className="text-red-500">Time Sinks</span> - Low impact, 2+ weeks. Avoid or delegate these.
+        </p>
+        <p className="pt-1 border-t border-white/[0.04]">
+          <span className="font-medium">Effort scale:</span> 1-2 = Hours, 3-4 = Days, 5-6 = 1-2 weeks, 7-8 = 2-4 weeks, 9-10 = Months
         </p>
       </div>
     </div>
