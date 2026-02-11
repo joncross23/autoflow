@@ -82,12 +82,12 @@ export default function RegisterPage() {
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
           <Zap className="h-6 w-6 text-white" />
         </div>
-        <span className="text-xl font-bold">AutoFlow</span>
+        <span className="text-xl font-bold">IdeaTracker</span>
       </div>
 
       <h1 className="text-2xl font-bold text-center mb-2">Create an account</h1>
       <p className="text-muted-foreground text-center mb-6">
-        Get started with AutoFlow today
+        Get started with IdeaTracker today
       </p>
 
       {error && (

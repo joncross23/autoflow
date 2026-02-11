@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { GuidedCaptureFlow } from "@/components/ideas/GuidedCaptureFlow";
 
 export const metadata: Metadata = {
-  title: "Guided Capture | AutoFlow",
+  title: "Guided Capture | IdeaTracker",
   description: "Capture your automation idea step by step with guided questions",
 };
 

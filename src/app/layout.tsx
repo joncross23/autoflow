@@ -31,8 +31,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "AutoFlow - AI & Automation Discovery Platform",
-    template: "%s | AutoFlow",
+    default: "IdeaTracker - Capture, Score & Deliver Your Best Ideas",
+    template: "%s | IdeaTracker",
   },
   description:
     "Capture automation ideas, evaluate them with AI, and track implementation projects. Streamline your workflow with intelligent prioritisation.",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     "ROI analysis",
     "kanban",
   ],
-  authors: [{ name: "AutoFlow Team" }],
-  creator: "AutoFlow",
-  publisher: "AutoFlow",
+  authors: [{ name: "IdeaTracker" }],
+  creator: "IdeaTracker",
+  publisher: "IdeaTracker",
   robots: {
     index: true,
     follow: true,
@@ -60,14 +60,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "AutoFlow",
-    title: "AutoFlow - AI & Automation Discovery Platform",
+    siteName: "IdeaTracker",
+    title: "IdeaTracker - Capture, Score & Deliver Your Best Ideas",
     description:
       "Capture automation ideas, evaluate them with AI, and track implementation projects.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AutoFlow - AI & Automation Discovery Platform",
+    title: "IdeaTracker - Capture, Score & Deliver Your Best Ideas",
     description:
       "Capture automation ideas, evaluate them with AI, and track implementation projects.",
   },

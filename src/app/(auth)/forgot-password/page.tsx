@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
           <Zap className="h-6 w-6 text-white" />
         </div>
-        <span className="text-xl font-bold">AutoFlow</span>
+        <span className="text-xl font-bold">IdeaTracker</span>
       </div>
 
       <h1 className="text-2xl font-bold text-center mb-2">Reset password</h1>

@@ -320,7 +320,7 @@ export default function SharedViewPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              AutoFlow
+              IdeaTracker
             </a>
           </p>
         </div>

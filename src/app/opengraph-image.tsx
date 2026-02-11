@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "AutoFlow - AI & Automation Discovery Platform";
+export const alt = "IdeaTracker - Capture, Score & Deliver Your Best Ideas";
 export const size = {
   width: 1200,
   height: 630,
@@ -62,7 +62,7 @@ export default async function Image() {
             letterSpacing: -2,
           }}
         >
-          AutoFlow
+          IdeaTracker
         </div>
 
         {/* Subtitle */}
@@ -74,7 +74,7 @@ export default async function Image() {
             maxWidth: 800,
           }}
         >
-          AI & Automation Discovery Platform
+          Capture, score, and deliver your best ideas
         </div>
 
         {/* Tagline */}

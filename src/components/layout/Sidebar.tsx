@@ -87,19 +87,39 @@ export function Sidebar() {
       )}
     >
       {/* Header */}
-      <div className="flex h-14 items-center justify-end border-b border-border px-4">
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="btn-ghost rounded-md p-2"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          title="Cmd/Ctrl + B"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
-        </button>
+      <div className={cn(
+        "flex h-14 items-center border-b border-border",
+        isCollapsed ? "justify-center px-2" : "justify-between px-3"
+      )}>
+        {isCollapsed ? (
+          <button
+            onClick={() => setIsCollapsed(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 transition-opacity"
+            aria-label="Expand sidebar"
+            title="Cmd/Ctrl + B"
+          >
+            <span className="text-[10px] text-white/80 font-normal">i</span>
+            <span className="text-[11px] text-white font-bold -ml-0.5">T</span>
+          </button>
+        ) : (
+          <>
+            <Link href="/dashboard" className="flex items-center gap-2 min-w-0">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-blue-600">
+                <span className="text-[10px] text-white/80 font-normal">i</span>
+                <span className="text-[11px] text-white font-bold -ml-0.5">T</span>
+              </div>
+              <span className="text-sm font-semibold truncate">IdeaTracker</span>
+            </Link>
+            <button
+              onClick={() => setIsCollapsed(true)}
+              className="btn-ghost rounded-md p-1.5 shrink-0"
+              aria-label="Collapse sidebar"
+              title="Cmd/Ctrl + B"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Navigation */}
