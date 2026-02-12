@@ -3,9 +3,9 @@
 > **Repository:** https://github.com/jon-cross/autoflow
 > **Vercel:** Linked to GitHub
 > **Supabase:** Linked to GitHub
-> **Last Updated:** 2026-01-08
+> **Last Updated:** 2026-02-11
 > **Current Version:** 1.6.3
-> **Current Phase:** iOS UX Improvements (COMPLETE)
+> **Current Phase:** UX Polish & Rebrand (COMPLETE)
 > **Next Phase:** Dynamic Delivery Filters
 >
 > **Staging:** https://autoflow-staging.vercel.app (develop branch)
@@ -386,6 +386,30 @@ See `DEPLOY_CHECKLIST.md` for full instructions.
 ---
 
 ## Session Log
+
+### 2026-02-11 — UX Polish & Rebrand (AutoFlow → IdeaTracker)
+- **Ideas Table Numbered Rows:**
+  - Added `#` column with sequential row numbers to IdeasTable (desktop and mobile)
+  - Dynamic counter on Ideas page showing filtered/total/selected counts
+- **Dashboard Quick Actions:**
+  - Added "New Idea" and "Guided Capture" buttons to Dashboard header, matching Ideas page layout
+- **Calibrated Effort Scale:**
+  - Updated EFFORT_OPTIONS in RiceScorePanel to concrete timeframes: 1=hours, 3=days, 5=1 week, 6=2 weeks, 7=3-4 weeks, 8=months, 10=quarter+
+  - Added effort tick labels along bottom of Matrix view
+  - Updated Matrix axis label to "Effort (Hours → Months)"
+  - Updated tips section with concrete timeframe references
+- **Rebrand — AutoFlow → IdeaTracker (user-visible only):**
+  - Updated all metadata in `layout.tsx` (title, template, authors, creator, publisher, OG, Twitter)
+  - Updated landing page, auth pages (login, register, forgot-password), share page footer
+  - Updated OpenGraph image alt/title/subtitle
+  - Updated guided capture page title
+  - New favicon: "iT" (lowercase i, uppercase T) on blue gradient background
+  - Sidebar logo: collapsed = clickable iT icon button, expanded = iT icon + "IdeaTracker" text
+  - Internal identifiers (localStorage keys, env vars, package.json) intentionally unchanged
+- **Dashboard Layout Title Fix:**
+  - Changed `dashboard/layout.tsx` from static `title: "Dashboard"` to template format so child pages show correct tab names
+- **Deployment:**
+  - All changes merged to main and deployed to production
 
 ### 2026-01-08 — Matrix View Improvements & Guided Capture Cancel Button
 - **Matrix View Visual Improvements:**
