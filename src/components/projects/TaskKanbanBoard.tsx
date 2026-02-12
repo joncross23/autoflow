@@ -84,6 +84,21 @@ export function TaskKanbanBoard({
     })
   );
 
+  // Helper: resolve an overId to a column ID
+  // The droppable inside TaskColumn uses `droppable-${column.id}`,
+  // while the SortableColumn wrapper uses the raw `column.id`.
+  const resolveColumnId = useCallback(
+    (id: string): string | null => {
+      if (columns.some((col) => col.id === id)) return id;
+      if (id.startsWith("droppable-")) {
+        const stripped = id.slice("droppable-".length);
+        if (columns.some((col) => col.id === stripped)) return stripped;
+      }
+      return null;
+    },
+    [columns]
+  );
+
   // Group tasks by column
   const tasksByColumn = useMemo(() => {
     const grouped: Record<string, DbTask[]> = {};
@@ -144,10 +159,10 @@ export function TaskKanbanBoard({
       const activeTask = tasks.find((t) => t.id === activeId);
       if (!activeTask) return;
 
-      // Check if dropping on a column
-      const isOverColumn = columns.some((col) => col.id === overId);
-      if (isOverColumn) {
-        const newColumnId = overId;
+      // Check if dropping on a column (raw ID or droppable-prefixed ID)
+      const overColumnId = resolveColumnId(overId);
+      if (overColumnId) {
+        const newColumnId = overColumnId;
         if (activeTask.column_id !== newColumnId) {
           // Move to new column at end
           const updatedTasks = tasks.map((t) =>
@@ -200,7 +215,7 @@ export function TaskKanbanBoard({
         }
       }
     },
-    [tasks, columns, tasksByColumn, onTasksChange]
+    [tasks, columns, tasksByColumn, onTasksChange, resolveColumnId, localColumns]
   );
 
   const handleDragEnd = useCallback(
@@ -242,9 +257,9 @@ export function TaskKanbanBoard({
 
       // Determine target column - either the column we're over, or the column of the task we're over
       let targetColumnId = task.column_id;
-      const isOverColumn = columns.some((col) => col.id === overId);
-      if (isOverColumn) {
-        targetColumnId = overId;
+      const overColumnId = resolveColumnId(overId);
+      if (overColumnId) {
+        targetColumnId = overColumnId;
       } else {
         const overTask = tasks.find((t) => t.id === overId);
         if (overTask) {
@@ -266,7 +281,7 @@ export function TaskKanbanBoard({
         console.error("Failed to save task position:", error);
       }
     },
-    [tasks, columns, localColumns, onColumnUpdate]
+    [tasks, columns, localColumns, onColumnUpdate, resolveColumnId]
   );
 
   // Sort columns by position

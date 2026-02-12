@@ -72,7 +72,8 @@ function TaskColumnComponent({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { setNodeRef, isOver } = useDroppable({
-    id: column.id,
+    id: `droppable-${column.id}`,
+    data: { type: "column", columnId: column.id },
   });
 
   // Auto-focus input when adding
